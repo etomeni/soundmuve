@@ -1,0 +1,126 @@
+.title {
+    /* font-family: 'Inter'; */
+    font-style: normal;
+    font-weight: 700;
+    font-size: 15px;
+    /* line-height: 19px; */
+
+    color: #FFFFFF;
+}
+
+.text {
+    /* Address → 32 Disu Aina Efon */
+    font-family: 'Geist';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 12px;
+    /* line-height: 19px; */
+
+    color: #CACACA;
+}
+
+.icons {
+    color: #fff;
+    font-size: 20px;
+}
+
+ul.footerList {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+a {
+    padding: 0;
+    margin: 0;
+}
+
+li.text {
+    margin-bottom: 10px;
+}
+
+li.xsText {
+    margin-bottom: 5px;
+}
+  
+
+.link {
+    font-family: "Geist";
+    color: #FFFFE6;
+    text-decoration: none;
+    display: block;
+}
+
+.mdLink {
+    font-family: 'Geist';
+    font-size: 10.8px;
+    font-weight: 600;
+    line-height: 19.26px;
+    /* text-align: left; */
+}
+
+.xsLink {
+    font-family: 'Geist';
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 19.26px;
+    /* text-align: left; */
+}
+
+.input {
+    padding: 10px;
+    height: 34.66px;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: #fff;
+    /* border: 1.33px solid #CACACA; */
+    border: 0.67px solid #FFFFFF1A;
+    border-right: none;
+    border-top-left-radius: 5.33px;
+    border-bottom-left-radius: 5.33px;
+    width: 100%;
+    box-shadow: 0px 0px 16.66px 0px #1E22280A;
+
+    /* font-size: 9.61px;
+    line-height: 16.99px; */
+}
+
+.xsInput {
+    padding: 5px;
+    height: 14.79px;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: #fff;
+    border: 0.28px solid #FFFFFF1A;
+    border-right: none;
+    border-top-left-radius: 2.8px;
+    border-bottom-left-radius: 2.8px;
+    box-shadow: 0px 0px 7.11px 0px #1E22280A;
+    width: 100%;
+
+    font-size: 4.1px;
+    line-height: 7.25px;
+}
+
+input::placeholder {
+    color: #959CA9;
+} 
+
+.input:focus {
+    border: 1px solid #644986;
+    border-right: none;
+}
+
+.btn {
+    background: #644986;
+    color: #FFFFFF;
+    outline: none;
+    /* border: none; */
+    padding: 15px;
+    border: 1px solid #644986;
+    border-left: none;
+    
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
