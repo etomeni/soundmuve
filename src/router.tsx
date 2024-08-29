@@ -1,52 +1,52 @@
 import { createBrowserRouter } from "react-router-dom";
 
-import ScrollToTop from "./components/ScrollToTop.tsx";
-import NotFoundPage from './pages/NotFound.tsx';
-import HomePage from './pages/Home.tsx';
-import Contact from './pages/Contact.tsx';
-import Faq from './pages/Faq.tsx';
-import About from './pages/About.tsx';
-import Pricing from './pages/Pricing.tsx';
-import PrivacyPolicy from './pages/PrivacyPolicy.tsx';
-import TermsOfUse from './pages/TermsOfUse.tsx';
+import ScrollToTop from "@/components/ScrollToTop.tsx";
+import NotFoundPage from '@/pages/NotFound.tsx';
+import HomePage from '@/pages/Home.tsx';
+import Contact from '@/pages/Contact.tsx';
+import Faq from '@/pages/Faq.tsx';
+import About from '@/pages/About.tsx';
+import Pricing from '@/pages/Pricing.tsx';
+import PrivacyPolicy from '@/pages/PrivacyPolicy.tsx';
+import TermsOfUse from '@/pages/TermsOfUse.tsx';
 
-import AuthLayout from "./pages/auth/AuthLayout.tsx";
-import Login from './pages/auth/Login.tsx';
-import Signup from './pages/auth/Signup.tsx';
-import SignupType from "./pages/auth/SignupType.tsx";
-import ArtistDetails from "./pages/auth/ArtistDetails.tsx";
-import RecordLabelDetails from "./pages/auth/RecordLabelDetails.tsx";
-import ForgotPassword from "./pages/auth/ForgotPassword.tsx";
-import VerifyEmail from "./pages/auth/VerifyEmail.tsx";
-import CreateNewPassword from "./pages/auth/CreateNewPassword.tsx";
+import AuthLayout from "@/pages/auth/AuthLayout.tsx";
+import Login from '@/pages/auth/Login.tsx';
+import Signup from '@/pages/auth/Signup.tsx';
+import SignupType from "@/pages/auth/SignupType.tsx";
+import SignupArtistDetails from "@/pages/auth/SignupArtistDetails.tsx";
+import SignuRecordLabelDetails from "@/pages/auth/SignupRecordLabelDetails.tsx";
+import ForgotPassword from "@/pages/auth/ForgotPassword.tsx";
+import VerifyEmail from "@/pages/auth/VerifyEmail.tsx";
+import CreateNewPassword from "@/pages/auth/CreateNewPassword.tsx";
 
-import AccountLayout from "./pages/account/AccountLayout.tsx";
-import DashboardHome from "./pages/account/DashboardHome.tsx";
+import AccountLayout from "@/pages/account/AccountLayout.tsx";
+import DashboardHome from "@/pages/account/DashboardHome.tsx";
 
-import DashboardArtist from "./pages/account/artist/DashboardArtist.tsx";
-import CreateSingle from "./pages/account/CreateSingleRelease.tsx";
-import DashboardRecordLabel from "./pages/account/recordLabel/DashboardRecordLabel.tsx";
-import CreateSingleRelease2 from "./pages/account/CreateSingleRelease2.tsx";
-import BalanceHistory from "./pages/account/artist/BalanceHistory.tsx";
-import SalesReport from "./pages/account/artist/SalesReport.tsx";
-import AnalyticsReach from "./pages/account/artist/AnalyticsReach.tsx";
-import SongDetails from "./pages/account/artist/SongDetails.tsx";
-import AllMusic from "./pages/account/artist/AllMusic.tsx";
-import AlbumDetails from "./pages/account/artist/AlbumDetails.tsx";
-import CreateAlbumReleaseDetails from "./pages/account/createAlbumRelease/AlbumDetails.tsx";
-import CreateAlbumReleaseAdvanceFeatures from "./pages/account/createAlbumRelease/AdvanceFeatures.tsx";
-import CreateAlbumReleaseSelectStores from "./pages/account/createAlbumRelease/SelectStores.tsx";
-import CreateAlbumReleaseSongUpload from "./pages/account/createAlbumRelease/SongUpload.tsx";
-import CreateAlbumReleaseAlbumArt from "./pages/account/createAlbumRelease/AlbumArt.tsx";
-import CreateAlbumReleaseOverview from "./pages/account/createAlbumRelease/Overview.tsx";
-import AddArtistRecordLabel from "./pages/account/recordLabel/AddArtist.tsx";
-import BalanceHistory_RL from "./pages/account/recordLabel/BalanceHistory_RL.tsx";
-import SalesReport_RL from "./pages/account/recordLabel/SalesReport.tsx";
-import AnalyticsReach_RL from "./pages/account/recordLabel/AnalyticsReach_RL.tsx";
-import SongDetails_RL from "./pages/account/recordLabel/SongDetails.tsx";
-import AlbumDetails_RL from "./pages/account/recordLabel/AlbumDetails_RL.tsx";
-import AllMusic_RL from "./pages/account/recordLabel/AllMusic_RL.tsx";
-import ArtistList_RL from "./pages/account/recordLabel/ArtistList.tsx";
+import DashboardArtist from "@/pages/account/artist/DashboardArtist.tsx";
+import CreateSingle from "@/pages/account/CreateSingleRelease.tsx";
+import DashboardRecordLabel from "@/pages/account/recordLabel/DashboardRecordLabel.tsx";
+import CreateSingleRelease2 from "@/pages/account/CreateSingleRelease2.tsx";
+import BalanceHistory from "@/pages/account/artist/BalanceHistory.tsx";
+import SalesReport from "@/pages/account/artist/SalesReport.tsx";
+import AnalyticsReach from "@/pages/account/artist/AnalyticsReach.tsx";
+import SongDetails from "@/pages/account/artist/SongDetails.tsx";
+import AllMusic from "@/pages/account/artist/AllMusic.tsx";
+import AlbumDetails from "@/pages/account/artist/AlbumDetails.tsx";
+import CreateAlbumReleaseDetails from "@/pages/account/createAlbumRelease/AlbumDetails.tsx";
+import CreateAlbumReleaseAdvanceFeatures from "@/pages/account/createAlbumRelease/AdvanceFeatures.tsx";
+import CreateAlbumReleaseSelectStores from "@/pages/account/createAlbumRelease/SelectStores.tsx";
+import CreateAlbumReleaseSongUpload from "@/pages/account/createAlbumRelease/SongUpload.tsx";
+import CreateAlbumReleaseAlbumArt from "@/pages/account/createAlbumRelease/AlbumArt.tsx";
+import CreateAlbumReleaseOverview from "@/pages/account/createAlbumRelease/Overview.tsx";
+import AddArtistRecordLabel from "@/pages/account/recordLabel/AddArtist.tsx";
+import BalanceHistory_RL from "@/pages/account/recordLabel/BalanceHistory_RL.tsx";
+import SalesReport_RL from "@/pages/account/recordLabel/SalesReport.tsx";
+import AnalyticsReach_RL from "@/pages/account/recordLabel/AnalyticsReach_RL.tsx";
+import SongDetails_RL from "@/pages/account/recordLabel/SongDetails.tsx";
+import AlbumDetails_RL from "@/pages/account/recordLabel/AlbumDetails_RL.tsx";
+import AllMusic_RL from "@/pages/account/recordLabel/AllMusic_RL.tsx";
+import ArtistList_RL from "@/pages/account/recordLabel/ArtistList.tsx";
 
 
 export const router = createBrowserRouter([
@@ -121,11 +121,11 @@ export const router = createBrowserRouter([
             },
             {
               path: "signup-artistDetails",
-              element: <ArtistDetails />
+              element: <SignupArtistDetails />
             },
             {
               path: "signup-recordLabelDetails",
-              element: <RecordLabelDetails />
+              element: <SignuRecordLabelDetails />
             },
           ]
         },

@@ -1,10 +1,10 @@
+import * as React from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 
-import HeaderComponent from '../components/Header';
-import FooterComponent from '../components/Footer';
+import HeaderComponent from '@/components/Header';
+import FooterComponent from '@/components/Footer';
 
-import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';

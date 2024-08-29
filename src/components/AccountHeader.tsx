@@ -31,15 +31,16 @@ import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
 import AssessmentOutlinedIcon from '@mui/icons-material/AssessmentOutlined';
 import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
 
-import SoundMuve from "@/assets/images/SoundMuve.png";
+import SoundMuve from "@/assets/branded/logo.png";
 import SoundMuv from "@/assets/images/SoundMuv.png";
 import light_off from "@/assets/images/light_off.png";
-import { useSettingStore } from '../state/settingStore';
+import { useSettingStore } from '@/state/settingStore';
 import NewReleaseModalComponent from './account/NewReleaseModal';
 import { useUserStore } from '@/state/userStore';
 import { stringAvatar, stringToColor } from '@/util/resources';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import LanguageTranslate from './LanguageTranslate';
+import { contentWidth } from '@/util/mui';
 
 const drawerWidth = 240;
 
@@ -374,21 +375,20 @@ export default function AccountHeaderComponent() {
 
 
     return (
-        <Box 
-            sx={{ 
-                display: 'flex', 
-                background: darkTheme ? "#000" : "#343434",
-            }}
-        >
+        <>
             <CssBaseline />
-            <AppBar 
-                component="nav" 
-                position="fixed"
-                sx={{ backgroundColor: darkTheme ? "#000" : "#343434" }} 
+            <AppBar component="nav" position="sticky"
+                sx={{ 
+                    top: 0,
+                    mx: "auto", 
+                    backgroundColor: "#000", 
+                    borderRadius: 23.5, 
+                    ...contentWidth
+                 }} 
             >
                 <Toolbar sx={{ px: {xs: 2, md: 5, lg: 12} }}>
                     <Box sx={{flexGrow: 1, cursor: 'pointer' }} onClick={() => navigate("/") }>
-                        <img src={SoundMuve} alt="SoundMuve logo" style={{width: 130}} />
+                        <img src={SoundMuve} alt="SoundMuve logo" style={{width: 130, objectFit: "contain"}} />
                     </Box>
 
                     <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
@@ -541,6 +541,6 @@ export default function AccountHeaderComponent() {
             />
 
             <Toolbar />
-        </Box>
+        </>
     );
 }

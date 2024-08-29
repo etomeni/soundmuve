@@ -96,7 +96,7 @@ export const XsSectionScroll = () => {
                             we take your sound from anywhere in the world to everywhere it matters.
                         </Typography>
 
-                        <Link to="">
+                        <Link to="/auth/signup" style={{ display: "contents" }}>
                             <Box sx={{ ...btnContainer }} >
                                 <Typography variant="button" sx={{ ...btnText }} >See more</Typography>
                             </Box>
@@ -126,13 +126,15 @@ export const XsSectionScroll = () => {
                             Make your mark and watch your sound reach audiences everywhere
                         </Typography>
 
-                        <Link to="">
-                            <Box sx={{ ...btnContainer }} >
-                                <Typography variant="button"
-                                    sx={{ ...btnText }}    
-                                >See more</Typography>
-                            </Box>
-                        </Link>
+                        <Box sx={{ float: "left"}}>
+                            <Link to="/auth/signup" style={{ display: "contents" }}>
+                                <Box sx={{ ...btnContainer }} >
+                                    <Typography variant="button"
+                                        sx={{ ...btnText }}    
+                                    >See more</Typography>
+                                </Box>
+                            </Link>
+                        </Box>
 
                     </Box>
                 </Box>
@@ -158,13 +160,15 @@ export const XsSectionScroll = () => {
                             Step into a new era of success and own your sound story
                         </Typography>
 
-                        <Link to="">
-                            <Box sx={{ ...btnContainer }} >
-                                <Typography variant="button" 
-                                    sx={{ ...btnText }}    
-                                >See more</Typography>
-                            </Box>
-                        </Link>
+                        <Box sx={{ float: "right" }}>
+                            <Link to="/auth/signup" style={{ display: "contents" }}>
+                                <Box sx={{ ...btnContainer }} >
+                                    <Typography variant="button" 
+                                        sx={{ ...btnText }}    
+                                    >See more</Typography>
+                                </Box>
+                            </Link>
+                        </Box>
                     </Box>
                 </Box>
             </div>
@@ -189,13 +193,16 @@ export const XsSectionScroll = () => {
                             Make your mark and watch your sound reach audiences everywhere
                         </Typography>
 
-                        <Link to="">
-                            <Box sx={{ ...btnContainer }} >
-                                <Typography variant="button"
-                                    sx={{ ...btnText }}    
-                                >See more</Typography>
-                            </Box>
-                        </Link>
+
+                        <Box sx={{ float: "left" }}>
+                            <Link to="/auth/signup" style={{ display: "contents" }}>
+                                <Box sx={{ ...btnContainer }} >
+                                    <Typography variant="button"
+                                        sx={{ ...btnText }}    
+                                    >See more</Typography>
+                                </Box>
+                            </Link>
+                        </Box>
                     </Box>
                 </Box>
             </div>

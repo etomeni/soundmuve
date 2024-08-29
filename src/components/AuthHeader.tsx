@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import Box from '@mui/material/Box';
 
-import SoundMuve from "./../assets/images/SoundMuve.png";
+import SoundMuve from "@/assets/branded/logo.png";
 
 
 export default function AuthHeaderComponent() {
@@ -22,7 +22,7 @@ export default function AuthHeaderComponent() {
             position: "relative"
         }}>
             <Box sx={{ alignSelf: "center", cursor: 'pointer' }} onClick={() => navigate("/") }>
-                <img src={SoundMuve} alt="SoundMuve logo" style={{width: 130}} />
+                <img src={SoundMuve} alt="SoundMuve logo" style={{width: 130, objectFit: "contain"}} />
             </Box>
         </Box>
 

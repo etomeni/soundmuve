@@ -5,14 +5,14 @@ import colors from '@/constants/colors';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 
-import HeaderComponent from '../components/Header';
-import FooterComponent from '../components/Footer';
+import HeaderComponent from '@/components/Header';
+import FooterComponent from '@/components/Footer';
  
 import { contentWidth } from '@/util/mui';
 
 import { DspLogos } from '@/components/home/DspLogos';
 import cssStyle from '@/components/home/homeStyle.module.css';
-import { MobileTestimonial } from '@/components/home/MobileTestimonial';
+// import { MobileTestimonial } from '@/components/home/MobileTestimonial';
 
 // import logo from "@/assets/branded/logo.png";
 import headerSectionBg from "@/assets/branded/images/home/headerSectionBg.png";
@@ -96,7 +96,7 @@ export default function Home() {
                             streaming platforms and connect with a global audience
                         </Typography>
 
-                        <Link to="/auth/signup">
+                        <Link to="/auth/signup" style={{ display: "contents" }}>
                             <Box
                                 sx={{
                                     p: {xs: "10px 16px", md: "8.97px 70px"},
@@ -147,8 +147,7 @@ export default function Home() {
                 </Box>
             </Box>
 
-
-
+            
             <Box bgcolor={colors.bg} zIndex={2}>
                 <Box height="300px"></Box>
 
@@ -196,7 +195,7 @@ export default function Home() {
 
                     <DspLogos />
 
-                    <Link to="/auth/signup">
+                    <Link to="/auth/signup" style={{ display: "contents" }}>
                         <Box
                             sx={{
                                 p: {xs: "10px 16px", md: "8.97px 70px"},
@@ -239,7 +238,7 @@ export default function Home() {
                 <Box sx={{ mt: {xs: "120px", md: "80px"} }}>
 
                     <DesktopTestimonial />
-                    <MobileTestimonial />
+                    {/* <MobileTestimonial /> */}
                 </Box>
 
                 <Stack alignItems="center" mb={5} mt={5}>

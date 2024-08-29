@@ -156,7 +156,7 @@ export const MdSectionScroll = () => {
                                 we take your sound from anywhere in the world to everywhere it matters.
                             </Typography>
 
-                            <Link to="">
+                            <Link to="/auth/signup" style={{ display: "contents" }}>
                                 <Box sx={{ ...btnContainer, bgcolor: colors.dark }}>
                                     <Typography variant="button"
                                         sx={btnText}    
@@ -186,12 +186,14 @@ export const MdSectionScroll = () => {
                                 Make your mark and watch your sound reach audiences everywhere
                             </Typography>
 
-                            <Link to="">
-                                <Box sx={{ ...btnContainer, bgcolor: colors.dark }} >
-                                    <Typography variant="button" sx={ btnText }    
-                                    >See more</Typography>
-                                </Box>
-                            </Link>
+                            <Box sx={{ float: "left"}}>
+                                <Link to="/auth/signup" style={{ display: "contents" }}>
+                                    <Box sx={{ ...btnContainer, bgcolor: colors.dark }} >
+                                        <Typography variant="button" sx={ btnText }    
+                                        >See more</Typography>
+                                    </Box>
+                                </Link>
+                            </Box>
 
                         </Box>
 
@@ -253,14 +255,21 @@ export const MdSectionScroll = () => {
                                 Step into a new era of success and own your sound story
                             </Typography>
 
-                            <Box
-                                sx={{
-                                    ...btnContainer,
-                                    bgcolor: colors.primary,
-                                }}
-                            >
-                                <Typography variant="button" sx={btnText} >See more</Typography>
+                            <Box sx={{ float: "right" }}>
+                                <Link to="/auth/signup" style={{ display: "contents" }}>
+                                    <Box
+                                        sx={{
+                                            ...btnContainer,
+                                            bgcolor: colors.primary,
+                                        }}
+                                    >
+                                        <Typography variant="button"
+                                            sx={btnText}    
+                                        >See more</Typography>
+                                    </Box>
+                                </Link>
                             </Box>
+
                         </Box>
                     </Stack>
                 </Box>
@@ -283,18 +292,20 @@ export const MdSectionScroll = () => {
                                 Make your mark and watch your sound reach audiences everywhere
                             </Typography>
 
-                            <Link to="">
-                                <Box
-                                    sx={{
-                                        ...btnContainer,
-                                        bgcolor: colors.dark,
-                                    }}
-                                >
-                                    <Typography variant="button"
-                                        sx={btnText}    
-                                    >See more</Typography>
-                                </Box>
-                            </Link>
+                            <Box sx={{ float: "left"}}>
+                                <Link to="/auth/signup" style={{ display: "contents" }}>
+                                    <Box
+                                        sx={{
+                                            ...btnContainer,
+                                            bgcolor: colors.dark,
+                                        }}
+                                    >
+                                        <Typography variant="button"
+                                            sx={btnText}    
+                                        >See more</Typography>
+                                    </Box>
+                                </Link>
+                            </Box>
                         </Box>
 
                         <Box>

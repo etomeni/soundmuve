@@ -106,11 +106,12 @@ export default function FooterComponent() {
 
                 <Box onClick={() => onSubmit()} 
                     sx={{
-                        border: `0.57px solid ${colors.primary}`,
-                        borderRadius: "0px 2.28px 2.28px 0px",
+                        // border: `0.57px solid ${colors.primary}`,
+                        borderRadius: "0px 5.33px 5.33px 0px",
                         bgcolor: colors.primary,
-                        px: 1,
-                        height: "14.79px",
+                        // px: 1,
+                        width: "54.67px",
+                        height: "34.66px",
                         alignSelf: "center",
                         display: "flex",
                         alignItems: "center",
@@ -120,13 +121,11 @@ export default function FooterComponent() {
                 >
                     <Typography sx={{
                         fontWeight: "700",
-                        fontSize: "4.13px",
-                        lineHeight: "7.54px",
+                        fontSize: "9.67px",
+                        lineHeight: "17.67px",
                         textAlign: "center",
                         color: "#fff",
-                    }}>
-                        Join
-                    </Typography>
+                    }}> Join </Typography>
                 </Box>
 
             </div>
@@ -142,7 +141,7 @@ export default function FooterComponent() {
                 <input 
                     type="email" 
                     placeholder='Email Address' 
-                    className={style.xsInput}
+                    className={style.desktopInput}
                     autoComplete="email" 
                     value={email}
                     required
@@ -152,10 +151,12 @@ export default function FooterComponent() {
                 <Box onClick={() => onSubmit()} 
                     sx={{
                         border: `0.57px solid ${colors.primary}`,
-                        borderRadius: "0px 2.28px 2.28px 0px",
+                        borderRadius: "0px 5.33px 5.33px 0px",
                         bgcolor: colors.primary,
-                        px: 1,
-                        height: "14.79px",
+                        
+                        // px: 1,
+                        width: "54.67px",
+                        height: "34.66px",
                         alignSelf: "center",
                         display: "flex",
                         alignItems: "center",
@@ -165,8 +166,8 @@ export default function FooterComponent() {
                 >
                     <Typography sx={{
                         fontWeight: "700",
-                        fontSize: "4.13px",
-                        lineHeight: "7.54px",
+                        fontSize: "9.67px",
+                        lineHeight: "17.67px",
                         textAlign: "center",
                         color: "#fff",
                     }}>
@@ -433,12 +434,14 @@ export default function FooterComponent() {
                     </Stack>
                 </Box>
 
-                <Box sx={{ position: "relative"}}>
+                <Box sx={{ position: "relative", bottom: 0 }}>
                     <img src={mobileBrandImage}
                         style={{
                             width: "auto",
                             // height: "100%",
-                            objectFit: "contain"
+                            objectFit: "contain",
+                            position: "relative",
+                            bottom: -7
                         }}
                     />
                 </Box>

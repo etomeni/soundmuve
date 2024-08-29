@@ -1,9 +1,6 @@
-import { useSettingStore } from '../state/settingStore';
-import SoundMuve from "./../assets/images/SoundMuve.png";
-import bgStyles from './../util/bgStyles.module.css';
+import SoundMuve from "@/assets/branded/soundMuve.png";
 
 export default function LoadingComponent() {
-    const darkTheme = useSettingStore((state) => state.darkTheme);
 
     return (
         <main 
@@ -12,32 +9,13 @@ export default function LoadingComponent() {
                 justifyContent: "center",
                 alignItems: "center",
                 height: "100vh",
-                background: darkTheme ? "#000" : "#ffff",
-                // overflow: "hidden"
+                // overflow: "hidden",
+                background: "#000"
             }}
         >
-            { darkTheme && 
-                <>
-                    <section className={`${bgStyles.defaultDisplay} ${bgStyles.mdzz}`}>
-                        <div className={bgStyles.topGradient}></div>
-                        <div className={bgStyles.leftGradient}></div>
-                        {/* <div className={bgStyles.leftBottomGradient}></div> */}
-                        <div className={bgStyles.rightTopGradient}></div>
-                        {/* <div className={bgStyles.rightBottom2Gradient}></div> */}
-                        <div className={bgStyles.btnCenteredGradient}></div>
-                        {/* <div className={bgStyles.leftBottom2Gradient}></div> */}
-                    </section>
-
-                    <section className={`${bgStyles.defaultDisplay} ${bgStyles.xszz}`}>
-                        <div className={bgStyles.mobileLeftGradient}></div>
-                        <div className={bgStyles.mobileRightGradientLoading}></div>
-                        {/* <div className={bgStyles.mobileCenteredGradient}></div> */}
-                    </section>
-                </>
-            }
 
             <div className="breathing-image">
-                <img src={SoundMuve} alt="soundmuve icon" style={{width: 130}} />
+                <img src={SoundMuve} alt="soundmuve icon" style={{width: 130, objectFit: "contain"}} />
                 <style>
                     {`
                         .breathing-image {

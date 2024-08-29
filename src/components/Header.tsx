@@ -4,7 +4,7 @@ import { Link, useLocation } from 'react-router-dom';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import CssBaseline from '@mui/material/CssBaseline';
-import Divider from '@mui/material/Divider';
+// import Divider from '@mui/material/Divider';
 import Drawer from '@mui/material/Drawer';
 import IconButton from '@mui/material/IconButton';
 import List from '@mui/material/List';
@@ -20,6 +20,8 @@ import CloseIcon from '@mui/icons-material/Close';
 import LanguageTranslate from './LanguageTranslate';
 import { contentWidth } from '../util/mui';
 import logo from "@/assets/branded/logo.png";
+import icon from "@/assets/branded/icon.png";
+import colors from '@/constants/colors';
 
 
 // const drawerWidth = 240;
@@ -62,7 +64,7 @@ export default function HeaderComponent() {
     ];
 
 
-    const drawer = (
+    const mobileDrawerContent = (
         <Box 
             // onClick={handleDrawerToggle} 
             sx={{ 
@@ -73,24 +75,35 @@ export default function HeaderComponent() {
                 display: "flex", flexDirection: "column",
                 justifyContent: "center",
                 // alignItems: "center",
-                // bgcolor: "green"
+                bgcolor: colors.milk,
+                borderRadius: "21px"
             }}
         >
             <Box>
-                <Box sx={{width: "100%", textAlign: "right"}}>
-                    <CloseIcon onClick={handleDrawerToggle} />
-                </Box>
+                <Stack direction="row" justifyContent="space-between" alignItems="center">
+                    <Box>
+                        <img src={icon} alt="SoundMuve Logo" style={{width: "100%", maxWidth: "24px", cursor: 'pointer' }} />
+                    </Box>
+                    
+                    <Box sx={{width: "100%", textAlign: "right"}}>
+                        <CloseIcon onClick={handleDrawerToggle} sx={{ color: colors.primary }} />
+                    </Box>
+                </Stack>
 
-                <Typography variant="h6" sx={{ my: 2 }}>
-                    <img src={logo} alt="SoundMuve Logo" style={{width: 130, cursor: 'pointer' }} />
-                </Typography>
+                {/* <Divider color='#c1c1c1' /> */}
 
-                <Divider color='#c1c1c1' />
+                <Box height="30px"></Box>
 
                 <List onClick={handleDrawerToggle}>
                     {menuItems.map((item) => (
                         <Link key={item.title} to={item.link}>
-                            <ListItem disablePadding sx={{bgcolor: item.active ? "#141414" : ''}}>
+                            <ListItem disablePadding 
+                                sx={{
+                                    bgcolor: item.active ? "#141414" : '',
+                                    borderRadius: "21px",
+                                    color: item.active ? colors.milk : colors.dark
+                                }}
+                            >
                                 <ListItemButton>
                                     <ListItemText primary={item.title} />
                                 </ListItemButton>
@@ -100,15 +113,65 @@ export default function HeaderComponent() {
                 </List>
             </Box>
 
-            <Box sx={{mt: "auto"}}>
-                <Box sx={{
-                    display: "flex", flexDirection: "row", gap: 0, color: "#FFF", 
-                    border: "1px solid #fff",
-                    p: 1, width: "90px",
-                    borderRadius: 3,
-                }}>
+            <Box sx={{mt: "20px"}}>
+                <Box 
+                    sx={{
+                        display: "flex", flexDirection: "row", gap: 0, 
+                        // border: `1px solid ${colors.dark}`,
+                        width: "fit-content",
+                        p: 1, 
+                        borderRadius: 3,
+                        color: colors.dark
+                    }}
+                >
                     <LanguageTranslate />
                 </Box>
+            </Box>
+
+            <Box mt="70px">
+                <Link to="/auth/login">
+                    <Box
+                        sx={{
+                            p: "10px 50px",
+                            borderRadius: "12px",
+                            border: `0.3px solid ${colors.primary}`,
+                            textAlign: "center"
+                        }}  
+                    >
+                        <Typography variant='button'
+                            sx={{
+                                fontFamily: "Nohemi",
+                                fontWeight: "600",
+                                fontSize: "13px",
+                                lineHeight: "13.06px",
+                                color: colors.primary
+                            }}
+                        >Login</Typography>
+                    </Box>
+                </Link>
+
+                <Link to="/auth/signup">
+                    <Box
+                        sx={{
+                            p: "10px 50px",
+                            borderRadius: "12px",
+                            border: `0.3px solid ${colors.primary}`,
+                            textAlign: "center",
+                            bgcolor: colors.primary,
+                            mt: "15px",
+                        }}  
+                    >
+                        <Typography variant='button'
+                            sx={{
+                                fontFamily: "Nohemi",
+                                fontWeight: "600",
+                                fontSize: "13px",
+                                lineHeight: "13.06px",
+                                color: colors.milk
+                            }}
+                        >Create an account</Typography>
+                    </Box>
+                </Link>
             </Box>
         </Box>
     );
@@ -254,9 +317,10 @@ export default function HeaderComponent() {
                             width: "100%", 
                             background: "transparent" 
                         },
+                        zIndex: 9999
                     }}
                 >
-                    {drawer}
+                    { mobileDrawerContent }
                 </Drawer>
             </nav>
 
