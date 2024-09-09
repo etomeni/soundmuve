@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -16,14 +16,15 @@ import Button from '@mui/material/Button';
 import CircularProgress from '@mui/material/CircularProgress';
 import TextField from '@mui/material/TextField';
 
-import FlutterwaveLogo2 from "@/assets/images/FlutterwaveLogo2.png";
+// import FlutterwaveLogo2 from "@/assets/images/FlutterwaveLogo2.png";
 
 import { useUserStore } from '@/state/userStore';
-import { useSettingStore } from '@/state/settingStore';
+// import { useSettingStore } from '@/state/settingStore';
 
 import { apiEndpoint, getQueryParams } from '@/util/resources';
-import { MuiTextFieldStyle } from '@/util/mui';
+import { paymentTextFieldStyle } from '@/util/mui';
 import { xfPaymentFormSchema, xfPaymentsInterface } from './FL_XfPayments';
+import colors from '@/constants/colors';
 
 
 interface _Props {
@@ -37,9 +38,15 @@ interface _Props {
 const FL_XfConfirmationModalComponent: React.FC<_Props> = ({
     openModal, closeModal, saveBtn, formDetails
 }) => {
-    const darkTheme = useSettingStore((state) => state.darkTheme);
+    // const darkTheme = useSettingStore((state) => state.darkTheme);
     const accessToken = useUserStore((state) => state.accessToken);
     const userData = useUserStore((state) => state.userData);
+
+    useEffect(() => {
+        if (!openModal) {
+            reset()
+        }
+    }, [openModal]);
 
     const [apiResponse, setApiResponse] = useState({
         display: false,
@@ -48,7 +55,7 @@ const FL_XfConfirmationModalComponent: React.FC<_Props> = ({
     });
 
     const {
-        handleSubmit, register, formState: { errors, isSubmitting, isValid } 
+        handleSubmit, register, reset, formState: { errors, isSubmitting, isValid } 
     } = useForm({ resolver: yupResolver(xfPaymentFormSchema), mode: 'onBlur', reValidateMode: 'onChange' });
 
 
@@ -115,14 +122,14 @@ const FL_XfConfirmationModalComponent: React.FC<_Props> = ({
             >
                 <Box 
                     sx={{
-                        bgcolor: darkTheme ? "#272727" : "#fff",
+                        bgcolor: colors.bg,
                         width: "100%",
                         maxWidth: {xs: "92%", sm: "496px"},
                         // maxHeight: "605px",
                         maxHeight: "95%",
                         borderRadius: "12px",
                         p: "25px",
-                        color: darkTheme ? "#fff" : "#000",
+                        color: colors.dark,
                         overflow: "scroll"
                     }}
                 >
@@ -130,12 +137,12 @@ const FL_XfConfirmationModalComponent: React.FC<_Props> = ({
                         <Box sx={{textAlign: "right"}}>
                             <IconButton onClick={() => closeModal() }>
                                 <CloseIcon 
-                                    sx={{color: darkTheme ? "#fff" : "#000", fontSize: "30px"}} 
+                                    sx={{color: colors.primary, fontSize: "30px"}} 
                                 />
                             </IconButton>
                         </Box>
 
-                        <Box sx={{textAlign: 'center'}}>
+                        {/* <Box sx={{textAlign: 'center'}}>
                             <img
                                 src={FlutterwaveLogo2} alt='Flutterwave Logo Image'
                                 style={{
@@ -143,7 +150,7 @@ const FL_XfConfirmationModalComponent: React.FC<_Props> = ({
                                     width: "60%"
                                 }}
                             />
-                        </Box>
+                        </Box> */}
                     </Box>
 
                     <Box id="payout-modal-description" sx={{mt: 2}}>
@@ -172,9 +179,7 @@ const FL_XfConfirmationModalComponent: React.FC<_Props> = ({
                                             inputMode='text'
                                             label=''
                                             defaultValue={formDetails.beneficiaryName}
-                                            InputLabelProps={{
-                                                style: { color: '#c1c1c1', fontWeight: "400" },
-                                            }}
+                                            
                                             InputProps={{
                                                 sx: {
                                                     borderRadius: "16px",
@@ -182,7 +187,7 @@ const FL_XfConfirmationModalComponent: React.FC<_Props> = ({
                                                 readOnly: true,
                                             }}
 
-                                            sx={{ ...MuiTextFieldStyle(darkTheme) }}
+                                            sx={paymentTextFieldStyle}
                                             
                                             error={ errors.beneficiaryName ? true : false }
                                             { ...register('beneficiaryName') }
@@ -216,9 +221,7 @@ const FL_XfConfirmationModalComponent: React.FC<_Props> = ({
                                             inputMode='email'
                                             label=''
                                             defaultValue={formDetails.email}
-                                            InputLabelProps={{
-                                                style: { color: '#c1c1c1', fontWeight: "400" },
-                                            }}
+                                            
                                             InputProps={{
                                                 sx: {
                                                     borderRadius: "16px",
@@ -226,7 +229,7 @@ const FL_XfConfirmationModalComponent: React.FC<_Props> = ({
                                                 readOnly: true,
                                             }}
 
-                                            sx={{ ...MuiTextFieldStyle(darkTheme) }}
+                                            sx={paymentTextFieldStyle}
                                             
                                             error={ errors.email ? true : false }
                                             { ...register('email') }
@@ -260,9 +263,7 @@ const FL_XfConfirmationModalComponent: React.FC<_Props> = ({
                                             inputMode='text'
                                             label=''
                                             defaultValue={formDetails.branchCode}
-                                            InputLabelProps={{
-                                                style: { color: '#c1c1c1', fontWeight: "400" },
-                                            }}
+                                            
                                             InputProps={{
                                                 sx: {
                                                     borderRadius: "16px",
@@ -270,7 +271,7 @@ const FL_XfConfirmationModalComponent: React.FC<_Props> = ({
                                                 readOnly: true,
                                             }}
 
-                                            sx={{ ...MuiTextFieldStyle(darkTheme) }}
+                                            sx={paymentTextFieldStyle}
                                             
                                             error={ errors.branchCode ? true : false }
                                             { ...register('branchCode') }
@@ -304,9 +305,7 @@ const FL_XfConfirmationModalComponent: React.FC<_Props> = ({
                                             inputMode='numeric'
                                             label=''
                                             defaultValue={formDetails.accountNumber}
-                                            InputLabelProps={{
-                                                style: { color: '#c1c1c1', fontWeight: "400" },
-                                            }}
+                                            
                                             InputProps={{
                                                 sx: {
                                                     borderRadius: "16px",
@@ -314,7 +313,7 @@ const FL_XfConfirmationModalComponent: React.FC<_Props> = ({
                                                 readOnly: true,
                                             }}
 
-                                            sx={{ ...MuiTextFieldStyle(darkTheme) }}
+                                            sx={paymentTextFieldStyle}
                                             
                                             error={ errors.accountNumber ? true : false }
                                             { ...register('accountNumber') }
@@ -348,16 +347,15 @@ const FL_XfConfirmationModalComponent: React.FC<_Props> = ({
                                             inputMode='text'
                                             label=''
                                             defaultValue={formDetails.bankName}
-                                            InputLabelProps={{
-                                                style: { color: '#c1c1c1', fontWeight: "400" },
-                                            }}
+                                            
                                             InputProps={{
                                                 sx: {
                                                     borderRadius: "16px",
                                                 },
                                                 readOnly: true,
                                             }}
-                                            sx={{ ...MuiTextFieldStyle(darkTheme) }}
+
+                                            sx={paymentTextFieldStyle}
                                             
                                             error={ errors.bankName ? true : false }
                                             { ...register('bankName') }
@@ -390,7 +388,7 @@ const FL_XfConfirmationModalComponent: React.FC<_Props> = ({
                                     fullWidth type="submit" 
                                     disabled={ !isValid || isSubmitting } 
                                     sx={{ 
-                                        bgcolor: darkTheme ? "#fff" : "#272727",
+                                        bgcolor: colors.primary,
                                         borderRadius: "17px",
                                         // p: "10px 26px 10px 26px",
                                         p: "16px 25px",
@@ -401,13 +399,13 @@ const FL_XfConfirmationModalComponent: React.FC<_Props> = ({
                                             color: "#797979"
                                         },
                                         "&:hover": {
-                                            bgcolor: darkTheme ? "#fff" : "#272727",
+                                            bgcolor: colors.primary,
                                         },
                                         "&:active": {
-                                            bgcolor: darkTheme ? "#fff" : "#272727",
+                                            bgcolor: colors.primary,
                                         },
                                         "&:focus": {
-                                            bgcolor: darkTheme ? "#fff" : "#272727",
+                                            bgcolor: colors.primary,
                                         },
 
                                         fontWeight: '700',
@@ -415,12 +413,18 @@ const FL_XfConfirmationModalComponent: React.FC<_Props> = ({
                                         lineHeight: "12px",
                                         // letterSpacing: "-0.13px",
                                         // textAlign: 'center',
-                                        color: darkTheme ? "#000" : "#fff",
+                                        color: colors.milk,
                                         textTransform: "none"
                                     }}
                                 >
                                     <span style={{ display: isSubmitting ? "none" : "initial" }}>Save</span>
-                                    <CircularProgress size={25} sx={{ display: isSubmitting ? "initial" : "none", color: "#8638E5", fontWeight: "bold" }} />
+                                    <CircularProgress size={25} 
+                                        sx={{ 
+                                            display: isSubmitting ? "initial" : "none", 
+                                            color: colors.primary,
+                                            fontWeight: "bold" 
+                                        }} 
+                                    />
                                 </Button>
                             </Box>
 

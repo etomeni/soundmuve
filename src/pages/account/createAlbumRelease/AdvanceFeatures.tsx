@@ -16,7 +16,6 @@ import Button from '@mui/material/Button';
 import CircularProgress from '@mui/material/CircularProgress';
 import TextField from '@mui/material/TextField';
 import Grid from '@mui/material/Grid';
-import { ThemeProvider, useTheme } from '@mui/material/styles';
 
 import IconButton from '@mui/material/IconButton';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
@@ -28,11 +27,12 @@ import { createReleaseStore } from '@/state/createReleaseStore';
 // import { apiEndpoint } from '@/util/resources';
 
 import AccountWrapper from '@/components/AccountWrapper';
-import { customTextFieldTheme } from '@/util/mui';
+import { releaseTextFieldStyle } from '@/util/mui';
 import { apiEndpoint } from '@/util/resources';
 import FormControl from '@mui/material/FormControl';
 import LongSelectList from '@/components/LongSelectList';
 import { restCountries } from '@/util/countries';
+import colors from '@/constants/colors';
 
 
 const formSchema = yup.object({
@@ -47,7 +47,6 @@ contriesss.unshift("All");
 
 function CreateAlbumReleaseAdvanceFeatures() {
     const navigate = useNavigate();
-    const outerTheme = useTheme();
     const darkTheme = useSettingStore((state) => state.darkTheme);
     const [soldWorldwide, setSoldWorldwide] = useState(""); // Yes
     const userData = useUserStore((state) => state.userData);
@@ -166,8 +165,8 @@ function CreateAlbumReleaseAdvanceFeatures() {
 
 
     return (
-        <AccountWrapper>
-            <Box sx={{ position: "relative", zIndex: 10 }}>
+        <AccountWrapper bottomSpacing={0} topSpacing={false}>
+            <Box>
 
                 <Box sx={{ display: {xs: 'initial', sm: 'flex'}, height: "100%" }}>
                     <SideNav activePageNumber={2} />
@@ -180,8 +179,8 @@ function CreateAlbumReleaseAdvanceFeatures() {
                                 <IconButton 
                                     onClick={() => navigate(-1)}
                                     sx={{
-                                        color: darkTheme ? "#fff" : "#000", 
-                                        mb: 2,
+                                        color: colors.primary, 
+                                        // mb: 2,
                                         display: {xs: "none", md: "block"}
                                     }}
                                 >
@@ -203,391 +202,364 @@ function CreateAlbumReleaseAdvanceFeatures() {
 
 
                         <Box sx={{my: 3}}>
-                            <ThemeProvider theme={customTextFieldTheme(outerTheme, darkTheme)}>
-                                <form noValidate onSubmit={ handleSubmit(onSubmit) } 
-                                    style={{ width: "100%", maxWidth: "916px" }}
-                                >
-                                    <Box>
-                                        <Grid container spacing="20px" sx={{my: "31px"}}>
-                                            <Grid item
-                                                xs={12} md={4}
-                                                sx={{ alignSelf: "center"}}
-                                            >
-                                                <Typography sx={{
-                                                    fontWeight: "900",
-                                                    fontSize: {xs: "19.28px", md: "20px"},
-                                                    lineHeight: {xs: "15.42px", md: "20px"},
-                                                    letterSpacing: {xs: "-0.1px", md: "-0.13px"}
-                                                }}>
-                                                    Label Name
-                                                </Typography>
+                            <form noValidate onSubmit={ handleSubmit(onSubmit) } 
+                                style={{ width: "100%", maxWidth: "916px" }}
+                            >
+                                <Box>
+                                    <Grid container spacing="20px" sx={{my: "31px"}}>
+                                        <Grid item
+                                            xs={12} md={4}
+                                            sx={{ alignSelf: "center"}}
+                                        >
+                                            <Typography variant='h3' sx={{
+                                                fontWeight: "900",
+                                                fontSize: {xs: "19.28px", md: "20px"},
+                                                lineHeight: {xs: "15.42px", md: "20px"},
+                                                letterSpacing: {xs: "-0.1px", md: "-0.13px"}
+                                            }}> Label Name </Typography>
 
-                                                <Typography sx={{
-                                                    fontWeight: "400",
-                                                    fontSize: {xs: "13.88px", md: "14px"},
-                                                    lineHeight: {xs: "9.25px", md: "12px"},
-                                                    letterSpacing: {xs: "-0.1px", md: "-0.13px"},
-                                                    mt: "9px"
-                                                }}>
-                                                    Optional
-                                                </Typography>
-                                            </Grid>
-
-                                            <Grid item
-                                                xs={12} md={8}
-                                                sx={{ alignSelf: "center" }}
-                                            >
-                                                <TextField 
-                                                    variant="outlined" 
-                                                    fullWidth 
-                                                    id='labelName'
-                                                    type='text'
-                                                    label=''
-                                                    inputMode='text'
-                                                    defaultValue=""
-                                                    InputLabelProps={{
-                                                        style: { color: '#c1c1c1', fontWeight: "400" },
-                                                    }}
-                                                    InputProps={{
-                                                        sx: {
-                                                            borderRadius: "16px",
-                                                            maxWidth: {xs: "337px", md: "100%"}
-                                                        },
-                                                    }}
-                                                    
-                                                    error={ errors.labelName ? true : false }
-                                                    { ...register('labelName') }
-                                                />
-                                                { errors.labelName && <Box sx={{fontSize: 13, color: "red", textAlign: "left"}}>{ errors.labelName?.message }</Box> }
-                                            </Grid>
+                                            <Typography sx={{
+                                                fontWeight: "400",
+                                                fontSize: {xs: "13.88px", md: "14px"},
+                                                lineHeight: {xs: "9.25px", md: "12px"},
+                                                letterSpacing: {xs: "-0.1px", md: "-0.13px"},
+                                                mt: "9px"
+                                            }}> Optional </Typography>
                                         </Grid>
 
-                                        <Grid container spacing="20px" sx={{my: "31px"}}>
-                                            <Grid item
-                                                xs={12} md={4}
-                                                sx={{ alignSelf: "center"}}
-                                            >
-                                                <Typography sx={{
-                                                    fontWeight: "900",
-                                                    fontSize: {xs: "19.28px", md: "20px"},
-                                                    lineHeight: {xs: "15.42px", md: "20px"},
-                                                    letterSpacing: {xs: "-0.1px", md: "-0.13px"}
-                                                }}>
-                                                    Recording Location
-                                                </Typography>
+                                        <Grid item xs={12} md={8} sx={{ alignSelf: "center" }} >
+                                            <TextField 
+                                                variant="outlined" 
+                                                fullWidth 
+                                                id='labelName'
+                                                type='text'
+                                                label=''
+                                                inputMode='text'
+                                                defaultValue=""
+                                                InputProps={{
+                                                    sx: {
+                                                        borderRadius: "16px",
+                                                        maxWidth: {xs: "337px", md: "100%"}
+                                                    },
+                                                }}
+                                                sx={releaseTextFieldStyle}
+                                                error={ errors.labelName ? true : false }
+                                                { ...register('labelName') }
+                                            />
+                                            { errors.labelName && <Box sx={{fontSize: 13, color: "red", textAlign: "left"}}>{ errors.labelName?.message }</Box> }
+                                        </Grid>
+                                    </Grid>
 
-                                                <Typography sx={{
-                                                    fontWeight: "400",
-                                                    fontSize: {xs: "13.88px", md: "14px"},
-                                                    lineHeight: {xs: "9.25px", md: "12px"},
-                                                    letterSpacing: {xs: "-0.1px", md: "-0.13px"},
-                                                    mt: "9px"
-                                                }}>
-                                                    Optional
-                                                </Typography>
-                                            </Grid>
+                                    <Grid container spacing="20px" sx={{my: "31px"}}>
+                                        <Grid item xs={12} md={4} sx={{ alignSelf: "center"}} >
+                                            <Typography variant='h3' sx={{
+                                                fontWeight: "900",
+                                                fontSize: {xs: "19.28px", md: "20px"},
+                                                lineHeight: {xs: "15.42px", md: "20px"},
+                                                letterSpacing: {xs: "-0.1px", md: "-0.13px"}
+                                            }}> Recording Location </Typography>
 
-                                            <Grid item
-                                                xs={12} md={8}
-                                                sx={{ alignSelf: "center" }}
-                                            >
-                                                <TextField 
-                                                    variant="outlined" 
-                                                    fullWidth 
-                                                    id='recordingLocation'
-                                                    type='text'
-                                                    label=''
-                                                    inputMode='text'
-                                                    defaultValue=""
-                                                    InputLabelProps={{
-                                                        style: { color: '#c1c1c1', fontWeight: "400" },
-                                                    }}
-                                                    InputProps={{
-                                                        sx: {
-                                                            borderRadius: "16px",
-                                                            maxWidth: {xs: "337px", md: "100%"}
-                                                        },
-                                                    }}
-                                                    
-                                                    error={ errors.recordingLocation ? true : false }
-                                                    { ...register('recordingLocation') }
-                                                />
-                                                { errors.recordingLocation && <Box sx={{fontSize: 13, color: "red", textAlign: "left"}}>{ errors.recordingLocation?.message }</Box> }
-                                            </Grid>
+                                            <Typography sx={{
+                                                fontWeight: "400",
+                                                fontSize: {xs: "13.88px", md: "14px"},
+                                                lineHeight: {xs: "9.25px", md: "12px"},
+                                                letterSpacing: {xs: "-0.1px", md: "-0.13px"},
+                                                mt: "9px"
+                                            }}> Optional </Typography>
                                         </Grid>
 
-                                        <Grid container spacing="20px" sx={{my: "31px"}}>
-                                            <Grid item xs={12} md={4} sx={{display: {xs: "none", md: "initial"}}}></Grid>
+                                        <Grid item xs={12} md={8}
+                                            sx={{ alignSelf: "center" }}
+                                        >
+                                            <TextField 
+                                                variant="outlined" 
+                                                fullWidth 
+                                                id='recordingLocation'
+                                                type='text'
+                                                label=''
+                                                inputMode='text'
+                                                defaultValue=""
+                                                InputProps={{
+                                                    sx: {
+                                                        borderRadius: "16px",
+                                                        maxWidth: {xs: "337px", md: "100%"}
+                                                    },
+                                                }}
+                                                sx={releaseTextFieldStyle}
+                                                error={ errors.recordingLocation ? true : false }
+                                                { ...register('recordingLocation') }
+                                            />
+                                            { errors.recordingLocation && <Box sx={{fontSize: 13, color: "red", textAlign: "left"}}>{ errors.recordingLocation?.message }</Box> }
+                                        </Grid>
+                                    </Grid>
 
-                                            <Grid item xs={12} md={8}>
+                                    <Grid container spacing="20px" sx={{my: "31px"}}>
+                                        <Grid item xs={12} md={4} sx={{display: {xs: "none", md: "initial"}}}></Grid>
+
+                                        <Grid item xs={12} md={8}>
+                                            <Box
+                                                sx={{
+                                                    display: "flex",
+                                                    flexDirection: "column",
+                                                    // justifyContent: "center",
+                                                    alignItems: {xs: "center", sm: "initial"}
+                                                }}
+                                            >
+                                                <Typography
+                                                    sx={{
+                                                        fontWeight: "900",
+                                                        fontSize: {xs: "12.4px", md: "20px"},
+                                                        lineHeight: {xs: "19.07px", md: "40px"},
+                                                        letterSpacing: {xs: "-0.06px", md: "-0.13px"}
+                                                    }}
+                                                >
+                                                    Can this release be sold worldwide?
+                                                </Typography>
+
                                                 <Box
                                                     sx={{
                                                         display: "flex",
-                                                        flexDirection: "column",
-                                                        // justifyContent: "center",
-                                                        alignItems: {xs: "center", sm: "initial"}
+                                                        flexDirection: "row",
+                                                        alignItems: "center",
+                                                        gap: soldWorldwide == "Yes" ? "1px" : "15px",
+                                                        mt: "21px",
                                                     }}
                                                 >
-                                                    <Typography
-                                                        sx={{
-                                                            fontWeight: "900",
-                                                            fontSize: {xs: "12.4px", md: "20px"},
-                                                            lineHeight: {xs: "19.07px", md: "40px"},
-                                                            letterSpacing: {xs: "-0.06px", md: "-0.13px"}
-                                                        }}
-                                                    >
-                                                        Can this release be sold worldwide?
-                                                    </Typography>
+                                                    <Box>
+                                                        <Box 
+                                                            sx={{
+                                                                p: {xs: "10.18px 19.68px 10.18px 19.68px", md: "15px 29px 15px 29px"},
+                                                                borderRadius: {xs: "8.14px", md: "12px"},
 
-                                                    <Box
-                                                        sx={{
-                                                            display: "flex",
-                                                            flexDirection: "row",
-                                                            alignItems: "center",
-                                                            gap: soldWorldwide == "Yes" ? "1px" : "15px",
-                                                            mt: "21px",
-                                                        }}
-                                                    >
-                                                        <Box>
-                                                            <Box 
+                                                                border: `1px solid ${soldWorldwide == "Yes" ? colors.primary : colors.dark}`,
+                                                                background: soldWorldwide == "Yes" ? colors.primary : colors.milk,
+                                                                color: soldWorldwide == "Yes" ? colors.milk : colors.dark,
+
+                                                                cursor: "pointer",
+                                                                display: "inline-block"
+                                                            }}
+                                                            onClick={() => {
+                                                                setValue("soldWorldwide", "Yes", {shouldDirty: true, shouldTouch: true, shouldValidate: true});
+                                                                setSoldWorldwide("Yes");
+                                                            }}
+                                                        >
+                                                            <Typography 
                                                                 sx={{
-                                                                    p: {xs: "10.18px 19.68px 10.18px 19.68px", md: "15px 29px 15px 29px"},
-                                                                    borderRadius: {xs: "8.14px", md: "12px"},
-
-                                                                    background: soldWorldwide == "Yes" ? "#644986" : darkTheme ? "#fff" : "#272727",
-                                                                    color: soldWorldwide == "Yes" ? "#fff" : darkTheme ? "#000" : "#fff",
-
-                                                                    cursor: "pointer",
-                                                                    display: "inline-block"
+                                                                    fontWeight: '900',
+                                                                    fontSize: {xs: "10.18px", md: "15px"},
+                                                                    lineHeight: {xs: "8.82px", md: "13px"},
+                                                                    letterSpacing: {xs: "-0.09px", md: "-0.13px"},
+                                                                    textAlign: 'center',
                                                                 }}
-                                                                onClick={() => {
-                                                                    setValue("soldWorldwide", "Yes", {shouldDirty: true, shouldTouch: true, shouldValidate: true});
-                                                                    setSoldWorldwide("Yes");
-                                                                }}
-                                                            >
-                                                                <Typography 
-                                                                    sx={{
-                                                                        fontWeight: '900',
-                                                                        fontSize: {xs: "10.18px", md: "15px"},
-                                                                        lineHeight: {xs: "8.82px", md: "13px"},
-                                                                        letterSpacing: {xs: "-0.09px", md: "-0.13px"},
-                                                                        textAlign: 'center',
-                                                                    }}
-                                                                > Yes </Typography>
-                                                            </Box>
-
-                                                            { soldWorldwide == "Yes" ? 
-                                                                <CheckCircleIcon 
-                                                                    sx={{ 
-                                                                        color: darkTheme ? "#fff" : "#c4c4c4",
-                                                                        position: "relative", 
-                                                                        left: -15,
-                                                                        top: -8,
-                                                                    }} 
-                                                                /> : <></>
-                                                            }
+                                                            > Yes </Typography>
                                                         </Box>
 
-                                                        <Box>
-                                                            <Box 
-                                                                sx={{
-                                                                    p: {xs: "10.18px 19.68px 10.18px 19.68px", md: "15px 29px 15px 29px"},
-                                                                    borderRadius: {xs: "8.14px", md: "12px"},
-
-                                                                    background: soldWorldwide == "No" ? "#644986" : darkTheme ? "#fff" : "#272727",
-                                                                    color: soldWorldwide == "No" ? "#fff" : darkTheme ? "#000" : "#fff",
-
-                                                                    cursor: "pointer",
-                                                                    display: "inline-block"
-                                                                }}
-                                                                onClick={() => {
-                                                                    setValue("soldWorldwide", "No", {shouldDirty: true, shouldTouch: true, shouldValidate: true});
-                                                                    setSoldWorldwide("No");
-                                                                }}
-                                                            >
-                                                                <Typography 
-                                                                    sx={{
-                                                                        fontWeight: '900',
-                                                                        fontSize: {xs: "10.18px", md: "15px"},
-                                                                        lineHeight: {xs: "8.82px", md: "13px"},
-                                                                        letterSpacing: {xs: "-0.09px", md: "-0.13px"},
-                                                                        textAlign: 'center',
-                                                                    }}
-                                                                > No </Typography>
-                                                            </Box>
-
-                                                            { soldWorldwide == "No" ? 
-                                                                <CheckCircleIcon 
-                                                                    sx={{ 
-                                                                        color: darkTheme ? "#fff" : "#c4c4c4",
-                                                                        position: "relative", 
-                                                                        left: -15,
-                                                                        top: -8,
-                                                                    }} 
-                                                                /> : <></>
-                                                            }
-                                                        </Box>
+                                                        { soldWorldwide == "Yes" ? 
+                                                            <CheckCircleIcon 
+                                                                sx={{ 
+                                                                    color: colors.tertiary,
+                                                                    position: "relative", 
+                                                                    left: -15,
+                                                                    top: -8,
+                                                                }} 
+                                                            /> : <></>
+                                                        }
                                                     </Box>
 
-                                                    { soldWorldwide == "No" ? 
-                                                        <FormControl fullWidth sx={{mt: 2}}>
+                                                    <Box>
+                                                        <Box 
+                                                            sx={{
+                                                                p: {xs: "10.18px 19.68px 10.18px 19.68px", md: "15px 29px 15px 29px"},
+                                                                borderRadius: {xs: "8.14px", md: "12px"},
 
-                                                            <Typography id="soldCountriesSelect" sx={{color: "grey"}}>
-                                                                Where would you like your music to be sold
-                                                            </Typography>
 
-                                                            <LongSelectList 
-                                                                options={contriesss}
-                                                                darkTheme={darkTheme}
-                                                                handleSelected={handleSoldCountriesSelect}
-                                                                selectedValue={selectSoldCountries}
-                                                                error={ errors.soldWorldwide ? true : false }
-                                                            />
-                                                        </FormControl>
-                                                        : <></>
-                                                    }
+                                                                border: `1px solid ${soldWorldwide == "No" ? colors.primary : colors.dark}`,
+                                                                background: soldWorldwide == "No" ? colors.primary : colors.milk,
+                                                                color: soldWorldwide == "No" ? colors.milk : colors.dark,
 
-                                                    { errors.soldWorldwide && <Box sx={{fontSize: 13, color: "red", textAlign: "left"}}>{ errors.soldWorldwide?.message }</Box> }
+                                                                cursor: "pointer",
+                                                                display: "inline-block"
+                                                            }}
+                                                            onClick={() => {
+                                                                setValue("soldWorldwide", "No", {shouldDirty: true, shouldTouch: true, shouldValidate: true});
+                                                                setSoldWorldwide("No");
+                                                            }}
+                                                        >
+                                                            <Typography 
+                                                                sx={{
+                                                                    fontWeight: '900',
+                                                                    fontSize: {xs: "10.18px", md: "15px"},
+                                                                    lineHeight: {xs: "8.82px", md: "13px"},
+                                                                    letterSpacing: {xs: "-0.09px", md: "-0.13px"},
+                                                                    textAlign: 'center',
+                                                                }}
+                                                            > No </Typography>
+                                                        </Box>
+
+                                                        { soldWorldwide == "No" ? 
+                                                            <CheckCircleIcon 
+                                                                sx={{ 
+                                                                    color: colors.tertiary,
+                                                                    position: "relative", 
+                                                                    left: -15,
+                                                                    top: -8,
+                                                                }} 
+                                                            /> : <></>
+                                                        }
+                                                    </Box>
                                                 </Box>
-                                            </Grid>
+
+                                                { soldWorldwide == "No" ? 
+                                                    <FormControl fullWidth sx={{mt: 2}}>
+
+                                                        <Typography id="soldCountriesSelect" sx={{color: "grey"}}>
+                                                            Where would you like your music to be sold
+                                                        </Typography>
+
+                                                        <LongSelectList 
+                                                            options={contriesss}
+                                                            darkTheme={darkTheme}
+                                                            handleSelected={handleSoldCountriesSelect}
+                                                            selectedValue={selectSoldCountries}
+                                                            error={ errors.soldWorldwide ? true : false }
+                                                        />
+                                                    </FormControl>
+                                                    : <></>
+                                                }
+
+                                                { errors.soldWorldwide && <Box sx={{fontSize: 13, color: "red", textAlign: "left"}}>{ errors.soldWorldwide?.message }</Box> }
+                                            </Box>
+                                        </Grid>
+                                    </Grid>
+
+                                    <Grid container spacing="20px" sx={{my: "31px"}}>
+                                        <Grid item xs={12} md={4} >
+                                            <Typography variant='h3' sx={{
+                                                fontWeight: "900",
+                                                fontSize: {xs: "19.28px", md: "20px"},
+                                                lineHeight: {xs: "15.42px", md: "20px"},
+                                                letterSpacing: {xs: "-0.1px", md: "-0.13px"}
+                                            }}> UPC/EAN Code </Typography>
+
+                                            <Typography sx={{
+                                                fontWeight: "400",
+                                                fontSize: {xs: "13.88px", md: "14px"},
+                                                lineHeight: {xs: "9.25px", md: "12px"},
+                                                letterSpacing: {xs: "-0.1px", md: "-0.13px"},
+                                                mt: "9px"
+                                            }}> Optional </Typography>
                                         </Grid>
 
-                                        <Grid container spacing="20px" sx={{my: "31px"}}>
-                                            <Grid item xs={12} md={4} >
-                                                <Typography sx={{
-                                                    fontWeight: "900",
-                                                    fontSize: {xs: "19.28px", md: "20px"},
-                                                    lineHeight: {xs: "15.42px", md: "20px"},
-                                                    letterSpacing: {xs: "-0.1px", md: "-0.13px"}
-                                                }}>
-                                                    UPC/EAN Code
-                                                </Typography>
-
-                                                <Typography sx={{
-                                                    fontWeight: "400",
-                                                    fontSize: {xs: "13.88px", md: "14px"},
-                                                    lineHeight: {xs: "9.25px", md: "12px"},
-                                                    letterSpacing: {xs: "-0.1px", md: "-0.13px"},
-                                                    mt: "9px"
-                                                }}>
-                                                    Optional
-                                                </Typography>
-                                            </Grid>
-
-                                            <Grid item xs={12} md={8}>
-                                                <TextField 
-                                                    variant="outlined" 
-                                                    fullWidth 
-                                                    id='UPC_EANcode'
-                                                    type='text'
-                                                    label=''
-                                                    inputMode='text'
-                                                    defaultValue=""
-                                                    InputLabelProps={{
-                                                        style: { color: '#c1c1c1', fontWeight: "400" },
-                                                    }}
-                                                    InputProps={{
-                                                        sx: {
-                                                            borderRadius: "16px",
-                                                            maxWidth: {xs: "337px", md: "100%"}
-                                                        },
-                                                    }}
-                                                    
-                                                    error={ errors.UPC_EANcode ? true : false }
-                                                    { ...register('UPC_EANcode') }
-                                                />
-                                                <Typography
-                                                    sx={{
-                                                        fontWeight: "300",
-                                                        fontSize: {xs: "11.44px", md: "16px"},
-                                                        lineHeight: {xs: "11.58px", md: "16px"},
-                                                        letterSpacing: {xs: "-0.09px", md: "-0.13px"},
-                                                        color: "#fff",
-                                                        my: 1
-                                                    }}
-                                                >
-                                                    If you have one, please enter it above. Otherwise, we will generate one for you
-                                                </Typography>
-                                                { errors.UPC_EANcode && <Box sx={{fontSize: 13, color: "red", textAlign: "left"}}>{ errors.UPC_EANcode?.message }</Box> }
-                                            </Grid>
-                                        </Grid>
-                                    </Box>
-
-                                    {
-                                        apiResponse.display && (
-                                            <Stack sx={{ width: '100%', mt: 5, mb: 2 }}>
-                                                <Alert severity={apiResponse.status ? "success" : "error"}>{apiResponse.message}</Alert>
-                                            </Stack>
-                                        )
-                                    }
-
-                                    <Box mt="100px">
-                                        <Stack direction="row" justifyContent="space-between" spacing="20px" alignItems="center">
-                                            <Button variant="contained" 
-                                                fullWidth type='button'
-                                                onClick={() => navigate("/account/create-album-release-details")}
-                                                sx={{ 
-                                                    bgcolor: darkTheme ? "#4C4C4C57" : "#9c9c9c",
-                                                    maxWidth: "312px",
-                                                    "&.Mui-disabled": {
-                                                        background: "#9c9c9c",
-                                                        color: "#797979"
+                                        <Grid item xs={12} md={8}>
+                                            <TextField 
+                                                variant="outlined" 
+                                                fullWidth 
+                                                id='UPC_EANcode'
+                                                type='text'
+                                                label=''
+                                                inputMode='text'
+                                                defaultValue=""
+                                                InputProps={{
+                                                    sx: {
+                                                        borderRadius: "16px",
+                                                        maxWidth: {xs: "337px", md: "100%"}
                                                     },
-                                                    "&:hover": {
-                                                        bgcolor: darkTheme ? "#4C4C4C57" : "#9c9c9c",
-                                                    },
-                                                    "&:active": {
-                                                        bgcolor: darkTheme ? "#4C4C4C57" : "#9c9c9c",
-                                                    },
-                                                    "&:focus": {
-                                                        bgcolor: darkTheme ? "#4C4C4C57" : "#9c9c9c",
-                                                    },
-                                                    color: "#fff",
-                                                    borderRadius: "12px",
-                                                    my: 3, py: 1.5,
-                                                    fontSize: {md: "15.38px"},
-                                                    fontWeight: "900",
-                                                    letterSpacing: "-0.12px",
-                                                    textTransform: "none"
                                                 }}
-                                            > Previous step </Button>
-
-                                            <Button variant="contained" 
-                                                fullWidth type="submit" 
-                                                disabled={ !isValid || isSubmitting } 
-                                                sx={{ 
-                                                    bgcolor: "#644986",
-                                                    maxWidth: "312px",
-                                                    "&.Mui-disabled": {
-                                                        background: "#9c9c9c",
-                                                        color: "#797979"
-                                                    },
-                                                    "&:hover": {
-                                                        bgcolor: "#644986",
-                                                    },
-                                                    "&:active": {
-                                                        bgcolor: "#644986",
-                                                    },
-                                                    "&:focus": {
-                                                        bgcolor: "#644986",
-                                                    },
+                                                sx={releaseTextFieldStyle}
+                                                error={ errors.UPC_EANcode ? true : false }
+                                                { ...register('UPC_EANcode') }
+                                            />
+                                            <Typography
+                                                sx={{
+                                                    fontWeight: "300",
+                                                    fontSize: {xs: "11.44px", md: "16px"},
+                                                    lineHeight: {xs: "11.58px", md: "16px"},
+                                                    letterSpacing: {xs: "-0.09px", md: "-0.13px"},
                                                     color: "#fff",
-                                                    borderRadius: "12px",
-                                                    my: 3, py: 1.5,
-                                                    fontSize: {md: "15.38px"},
-                                                    fontWeight: "900",
-                                                    letterSpacing: "-0.12px",
-                                                    textTransform: "none"
+                                                    my: 1
                                                 }}
                                             >
-                                                <span style={{ display: isSubmitting ? "none" : "initial" }}>Next</span>
-                                                <CircularProgress size={25} sx={{ display: isSubmitting ? "initial" : "none", color: "#8638E5", fontWeight: "bold" }} />
-                                            </Button>
-                                        </Stack>
-                                    </Box>
+                                                If you have one, please enter it above. Otherwise, we will generate one for you
+                                            </Typography>
+                                            { errors.UPC_EANcode && <Box sx={{fontSize: 13, color: "red", textAlign: "left"}}>{ errors.UPC_EANcode?.message }</Box> }
+                                        </Grid>
+                                    </Grid>
+                                </Box>
 
-                                </form>
-                            </ThemeProvider>
+                                {
+                                    apiResponse.display && (
+                                        <Stack sx={{ width: '100%', mt: 5, mb: 2 }}>
+                                            <Alert severity={apiResponse.status ? "success" : "error"}>{apiResponse.message}</Alert>
+                                        </Stack>
+                                    )
+                                }
+
+                                <Box mt="100px">
+                                    <Stack direction="row" justifyContent="space-between" spacing="20px" alignItems="center">
+                                        <Button variant="contained" 
+                                            fullWidth type='button'
+                                            onClick={() => navigate("/account/create-album-release-details")}
+                                            sx={{ 
+                                                maxWidth: "312px",
+                                                bgcolor: "#9c9c9c",
+                                                color: "#fff",
+                                                "&.Mui-disabled": {
+                                                    background: "#9c9c9c",
+                                                    color: "#797979"
+                                                },
+                                                "&:hover": {
+                                                    bgcolor: "#4C4C4C57",
+                                                },
+                                                "&:active": {
+                                                    bgcolor: "#4C4C4C57",
+                                                },
+                                                "&:focus": {
+                                                    bgcolor: "#4C4C4C57",
+                                                },
+                                                borderRadius: "12px",
+                                                my: 3, py: 1.5,
+                                                fontSize: {md: "15.38px"},
+                                                fontWeight: "900",
+                                                letterSpacing: "-0.12px",
+                                                textTransform: "none"
+                                            }}
+                                        > Previous step </Button>
+
+                                        <Button variant="contained" 
+                                            fullWidth type="submit" 
+                                            disabled={ !isValid || isSubmitting } 
+                                            sx={{ 
+                                                bgcolor: colors.primary,
+                                                color: colors.milk,
+                                                maxWidth: "312px",
+                                                "&.Mui-disabled": {
+                                                    background: "#9c9c9c",
+                                                    color: "#797979"
+                                                },
+                                                "&:hover": {
+                                                    bgcolor: colors.primary,
+                                                },
+                                                "&:active": {
+                                                    bgcolor: colors.primary,
+                                                },
+                                                "&:focus": {
+                                                    bgcolor: colors.primary,
+                                                },
+                                                borderRadius: "12px",
+                                                my: 3, py: 1.5,
+                                                fontSize: {md: "15.38px"},
+                                                fontWeight: "900",
+                                                letterSpacing: "-0.12px",
+                                                textTransform: "none"
+                                            }}
+                                        >
+                                            <span style={{ display: isSubmitting ? "none" : "initial" }}>Next</span>
+                                            <CircularProgress size={25} sx={{ display: isSubmitting ? "initial" : "none", color: "#8638E5", fontWeight: "bold" }} />
+                                        </Button>
+                                    </Stack>
+                                </Box>
+
+                            </form>
                         </Box>
                     </Box>
                 </Box>

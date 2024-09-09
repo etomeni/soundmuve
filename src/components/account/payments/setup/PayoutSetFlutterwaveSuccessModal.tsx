@@ -7,10 +7,11 @@ import Typography from '@mui/material/Typography';
 import CloseIcon from '@mui/icons-material/Close';
 import Stack from '@mui/material/Stack';
 
-import FlutterwaveLogo2 from "@/assets/images/FlutterwaveLogo2.png";
+// import FlutterwaveLogo2 from "@/assets/images/FlutterwaveLogo2.png";
 
-import { useSettingStore } from '@/state/settingStore';
+// import { useSettingStore } from '@/state/settingStore';
 import successImg from "@/assets/images/successImg.gif";
+import colors from '@/constants/colors';
 
 
 interface _Props {
@@ -22,7 +23,7 @@ const PayoutFL_SuccessModalComponent: React.FC<_Props> = ({
     openModal, closeModal
 }) => {
     // const [useEmail_n_PhoneNo, setUseEmail_n_PhoneNo] = useState(false);
-    const darkTheme = useSettingStore((state) => state.darkTheme);
+    // const darkTheme = useSettingStore((state) => state.darkTheme);
 
 
     return (
@@ -43,27 +44,27 @@ const PayoutFL_SuccessModalComponent: React.FC<_Props> = ({
             >
                 <Box 
                     sx={{
-                        bgcolor: darkTheme ? "#272727" : "#fff",
+                        bgcolor: colors.bg,
+                        color: colors.dark,
                         width: "100%",
                         maxWidth: {xs: "92%", sm: "496px"},
                         // maxHeight: "605px",
                         maxHeight: "95%",
                         borderRadius: "12px",
                         p: "25px",
-                        color: darkTheme ? "#fff" : "#000",
-                        overflow: "scroll"
+                        overflow: "scroll",
                     }}
                 >
                     <Box  id="payout-modal-title">
                         <Box sx={{textAlign: "right"}}>
                             <IconButton onClick={() => closeModal() }>
                                 <CloseIcon 
-                                    sx={{color: darkTheme ? "#fff" : "#000", fontSize: "30px"}} 
+                                    sx={{color: colors.primary, fontSize: "30px"}} 
                                 />
                             </IconButton>
                         </Box>
 
-                        <Box sx={{textAlign: 'center'}}>
+                        {/* <Box sx={{textAlign: 'center'}}>
                             <img
                                 src={FlutterwaveLogo2} alt='Flutterwave Logo Image'
                                 style={{
@@ -71,7 +72,7 @@ const PayoutFL_SuccessModalComponent: React.FC<_Props> = ({
                                     width: "60%"
                                 }}
                             />
-                        </Box>
+                        </Box> */}
 
                         <Typography variant='body2'
                             sx={{
@@ -79,7 +80,8 @@ const PayoutFL_SuccessModalComponent: React.FC<_Props> = ({
                                 fontSize: '12px',
                                 textAlign: 'center'
                             }}
-                        >Confirm payout details</Typography>
+                        >Successful</Typography>
+                        {/* >Confirm payout details</Typography> */}
                     </Box>
 
                     <Box id="payout-modal-description" sx={{mt: 5}}>
@@ -104,8 +106,10 @@ const PayoutFL_SuccessModalComponent: React.FC<_Props> = ({
                                 mt: 3
                             }}
                         >
-                            <span style={{ fontWeight: 'bold' }}>Note: </span>
-                            Every detail provides would be used to process your pay out 
+                            Congratulations, your have successfully set out your pay out
+
+                            {/* <span style={{ fontWeight: 'bold' }}>Note: </span>
+                            Every detail provides would be used to process your pay out  */}
                         </Typography>
                     </Box>
                 </Box>

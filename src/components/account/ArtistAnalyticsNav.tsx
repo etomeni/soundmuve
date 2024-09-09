@@ -4,17 +4,18 @@ import { useNavigate } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
+import colors from '@/constants/colors';
 
 
 interface _Props {
     currentPage: string,
     accountType: string,
-    darkTheme: boolean,
+    darkTheme?: boolean,
 }
 
 
 const ArtistAnalyticsNavComponent: React.FC<_Props> = ({
-    currentPage, darkTheme, accountType
+    currentPage, accountType
 }) => {
     const navigate = useNavigate();
 
@@ -26,8 +27,9 @@ const ArtistAnalyticsNavComponent: React.FC<_Props> = ({
                     sx={{
                         p: {xs: "10.18px 19.68px 10.18px 19.68px", md: "15px 29px 15px 29px"},
                         borderRadius: {xs: "8.14px", md: "12px"},
-                        background: currentPage == "balance-history" ? "#644986" : darkTheme ? "#fff" : "#E0E0E0",
-                        color: currentPage == "balance-history" ? "#fff" : darkTheme ? "#000" : "#313131",
+                        border: `1px solid ${colors.primary}`,
+                        background: currentPage == "balance-history" ? colors.primary : colors.bg,
+                        color: currentPage == "balance-history" ? colors.milk : colors.primary,
                         cursor: "pointer",
                         display: "inline-block"
                     }}
@@ -48,10 +50,9 @@ const ArtistAnalyticsNavComponent: React.FC<_Props> = ({
                     sx={{
                         p: {xs: "10.18px 19.68px 10.18px 19.68px", md: "15px 29px 15px 29px"},
                         borderRadius: {xs: "8.14px", md: "12px"},
-                        // background: "#644986",
-                        // color: "#fff",
-                        background: currentPage == "sales-report" ? "#644986" : darkTheme ? "#fff" : "#E0E0E0",
-                        color: currentPage == "sales-report" ? "#fff" : darkTheme ? "#000" : "#313131",
+                        border: `1px solid ${colors.primary}`,
+                        background: currentPage == "sales-report" ? colors.primary : colors.bg,
+                        color: currentPage == "sales-report" ? colors.milk : colors.primary,
                         cursor: "pointer",
                         display: "inline-block"
                     }}
@@ -72,10 +73,11 @@ const ArtistAnalyticsNavComponent: React.FC<_Props> = ({
                     sx={{
                         p: {xs: "10.18px 19.68px 10.18px 19.68px", md: "15px 29px 15px 29px"},
                         borderRadius: {xs: "8.14px", md: "12px"},
-                        // background: darkTheme ? "#fff" : "#E0E0E0",
+                        // background: colors.bg,
                         // color: darkTheme ? "#000" : "#313131",
-                        background: currentPage == "analytics-reach" ? "#644986" : darkTheme ? "#fff" : "#E0E0E0",
-                        color: currentPage == "analytics-reach" ? "#fff" : darkTheme ? "#000" : "#313131",
+                        border: `1px solid ${colors.primary}`,
+                        background: currentPage == "analytics-reach" ? colors.primary : colors.bg,
+                        color: currentPage == "analytics-reach" ? colors.milk : colors.primary,
                         cursor: "pointer",
                         display: "inline-block"
                     }}

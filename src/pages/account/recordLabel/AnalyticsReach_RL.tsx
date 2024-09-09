@@ -16,6 +16,7 @@ import AccountWrapper from '@/components/AccountWrapper';
 import { useSettingStore } from '@/state/settingStore';
 import ArtistAnalyticsNavComponent from '@/components/account/ArtistAnalyticsNav';
 import BarChartGraphComponent from '@/components/analytics/BarChartGraph';
+import colors from '@/constants/colors';
 
 const dataset = [
     {
@@ -76,15 +77,11 @@ function AnalyticsReach_RL() {
 
     return (
         <AccountWrapper>
-            <Box sx={{px: {xs: 2, md: 5, lg: 12}, pb: 5, position: "relative", zIndex: 10, mt: {xs: 7, md: 10}  }}>
+            <Box>
                 <Stack direction={"row"} spacing={"20px"} justifyContent={"space-between"} alignItems={"center"}>
                     <IconButton 
                         onClick={() => navigate(-1)}
-                        sx={{
-                            color: darkTheme ? "#fff" : "#000", 
-                            mb: 2,
-                            
-                        }}
+                        sx={{ color: colors.primary, mb: 2 }}
                     >
                         <ChevronLeftIcon sx={{ display: {xs: "none", md: "block"} }} />
                     </IconButton>
@@ -101,7 +98,7 @@ function AnalyticsReach_RL() {
                                 sx={{
                                     color: "#fff",
                                     borderRadius: "8px",
-                                    bgcolor: darkTheme ? "#272727" : "#414141",
+                                    bgcolor: colors.dark,
                                     // textAlign: "center",
                                     fontWeight: "900",
                                     border: "none",
@@ -151,10 +148,7 @@ function AnalyticsReach_RL() {
                 <Box sx={{ mt: 7 }}>
                     <Box
                         sx={{
-                            background: {
-                                xs: darkTheme ? "linear-gradient(89.99deg, #272727 17.33%, rgba(206, 41, 55, 0.5) 99.99%)" : "linear-gradient(89.99deg, #272727 39.65%, #8F1E27 99.99%)",
-                                md: darkTheme ? "rgba(121, 121, 121, 0.25)" : "linear-gradient(89.99deg, #272727 39.65%, #8F1E27 99.99%)"
-                            },
+                            background: colors.dark,
 
                             backdropFilter: "blur(12.5px)",
                             WebkitBackdropFilter: "blur(12.5px)",
@@ -229,6 +223,7 @@ function AnalyticsReach_RL() {
                         </Stack>
                     </Box>
 
+
                     <Box my={5}>
                         <BarChartGraphComponent 
                             darkTheme={darkTheme}
@@ -268,10 +263,10 @@ function AnalyticsReach_RL() {
                         <Stack direction="row" alignItems="center" spacing="15px"
                             onClick={() => navigate('/account/record-label/add-artist')}
                             sx={{
-                                color: darkTheme ? '#C8F452' : '#5B8E14',
+                                color: "#627C1D",
                                 fontWeight: '400',
                                 fontSize: '13px',
-                                border: `1px solid ${ darkTheme ? '#C8F452' : '#5B8E14' }`,
+                                border: `1px solid #627C1D`,
                                 borderRadius: '6.09px',
                                 padding: 1,
                                 width: "130px",
@@ -288,7 +283,7 @@ function AnalyticsReach_RL() {
                                 fontSize: '24px',
                                 lineHeight: '41px',
                                 textAlign: 'center',
-                                color: darkTheme ? '#D9D9D9' : '#272727',
+                                color: colors.dark,
                                 mt: '25px'
                             }}
                         >

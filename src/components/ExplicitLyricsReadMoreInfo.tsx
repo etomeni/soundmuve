@@ -3,12 +3,13 @@ import Box from '@mui/material/Box';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import ClickAwayListener from '@mui/material/ClickAwayListener';
+import colors from '@/constants/colors';
 
 interface myProps {
     iconColor?: string;
 };
 
-const ExplicitLyricsReadMoreInfoComponent: React.FC<myProps> = ({iconColor = "#C8F452"}) => {
+const ExplicitLyricsReadMoreInfoComponent: React.FC<myProps> = ({iconColor = colors.primary}) => {
     // const darkTheme = useSettingStore((state) => state.darkTheme);
     const [openDescriptionTooltip, setOpenDescriptionTooltip] = React.useState(false);
 

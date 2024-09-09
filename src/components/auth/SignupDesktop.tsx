@@ -26,6 +26,7 @@ import colors from '@/constants/colors';
 import bgImage from "@/assets/branded/images/auth/background.png";
 import soundMuve from "@/assets/branded/soundMuve.png";
 import { authMuiTextFieldStyle } from '@/util/mui';
+import WestIcon from '@mui/icons-material/West';
 
 
 const formSchema = yup.object({
@@ -146,17 +147,18 @@ function SignupDesktopComponent() {
                             // backgroundPosition: 'center',
                         }}
                     >
-                        <img src={soundMuve} alt='soundMuve logo'
-                            style={{
-                                width: "100%",
-                                maxWidth: "303.07px",
-                                height: "100%",
-                                maxHeight: "73.57px",
-                                objectFit: "contain",
-                                margin: "auto"
-                            }}
-                            
-                        />
+                        <Link to="/">
+                            <img src={soundMuve} alt='soundMuve logo'
+                                style={{
+                                    width: "100%",
+                                    maxWidth: "303.07px",
+                                    height: "100%",
+                                    maxHeight: "73.57px",
+                                    objectFit: "contain",
+                                    margin: "auto"
+                                }}
+                            />
+                        </Link>
                     </Box>
                 </Grid>
 
@@ -171,7 +173,7 @@ function SignupDesktopComponent() {
 
                                 <Box 
                                     sx={{
-                                        py: 5,
+                                        py: 4,
                                         px: 2,
                                         display: "flex",
                                         flexDirection: "column",
@@ -185,7 +187,7 @@ function SignupDesktopComponent() {
                                         bgcolor: "#FFFFFF",
                                         position: "absolute",
                                         right: 0,
-                                        top: "70px",
+                                        top: "60px",
                                         // overflow: "hidden",
                                         width: "100%",
 
@@ -201,6 +203,9 @@ function SignupDesktopComponent() {
                                             maxWidth: {xs: "470px", md: "100%"},
                                             textAlign: "center"
                                         }}>
+                                            <WestIcon onClick={() => navigate(-1)} 
+                                                sx={{ textAlign: "left", display: "block", cursor: "pointer" }} 
+                                            />
 
                                             <Typography variant='h2' component="h2" sx={{
                                                 fontFamily: "Nohemi",

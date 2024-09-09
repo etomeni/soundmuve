@@ -16,6 +16,7 @@ import Alert from '@mui/material/Alert';
 import IconButton from '@mui/material/IconButton';
 import CircularProgress from '@mui/material/CircularProgress';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
+import WestIcon from '@mui/icons-material/West';
 
 import newPasswordImg from "@/assets/branded/images/auth/newPasswordImg.png";
 import { apiEndpoint } from '@/util/resources';
@@ -130,6 +131,10 @@ function NewPasswordDesktopComponent() {
                             alignSelf: "center"
                         }}
                     >
+                        <WestIcon onClick={() => navigate(-1)} 
+                            sx={{ textAlign: "left", alignSelf: "start", display: "block", cursor: "pointer" }} 
+                        />
+
                         <Box sx={{
                             maxWidth: "214px",
                             width: {xs: `${214 * 0.3}px`, md: `${214 * 0.6}px`},

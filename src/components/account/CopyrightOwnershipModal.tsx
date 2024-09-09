@@ -5,7 +5,7 @@ import Modal from '@mui/material/Modal';
 import Typography from '@mui/material/Typography';
 import CloseIcon from '@mui/icons-material/Close';
 import Stack from '@mui/material/Stack';
-import { useSettingStore } from '@/state/settingStore';
+import colors from '@/constants/colors';
 
 
 interface _Props {
@@ -16,7 +16,6 @@ interface _Props {
 const CopyrightOwnershipModalComponent: React.FC<_Props> = ({
     openModal, closeModal
 }) => {
-    const darkTheme = useSettingStore((state) => state.darkTheme);
 
     return (
         <Modal
@@ -36,12 +35,12 @@ const CopyrightOwnershipModalComponent: React.FC<_Props> = ({
             >
                 <Box 
                     sx={{
-                        bgcolor: darkTheme ? "#272727" : "#fff",
+                        bgcolor: colors.bg,
                         maxWidth: {xs: "92%", sm: "496px"},
                         maxHeight: "605px",
                         borderRadius: "12px",
                         p: "25px",
-                        color: darkTheme ? "#fff" : "#000"
+                        color: colors.dark
                     }}
                 >
                     <Stack id="payout-modal-title" direction="row" alignItems="center" justifyContent="space-between">
@@ -59,7 +58,7 @@ const CopyrightOwnershipModalComponent: React.FC<_Props> = ({
                         <Box sx={{textAlign: "right"}}>
                             <IconButton onClick={() => closeModal() }>
                                 <CloseIcon 
-                                    sx={{color: darkTheme ? "#fff" : "#000", fontSize: "30px"}} 
+                                    sx={{color: colors.primary, fontSize: "30px"}} 
                                 />
                             </IconButton>
                         </Box>

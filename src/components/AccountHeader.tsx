@@ -3,7 +3,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import CssBaseline from '@mui/material/CssBaseline';
-import Divider from '@mui/material/Divider';
+// import Divider from '@mui/material/Divider';
 import Drawer from '@mui/material/Drawer';
 import IconButton from '@mui/material/IconButton';
 import List from '@mui/material/List';
@@ -22,7 +22,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import SettingsPowerIcon from '@mui/icons-material/SettingsPower';
 // import LanguageIcon from '@mui/icons-material/Language';
 // import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
-import LightbulbOutlinedIcon from '@mui/icons-material/LightbulbOutlined';
+// import LightbulbOutlinedIcon from '@mui/icons-material/LightbulbOutlined';
 import AccountCircleOutlined from '@mui/icons-material/AccountCircleOutlined';
 import ClickAwayListener from '@mui/material/ClickAwayListener';
 
@@ -32,25 +32,30 @@ import AssessmentOutlinedIcon from '@mui/icons-material/AssessmentOutlined';
 import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
 
 import SoundMuve from "@/assets/branded/logo.png";
-import SoundMuv from "@/assets/images/SoundMuv.png";
-import light_off from "@/assets/images/light_off.png";
-import { useSettingStore } from '@/state/settingStore';
+import icon from "@/assets/branded/icon.png";
+// import { useSettingStore } from '@/state/settingStore';
 import NewReleaseModalComponent from './account/NewReleaseModal';
 import { useUserStore } from '@/state/userStore';
 import { stringAvatar, stringToColor } from '@/util/resources';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import LanguageTranslate from './LanguageTranslate';
 import { contentWidth } from '@/util/mui';
+import colors from '@/constants/colors';
 
-const drawerWidth = 240;
 
-export default function AccountHeaderComponent() {
+interface _Props {
+    // children: React.ReactNode,
+    headerSpacing?: boolean,
+}
+// const drawerWidth = 240;
+
+export default function AccountHeaderComponent({headerSpacing = false} : _Props) {
     const navigate = useNavigate();
     const location = useLocation();
     const pathname = location.pathname;
     const [mobileOpen, setMobileOpen] = useState(false);
-    const darkTheme = useSettingStore((state) => state.darkTheme);
-    const _setTheme = useSettingStore((state) => state._setTheme);
+    // const darkTheme = useSettingStore((state) => state.darkTheme);
+    // const _setTheme = useSettingStore((state) => state._setTheme);
     const userData = useUserStore((state) => state.userData);
     const _logOutUser = useUserStore((state) => state._logOutUser);
     // const isLoggedIn = useUserStore((state) => state.isLoggedIn);
@@ -126,35 +131,51 @@ export default function AccountHeaderComponent() {
         }
     ];
 
-    const drawer = (
+    const mobileDrawerContent = (
         <Box 
             // onClick={handleDrawerToggle} 
             sx={{ 
                 p: 2, 
-                bgcolor: darkTheme ? "initial" : "#FBFBFB", 
-                color: darkTheme ? "#fff" : "#272727", 
                 height: "100%", 
                 display: "flex", 
                 flexDirection: "column", 
+
+                m: 2,
+                color: "#fff", 
+                // height: "95%", width: "95%", 
+                justifyContent: "center",
+                // alignItems: "center",
+                bgcolor: colors.milk,
+                borderRadius: "21px"
             }}
         >
             <Box>
-                <Box sx={{width: "100%", textAlign: "right" }}>
-                    <CloseIcon onClick={handleDrawerToggle} />
-                </Box>
+                <Stack direction="row" justifyContent="space-between" alignItems="center">
+                    <Box>
+                        <img src={icon} alt="SoundMuve Logo" style={{width: "100%", maxWidth: "24px", cursor: 'pointer' }} />
+                    </Box>
+                    
+                    <Box sx={{width: "100%", textAlign: "right"}}>
+                        <CloseIcon onClick={handleDrawerToggle} sx={{ color: colors.primary }} />
+                    </Box>
+                </Stack>
 
-                <Typography variant="h6" sx={{ my: 2 }}>
-                    <img src={ darkTheme ? SoundMuve : SoundMuv } alt="SoundMuve Logo" style={{width: 130, cursor: 'pointer' }} />
-                </Typography>
+                {/* <Divider color='#c1c1c1' /> */}
 
-                <Divider color='#c1c1c1' />
+                <Box height="30px"></Box>
 
                 <List onClick={handleDrawerToggle}>
                     {
                         userData.teamType == "Artist" ? (
                             menuItems.map((item) => (
                                 <Link key={item.title} to={item.link} style={{ color: "inherit" }}>
-                                    <ListItem disablePadding sx={{bgcolor: item.active ? darkTheme ? "#141414" : "#D9D9D9" : ''}}>
+                                    <ListItem disablePadding 
+                                        sx={{
+                                            bgcolor: item.active ? "#141414" : '',
+                                            borderRadius: "21px",
+                                            color: item.active ? colors.milk : colors.dark
+                                        }}
+                                    >
                                         <ListItemButton>
                                             <ListItemText primary={item.title} />
                                         </ListItemButton>
@@ -164,7 +185,13 @@ export default function AccountHeaderComponent() {
                         ) : (
                             RLmenuItems.map((item) => (
                                 <Link key={item.title} to={item.link} style={{ color: "inherit" }}>
-                                    <ListItem disablePadding sx={{bgcolor: item.active ? darkTheme ? "#141414" : "#D9D9D9" : ''}}>
+                                    <ListItem disablePadding 
+                                        sx={{
+                                            bgcolor: item.active ? "#141414" : '',
+                                            borderRadius: "21px",
+                                            color: item.active ? colors.milk : colors.dark
+                                        }}
+                                    >
                                         <ListItemButton>
                                             { item.icon && 
                                                 <ListItemIcon
@@ -187,112 +214,60 @@ export default function AccountHeaderComponent() {
                         )
                     }
 
-                    {/* <ListItem disablePadding onClick={() => _logOutUser() }>
+                    <ListItem disablePadding sx={{color: colors.dark}}>
                         <ListItemButton>
-                            <ListItemText primary="Log out" />
+                            <ListItemText 
+                                primary={<LanguageTranslate />}
+                            />
                         </ListItemButton>
-                    </ListItem> */}
+                    </ListItem>
                 </List>
             </Box>
 
+            
             <Box sx={{mt: "auto"}}>
-
-                <Box mb="50px">
-                    <Stack direction="row" alignItems="center" spacing="10px" mb="20px">
-                        <Avatar
-                            alt={`${userData.firstName} ${userData.lastName}`}
-                            // src={userData.profile_image || ""}
-                            sx={{ 
-                                boxShadow: "0px 4px 8px -1px rgba(0, 0, 0, 0.1)",
-                                bgcolor: stringToColor(`${userData.firstName.trim()} ${userData.lastName.trim()}`),
-                            }}
-                            children={<Typography sx={{
-                                fontSize: "15px",
-                                fontWeight: "bold"
-                            }}>{stringAvatar(`${userData.firstName.trim()} ${userData.lastName.trim()}`)}</Typography>}
-                        />
-
-                        <Box width={"160px"}>
-                            <Typography noWrap variant="h1" component="h2"
-                                sx={{
-                                    fontWeight: "700",
-                                    fontSize: "16px",
-                                    lineHeight: "16px",
-                                    letterSpacing: "-0.13px",
-                                    color: darkTheme ? "#FBFBFB" : "#272727",
-                                    overflow: "hidden",
-                                }}
-                            >{ userData.firstName.trim() }</Typography>
-
-                            <Typography noWrap
-                                sx={{
-                                    fontWeight: "400",
-                                    fontSize: "13px",
-                                    lineHeight: "12px",
-                                    letterSpacing: "-0.13px",
-                                    color: "#797979",
-                                    mt: 0.5
-                                }}
-                            >Artist</Typography>
-                        </Box>
-                    </Stack>
-
-                    <Stack direction="row" alignItems='center' spacing="10px"
-                        onClick={() => _logOutUser() }
+                <Box onClick={() => { setOpenReleaseModal(true); handleDrawerToggle(); }}
+                    sx={{
+                        padding: "15px",
+                        // border: `0.3px solid ${colors.primary}`,
+                        borderRadius: "12px",
+                        bgcolor: colors.dark,
+                        mb: 3
+                    }}
+                >
+                    <Typography variant='body1'
                         sx={{
-                            width: "fit-content",
-                            bgcolor: darkTheme ? "#FBFBFB" : "#272727",
-                            padding: "5px 7px",
-                            color: darkTheme ? "#000" : "#fff",
-                            borderRadius: "5px",
-                            // mx: "auto",
-                            cursor: "pointer"
+                            fontFamily: "Nohemi",
+                            fontWeight: "600",
+                            fontSize: "13px",
+                            lineHeight: "13.06px",
+                            // letterSpacing: "-0.08px",
+                            textAlign: "center",
+                            color: colors.milk,
                         }}
-                    >
-                        <SettingsPowerIcon sx={{ fontSize: "20px" }} />
-
-                        <Typography
-                            sx={{
-                                fontWeight: "400",
-                                fontSize: "16px",
-                                lineHeight: "5px",
-                                letterSpacing: "-0.08px"
-                            }}
-                        >Log out</Typography>
-                    </Stack>
+                    >Add new release</Typography>
                 </Box>
 
-                <Box sx={{display: "flex", flexDirection: "row", justifyContent: "space-between", gap: 10}}>
-                    <Box onClick={handleDrawerToggle} 
+                <Box onClick={() => { _logOutUser(); handleDrawerToggle(); }}
+                    sx={{
+                        padding: "15px",
+                        border: `0.3px solid ${colors.primary}`,
+                        borderRadius: "12px",
+                        mb: 3,
+                    }}
+                >
+                    <Typography variant='body1'
                         sx={{
-                            display: "flex", 
-                            flexDirection: "row", 
-                            gap: 0, 
-                            color: darkTheme ? "#FFF" : "#000",
-                            border: `1px solid ${ darkTheme ? '#fff' : '#000' }`,
-                            p: 1, 
-                            width: "90px",
-                            borderRadius: 3,
+                            fontFamily: "Nohemi",
+                            fontWeight: "600",
+                            fontSize: "13px",
+                            lineHeight: "13.06px",
+                            // letterSpacing: "-0.08px",
+                            textAlign: "center",
+                            color: colors.primary,
                         }}
-                    >
-                        <LanguageTranslate />
-                    </Box>
-
-                    <IconButton 
-                        onClick={() => _setTheme(!darkTheme)}
-                        sx={{ color: darkTheme ? "#fff" : "#000" }}
-                    >
-                        { darkTheme ? 
-                            <img 
-                                src={light_off} alt='light off icon'
-                                style={{maxWidth: "24px"}}
-                            />
-                            :
-                            <LightbulbOutlinedIcon />
-                        }
-                    </IconButton>
+                    >Logout</Typography>
                 </Box>
-
             </Box>
         </Box>
     );
@@ -328,7 +303,7 @@ export default function AccountHeaderComponent() {
                             fontSize: "14px",
                             lineHeight: "12px",
                             letterSpacing: "-0.13px",
-                            color: darkTheme ? "#FBFBFB" : "#272727",
+                            color: "#FBFBFB",
                             overflow: "hidden",
                         }}
                     >{ userData.firstName.trim() }</Typography>
@@ -408,7 +383,8 @@ export default function AccountHeaderComponent() {
 
                     <Box sx={{flexGrow: 1, display: "flex", justifyContent: 'flex-end', alignItems: "center"}}>
                         <Stack spacing={2} direction="row" alignItems="center" >
-                            <Box sx={{ display: { xs: 'none', sm: 'block' }, alignSelf: "center" }}>
+
+                            {/* <Box sx={{ display: { xs: 'none', sm: 'block' }, alignSelf: "center" }}>
                                 <IconButton 
                                     onClick={() => _setTheme(!darkTheme)}
                                     sx={{color: "#fff"}}
@@ -422,8 +398,7 @@ export default function AccountHeaderComponent() {
                                         <LightbulbOutlinedIcon />
                                     }
                                 </IconButton>
-                            </Box>
-                            
+                            </Box> */}
 
                             <Box
                                 onClick={() => setOpenReleaseModal(true)}
@@ -485,7 +460,7 @@ export default function AccountHeaderComponent() {
                                             slotProps={{
                                                 tooltip: {
                                                     sx: {
-                                                        backgroundColor: darkTheme ? "#272727" : "#D9D9D9",
+                                                        backgroundColor: "#272727",
                                                     },
                                                 },
                                             }}
@@ -527,11 +502,16 @@ export default function AccountHeaderComponent() {
                         keepMounted: true, // Better open performance on mobile.
                     }}
                     sx={{
-                        display: { xs: 'block', sm: 'none' },
-                        '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth, background: "#000" },
+                        display: { xs: 'block', md: 'none' },
+                        '& .MuiDrawer-paper': { 
+                            boxSizing: 'border-box', 
+                            width: "100%", 
+                            background: "transparent" 
+                        },
+                        zIndex: 9999
                     }}
                 >
-                    {drawer}
+                    {mobileDrawerContent}
                 </Drawer>
             </nav>
 
@@ -540,7 +520,7 @@ export default function AccountHeaderComponent() {
                 closeReleaseModal={closeReleaseModal}
             />
 
-            <Toolbar />
+            { headerSpacing ? <Toolbar /> : <></> }
         </>
     );
 }

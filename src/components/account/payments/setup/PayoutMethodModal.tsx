@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
 import Modal from '@mui/material/Modal';
@@ -7,10 +7,11 @@ import CloseIcon from '@mui/icons-material/Close';
 import Stack from '@mui/material/Stack';
 
 // import AccountBalanceOutlinedIcon from '@mui/icons-material/AccountBalanceOutlined';
-import { useSettingStore } from '@/state/settingStore';
+// import { useSettingStore } from '@/state/settingStore';
 
 import FlutterwaveLogo from "@/assets/images/FlutterwaveLogo.png";
 import PayPalLogo from "@/assets/images/PayPalLogo.png";
+import colors from '@/constants/colors';
 // import PayoneerLogo from "@/assets/images/PayoneerLogo.png";
 
 
@@ -26,7 +27,14 @@ interface _Props {
 const PayoutMethodModalComponent: React.FC<_Props> = ({
     openModal, closeModal, openFlutterwavePayoutModal
 }) => {
-    const darkTheme = useSettingStore((state) => state.darkTheme);
+    // const darkTheme = useSettingStore((state) => state.darkTheme);
+
+    useEffect(() => {
+        if (openModal) {
+            handleOpenFlutterwaveModal();
+        }
+    }, [openModal])
+    
 
     const handleOpenFlutterwaveModal = () => {
         closeModal();
@@ -55,18 +63,18 @@ const PayoutMethodModalComponent: React.FC<_Props> = ({
                 }}
             >
                 <Box sx={{
-                    bgcolor: darkTheme ? "#272727" : "#fff",
+                    bgcolor: colors.bg,
                     maxWidth: {xs: "92%", sm: "496px"},
                     width: "100%",
                     maxHeight: "605px",
                     borderRadius: "12px",
                     p: "25px",
-                    color: darkTheme ? "#fff" : "#000"
+                    color: colors.dark
                 }}>
                     <Box sx={{textAlign: "right"}}>
                         <IconButton onClick={() => closeModal() }>
                             <CloseIcon 
-                                sx={{color: darkTheme ? "#fff" : "#000", fontSize: "30px"}} 
+                                sx={{color: colors.primary, fontSize: "30px"}} 
                             />
                         </IconButton>
                     </Box>
@@ -80,9 +88,7 @@ const PayoutMethodModalComponent: React.FC<_Props> = ({
                             textAlign: "center",
                             mt: 2
                         }}
-                    >
-                        Set up payout
-                    </Typography>
+                    > Set up payout </Typography>
 
 
                     <Box id="payout-modal-description" sx={{my: 5}}>
@@ -108,7 +114,7 @@ const PayoutMethodModalComponent: React.FC<_Props> = ({
                                     borderRadius: "8px",
                                     background: "#FFFFFF",
                                     ":hover": {
-                                        boxShadow: "1px 3px 18px 0px #C89FF5"
+                                        boxShadow: `1px 3px 18px 0px ${colors.primary}`
                                     },
                                     overflow: "hidden"
                                 }}
@@ -187,7 +193,7 @@ const PayoutMethodModalComponent: React.FC<_Props> = ({
                                     borderRadius: "8px",
                                     background: "#FFFFFF",
                                     ":hover": {
-                                        boxShadow: "1px 3px 18px 0px #C89FF5"
+                                        boxShadow: `1px 3px 18px 0px ${colors.primary}`
                                     },
                                     overflow: "hidden"
                                 }}
@@ -206,7 +212,8 @@ const PayoutMethodModalComponent: React.FC<_Props> = ({
 
                         <Box sx={{
                             borderRadius: "17px",
-                            bgcolor: darkTheme ? "#fff" : "#272727",
+                            bgcolor: colors.primary,
+                            color: colors.milk,
                             p: "10px 26px 10px 26px",
                             my: "60px",
                             width: "fit-content",
@@ -218,7 +225,6 @@ const PayoutMethodModalComponent: React.FC<_Props> = ({
                                 lineHeight: "12px",
                                 // letterSpacing: "-0.13px",
                                 // textAlign: 'center',
-                                color: darkTheme ? "#000" : "#fff",
                             }}> Confirm </Typography>
                         </Box>
                     </Box>

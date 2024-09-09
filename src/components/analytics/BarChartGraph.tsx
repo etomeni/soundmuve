@@ -4,6 +4,7 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import { BarChart } from '@mui/x-charts/BarChart';
 import { axisClasses } from '@mui/x-charts/ChartsAxis';
 import { DatasetType } from '@mui/x-charts/internals';
+import colors from '@/constants/colors';
 
 
 
@@ -14,13 +15,13 @@ import { DatasetType } from '@mui/x-charts/internals';
 
 interface _Props {
     // children: React.ReactNode,
-    darkTheme: boolean,
+    darkTheme?: boolean,
     dataset: DatasetType,
 }
 
 
 const BarChartGraphComponent: React.FC<_Props> = ({
-    darkTheme, dataset
+    dataset
 }) => {
     const mdDevice = useMediaQuery('(min-width:900px)');
     const smDevice = useMediaQuery('(min-width:600px)');
@@ -29,7 +30,7 @@ const BarChartGraphComponent: React.FC<_Props> = ({
         <Box>
             <BarChart
                 dataset={dataset}
-                series={[{ dataKey: 'percentageValue', color: "#644986" }]}
+                series={[{ dataKey: 'percentageValue', color: colors.primary }]}
 
                 yAxis={[{disableLine: true, disableTicks: true,  }]}
                 xAxis={[
@@ -51,7 +52,7 @@ const BarChartGraphComponent: React.FC<_Props> = ({
                         fontWeight: "400",
                         fontSize: {xs: "7.66px !important", sm: "12px !important", md: "20.88px !important"},
                         lineHeight: {xs: "9.27px", md: "25.27px"},
-                        fill: darkTheme ? "#fff" : "#000",
+                        fill: colors.dark,
                     },
                 }}
 

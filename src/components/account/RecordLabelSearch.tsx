@@ -12,16 +12,17 @@ import ClearIcon from '@mui/icons-material/Clear';
 
 import { stringAvatar } from '@/util/resources';
 import { recordLabelArtistInterface } from '@/constants/typesInterface';
+import colors from '@/constants/colors';
 
 
 
 interface _Props {
-    darkTheme: boolean,
+    darkTheme?: boolean,
     artists: recordLabelArtistInterface[],
 }
 
 
-const ArtistListComponent: React.FC<_Props> = ({ artists, darkTheme }) => {
+const ArtistListComponent: React.FC<_Props> = ({ artists }) => {
     return (
         <Box
             sx={{
@@ -31,7 +32,8 @@ const ArtistListComponent: React.FC<_Props> = ({ artists, darkTheme }) => {
                 width: "100%",
                 overflow: "scroll",
                 p: 5,
-                bgcolor: darkTheme ? "#1C1B1F" : '#EFEFEF',
+                bgcolor: "#FFFFFF",
+                color: colors.dark,
                 position: 'absolute',
                 borderRadius: '8px',
                 zIndex: 3
@@ -86,8 +88,7 @@ const ArtistListComponent: React.FC<_Props> = ({ artists, darkTheme }) => {
     )
 }
 
-const RecordLabelSearchComponent: React.FC<_Props> = ({ artists, darkTheme }) => {
-    // const darkTheme = useSettingStore((state) => state.darkTheme);
+const RecordLabelSearchComponent: React.FC<_Props> = ({ artists }) => {
     const [searchInputValue, setSearchInputValue] = useState('');
     const [searchResult, setSearchResult] = useState<any[]>([]);
 
@@ -122,9 +123,7 @@ const RecordLabelSearchComponent: React.FC<_Props> = ({ artists, darkTheme }) =>
                 onChange={(e) => {
                     handleSearchInputValue(e.target.value)
                 }}
-                InputLabelProps={{
-                    style: { color: '#c1c1c1', fontWeight: "400" },
-                }}
+                
                 InputProps={{
                     startAdornment: (
                         <InputAdornment position="start">
@@ -147,14 +146,14 @@ const RecordLabelSearchComponent: React.FC<_Props> = ({ artists, darkTheme }) =>
                         color: 'var(--TextField-brandBorderFocusedColor)',
                     },
                     '& .MuiInputBase-input': { // Target input text
-                        color: darkTheme ? '#fff' : "#000", // Change to your desired text color
+                        color: colors.dark
                     },
                     '& .MuiInputBase-placeholder': { // Target placeholder text
                         color: 'gray',
                     },
 
                     '& .MuiOutlinedInput-root': {
-                        bgcolor: darkTheme ? '#1C1B1F' : '#EFEFEF',
+                        bgcolor: '#E0D9CE',
                         borderRadius: '17.8px',
                         height: '42px',
 
@@ -186,7 +185,7 @@ const RecordLabelSearchComponent: React.FC<_Props> = ({ artists, darkTheme }) =>
                         top: "-20px",
                     }}
                 >
-                    <ArtistListComponent artists={searchResult} darkTheme={darkTheme} />
+                    <ArtistListComponent artists={searchResult} />
                 </Box>
                 : <></>
             }

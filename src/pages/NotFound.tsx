@@ -6,7 +6,7 @@ import HeaderComponent from '@/components/Header';
 import { contentWidth } from '@/util/mui';
 import colors from '@/constants/colors';
 
-import notFound from "@/assets/branded/images/NotFound.png"
+import notFound from "@/assets/branded/images/notFound.png";
 
 export default function NotFoundPage() {
 

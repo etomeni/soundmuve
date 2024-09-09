@@ -17,11 +17,15 @@ import cssStyle from '@/components/home/homeStyle.module.css';
 // import logo from "@/assets/branded/logo.png";
 import headerSectionBg from "@/assets/branded/images/home/headerSectionBg.png";
 import spaceDude from "@/assets/branded/images/home/spaceDude.png";
+import animatedGif from "@/assets/branded/images/animation.gif";
 
 import soundmuveText from "@/assets/branded/images/home/soundmuveText.png";
 import { MdSectionScroll } from '@/components/home/MdSectionScroll';
 import { XsSectionScroll } from '@/components/home/XsSectionScroll';
 import { DesktopTestimonial } from '@/components/home/DesktopTestimonial';
+
+// import Lottie from 'react-lottie';
+// import musicAnimation from "@/assets/lottie/dektop/animations/animation_1.json";
 
 
 export default function Home() {
@@ -33,124 +37,183 @@ export default function Home() {
 
             <Box
                 sx={{
-                    position: 'relative',
-                    // top: {xs: -120, sm: 50, md: -120},
-                    top: -120,
-                    background: "#0C2634",
-                    overflow: 'hidden',
+                    position: "relative",
+                    mb: "200px",
                 }}
             >
-                <Box sx={{ pt: "250px", pb: "100px" }} >
-                    <Box 
-                        sx={{ 
-                            textAlign: "center", 
-                            width: {xs: "calc(100% - 50px)", md: "687px" }, 
-                            mx: "auto",
-                            p: 3,
-                            // mt: "105px",
-                            position: "relative",
-                            zIndex: 2
-                        }}
-                    >
-                        <Box className={cssStyle.astronaut}
-                            sx={{
-                                position: "absolute",
-                                left: {xs: "-15px", md:"-90px"},
-                                top: {xs: "-90px", md: "70px"},
-                                width: {xs: "75.83px", md: "134px"},
-                                height: {xs: "104.9px", md: "185.38px"}
-                            }}
-                        >
-                            <img src={ spaceDude }
-                                alt="space dude listening to music"
-                            />
-                        </Box>
 
-                        <Typography variant="h1" component="h1"
-                            sx={{
-                                fontFamily: "Nohemi",
-                                fontWeight: "900",
-                                fontSize: {xs: "35px", md: "60px"},
-                                lineHeight: {xs: "35.16px", md: "60.27px"},
-                                textAlign: "center",
-                                color: colors.milk
-                            }}
-                        >
-                            Amplify your sound
-                            Start Here, Reach Everywhere
-                        </Typography>
-
-                        <Typography variant="body1"
-                            sx={{
-                                mt: {xs: "10px", md: "35px"},
-                                fontFamily: "Geist",
-                                fontWeight: "300",
-                                fontSize: {xs: "13px", md: "16px"},
-                                lineHeight: {xs: "16.12px", md: "19.84px"},
-                                textAlign: "center",
-                                color: colors.milk,
-                                px: 3
-                            }}    
-                        >
-                            Easily distribute your music and audio creations to major 
-                            streaming platforms and connect with a global audience
-                        </Typography>
-
-                        <Link to="/auth/signup" style={{ display: "contents" }}>
-                            <Box
-                                sx={{
-                                    p: {xs: "10px 16px", md: "8.97px 70px"},
-                                    borderRadius: {xs: "5.87px", md: "11.73px"},
-                                    width: "fit-content",
-                                    bgcolor: colors.primary,
-                                    mx: "auto",
-                                    my: {xs: "45px", md: "120px"}
-                                }}
-                            >
-                                <Typography variant="button"
-                                    sx={{
-                                        fontFamily: "Nohemi",
-                                        fontWeight: "600",
-                                        fontSize: {xs: "13px", md: "16.56px"},
-                                        lineHeight: {xs: "13.06px", md: "16.63px"},
-                                        textAlign: "center",
-                                        color: colors.milk
-                                    }}
-                                >Sign up</Typography>
-                            </Box>
-                        </Link>
-                    </Box>
-                </Box>
-                
                 <Box
                     sx={{
-                        width: "100vw",
-                        height: "120%",
-                        // height: "1605.25px",
-                        // transform: "rotate(15deg)",
-
-                        // bgcolor: "red",
-                        position: "absolute",
-                        top: "-90px",
-                        left: "0px",
-                        mixBlendMode: "multiply",
+                        position: 'relative',
+                        // top: {xs: -120, sm: 50, md: -120},
+                        top: -120,
+                        background: "#0C2634",
+                        overflow: 'hidden',
                     }}
                 >
-                    <img src={ headerSectionBg } 
-                        alt="awesome background image"
-                        style={{
-                            width: '100%',
-                            height: "100%",
-                            objectFit: "cover"
+                    <Box sx={{ pt: "250px", pb: "100px" }} >
+                        <Box 
+                            sx={{ 
+                                textAlign: "center", 
+                                width: {xs: "calc(100% - 50px)", md: "687px" }, 
+                                mx: "auto",
+                                p: 3,
+                                // mt: "105px",
+                                position: "relative",
+                                zIndex: 2
+                            }}
+                        >
+                            <Box className={cssStyle.astronaut}
+                                sx={{
+                                    position: "absolute",
+                                    left: {xs: "-15px", md:"-90px"},
+                                    top: {xs: "-90px", md: "70px"},
+                                    width: {xs: "75.83px", md: "134px"},
+                                    height: {xs: "104.9px", md: "185.38px"}
+                                }}
+                            >
+                                <img src={ spaceDude }
+                                    alt="space dude listening to music"
+                                />
+                            </Box>
+
+                            <Typography variant="h1" component="h1"
+                                sx={{
+                                    fontFamily: "Nohemi",
+                                    fontWeight: "900",
+                                    fontSize: {xs: "35px", md: "60px"},
+                                    lineHeight: {xs: "35.16px", md: "60.27px"},
+                                    textAlign: "center",
+                                    color: colors.milk
+                                }}
+                            >
+                                Amplify your sound
+                                Start Here, Reach Everywhere
+                            </Typography>
+
+                            <Typography variant="body1"
+                                sx={{
+                                    mt: {xs: "10px", md: "35px"},
+                                    fontFamily: "Geist",
+                                    fontWeight: "300",
+                                    fontSize: {xs: "13px", md: "16px"},
+                                    lineHeight: {xs: "16.12px", md: "19.84px"},
+                                    textAlign: "center",
+                                    color: colors.milk,
+                                    px: 3
+                                }}    
+                            >
+                                Easily distribute your music and audio creations to major 
+                                streaming platforms and connect with a global audience
+                            </Typography>
+
+                            <Link to="/auth/signup" style={{ display: "contents" }}>
+                                <Box
+                                    sx={{
+                                        p: {xs: "10px 16px", md: "8.97px 70px"},
+                                        borderRadius: {xs: "5.87px", md: "11.73px"},
+                                        width: "fit-content",
+                                        bgcolor: colors.primary,
+                                        mx: "auto",
+                                        my: {xs: "45px", md: "120px"}
+                                    }}
+                                >
+                                    <Typography variant="button"
+                                        sx={{
+                                            fontFamily: "Nohemi",
+                                            fontWeight: "600",
+                                            fontSize: {xs: "13px", md: "16.56px"},
+                                            lineHeight: {xs: "13.06px", md: "16.63px"},
+                                            textAlign: "center",
+                                            color: colors.milk
+                                        }}
+                                    >Sign up</Typography>
+                                </Box>
+                            </Link>
+                        </Box>
+                    </Box>
+                    
+                    <Box
+                        sx={{
+                            width: "100vw",
+                            height: "120%",
+                            // height: "1605.25px",
+                            // transform: "rotate(15deg)",
+
+                            // bgcolor: "red",
+                            position: "absolute",
+                            top: "-90px",
+                            left: "0px",
+                            mixBlendMode: "multiply",
                         }}
-                    />
+                    >
+                        <img src={ headerSectionBg } 
+                            alt="awesome background image"
+                            style={{
+                                width: '100%',
+                                height: "100%",
+                                objectFit: "cover"
+                            }}
+                        />
+                    </Box>
                 </Box>
+
+                <Box
+                    sx={{
+                        height: {xs: "400px", sm: "500px", md: "600px"},
+                        // ...contentWidth,
+                        width: {xs: "100%", sm: "calc(100% - 50px)", md: "calc(100% - 140px)" },
+
+                        maxWidth: "1300px",
+                        // bgcolor: colors.secondary,
+
+                        position: "absolute",
+                        // bottom: {xs: "-15%", sm: "-25%", md: "-20%"},
+                        bottom: {xs: "-12%", sm: "-27%", md: "-22%"},
+                        // bottom: {xs: "0%", md: "0%"},
+                        // bottom: {xs: "0%", sm: "-15%", md: "-20%", lg: "-25%"},
+                        left: 0,
+                        right: 0,
+                        marginInline: "auto",
+
+                        backgroundImage: `url(${animatedGif})`,
+                        backgroundSize: "cover",
+                        backgroundPosition: "bottom center",
+                        backgroundRepeat: "no-repeat",
+                    }}
+                >
+                    {/* <img src={animatedGif} alt='animated Gif'
+                        style={{
+                            width: "100%",
+                            height: "100%",
+                            objectFit: "contain",
+                            textAlign: "center",
+                        }}
+                    /> */}
+                </Box>
+
             </Box>
+
+
+            {/* <Box>
+                <Lottie 
+                    options={{
+                        animationData: musicAnimation,
+                        autoplay: true,
+                        loop: true,
+                        // rendererSettings: {}
+                    }}
+                    height={800}
+                    width={800}
+                    // isStopped={this.state.isStopped}
+                    // isPaused={this.state.isPaused}
+                />
+
+            </Box> */}
 
             
             <Box bgcolor={colors.bg} zIndex={2}>
-                <Box height="300px"></Box>
-
+                <Box height={{xs: "10px", md: "50px", lg: "75px"}}></Box>
                 <Box
                     sx={{
                         ...contentWidth,
@@ -296,9 +359,9 @@ export default function Home() {
                         </Link>
                     </Box>
                 </Stack>
-
-                <FooterComponent />
             </Box>
+
+            <FooterComponent />
         </Box>
     )
 }

@@ -17,13 +17,13 @@ import Button from '@mui/material/Button';
 import CircularProgress from '@mui/material/CircularProgress';
 import TextField from '@mui/material/TextField';
 
-import { useSettingStore } from '@/state/settingStore';
+// import { useSettingStore } from '@/state/settingStore';
 
 import { restCountries } from '@/util/countries';
 import { getCountries } from '@/util/location';
-import { MuiSelectFieldStyle, MuiTextFieldStyle } from '@/util/mui';
-
-import FlutterwaveLogo2 from "@/assets/images/FlutterwaveLogo2.png";
+import { paymentTextFieldStyle, releaseSelectStyle2 } from '@/util/mui';
+import colors from '@/constants/colors';
+// import FlutterwaveLogo2 from "@/assets/images/FlutterwaveLogo2.png";
 
 
 export const usPaymentFormSchema = yup.object({
@@ -55,27 +55,28 @@ const FL_USpaymentsModalComponent: React.FC<_Props> = ({
 }) => {
     // const [useEmail_n_PhoneNo, setUseEmail_n_PhoneNo] = useState(false);
     // const outerTheme = useTheme();
-    const darkTheme = useSettingStore((state) => state.darkTheme);
+    // const darkTheme = useSettingStore((state) => state.darkTheme);
     const [countries, setCountries] = useState(restCountries);
 
     useEffect(() => {
-        getCountries().then((countryRes) => {
-            setCountries(countryRes);
-        });
-    }, []);
+        if (!openModal) {
+            reset()
+        } else {
+            getCountries().then((countryRes) => {
+                setCountries(countryRes);
+            });
+        }
+    }, [openModal]);
 
     const {
-        handleSubmit, register, formState: { errors, isSubmitting, isValid } 
+        handleSubmit, register, reset, formState: { errors, isSubmitting, isValid } 
     } = useForm({ resolver: yupResolver(usPaymentFormSchema), mode: 'onBlur', reValidateMode: 'onChange' });
 
 
     const onSubmit = async (formData: usPaymentsInterface) => {
         // console.log(formData);
-
         confirmBtn(formData);
     }
-
-
 
 
     return (
@@ -96,14 +97,14 @@ const FL_USpaymentsModalComponent: React.FC<_Props> = ({
             >
                 <Box 
                     sx={{
-                        bgcolor: darkTheme ? "#272727" : "#fff",
+                        bgcolor: colors.bg,
                         width: "100%",
                         maxWidth: {xs: "92%", sm: "496px"},
                         // maxHeight: "605px",
                         maxHeight: "95%",
                         borderRadius: "12px",
                         p: "25px",
-                        color: darkTheme ? "#fff" : "#000",
+                        color: colors.dark,
                         overflow: "scroll"
                     }}
                 >
@@ -111,12 +112,12 @@ const FL_USpaymentsModalComponent: React.FC<_Props> = ({
                         <Box sx={{textAlign: "right"}}>
                             <IconButton onClick={() => closeModal() }>
                                 <CloseIcon 
-                                    sx={{color: darkTheme ? "#fff" : "#000", fontSize: "30px"}} 
+                                    sx={{color: colors.dark, fontSize: "30px"}} 
                                 />
                             </IconButton>
                         </Box>
 
-                        <Box sx={{textAlign: 'center'}}>
+                        {/* <Box sx={{textAlign: 'center'}}>
                             <img
                                 src={FlutterwaveLogo2} alt='Flutterwave Logo Image'
                                 style={{
@@ -124,7 +125,7 @@ const FL_USpaymentsModalComponent: React.FC<_Props> = ({
                                     width: "60%"
                                 }}
                             />
-                        </Box>
+                        </Box> */}
                     </Box>
 
                     <Box id="payout-modal-description" sx={{mt: 2}}>
@@ -150,18 +151,14 @@ const FL_USpaymentsModalComponent: React.FC<_Props> = ({
                                             inputMode='text'
                                             label=''
                                             defaultValue=""
-                                            InputLabelProps={{
-                                                style: { color: '#c1c1c1', fontWeight: "400" },
-                                            }}
+                                            
                                             InputProps={{
                                                 sx: {
                                                     borderRadius: "16px",
                                                 },
                                             }}
 
-                                            sx={{
-                                                ...MuiTextFieldStyle(darkTheme),
-                                            }}
+                                            sx={paymentTextFieldStyle}
                                             
                                             error={ errors.beneficiaryName ? true : false }
                                             { ...register('beneficiaryName') }
@@ -188,18 +185,14 @@ const FL_USpaymentsModalComponent: React.FC<_Props> = ({
                                             inputMode='email'
                                             label=''
                                             defaultValue=""
-                                            InputLabelProps={{
-                                                style: { color: '#c1c1c1', fontWeight: "400" },
-                                            }}
+                                            
                                             InputProps={{
                                                 sx: {
                                                     borderRadius: "16px",
                                                 },
                                             }}
 
-                                            sx={{
-                                                ...MuiTextFieldStyle(darkTheme),
-                                            }}
+                                            sx={paymentTextFieldStyle}
                                             
                                             error={ errors.email ? true : false }
                                             { ...register('email') }
@@ -227,18 +220,14 @@ const FL_USpaymentsModalComponent: React.FC<_Props> = ({
                                     inputMode='text'
                                     label=''
                                     defaultValue=""
-                                    InputLabelProps={{
-                                        style: { color: '#c1c1c1', fontWeight: "400" },
-                                    }}
+                                    
                                     InputProps={{
                                         sx: {
                                             borderRadius: "16px",
                                         },
                                     }}
 
-                                    sx={{
-                                        ...MuiTextFieldStyle(darkTheme),
-                                    }}
+                                    sx={paymentTextFieldStyle}
                                     
                                     error={ errors.address ? true : false }
                                     { ...register('address') }
@@ -266,18 +255,14 @@ const FL_USpaymentsModalComponent: React.FC<_Props> = ({
                                             inputMode='text'
                                             label=''
                                             defaultValue=""
-                                            InputLabelProps={{
-                                                style: { color: '#c1c1c1', fontWeight: "400" },
-                                            }}
+                                            
                                             InputProps={{
                                                 sx: {
                                                     borderRadius: "16px",
                                                 }
                                             }}
 
-                                            sx={{
-                                                ...MuiTextFieldStyle(darkTheme),
-                                            }}
+                                            sx={paymentTextFieldStyle}
                                             
                                             error={ errors.bankName ? true : false }
                                             { ...register('bankName') }
@@ -305,7 +290,7 @@ const FL_USpaymentsModalComponent: React.FC<_Props> = ({
                                                 defaultValue=""
                                                 // value={userCountry}
 
-                                                sx={{ ...MuiSelectFieldStyle(darkTheme) }}
+                                                sx={releaseSelectStyle2}
                                                 
                                                 error={ errors.country ? true : false }
                                                 { ...register('country') }
@@ -350,24 +335,14 @@ const FL_USpaymentsModalComponent: React.FC<_Props> = ({
                                             label=''
                                             inputMode='numeric'
                                             defaultValue=""
-                                            InputLabelProps={{
-                                                style: { color: '#c1c1c1', fontWeight: "400" },
-                                            }}
+                                            
                                             InputProps={{
                                                 sx: {
                                                     borderRadius: "16px",
                                                 },
                                             }}
 
-                                            sx={{
-                                                ...MuiTextFieldStyle(darkTheme),
-                                                "& input::-webkit-outer-spin-button, & input::-webkit-inner-spin-button": {
-                                                    display: "none",
-                                                },
-                                                "& input[type=number]": {
-                                                    MozAppearance: "textfield",
-                                                },
-                                            }}
+                                            sx={paymentTextFieldStyle}
                                             
                                             error={ errors.accountNumber ? true : false }
                                             { ...register('accountNumber') }
@@ -394,16 +369,14 @@ const FL_USpaymentsModalComponent: React.FC<_Props> = ({
                                             inputMode='text'
                                             label=''
                                             defaultValue=""
-                                            InputLabelProps={{
-                                                style: { color: '#c1c1c1', fontWeight: "400" },
-                                            }}
+                                            
                                             InputProps={{
                                                 sx: {
                                                     borderRadius: "16px",
                                                 },
                                             }}
 
-                                            sx={{ ...MuiTextFieldStyle(darkTheme) }}
+                                            sx={paymentTextFieldStyle}
                                             
                                             error={ errors.routingNumber ? true : false }
                                             { ...register('routingNumber') }
@@ -432,18 +405,14 @@ const FL_USpaymentsModalComponent: React.FC<_Props> = ({
                                             inputMode='text'
                                             label=''
                                             defaultValue=""
-                                            InputLabelProps={{
-                                                style: { color: '#c1c1c1', fontWeight: "400" },
-                                            }}
+                                            
                                             InputProps={{
                                                 sx: {
                                                     borderRadius: "16px",
                                                 },
                                             }}
 
-                                            sx={{
-                                                ...MuiTextFieldStyle(darkTheme),
-                                            }}
+                                            sx={paymentTextFieldStyle}
                                             
                                             error={ errors.swiftCode ? true : false }
                                             { ...register('swiftCode') }
@@ -469,7 +438,7 @@ const FL_USpaymentsModalComponent: React.FC<_Props> = ({
                                     fullWidth type="submit" 
                                     disabled={ !isValid || isSubmitting } 
                                     sx={{ 
-                                        bgcolor: darkTheme ? "#fff" : "#272727",
+                                        bgcolor: colors.primary,
                                         borderRadius: "17px",
                                         // p: "10px 26px 10px 26px",
                                         p: "16px 25px",
@@ -480,13 +449,13 @@ const FL_USpaymentsModalComponent: React.FC<_Props> = ({
                                             color: "#797979"
                                         },
                                         "&:hover": {
-                                            bgcolor: darkTheme ? "#fff" : "#272727",
+                                            bgcolor: colors.primary,
                                         },
                                         "&:active": {
-                                            bgcolor: darkTheme ? "#fff" : "#272727",
+                                            bgcolor: colors.primary,
                                         },
                                         "&:focus": {
-                                            bgcolor: darkTheme ? "#fff" : "#272727",
+                                            bgcolor: colors.primary,
                                         },
 
                                         fontWeight: '700',
@@ -494,12 +463,18 @@ const FL_USpaymentsModalComponent: React.FC<_Props> = ({
                                         lineHeight: "12px",
                                         // letterSpacing: "-0.13px",
                                         // textAlign: 'center',
-                                        color: darkTheme ? "#000" : "#fff",
+                                        color: colors.milk,
                                         textTransform: "none"
                                     }}
                                 >
                                     <span style={{ display: isSubmitting ? "none" : "initial" }}>Confirm</span>
-                                    <CircularProgress size={25} sx={{ display: isSubmitting ? "initial" : "none", color: "#8638E5", fontWeight: "bold" }} />
+                                    <CircularProgress size={25} 
+                                        sx={{ 
+                                            display: isSubmitting ? "initial" : "none", 
+                                            color: colors.primary,
+                                            fontWeight: "bold" 
+                                        }} 
+                                    />
                                 </Button>
                             </Box>
 

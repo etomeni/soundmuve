@@ -17,6 +17,7 @@ import ArtistAnalyticsNavComponent from '@/components/account/ArtistAnalyticsNav
 
 // import albumImage from '@/assets/images/album.png';
 import BarChartGraphComponent from '@/components/analytics/BarChartGraph';
+import colors from '@/constants/colors';
 
 
 
@@ -129,12 +130,12 @@ function AnalyticsReach() {
 
     return (
         <AccountWrapper>
-            <Box sx={{px: {xs: 2, md: 5, lg: 12}, pb: 5, position: "relative", zIndex: 10, mt: {xs: 7, md: 10}  }}>
+            <Box>
                 <Stack direction={"row"} spacing={"20px"} justifyContent={"space-between"} alignItems={"center"}>
                     <IconButton 
                         onClick={() => navigate(-1)}
                         sx={{
-                            color: darkTheme ? "#fff" : "#000", 
+                            color: colors.primary, 
                             mb: 2,
                             
                         }}
@@ -204,10 +205,7 @@ function AnalyticsReach() {
                 <Box sx={{ mt: 7 }}>
                     <Box
                         sx={{
-                            background: {
-                                xs: darkTheme ? "linear-gradient(89.99deg, #272727 17.33%, rgba(206, 41, 55, 0.5) 99.99%)" : "linear-gradient(89.99deg, #272727 39.65%, #8F1E27 99.99%)",
-                                md: darkTheme ? "rgba(121, 121, 121, 0.25)" : "linear-gradient(89.99deg, #272727 39.65%, #8F1E27 99.99%)"
-                            },
+                            background: colors.dark,
 
                             backdropFilter: "blur(12.5px)",
                             WebkitBackdropFilter: "blur(12.5px)",

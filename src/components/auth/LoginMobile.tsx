@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useForm } from 'react-hook-form';
@@ -24,6 +24,10 @@ import FooterComponent from '@/components/Footer';
 import HeaderComponent from '@/components/Header';
 import colors from '@/constants/colors';
 import { authMuiTextFieldStyle, contentWidth } from '@/util/mui';
+import { getDecryptedLocalStorage, setEncryptedLocalStorage } from '@/util/storage';
+import FormGroup from '@mui/material/FormGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
 
 
 const formSchema = yup.object({
@@ -55,10 +59,19 @@ function LoginMobileComponent() {
     const _setToastNotification = useSettingStore((state) => state._setToastNotification);
     
     const [showPassword, setShowPassword] = useState(false);
+    const [rememberMe, setRememberMe] = useState(false);
     const handleClickShowPassword = () => setShowPassword((show) => !show);
 
+    useEffect(() => {
+        const result = getDecryptedLocalStorage('uad');
+        if (result) {
+            setValue("email", result.email || '', {shouldDirty: true, shouldTouch: true, shouldValidate: true});
+            setValue("password", result.password || '', {shouldDirty: true, shouldTouch: true, shouldValidate: true});
+        }
+    }, []);
+    
     const { 
-        handleSubmit, register, formState: { errors, isValid, isSubmitting } 
+        handleSubmit, register, setValue, formState: { errors, isValid, isSubmitting } 
     } = useForm({ resolver: yupResolver(formSchema), mode: 'onBlur', reValidateMode: 'onBlur' });
 
         
@@ -72,18 +85,6 @@ function LoginMobileComponent() {
 
         try {
             const response = (await axios.post(`${apiEndpoint}/auth/sign-in`, formData )).data;
-            // console.log(response);
-
-            // const checkSignupCompletionRes = (await axios.get(
-            //     `${apiEndpoint}/auth/checkProfileInformation/${response.user.email}`, 
-            //     {
-            //         headers: {
-            //             Authorization: `Bearer ${response.token}`
-            //         }
-            //     }
-            // )).data;
-            // console.log(checkSignupCompletionRes);
-
 
             if (response && (response.user || response.token)) {
                 setApiResponse({
@@ -97,6 +98,10 @@ function LoginMobileComponent() {
                     message: response.message
                 });
 
+                if (rememberMe) {
+                    // uad - user auth data;
+                    setEncryptedLocalStorage('uad', formData);
+                }
 
                 if (!response.user.teamType) {
                     _signUpUser(response.user);
@@ -117,7 +122,7 @@ function LoginMobileComponent() {
                 message: response.message || "Oooops, login failed. please try again."
             });
         } catch (error: any) {
-            const err = error.response.data;
+            const err = error.response ? error.response.data : error || '';
             console.log(err);
 
             setApiResponse({
@@ -260,27 +265,61 @@ function LoginMobileComponent() {
 
                             </Box>
 
-                            <Typography variant='body1' component="p"
-                                sx={{
-                                    fontFamily: "Geist",
-                                    fontWeight: "300",
-                                    fontSize: {xs: "10.69px", md: "16px"},
-                                    lineHeight: {xs: "26.72px", md: "12px" },
-                                    letterSpacing: {xs: "-0.09px", md: "-0.2px"}
-                                }}
+
+                            <Stack direction="row" justifyContent="space-between" 
+                                alignItems="center" mb="30px"
                             >
-                                <Link to="/auth/forgot-password" style={{
-                                    fontFamily: "Geist",
-                                    fontWeight: "300",
-                                    fontSize: "16px", 
-                                    lineHeight: "12px",
-                                    textAlign: "right",
-                                    color: colors.primary,
-                                    float: 'right',
-                                }}>
-                                    Forgot Password?
-                                </Link>
-                            </Typography>
+                                <FormGroup>
+                                    <FormControlLabel 
+                                        control={
+                                            <Checkbox 
+                                                checked={rememberMe}
+                                                sx={{
+                                                    color: "#D9D9D9",
+                                                    '&.Mui-checked': {
+                                                        color: colors.primary,
+                                                    },
+                                                }}
+                                                onChange={(e) => {
+                                                    // console.log(e.target.checked);
+                                                    setRememberMe(e.target.checked);
+                                                }}
+                                            
+                                            />
+                                        } 
+                                        label={<Typography variant='body2' sx={{
+                                            fontFamily: "Geist",
+                                            fontWeight: "300",
+                                            fontSize: {xs: "15px", md: "16px"},
+                                            lineHeight: "12px",
+                                            letterSpacing: "-0.2px",
+                                            color: "#A4A4A4"
+                                        }}>Remember me</Typography>}
+                                    />
+                                </FormGroup>
+
+                                <Typography variant='body1' component="p"
+                                    sx={{
+                                        fontFamily: "Geist",
+                                        fontWeight: "300",
+                                        fontSize: {xs: "10.69px", md: "16px"},
+                                        lineHeight: {xs: "26.72px", md: "12px" },
+                                        letterSpacing: {xs: "-0.09px", md: "-0.2px"}
+                                    }}
+                                >
+                                    <Link to="/auth/forgot-password" style={{
+                                        fontFamily: "Geist",
+                                        fontWeight: "300",
+                                        fontSize: "16px", 
+                                        lineHeight: "12px",
+                                        textAlign: "right",
+                                        color: colors.primary,
+                                        float: 'right',
+                                    }}>
+                                        Forgot Password?
+                                    </Link>
+                                </Typography>
+                            </Stack>
 
 
                             {

@@ -1,6 +1,6 @@
 import React from 'react';
 import Box from '@mui/material/Box';
-import Drawer from '@mui/material/Drawer';
+// import Drawer from '@mui/material/Drawer';
 import Toolbar from '@mui/material/Toolbar';
 import List from '@mui/material/List';
 import Typography from '@mui/material/Typography';
@@ -8,20 +8,21 @@ import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import { useSettingStore } from '@/state/settingStore';
+// import { useSettingStore } from '@/state/settingStore';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import colors from '@/constants/colors';
+
 
 const drawerWidth = 240;
-
 
 interface MyComponentProps {
     activePageNumber: number
 };
 const SideNav: React.FC<MyComponentProps> = ({activePageNumber}) => {
-    const darkTheme = useSettingStore((state) => state.darkTheme);
+    // const darkTheme = useSettingStore((state) => state.darkTheme);
 
     const xsDevice = useMediaQuery('(max-width:599px)');
     const smDevice = useMediaQuery('(min-width:600px)');
@@ -62,75 +63,63 @@ const SideNav: React.FC<MyComponentProps> = ({activePageNumber}) => {
 
     const desktopNav = () => {
         return (
-            <Drawer
-                variant="permanent"
-                sx={{
+            <Box 
+                sx={{ 
                     width: drawerWidth,
-                    flexShrink: 0,
-                    position: "relative", 
-                    [`& .MuiDrawer-paper`]: {
-                        width: drawerWidth, 
-                        boxSizing: 'border-box', 
-                        position: "absolute",
-                        bgcolor: darkTheme ? '#101012' : '#FBFBFB',
-                        borderRight: '1px solid #666666'
-                    },
+                    borderRight: "1px solid #666666",
                 }}
             >
-                <Toolbar />
-                <Box sx={{ overflow: 'auto' }}>
-                    <List sx={{ position: "fixed" }}>
-                        { menuItems.map((item, index) => (
-                            <ListItem key={index} disablePadding>
-                                <ListItemButton disabled={ index + 1 > activePageNumber }>
-                                    <ListItemIcon>
-                                        {
-                                            index + 1 < activePageNumber ? (
-                                                <CheckCircleIcon sx={{ color: darkTheme ? "#C8F452" : "#33500B"}} />
-                                            ) : (
-                                                <Box
+                <List sx={{ position: "sticky", top: 100 }}>
+                    { menuItems.map((item, index) => (
+                        <ListItem key={index} disablePadding>
+                            <ListItemButton disabled={ index + 1 > activePageNumber }>
+                                <ListItemIcon>
+                                    {
+                                        index + 1 < activePageNumber ? (
+                                            <CheckCircleIcon sx={{ color: "green" }} />
+                                        ) : (
+                                            <Box
+                                                sx={{
+                                                    border: `1px solid ${colors.primary}`,
+                                                    borderRadius: "100%",
+                                                    width: "20px",
+                                                    height: "20px",
+                                                    display: "flex",
+                                                    justifyContent: 'center',
+                                                    alignItems: 'center'
+                                                }}
+                                            >
+                                                <Typography variant='body2'
                                                     sx={{
-                                                        border: "1px solid #644986",
-                                                        borderRadius: "100%",
-                                                        width: "20px",
-                                                        height: "20px",
-                                                        display: "flex",
-                                                        justifyContent: 'center',
-                                                        alignItems: 'center'
+                                                        color: colors.primary,
+                                                        textAlign: "center",
+                                                        fontWeight: "400",
+                                                        fontSize: "16.35px",
+                                                        lineHeight: "33.85px",
+                                                        letterSpacing: "-0.11px",
                                                     }}
-                                                >
-                                                    <Typography variant='body2'
-                                                        sx={{
-                                                            color: "#644986",
-                                                            textAlign: "center",
-                                                            fontWeight: "400",
-                                                            fontSize: "16.35px",
-                                                            lineHeight: "33.85px",
-                                                            letterSpacing: "-0.11px",
-                                                        }}
-                                                    > { index + 1 } </Typography>
-                                                </Box>
-                                            )
-                                        }
-                                    </ListItemIcon>
+                                                > { index + 1 } </Typography>
+                                            </Box>
+                                        )
+                                    }
+                                </ListItemIcon>
 
-                                    <ListItemText 
-                                        primary={item.title} 
-                                        sx={{ color: index + 1 < activePageNumber ? "#666666" : "#644986" }} 
-                                    />
-                                </ListItemButton>
-                            </ListItem>
-                        ))}
-                    </List>
-                </Box>
-            </Drawer>
+                                <ListItemText 
+                                    primary={item.title} 
+                                    sx={{ color: index + 1 < activePageNumber ? "#666666" : colors.primary }} 
+                                />
+                            </ListItemButton>
+                        </ListItem>
+                    ))}
+                </List>
+            </Box>
         )
     }
 
 
     const mobileNav = () => {
         return (
-            <Box sx={{  px: 3 }}>
+            <Box sx={{  px: 1 }}>
                 <Toolbar />
                 <Box sx={{ borderBottom: 1, borderColor: '#666666', mx: "auto" }}>
                     <Tabs 
@@ -143,7 +132,7 @@ const SideNav: React.FC<MyComponentProps> = ({activePageNumber}) => {
                         centered
                         sx={{
                             "& .MuiTab-root.Mui-selected": {
-                                color: darkTheme ? "#fff" : "#000"
+                                color: colors.dark
                             },
 
                             "& .MuiButtonBase-root.MuiTab-root": {
@@ -153,7 +142,7 @@ const SideNav: React.FC<MyComponentProps> = ({activePageNumber}) => {
                             },
 
                             "& .MuiTabs-indicator": {
-                                backgroundColor: "#644986"
+                                backgroundColor: colors.primary
                             },
                         }}
                     >
@@ -163,8 +152,8 @@ const SideNav: React.FC<MyComponentProps> = ({activePageNumber}) => {
                                     <Typography
                                         sx={{
                                             fontWeight: '900',
-                                            fontSize: '15px',
-                                            lineHeight: '26.31px',
+                                            fontSize: '13px',
+                                            lineHeight: '13.31px',
                                             letterSpacing: '-0.55px',
                                             p: 0, m: 0
                                         }}
@@ -174,12 +163,12 @@ const SideNav: React.FC<MyComponentProps> = ({activePageNumber}) => {
                                 } 
                                 icon={
                                     index + 1 < activePageNumber ? (
-                                        <CheckCircleIcon sx={{ color: darkTheme ? "#C8F452" : "#33500B"}} />
+                                        <CheckCircleIcon sx={{ color: "green" }} />
                                     ) : (
                                         <Box
                                             sx={{
-                                                border: "1px solid #644986",
-                                                color: "#644986",
+                                                border: `1px solid ${colors.primary}`,
+                                                color: colors.primary,
                                                 borderRadius: '50%',
                                                 width: "20px",
                                                 height: "20px",
@@ -195,10 +184,9 @@ const SideNav: React.FC<MyComponentProps> = ({activePageNumber}) => {
                                 iconPosition="start"
                                 sx={{
                                     textTransform: "none",
-
                                     fontWeight: '900',
-                                    fontSize: '15px',
-                                    lineHeight: '26.31px',
+                                    fontSize: '13px',
+                                    lineHeight: '13.31px',
                                     letterSpacing: '-0.55px',
                                 }}
 

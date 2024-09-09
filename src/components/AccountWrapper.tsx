@@ -9,17 +9,20 @@ import { contentWidth } from '@/util/mui';
 
 interface _Props {
     children: React.ReactNode,
+    bottomSpacing?: number,
+    topSpacing?: boolean
 }
 
-const AccountWrapper: React.FC<_Props> = ({ children }) => {
+const AccountWrapper: React.FC<_Props> = ({ children, topSpacing = true, bottomSpacing = 7,  }) => {
 
     return (
         <Box bgcolor={colors.bg} >
             <Box height={{xs: 60, sm: 50, md: 40}}></Box>
-            <AccountHeaderComponent />
+            <AccountHeaderComponent headerSpacing={topSpacing} />
 
             <Box sx={{
                 ...contentWidth,
+                mb: bottomSpacing
             }}>
                 { children }
             </Box>

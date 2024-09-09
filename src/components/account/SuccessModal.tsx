@@ -6,10 +6,8 @@ import Typography from '@mui/material/Typography';
 // import CloseIcon from '@mui/icons-material/Close';
 import Stack from '@mui/material/Stack';
 
-import { useSettingStore } from '@/state/settingStore';
-
 import successImg from "@/assets/images/successImg.gif";
-
+import colors from '@/constants/colors';
 
 
 interface _Props {
@@ -20,7 +18,6 @@ interface _Props {
 const SuccessModalComponent: React.FC<_Props> = ({
     openModal, closeModal
 }) => {
-    const darkTheme = useSettingStore((state) => state.darkTheme);
 
     return (
         <Modal
@@ -39,12 +36,12 @@ const SuccessModalComponent: React.FC<_Props> = ({
                 }}
             >
                 <Box sx={{
-                    bgcolor: darkTheme ? "#272727" : "#fff",
+                    bgcolor: colors.bg,
                     maxWidth: {xs: "92%", sm: "496px"},
                     maxHeight: "605px",
                     borderRadius: "12px",
                     p: "25px",
-                    color: darkTheme ? "#fff" : "#000"
+                    color: colors.dark
                 }}>
                     <Box id="payout-modal-title">
                         {/* <Box sx={{textAlign: "right"}}>
@@ -64,9 +61,7 @@ const SuccessModalComponent: React.FC<_Props> = ({
                                 textAlign: "center",
                                 mt: 2
                             }}
-                        >
-                            Release Completed
-                        </Typography>
+                        > Release Completed </Typography>
                     </Box>
 
 

@@ -14,6 +14,7 @@ import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import Alert from '@mui/material/Alert';
 import CircularProgress from '@mui/material/CircularProgress';
+import WestIcon from '@mui/icons-material/West';
 
 import { apiEndpoint } from '@/util/resources';
 import resetPasswordImg from "@/assets/branded/images/auth/newPassword.png";
@@ -113,6 +114,11 @@ function ForgotPasswordDesktopComponent() {
                             alignSelf: "center"
                         }}
                     >
+
+                        <WestIcon onClick={() => navigate(-1)} 
+                            sx={{ textAlign: "left", alignSelf: "start", display: "block", cursor: "pointer" }} 
+                        />
+                        
                         <Box sx={{
                             maxWidth: "214px",
                             width: {xs: `${214 * 0.3}px`, md: `${214 * 0.6}px`},

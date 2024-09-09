@@ -24,10 +24,10 @@ import contactBgImage from "@/assets/branded/images/contact/background.png";
 import illustrationMailImage from "@/assets/branded/images/contact/illustrationMail.png";
 import useMediaQuery from '@mui/material/useMediaQuery';
 
-import FacebookIcon from '@mui/icons-material/Facebook';
+// import FacebookIcon from '@mui/icons-material/Facebook';
 import TwitterIcon from '@mui/icons-material/Twitter';
 import InstagramIcon from '@mui/icons-material/Instagram';
-import LinkedInIcon from '@mui/icons-material/LinkedIn';
+// import LinkedInIcon from '@mui/icons-material/LinkedIn';
 
 
 const formSchema = yup.object({
@@ -353,10 +353,17 @@ function Contact() {
 
                                                 <Box sx={{mt: "auto", mb: "50px", width: "100%" }}>
                                                     <Box sx={{ display: "flex", gap: "15px" }}>
-                                                        <FacebookIcon sx={{maxWidth: "20px", fontSize: 20, color: "#6C6050"}} />
-                                                        <TwitterIcon sx={{maxWidth: "20px", fontSize: 20, color: "#6C6050"}} />
-                                                        <LinkedInIcon sx={{maxWidth: "20px", fontSize: 20, color: "#6C6050"}} />
-                                                        <InstagramIcon sx={{maxWidth: "20px", fontSize: 20, color: "#6C6050"}} />
+                                                        {/* <FacebookIcon sx={{maxWidth: "20px", fontSize: 20, color: "#6C6050"}} /> */}
+
+                                                        <a href="https://x.com/soundmuve/" target='_blank' >
+                                                            <TwitterIcon sx={{maxWidth: "20px", fontSize: 20, color: "#6C6050"}} />
+                                                        </a>
+
+                                                        {/* <LinkedInIcon sx={{maxWidth: "20px", fontSize: 20, color: "#6C6050"}} /> */}
+
+                                                        <a href="https://www.instagram.com/soundmuve/" target='_blank' >
+                                                            <InstagramIcon sx={{maxWidth: "20px", fontSize: 20, color: "#6C6050"}} />
+                                                        </a>
                                                     </Box>
                                                 </Box>
                                             </Stack>

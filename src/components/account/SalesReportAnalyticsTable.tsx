@@ -10,16 +10,17 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
+import colors from '@/constants/colors';
 
 interface _Props {
     headerTitle: any[],
     tBodyContent: any[],
-    darkTheme: boolean,
+    darkTheme?: boolean,
     displayDownloadReport?: boolean,
 }
 
 const SalesReportAnalyticsTableComponent: React.FC<_Props> = ({
-    headerTitle, tBodyContent, darkTheme, displayDownloadReport = false
+    headerTitle, tBodyContent, displayDownloadReport = false
 }) => {
 
     return (
@@ -27,11 +28,11 @@ const SalesReportAnalyticsTableComponent: React.FC<_Props> = ({
             <Paper 
                 sx={{ 
                     width: '100%',
-                    border: "1px solid #D9D9D9",
+                    border: `1px solid ${colors.dark}`,
                     borderRadius: "13px",
                     overflow: "hidden",
-                    bgcolor: darkTheme ? "#000" : "#fff",
-                    color: darkTheme ? "#fff" : "#000"
+                    bgcolor: colors.secondary,
+                    color: colors.dark
                 }}
             >
                 <TableContainer sx={{ maxHeight: 440 }}>
@@ -42,21 +43,27 @@ const SalesReportAnalyticsTableComponent: React.FC<_Props> = ({
                             }
                         }}
                     >
-                        <TableHead>
-                            <TableRow>
+                        <TableHead >
+                            <TableRow 
+                                sx={{ 
+                                    [`& .${tableCellClasses.root}`]: {
+                                        borderBottom: `1px solid ${colors.dark}`,
+                                    }
+                                }}
+                            >
                                 {headerTitle.map((title, index) => (
                                     <TableCell
                                         key={index}
                                         align={"center"} 
                                         // style={{ top: 57, minWidth: column.minWidth }}
-                                        sx={{ bgcolor: darkTheme ? "#000" : "#fff" }}
+                                        sx={{ bgcolor: colors.secondary }}
                                     >
                                         <Box 
                                             sx={{
                                                 p: "10px",
                                                 borderRadius: "8px",
-                                                border: darkTheme ? "1px solid #797979" : "1px solid #202020",
-                                                color: darkTheme ? "#666666" : "#202020",
+                                                border: "1px solid #797979",
+                                                color: "#666666",
                                                 // cursor: "pointer",
                                                 display: "inline-block"
                                             }}
@@ -89,7 +96,7 @@ const SalesReportAnalyticsTableComponent: React.FC<_Props> = ({
                                                     align={"center"} 
                                                     // align={indez == 0 ? "left" : indez == Object.entries(row).length - 1 ? "right" : 'center' }
                                                     sx={{ 
-                                                        color: darkTheme ? indez == Object.entries(row).length - 1 ? "#C8F452" : "#fff" : "#000",
+                                                        color: indez == Object.entries(row).length - 1 ? "#627C1D" : colors.dark,
                                                         fontWeight: "400",
                                                         fontSize: {xs: "9.07px", md: "18px"},
                                                         lineHeight: {xs: "12.1px", md: "24px"},
@@ -115,8 +122,8 @@ const SalesReportAnalyticsTableComponent: React.FC<_Props> = ({
                             sx={{
                                 p: {xs: "10.18px 19.68px", md: "10px 29px"},
                                 borderRadius: {xs: "8.14px", md: "5px"},
-                                background: darkTheme ? "#fff" : "#272727",
-                                color: darkTheme ? "#000" : "#fff",
+                                background: colors.milk,
+                                color: colors.dark,
                                 cursor: "pointer",
                                 display: "inline-block",
                                 // m: 2,

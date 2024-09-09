@@ -8,10 +8,11 @@ import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
 import CloseIcon from '@mui/icons-material/Close';
 
-import { useSettingStore } from '@/state/settingStore';
+// import { useSettingStore } from '@/state/settingStore';
 import { successfulWithdrawalInterface } from './FL_ReviewModal';
 import { getCurrencySymbol } from '@/util/currencies';
 import { formatedNumber } from '@/util/resources';
+import colors from '@/constants/colors';
 
 
 interface _Props {
@@ -24,7 +25,7 @@ const FL_RequestConfirmationModalComponent: React.FC<_Props> = ({
     openModal, closeModal, withdrawlData
 }) => {
     const navigate = useNavigate();
-    const darkTheme = useSettingStore((state) => state.darkTheme);
+    // const darkTheme = useSettingStore((state) => state.darkTheme);
 
     const handleCloseModal = () => {
         const url = window.location.pathname;
@@ -56,18 +57,18 @@ const FL_RequestConfirmationModalComponent: React.FC<_Props> = ({
             >
                 <Box 
                     sx={{
-                        bgcolor: darkTheme ? "#272727" : "#fff",
+                        bgcolor: colors.bg,
                         maxWidth: {xs: "92%", sm: "496px"},
                         maxHeight: "605px",
                         borderRadius: "12px",
                         p: "25px",
-                        color: darkTheme ? "#fff" : "#000"
+                        color: colors.dark
                     }}
                 >
                     <Box sx={{textAlign: "right"}}>
                         <IconButton onClick={() => closeModal() }>
                             <CloseIcon 
-                                sx={{color: darkTheme ? "#fff" : "#000", fontSize: "30px"}} 
+                                sx={{color: colors.primary, fontSize: "30px"}} 
                             />
                         </IconButton>
                     </Box>
@@ -90,6 +91,7 @@ const FL_RequestConfirmationModalComponent: React.FC<_Props> = ({
                                 fontSize: "14px",
                                 lineHeight: "12px",
                                 letterSpacing: "-1px",
+                                textAlign: 'center',
                                 mt: "27px"
                             }}
                         >Payment request was sucessful</Typography>
@@ -192,8 +194,8 @@ const FL_RequestConfirmationModalComponent: React.FC<_Props> = ({
                                 sx={{
                                     p: "10px 25px",
                                     borderRadius: "12px",
-                                    background: darkTheme ? "#fff" : "#272727",
-                                    color: darkTheme ? "#000" : "#fff",
+                                    background: colors.primary,
+                                    color: colors.milk,
                                     cursor: "pointer",
                                     display: "inline-block"
                                 }}

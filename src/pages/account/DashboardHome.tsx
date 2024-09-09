@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Box from '@mui/material/Box';
 
-import AccountWrapper from '../../components/AccountWrapper';
+import AccountWrapper from '@/components/AccountWrapper';
 import LoadingComponent from '@/components/Loading';
 import { useUserStore } from '@/state/userStore';
 
@@ -35,7 +35,8 @@ function DashboardHome() {
 
     return (
         <AccountWrapper>
-            <Box sx={{px: {xs: 2, md: 5, lg: 12}, pb: 5, position: "relative", zIndex: 10, mt: {xs: 5, md: 10}  }}>
+            <Box>
+
                 <LoadingComponent />
 
             </Box>

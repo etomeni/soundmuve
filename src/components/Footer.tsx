@@ -6,10 +6,10 @@ import Grid from '@mui/material/Grid';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 
-import FacebookIcon from '@mui/icons-material/Facebook';
+// import FacebookIcon from '@mui/icons-material/Facebook';
 import TwitterIcon from '@mui/icons-material/Twitter';
 import InstagramIcon from '@mui/icons-material/Instagram';
-import LinkedInIcon from '@mui/icons-material/LinkedIn';
+// import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 
 import style from "./footer.module.css";
@@ -219,6 +219,7 @@ export default function FooterComponent() {
                 </Box>
             </Box>
 
+            {/* desktop view */}
             <Box sx={{
                 display: {xs: "none", md: "block"},
                 px: {xs: 2, md: 5, lg: 12}, 
@@ -226,8 +227,7 @@ export default function FooterComponent() {
                 pb: 0
             }}>
                 <Grid container spacing={2}>
-                    <Grid item 
-                        xs={6} sm={3} md={2} // lg={3}
+                    <Grid item xs={6} sm={3} md={2}
                         sx={{ display: "flex", justifyContent: "left" }}
                     >
                         <div>
@@ -240,16 +240,22 @@ export default function FooterComponent() {
                             </Link>
 
                             <Box sx={{display: "flex", gap: 1, mt: 2}}>
-                                <FacebookIcon className={style.icons} />
-                                <TwitterIcon className={style.icons} />
-                                <LinkedInIcon className={style.icons} />
-                                <InstagramIcon className={style.icons} />
+                                {/* <FacebookIcon className={style.icons} /> */}
+
+                                <Link to="https://x.com/soundmuve/" target='_blank' >
+                                    <TwitterIcon className={style.icons} />
+                                </Link>
+
+                                {/* <LinkedInIcon className={style.icons} /> */}
+                                
+                                <Link to="https://www.instagram.com/soundmuve/" target='_blank' >
+                                    <InstagramIcon className={style.icons} />
+                                </Link>
                             </Box>
                         </div>
                     </Grid>
 
-                    <Grid item
-                        xs={6} sm={3} md={2}
+                    <Grid item xs={6} sm={3} md={2}
                         sx={{ display: "flex", justifyContent: "center" }}
                     >
                         <Box my={0}>
@@ -262,8 +268,7 @@ export default function FooterComponent() {
                         </Box>
                     </Grid>
 
-                    <Grid item
-                        xs={6} sm={3} md={2}
+                    <Grid item xs={6} sm={3} md={2}
                         sx={{ display: "flex", justifyContent: "center" }}
                     >
                         <Box my={0}>
@@ -273,8 +278,7 @@ export default function FooterComponent() {
                         </Box>
                     </Grid>
 
-                    <Grid item
-                        xs={6} sm={3} md={2}
+                    <Grid item xs={6} sm={3} md={2}
                         sx={{ display: "flex", justifyContent: "center" }}
                     >
                         <Box my={0}>
@@ -284,8 +288,7 @@ export default function FooterComponent() {
                         </Box>
                     </Grid>
 
-                    <Grid item
-                        xs={6} sm={3} md={2}
+                    <Grid item xs={6} sm={3} md={2}
                         sx={{ display: "flex", justifyContent: "center" }}
                     >
                         <Box my={0}>
@@ -295,8 +298,7 @@ export default function FooterComponent() {
                         </Box>
                     </Grid>
 
-                    <Grid item
-                        xs={12} sm={3} md={2}
+                    <Grid item xs={12} sm={3} md={2}
                         sx={{ display: "flex", justifyContent: "center", overflow: "hidden" }}
                     >
                         <Box>
@@ -325,6 +327,37 @@ export default function FooterComponent() {
                     </Grid>
                 </Grid>
 
+                <Grid container spacing={2} sx={{ position: "relative", top: "-30px" }}>
+                    <Grid item xs={4} sm={3}>
+                        <Link to="mailto:help@soundmuve.com">
+                            <Typography variant='body2'
+                                sx={{
+                                    fontFamily: "Geist",
+                                    fontWeight: "600",
+                                    fontSize: "11.15px",
+                                    lineHeight: "19.26px",
+                                    color: "#CACACA"
+                                }}
+                            >help@soundmuve.com</Typography>
+                        </Link>
+                    </Grid>
+
+                    <Grid item xs={8} sm={9}>
+                        <Typography variant='body2'
+                            sx={{
+                                fontFamily: "Geist",
+                                fontWeight: "600",
+                                fontSize: "11.15px",
+                                lineHeight: "19.26px",
+                                color: "#CACACA"
+                            }}
+                        >
+                            2261 Market street STE 86008, San Francisco, 
+                            Carlifonia, United states.
+                        </Typography>
+                    </Grid>
+                </Grid>
+
                 <Box sx={{ position: "relative"}}>
                     <img src={desktopBrandImage}
                         style={{
@@ -336,6 +369,7 @@ export default function FooterComponent() {
                 </Box>
             </Box>
 
+            {/* mobile view  */}
             <Box sx={{
                 display: {xs: "block", md: "none"},
                 pt: {xs: 5, md: 7},
@@ -371,6 +405,15 @@ export default function FooterComponent() {
                                     <li className={style.xsText}>
                                         <Link to="/privacy-policy" className={`${style.link} ${style.xsLink}`} title='Privacy Policy'>
                                             Privacy Policy
+                                        </Link>
+                                    </li>
+
+                                    <li className={style.xsText}>
+                                        <Link to="mailto:help@soundmuve.com" 
+                                            className={`${style.link} ${style.xsLink}`} 
+                                            title='help@soundmuve.com'
+                                        >
+                                            help@soundmuve.com
                                         </Link>
                                     </li>
                                 </ul>
@@ -415,10 +458,17 @@ export default function FooterComponent() {
                     <Stack direction="row" justifyContent="left" alignItems="center" spacing={2} my={2}>
 
                         <Box sx={{display: "flex", gap: 1}}>
-                            <FacebookIcon className={style.icons} sx={{maxWidth: "5.69px", fontSize: 10}} />
-                            <TwitterIcon className={style.icons} sx={{maxWidth: "5.69px", fontSize: 10}} />
-                            <LinkedInIcon className={style.icons} sx={{maxWidth: "5.69px", fontSize: 10}} />
-                            <InstagramIcon className={style.icons} sx={{maxWidth: "5.69px", fontSize: 10}} />
+                            {/* <FacebookIcon className={style.icons} sx={{ fontSize: 12 }} /> */}
+
+                            <Link to="https://x.com/soundmuve/" target='_blank'>
+                                <TwitterIcon className={style.icons} sx={{ fontSize: 12 }} />
+                            </Link>
+
+                            {/* <LinkedInIcon className={style.icons} sx={{ fontSize: 12}} /> */}
+
+                            <Link to="https://www.instagram.com/soundmuve/" target='_blank'>
+                                <InstagramIcon className={style.icons} sx={{ fontSize: 12 }} />
+                            </Link>
                         </Box>
 
                         <Typography className={style.text} sx={{
@@ -432,7 +482,22 @@ export default function FooterComponent() {
                             &copy; { currentYear } SoundMuve All rights reserved.
                         </Typography>
                     </Stack>
+
+                    <Typography variant='body2'
+                        sx={{
+                            fontFamily: "Geist",
+                            fontWeight: "600",
+                            fontSize: "11.15px",
+                            lineHeight: "19.26px",
+                            color: "#CACACA"
+                        }}
+                    >
+                        2261 Market street STE 86008, San Francisco, 
+                        Carlifonia, United states.
+                    </Typography>
                 </Box>
+
+
 
                 <Box sx={{ position: "relative", bottom: 0 }}>
                     <img src={mobileBrandImage}

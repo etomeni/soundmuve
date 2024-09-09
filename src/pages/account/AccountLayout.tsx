@@ -1,5 +1,5 @@
 import { Outlet, Navigate } from 'react-router-dom';
-import { useUserStore } from '../../state/userStore';
+import { useUserStore } from '@/state/userStore';
 
 const AccountLayout = () => {
     const isLoggedIn = useUserStore((state) => state.isLoggedIn);

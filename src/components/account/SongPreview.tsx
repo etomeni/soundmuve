@@ -8,7 +8,8 @@ import Stack from '@mui/material/Stack';
 import DeleteForeverOutlinedIcon from '@mui/icons-material/DeleteForeverOutlined';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import StopCircleOutlinedIcon from '@mui/icons-material/StopCircleOutlined';
-import { useSettingStore } from '@/state/settingStore';
+// import { useSettingStore } from '@/state/settingStore';
+import colors from '@/constants/colors';
 
 
 interface _Props {
@@ -24,7 +25,7 @@ interface _Props {
 const SongPreviewComponent: React.FC<_Props> = ({
     songAudio, songTitle, subTitle, deleteSong = ()=>{}, editSong
 }) => {
-    const darkTheme = useSettingStore((state) => state.darkTheme);
+    // const darkTheme = useSettingStore((state) => state.darkTheme);
     const waveDisplayRef = useRef();
     const waveSurferRef: any = useRef();
     const [isAudioPlaying, setIsAudioPlaying] = useState<boolean>(false);
@@ -33,10 +34,10 @@ const SongPreviewComponent: React.FC<_Props> = ({
         if(waveDisplayRef.current && songAudio) {
             waveSurferRef.current = WaveSurfer.create({
                 container: waveDisplayRef.current,
-                waveColor: darkTheme ? '#666666' : "#272727",
-                progressColor: '#644986',
+                waveColor: colors.tertiary,
+                progressColor: colors.milk,
                 normalize: true,
-                cursorColor: "#fff",
+                cursorColor: colors.primary,
                 url: `${songAudio}`,
                 height: 80,
                 barWidth: 10,
@@ -57,14 +58,15 @@ const SongPreviewComponent: React.FC<_Props> = ({
             sx={{
                 // height: "185px",
                 borderRadius: "11px",
-                bgcolor: darkTheme ? "#272727" : "#B0AFAF",
+                bgcolor: colors.secondary,
+                border: `1px solid ${colors.dark}`,
                 width: "100%",
                 my: 1.5
             }}
         >
             <Stack 
                 direction="row" alignItems="center" justifyContent="space-between"
-                p="15px" bgcolor="#666666" borderRadius="11px" color={darkTheme ? "#000" : "#fff"}
+                p="15px" bgcolor={colors.tertiary} borderRadius="11px" color={colors.milk}
             >
                 <Box>
                     <Typography
@@ -107,7 +109,7 @@ const SongPreviewComponent: React.FC<_Props> = ({
                             }}
                         > Edit </Typography>
                     ) : (
-                        <DeleteForeverOutlinedIcon sx={{ color: darkTheme ? "#313131" : "#fff", ":hover": { color: "#de2341" } }}
+                        <DeleteForeverOutlinedIcon sx={{ color: colors.milk, ":hover": { color: colors.primary } }}
                             onClick={() => { 
                                 waveSurferRef.current.stop();
                                 waveSurferRef.current.destroy();
@@ -130,11 +132,11 @@ const SongPreviewComponent: React.FC<_Props> = ({
                 <Box px={{xs: 0, sm: 1, md: 2}}>
                     {
                         isAudioPlaying ? (
-                            <StopCircleOutlinedIcon sx={{ color: "#fff", fontSize: "40px" }}  
+                            <StopCircleOutlinedIcon sx={{ color: colors.milk, fontSize: "40px" }}  
                                 onClick={() => { waveSurferRef.current.stop(); setIsAudioPlaying(false) }}
                             />
                         ) : (
-                            <PlayArrowIcon sx={{ color: "#fff", fontSize: "40px" }}  
+                            <PlayArrowIcon sx={{ color: colors.milk, fontSize: "40px" }}  
                                 onClick={() => { waveSurferRef.current.play(); setIsAudioPlaying(true); }}
                             />
                         )

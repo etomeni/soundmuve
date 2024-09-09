@@ -1,6 +1,5 @@
 import Box from '@mui/material/Box';
 import emptyImg from '@/assets/images/empty.png';
-import { useSettingStore } from '@/state/settingStore';
 
 interface MyComponentProps {
     notFoundText?: string,
@@ -8,7 +7,6 @@ interface MyComponentProps {
 };
 
 const EmptyListComponent: React.FC<MyComponentProps> = ({notFoundText = 'not found', containerHeight = '30vh'}) => {
-    const darkTheme = useSettingStore((state) => state.darkTheme);
 
     return (
         <Box sx={{
@@ -23,7 +21,6 @@ const EmptyListComponent: React.FC<MyComponentProps> = ({notFoundText = 'not fou
         }}>
             <img src={emptyImg} alt='empty image' style={{ width: 200, height: 200 }} />
             <h4 style={{
-                color: darkTheme ? "#fff" : '#272727',
                 fontSize: 20,
                 textAlign: 'center',
                 margin: 0

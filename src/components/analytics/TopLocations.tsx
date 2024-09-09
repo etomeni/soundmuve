@@ -3,6 +3,7 @@ import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography'
 import LinearProgress, { linearProgressClasses } from '@mui/material/LinearProgress';
+import colors from '@/constants/colors';
 
 
 interface locationIntercae {
@@ -12,19 +13,19 @@ interface locationIntercae {
 
 interface _Props {
     // children: React.ReactNode,
-    darkTheme: boolean,
+    darkTheme?: boolean,
     title: string,
     locations: locationIntercae[]
 }
 
 const TopLocationsComponent: React.FC<_Props> = ({
-    darkTheme, title, locations
+    title, locations
 }) => {
 
     return (
         <Box
             sx={{
-                border: darkTheme ? "1.08px solid #fff" : "1.08px solid #000",
+                border: `1.08px solid ${colors.dark}`,
                 borderRadius: "10.8px",
                 p: "15px"
             }}
@@ -60,11 +61,11 @@ const TopLocationsComponent: React.FC<_Props> = ({
                                         height: 10,
                                         borderRadius: 5,
                                         [`&.${linearProgressClasses.colorPrimary}`]: {
-                                            backgroundColor: darkTheme ? "#fff" : "#c4c4c4",
+                                            backgroundColor: colors.secondary,
                                         },
                                         [`& .${linearProgressClasses.bar}`]: {
                                             borderRadius: 5,
-                                            backgroundColor: "#C89FF5"
+                                            backgroundColor: colors.primary
                                         },
                                     }}
                                 />

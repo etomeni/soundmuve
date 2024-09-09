@@ -4,12 +4,14 @@ import axios from 'axios';
 
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
+import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 
 import AddIcon from '@mui/icons-material/Add';
 
 import albumImage from '@/assets/images/album.png';
 import dashHappyGuyImage from '@/assets/images/dashHappyGuy.png';
+import setPayoutImg from '@/assets/branded/images/account/setPayoutImg.png';
 
 import AccountWrapper from '@/components/AccountWrapper';
 import AlbumSongItem from '@/components/account/AlbumSongItem';
@@ -20,19 +22,23 @@ import ReleaseStatusComponent from '@/components/ReleaseStatus';
 // import LoadingDataComponent from '@/components/LoadingData';
 import PaymentzComponent from '@/components/account/payments/PaymentzComponent';
 
-import { useSettingStore } from '@/state/settingStore';
 import { useUserStore } from '@/state/userStore';
+import { useSettingStore } from '@/state/settingStore';
+import { useReleaseStore } from '@/state/releaseStore';
 
 import { apiEndpoint, currencyDisplay } from '@/util/resources';
 import { getLocalStorage, setLocalStorage } from '@/util/storage';
-import { useReleaseStore } from '@/state/releaseStore';
+import colors from '@/constants/colors';
 import { releaseInterface } from '@/constants/typesInterface';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
+import { homeSelectStyle } from '@/util/mui';
 
 
 function DashboardArtist() {
     const navigate = useNavigate();
     const [albumType, setAlbumType] = useState<"Single" | "Album">("Single");
-    const darkTheme = useSettingStore((state) => state.darkTheme);
     const userData = useUserStore((state) => state.userData); 
     const accessToken = useUserStore((state) => state.accessToken);
     const _setSongDetails = useReleaseStore((state) => state._setSongDetails);
@@ -239,18 +245,17 @@ function DashboardArtist() {
 
     return (
         <AccountWrapper>
-            <Box sx={{px: {xs: 2, md: 5, lg: 12}, pb: 5, position: "relative", zIndex: 10, mt: {xs: 5, md: 10}  }}>
-                <Typography 
+            <Box >
+                <Typography variant='h1' component="h1"
                     sx={{
+                        fontFamily: "Nohemi",
                         fontWeight: "900",
                         // fontSize: {xs: "39.96px", md: "60px"},
                         fontSize: {xs: "35px", md: "60px"},
                         lineHeight: {xs: "42.49px", md: "63.8px"},
                         letterSpacing: {xs: "-0.89px", md: "-1.34px"},
                     }}
-                >
-                    Welcome { userData.firstName } 👋
-                </Typography>
+                > Welcome { userData.firstName } 👋 </Typography>
 
                 <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
                     <Box 
@@ -273,18 +278,16 @@ function DashboardArtist() {
                                 display: "flex",
                                 flexDirection: "column",
                                 borderRadius: {xs: "14.34px", md: "12px"},
-                                border: "1px solid #C0A3E0",
-                                borderColor: "inear-gradient(180deg, #C0A3E0 0%, #69597A 100%)",
-                                // borderImageSource: "linear-gradient(180deg, #C0A3E0 0%, #69597A 100%)",
-                                background: darkTheme ? "#64498636" : "#644986",
+                                bgcolor: colors.dark,
                                 color: "#fff", 
                                 p: {xs: "15px", md: "18px"},
                                 alignSelf: "center"
                             }}
                         >
-                            <Typography 
+                            <Typography variant='body1'
                                 sx={{
-                                    fontWeight: "900",
+                                    fontFamily: "Geist",
+                                    fontWeight: "800",
                                     fontSize: "25px",
                                     lineHeight: "40px",
                                     letterSpacing: "-0.13px",
@@ -315,16 +318,18 @@ function DashboardArtist() {
 
                                 <Box onClick={() => setWithdrawlModal(true) }
                                     sx={{
-                                        p: "10px 29px 10px 29px",
+                                        p: "10px 29px",
                                         borderRadius: "12px",
-                                        background: "#fff",
+                                        // background: "#fff",
+                                        bgcolor: colors.primary,
                                         color: "#000",
                                         cursor: "pointer"
                                     }}
                                 >
-                                    <Typography 
+                                    <Typography variant='body1'
                                         sx={{
-                                            fontWeight: '900',
+                                            fontFamily: "Geist",
+                                            fontWeight: '800',
                                             fontSize: "15px",
                                             lineHeight: "13px",
                                             letterSpacing: "-0.13px",
@@ -345,21 +350,20 @@ function DashboardArtist() {
                                 flexDirection: "column",
 
                                 borderRadius: "12px",
-                                border: "1px solid #CAE18E",
-                                borderColor: "linear-gradient(180deg, #CAE18E 0%, #6E7B4E 100%)",
-                                // borderImageSource: "linear-gradient(180deg, #CAE18E 0%, #6E7B4E 100%)"
-                                background: darkTheme ? "#CAE18E36" : "#698522",
+                                bgcolor: colors.dark,
                                 color: "#fff",
 
                                 p: "18px",
                                 alignSelf: "center"
                             }}
                         >
-                            <Typography sx={{
-                                fontWeight: "900",
+                            <Typography variant='h3' sx={{
+                                fontFamily: "Geist",
+                                fontWeight: "800",
                                 fontSize: "25px",
                                 lineHeight: "40px",
                                 letterSpacing: "-0.13px",
+                                textAlign: "center",
                             }}>Add new Release</Typography>
 
                             <Box 
@@ -376,15 +380,16 @@ function DashboardArtist() {
                                 <Box 
                                     onClick={() => setOpenReleaseModal(true) }
                                     sx={{
-                                        p: "10px 29px 10px 29px",
+                                        p: "10px 29px",
                                         borderRadius: "12px",
-                                        background: "#fff",
+                                        bgcolor: colors.milk,
                                         cursor: "pointer",
                                         color: "#000"
                                     }}
                                 >
-                                    <Typography sx={{
-                                        fontWeight: '900',
+                                    <Typography variant='h3' sx={{
+                                        fontFamily: "Geist",
+                                        fontWeight: '800',
                                         fontSize: "15px",
                                         lineHeight: "13px",
                                         letterSpacing: "-0.13px",
@@ -404,19 +409,17 @@ function DashboardArtist() {
                                 display: "flex",
                                 flexDirection: "column",
                                 borderRadius: "12px",
-                                border: "1px solid #DA606B",
-                                borderColor: "linear-gradient(180deg, #DA606B 0%, #743339 100%)",
-                                // borderImageSource: "linear-gradient(180deg, #DA606B 0%, #743339 100%)",
-                                background: darkTheme ? "#DA606B36" : "#DA606B",
-
+                                bgcolor: colors.dark,
                                 color: "#fff",
 
                                 p: "18px",
-                                alignSelf: "center"
+                                alignSelf: "center",
+                                textAlign: 'center'
                             }}
                         >
-                            <Typography sx={{
-                                fontWeight: "900",
+                            <Typography variant='h3' sx={{
+                                fontFamily: "Geist",
+                                fontWeight: "800",
                                 fontSize: "25px",
                                 lineHeight: "40px",
                                 letterSpacing: "-0.13px",
@@ -438,12 +441,11 @@ function DashboardArtist() {
                                     outline: "none",
                                 }}>
                                     <Box sx={{
-                                        p: "10px 29px 10px 29px",
+                                        p: "10px 29px",
                                         borderRadius: "12px",
-                                        background: "#fff",
-
+                                        bgcolor: colors.milk
                                     }}>
-                                        <Typography sx={{
+                                        <Typography variant='body1' sx={{
                                             fontWeight: '900',
                                             fontSize: "15px",
                                             lineHeight: "13px",
@@ -469,12 +471,7 @@ function DashboardArtist() {
                             flexDirection: "column",
 
                             borderRadius: "14.34px",
-                            border: "1px solid #CAE18E",
-                            borderColor: "linear-gradient(180deg, #CAE18E 0%, #6E7B4E 100%)",
-                            // borderImageSource: "linear-gradient(180deg, #CAE18E 0%, #6E7B4E 100%)"
-                            // background: "#CAE18E36",
-
-                            background: darkTheme ? "#CAE18E36" : "#CAE18E",
+                            bgcolor: colors.dark,
                             color: "#fff", 
 
                             p: "18px",
@@ -485,7 +482,8 @@ function DashboardArtist() {
                         }}
                     >
                         <Typography sx={{
-                            fontWeight: "900",
+                            fontFamily: "Geist",
+                            fontWeight: "800",
                             fontSize: "29.88px",
                             lineHeight: "47.81px",
                             letterSpacing: "-0.16px",
@@ -507,12 +505,13 @@ function DashboardArtist() {
                                 outline: "none",
                             }}>
                                 <Box sx={{
-                                    p: "11.95px 34.66px 11.95px 34.66px",
+                                    p: "11.95px 34.66px",
                                     borderRadius: "14.34px",
-                                    background: "#fff",
+                                    bgcolor: colors.milk,
                                 }}>
-                                    <Typography sx={{
-                                        fontWeight: '900',
+                                    <Typography variant='body1' sx={{
+                                        fontFamily: "Geist",
+                                        fontWeight: '800',
                                         fontSize: "17.93px",
                                         lineHeight: "15.54px",
                                         letterSpacing: "-0.16px",
@@ -541,10 +540,7 @@ function DashboardArtist() {
                                 maxWidth: '47%',
                                 height: "214px",
                                 borderRadius: "6.81px",
-                                border: "1px solid #C0A3E0",
-                                borderColor: "inear-gradient(180deg, #C0A3E0 0%, #69597A 100%)",
-                                // borderImageSource: "linear-gradient(180deg, #C0A3E0 0%, #69597A 100%)",
-                                background: darkTheme ? "#64498636" : "#644986",
+                                bgcolor: colors.dark,
                                 color: "#fff",
 
                                 display: "flex",
@@ -552,8 +548,9 @@ function DashboardArtist() {
                                 p: "15px",
                             }}
                         >
-                            <Typography sx={{
-                                fontWeight: "900",
+                            <Typography variant='body1' sx={{
+                                fontFamily: "Geist",
+                                fontWeight: "800",
                                 fontSize: "14.19px",
                                 lineHeight: "22.7px",
                                 letterSpacing: "-0.07px",
@@ -582,11 +579,12 @@ function DashboardArtist() {
                                 <Box onClick={() => setWithdrawlModal(true) } sx={{
                                     p: "8.97px 26px 8.97px 26px",
                                     borderRadius: "10.76px",
-                                    background: "#fff",
+                                    bgcolor: colors.primary,
                                     cursor: 'pointer',
                                 }}>
-                                    <Typography sx={{
-                                        fontWeight: '900',
+                                    <Typography variant='body1' sx={{
+                                        fontFamily: "Geist",
+                                        fontWeight: '800',
                                         fontSize: "13.45px",
                                         lineHeight: "11.66px",
                                         letterSpacing: "-0.12px",
@@ -603,11 +601,7 @@ function DashboardArtist() {
                                 maxWidth: '47%',
                                 height: "214px",
                                 borderRadius: "6.81px",
-                                border: "1px solid #DA606B",
-                                borderColor: "linear-gradient(180deg, #DA606B 0%, #743339 100%)",
-                                // borderImageSource: "linear-gradient(180deg, #DA606B 0%, #743339 100%)",
-                                // background: "#DA606B36",
-                                background: darkTheme ? "#DA606B36" : "#DA606B",
+                                bgcolor: colors.dark,
                                 color: "#fff",
 
                                 display: "flex",
@@ -615,8 +609,9 @@ function DashboardArtist() {
                                 p: "15px",
                             }}
                         >
-                            <Typography sx={{
-                                fontWeight: "900",
+                            <Typography variant='body1' sx={{
+                                fontFamily: "Geist",
+                                fontWeight: "800",
                                 fontSize: "14.19px",
                                 lineHeight: "22.7px",
                                 letterSpacing: "-0.07px",
@@ -640,13 +635,14 @@ function DashboardArtist() {
                                     outline: "none",
                                 }}>
                                     <Box sx={{
-                                        p: "8.97px 26px 8.97px 26px",
+                                        p: "8.97px 26px",
                                         borderRadius: "10.76px",
-                                        background: "#fff",
+                                        bgcolor: colors.milk,
                                     }}>
-                                        <Typography 
+                                        <Typography variant='body1'
                                             sx={{
-                                                fontWeight: '900',
+                                                fontFamily: "Geist",
+                                                fontWeight: '800',
                                                 fontSize: "13.45px",
                                                 lineHeight: "11.66px",
                                                 letterSpacing: "-0.12px",
@@ -664,33 +660,37 @@ function DashboardArtist() {
                 <Box
                     sx={{
                         borderRadius: "4.48px",
-                        padding: {xs: "10px", md: "18px 15px"},
-                        background: darkTheme ? "#6449864A" : "linear-gradient(90deg, #644986 0%, #E977C2 100%)",
-                        color: "#fff",
+                        padding: {xs: "15px", md: "30px 20px"},
+                        bgcolor: "#E2CBA2",
+                        color: colors.dark,
 
                         display: "flex",
                         flexDirection: "row",
                         justifyContent: "space-between",
                         alignItems: "center",
                         gap: "20px",
-                        my: "30px"
+                        my: "30px",
+
+                        position: "relative",
+                        overflow: "hidden"
                     }}
                 >
-                    <Box>
-                        <Typography
+                    <Box zIndex={2}>
+                        <Typography variant='h2'
                             sx={{
+                                fontFamily: "Nohemi",
                                 fontWeight: "900",
                                 fontSize: {xs: "20px", md: "35px"},
-                                lineHeight: {xs: "23px", md: "24px"},
-                                letterSpacing: {xs: "-0.5px", md: "-1.34px"}
+                                lineHeight: {xs: "23px", md: "38.01px"},
+                                letterSpacing: {xs: "-0.5px", md: "-1.34px"},
+                                maxWidth: "428.06px"
                             }}
-                        >
-                            Don't Delay Getting Your Earnings
-                        </Typography>
+                        > Don't Delay Getting Your Earnings </Typography>
 
-                        <Typography
+                        <Typography variant='body2'
                             sx={{
-                                fontWeight: "400",
+                                fontFamily: "Geist",
+                                fontWeight: "300",
                                 fontSize: {xs: "9px", md: "16px"},
                                 lineHeight: {xs: "14.93px", md: "40px"},
                                 letterSpacing: {xs: "-0.05px", md: "-0.13px"}
@@ -700,19 +700,37 @@ function DashboardArtist() {
                         </Typography>
                     </Box>
 
+
+                    <Box
+                        sx={{
+                            position: "absolute",
+                            top: 0,
+                            right: {xs: "35px", sm: "75px", md: "101px"},
+                            maxWidth: "432.01px",
+                        }}
+                    >
+                        <img src={setPayoutImg} alt='payout design image'
+                            style={{
+                                width: "100%",
+                                objectFit: "contain",
+                            }}
+                        />
+                    </Box>
+
                     <Box onClick={() => setOpenPayoutModal(true) }
                         sx={{
                             p: {xs: "7.47px 21.65px 7.47px 21.65px", md: "10px 29px 10px 29px"},
                             borderRadius: {xs: "8.96px", md: "12px"},
                             background: "#fff",
                             color: "#000",
-                            cursor: "pointer"
+                            cursor: "pointer",
+                            zIndex: 2
                         }}
                     >
-                        <Typography 
-                            noWrap
+                        <Typography variant='body1' noWrap
                             sx={{
-                                fontWeight: '900',
+                                fontFamily: "Geist",
+                                fontWeight: '800',
                                 fontSize: {xs: "11.2px", md: "15px"},
                                 lineHeight: {xs: "9.71px", md: "13px"},
                                 letterSpacing: {xs: "-0.1px", md: "-0.13px"},
@@ -720,6 +738,7 @@ function DashboardArtist() {
                             }}
                         > Set up payout </Typography>
                     </Box>
+
                 </Box>
 
                 <Box
@@ -756,13 +775,14 @@ function DashboardArtist() {
                         sx={{
                             width: "100%",
                             maxWidth: {xs: "110px", md: "280px"},
-                            textAlign: "center",
+                            // textAlign: "center",
                             ml: "auto",
                             zIndex: 1
                         }}
                     >
-                        <Typography
+                        <Typography variant='h2'
                             sx={{
+                                fontFamily: "Nohemi",
                                 fontWeight: "900",
                                 fontSize: {xs: "13.22px", md: "35px"},
                                 lineHeight: {xs: "12.46px", md: "33px"},
@@ -782,9 +802,10 @@ function DashboardArtist() {
                                 cursor: "pointer"
                             }}
                         >
-                            <Typography 
+                            <Typography variant='body1'
                                 sx={{
-                                    fontWeight: '900',
+                                    fontFamily: "Geist",
+                                    fontWeight: '800',
                                     fontSize: {xs: "11.33px", md: "15px"},
                                     lineHeight: {xs: "9.82px", md: "13px"},
                                     letterSpacing: {xs: "-0.1px", md: "-0.13px"},
@@ -796,8 +817,13 @@ function DashboardArtist() {
                     </Box>
                 </Box>
 
-                <Box>
-                    <Typography
+                <Stack direction="row" justifyContent="space-between" alignItems="center"
+                    sx={{
+                        mt: "50px",
+                        display: {xs: "none", md: "flex"}
+                    }}
+                >
+                    {/* <Typography
                         sx={{
                             fontWeight: "900",
                             fontSize: {xs: "19.28px", md: "35px"},
@@ -806,7 +832,7 @@ function DashboardArtist() {
                             // color: "#FFFFFF",
                             my: 2
                         }}
-                    > Your { albumType } </Typography>
+                    > Your { albumType } </Typography> */}
 
                     <Box 
                         sx={{ 
@@ -814,11 +840,11 @@ function DashboardArtist() {
                             maxWidth: {xs: "401.95px", md: "518px"},
                             height: {xs: "39px", md: "50.26px"},
                             borderRadius: {xs: "7.55px", md: "9.73px"},
-                            bgcolor: "#D9D9D9",
+                            // bgcolor: "#D9D9D9",
 
                             border: {xs: "0.63px solid #000000", md: "0.81px solid #000000"},
                             my: {xs: 2, md: 4},
-                            mx: "auto",
+                            // mx: "auto",
                             px: "2px",
 
                             display: "flex",
@@ -893,7 +919,105 @@ function DashboardArtist() {
                             > Album </Typography>
                         </Box>
                     </Box>
-                </Box>
+
+                    {
+                        releases && releases.length ? 
+                            <Link to="/account/artist/all-music">
+                                <Box 
+                                    sx={{
+                                        p: "11px 29px",
+                                        borderRadius: "12px",
+                                        bgcolor: colors.dark,
+                                        color: colors.milk
+                                    }}
+                                >
+                                    <Typography variant='body1'
+                                        sx={{
+                                            fontFamily: "Geist",
+                                            fontWeight: "800",
+                                            fontSize: "15px",
+                                            lineHeight: "13px",
+                                            letterSpacing: "-0.13px"
+                                        }}
+                                    >See all your music</Typography>
+                                </Box>
+                            </Link>
+                        : <></>
+                    }
+
+                </Stack>
+
+                <Stack direction="row" justifyContent="space-between" alignItems="center"
+                    sx={{
+                        mt: "50px",
+                        mb: "25px",
+                        display: {xs: "flex", md: "none"}
+                    }}
+                >
+                    <Box>
+                        <FormControl>
+                            <Select
+                                labelId="language"
+                                id="language-select"
+                                label=""
+                                // defaultValue="Select Language"
+                                // placeholder='Select Language'
+                                value={albumType}
+
+                                sx={homeSelectStyle}
+
+                                MenuProps={{
+                                    sx: {
+                                      "&& .Mui-selected": {
+                                        color: colors.dark,
+                                        background: colors.primary,
+                                      },
+                                    },
+                                }}
+                            
+                                
+                                onChange={(event) => {
+                                    const value: any = event.target.value;
+                                    setAlbumType(value);
+
+                                    if (value == "Single") {
+                                        handleGetSingleRelease();
+                                        return;
+                                    }
+
+                                    if (value == "Album") {
+                                        getAlbumRelease();
+                                        return;
+                                    }
+                                }}
+                            >
+                                <MenuItem value="Single">
+                                    Single
+                                </MenuItem>
+                                <MenuItem value="Album">
+                                    Album
+                                </MenuItem>
+                            </Select>
+                        </FormControl>
+                    </Box>
+
+                    {
+                        releases && releases.length ? 
+                            <Link to="/account/artist/all-music">
+                                <Typography variant='body1'
+                                    sx={{
+                                        fontFamily: "Geist",
+                                        fontWeight: "800",
+                                        fontSize: "15px",
+                                        lineHeight: "13px",
+                                        letterSpacing: "-0.13px",
+                                        color: colors.primary
+                                    }}
+                                >See all your music</Typography>
+                            </Link>
+                        : <></>
+                    }
+                </Stack>
 
                 <Grid container spacing="20px">
                     
@@ -904,25 +1028,9 @@ function DashboardArtist() {
                             ))
                         : <></>
                     }
-                    {/* {
-                        releases ? 
-                            releases.length ?
-                                releases.slice(0, 2).map((song, index) => (
-                                    viewSong(song, index)
-                                ))
-                            : <Grid item xs={6} md={8}>
-                                <EmptyListComponent notFoundText={apiResponse.message} />
-                            </Grid>
-                        : <Grid item xs={6} md={8}>
-                            <LoadingDataComponent />
-                        </Grid>
-                    } */}
 
 
-
-                    <Grid item
-                        xs={6} md={4}
-                    >
+                    <Grid item xs={6} md={4}>
                         <Box
                             sx={{
                                 width: "100%",
@@ -941,7 +1049,7 @@ function DashboardArtist() {
                                     justifyContent: "center",
                                     alignItems: "center",
 
-                                    border: "4px dashed #644986",
+                                    border: "4px dashed #6C6050",
                                     cursor: "pointer"
                                 }}
                             >
@@ -949,7 +1057,7 @@ function DashboardArtist() {
                                     sx={{
                                         width: {xs: "65.65px", md: "115px"},
                                         height: {xs: "65.65px", md: "115px"},
-                                        bgcolor: "#644986",
+                                        bgcolor: "#6C6050",
                                         borderRadius: "100%",
                                         display: "flex",
                                         justifyContent: "center",
@@ -965,103 +1073,8 @@ function DashboardArtist() {
                                 </Box>
                             </Box>
 
-                            {
-                                releases && releases.length ? 
-                                    <Box sx={{display: {xs: "none", md: "block"}}}>
-                                        <Link to="/account/artist/all-music" style={{
-                                            textDecoration: "none",
-                                            color: "#000000",
-                                            border: "none",
-                                            outline: "none",
-
-                                            display: 'flex',
-                                            justifyContent: "center",
-                                        }}>
-                                            <Box
-                                                sx={{
-                                                    bgcolor: darkTheme ? "#fff" : "#000",
-                                                    p: "11px 29px 10px 29px",
-                                                    borderRadius: "12px",
-                                                    display: "inline-block",
-                                                    my: 2
-                                                }}
-                                            >
-                                                <Typography
-                                                    sx={{
-                                                        color: darkTheme ? "#000" : "#fff",
-                                                        fontSize: {xs: "8.56px", md: "15px"},
-                                                        lineHeight: {xs: "7.42px", md: "13px"},
-                                                        letterSpacing: {xs: "-0.07px", md: "-0.13px"}
-                                                    }}
-                                                > See all your music </Typography>
-                                            </Box>
-                                        </Link> 
-                                    </Box>
-                                : <></>
-                            }
-
                         </Box>
                     </Grid>
-
-                    {
-                        releases && releases.length ? 
-                            <Grid item
-                                xs={6} md={4}
-                                sx={{ alignSelf: "center", display: {xs: "block", md: "none"} }}
-                            >
-                                <Box
-                                    sx={{
-                                        width: "100%",
-                                        maxWidth: {xs: "196.38px", md: "345px"},
-                                        mx: "auto"
-                                    }}
-                                >
-                                    <Box
-                                        sx={{
-                                            height: {xs: "152.99px", md: "268px"},
-                                            borderRadius: {xs: "6.85px", md: "12px"},
-                                            // bgcolor: "#343434",
-                                            textAlign: "center",
-                                            display: "flex",
-                                            justifyContent: "center",
-                                            alignItems: "center",
-                                        }}
-                                    >
-                                        <Link to="/account/artist/all-music" 
-                                            style={{
-                                                textDecoration: "none",
-                                                color: "#000000",
-                                                border: "none",
-                                                outline: "none",
-
-                                                display: 'flex',
-                                                justifyContent: "center",
-                                            }}
-                                        >
-                                            <Box
-                                                sx={{
-                                                    bgcolor: darkTheme ? "#fff" : "#000",
-                                                    p: {xs: "6.28px 16.56px 5.71px 16.56px", md: "11px 29px 10px 29px"},
-                                                    borderRadius: {xs: "6.85px", md: "12px"},
-                                                    display: "inline-block",
-                                                    // my: 2
-                                                }}
-                                            >
-                                                <Typography
-                                                    sx={{
-                                                        color: darkTheme ? "#000" : "#fff",
-                                                        fontSize: {xs: "8.56px", md: "15px"},
-                                                        lineHeight: {xs: "7.42px", md: "13px"},
-                                                        letterSpacing: {xs: "-0.07px", md: "-0.13px"}
-                                                    }}
-                                                > See all your music </Typography>
-                                            </Box>
-                                        </Link> 
-                                    </Box>
-                                </Box>
-                            </Grid>
-                        : <></>
-                    }
 
                 </Grid>
 
@@ -1069,7 +1082,7 @@ function DashboardArtist() {
                     <Box sx={{my: 4}}>
                         <Grid container spacing="20px">
                             <Grid item xs={12} md={6}>
-                                <Typography
+                                <Typography variant='h3'
                                     sx={{
                                         fontWeight: "900",
                                         fontSize: {xs: "19px"},

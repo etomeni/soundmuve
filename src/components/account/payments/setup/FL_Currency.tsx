@@ -11,9 +11,11 @@ import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import Button from '@mui/material/Button';
 
-import { useSettingStore } from '@/state/settingStore';
+// import { useSettingStore } from '@/state/settingStore';
 import { currencyLists, getSupportedCurrency } from '@/util/currencies';
-import FlutterwaveLogo2 from "@/assets/images/FlutterwaveLogo2.png";
+// import FlutterwaveLogo2 from "@/assets/images/FlutterwaveLogo2.png";
+import colors from '@/constants/colors';
+import { releaseSelectStyle2 } from '@/util/mui';
 
 
 interface _Props {
@@ -24,9 +26,9 @@ interface _Props {
 }
 
 const FL_CurrencyModalComponent: React.FC<_Props> = ({
-    openModal, closeModal, confirmBtn, changeMethod
+    openModal, closeModal, confirmBtn, // changeMethod
 }) => {
-    const darkTheme = useSettingStore((state) => state.darkTheme);
+    // const darkTheme = useSettingStore((state) => state.darkTheme);
     const [selectedCurrency, setSelectedCurrency] = useState('');
     const [errorMsg, setErrorMsg] = useState('');
     const [currencies, setCurrencies] = useState(currencyLists);
@@ -82,14 +84,14 @@ const FL_CurrencyModalComponent: React.FC<_Props> = ({
             >
                 <Box 
                     sx={{
-                        bgcolor: darkTheme ? "#272727" : "#fff",
+                        bgcolor: colors.bg,
                         width: "100%",
                         maxWidth: {xs: "92%", sm: "496px"},
                         maxHeight: "95%",
 
                         borderRadius: "12px",
                         p: "25px",
-                        color: darkTheme ? "#fff" : "#000",
+                        color: colors.dark,
 
                         display: "flex",
                         flexDirection: "column",
@@ -101,12 +103,12 @@ const FL_CurrencyModalComponent: React.FC<_Props> = ({
                         <Box sx={{textAlign: "right"}}>
                             <IconButton onClick={() => closeModal() }>
                                 <CloseIcon 
-                                    sx={{color: darkTheme ? "#fff" : "#000", fontSize: "30px"}} 
+                                    sx={{color: colors.primary, fontSize: "30px"}} 
                                 />
                             </IconButton>
                         </Box>
 
-                        <Box sx={{textAlign: 'center'}}>
+                        {/* <Box sx={{textAlign: 'center'}}>
                             <img
                                 src={FlutterwaveLogo2} alt='Flutterwave Logo Image'
                                 style={{
@@ -114,12 +116,21 @@ const FL_CurrencyModalComponent: React.FC<_Props> = ({
                                     width: "60%"
                                 }}
                             />
-                        </Box>
+                        </Box> */}
+
+                        <Typography variant='h2'
+                            sx={{
+                                fontWeight: "900",
+                                fontSize: "35px",
+                                lineHeight: "24px",
+                                letterSpacing: "-1.34px",
+                                textAlign: "center"
+                            }}
+                        >Set up bank payout</Typography>
                     </Box>
 
 
                     <Box id="payout-modal-description" sx={{mt: 5}}>
-
                         <Box>
                             <Typography sx={{
                                 fontWeight: "400",
@@ -127,7 +138,7 @@ const FL_CurrencyModalComponent: React.FC<_Props> = ({
                                 lineHeight: "38.44px",
                                 letterSpacing: "-0.12px",
                                 textAlign: "left"
-                            }}> Currency </Typography>
+                            }}> Select Currency </Typography>
 
                             <FormControl fullWidth>
                                 <Select
@@ -136,22 +147,7 @@ const FL_CurrencyModalComponent: React.FC<_Props> = ({
                                     label=""
                                     defaultValue=""
 
-                                    sx={{
-                                        color: darkTheme ? "white" : '#272727',
-                                        borderRadius: "13.79px",
-                                        '.MuiOutlinedInput-notchedOutline': {
-                                            borderColor: darkTheme ? 'gray' : 'gray',
-                                        },
-                                        '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                                            borderColor: darkTheme ? '#fff' : '#272727', // '#434e5e',
-                                        },
-                                        '&:hover .MuiOutlinedInput-notchedOutline': {
-                                            borderColor: darkTheme ? '#fff' : '#272727', // 'var(--TextField-brandBorderHoverColor)',
-                                        },
-                                        '.MuiSvgIcon-root ': {
-                                            fill: `${darkTheme ? '#ccc' : 'black'} !important`,
-                                        }
-                                    }}
+                                    sx={releaseSelectStyle2}
 
                                     onChange={(e) => {
                                         setSelectedCurrency(e.target.value);
@@ -172,7 +168,6 @@ const FL_CurrencyModalComponent: React.FC<_Props> = ({
                             { errorMsg && <Box sx={{fontSize: 13, color: "red", textAlign: "left"}}>{ errorMsg }</Box> }
                         </Box>
 
-
                         <Box 
                             sx={{ 
                                 my: 5,
@@ -186,9 +181,9 @@ const FL_CurrencyModalComponent: React.FC<_Props> = ({
                                 fullWidth type="submit" 
                                 onClick={() => handleConfirmBtn()}
                                 sx={{ 
-                                    bgcolor: darkTheme ? "#fff" : "#272727",
+                                    bgcolor: colors.primary,
+                                    color: colors.milk,
                                     borderRadius: "17px",
-                                    // p: "10px 26px 10px 26px",
                                     p: "16px 25px",
                                     width: "fit-content",
                                     height: "auto",
@@ -197,13 +192,13 @@ const FL_CurrencyModalComponent: React.FC<_Props> = ({
                                         color: "#797979"
                                     },
                                     "&:hover": {
-                                        bgcolor: darkTheme ? "#fff" : "#272727",
+                                        bgcolor: colors.primary,
                                     },
                                     "&:active": {
-                                        bgcolor: darkTheme ? "#fff" : "#272727",
+                                        bgcolor: colors.primary,
                                     },
                                     "&:focus": {
-                                        bgcolor: darkTheme ? "#fff" : "#272727",
+                                        bgcolor: colors.primary,
                                     },
 
                                     fontWeight: '700',
@@ -211,13 +206,12 @@ const FL_CurrencyModalComponent: React.FC<_Props> = ({
                                     lineHeight: "12px",
                                     // letterSpacing: "-0.13px",
                                     // textAlign: 'center',
-                                    color: darkTheme ? "#000" : "#fff",
                                     textTransform: "none"
                                 }}
                             > Confirm </Button>
                         </Box>
 
-                        <Typography variant='body2'
+                        {/* <Typography variant='body2'
                             onClick={() => changeMethod()}
                             sx={{
                                 fontWeight: '400',
@@ -227,7 +221,7 @@ const FL_CurrencyModalComponent: React.FC<_Props> = ({
                                 textAlign: 'center',
                                 cursor: "pointer"
                             }}
-                        >Change Payment method</Typography>
+                        >Change Payment method</Typography> */}
 
                     </Box>
                 </Box>

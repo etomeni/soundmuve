@@ -8,12 +8,23 @@ export const customEncrypt = (value: string) => {
 }
 
 export const customDecrypt = (encrypted: string) => {
-    let decryptedValue = atob(encrypted);
+    let decryptedValue: any = atob(encrypted);
     for (let i = 0; i < 4; i++) {
         decryptedValue = atob(decryptedValue);
     }
 
     return decryptedValue;
+}
+
+export function setEncryptedLocalStorage(storageKey: string, value: any) {
+    const stringValue = JSON.stringify(value);
+    localStorage.setItem(storageKey, customEncrypt(stringValue));
+}
+
+export function getDecryptedLocalStorage(storageKey: string) {
+    const storedData = localStorage.getItem(storageKey);
+    const storedValue = storedData ? JSON.parse(customDecrypt(storedData)) : null;
+    return  storedValue;
 }
 
 

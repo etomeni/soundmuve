@@ -193,10 +193,9 @@ export default function HeaderComponent() {
             >
                 <Toolbar>
                     <Stack direction="row" justifyContent="space-around" width="100%" alignItems="center" spacing={10}>
-                        <Box sx={{cursor: 'pointer' }} // onClick={() => navigate("/") }
-                        >
+                        <Link to="/">
                             <img src={logo} alt="SoundMuve logo" style={{width: 130}} />
-                        </Box>
+                        </Link>
 
                         <Box sx={{ display: { xs: 'none', md: 'block' } }}>
                             <Box sx={{display: "flex", flexDirection: "row", gap: 2}}>

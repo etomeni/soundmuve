@@ -5,6 +5,7 @@ import Modal from '@mui/material/Modal';
 import Typography from '@mui/material/Typography';
 import CloseIcon from '@mui/icons-material/Close';
 import { Link } from 'react-router-dom';
+import colors from '@/constants/colors';
 
 
 interface _Props {
@@ -34,23 +35,23 @@ const NewReleaseModalComponent: React.FC<_Props> = ({
             >
                 <Box 
                     sx={{
-                        bgcolor: "#272727",
+                        bgcolor: colors.bg,
                         maxWidth: {xs: "92%", sm: "85%", md: "846px"},
                         maxHeight: "404px",
                         borderRadius: "12px",
                         p: "25px",
-                        color: "#fff"
+                        color: colors.dark
                     }}
                 >
                     <Box sx={{textAlign: "right"}}>
                         <IconButton onClick={() => closeReleaseModal() }>
                             <CloseIcon 
-                                sx={{color: "#fff", fontSize: "16px"}} 
+                                sx={{color: colors.primary, fontSize: "16px"}} 
                             />
                         </IconButton>
                     </Box>
                     
-                    <Typography id="release-modal-title" variant="h6" component="h2"
+                    <Typography id="release-modal-title" variant="h4" component="h4"
                         sx={{
                             fontWeight: "900",
                             fontSize: {xs: "30px", md: "50px"},
@@ -58,9 +59,7 @@ const NewReleaseModalComponent: React.FC<_Props> = ({
                             letterSpacing: {xs: "-0.34px", md: "-1.34px"},
                             textAlign: "center"
                         }}
-                    >
-                        What would you like to release?
-                    </Typography>
+                    > What would you like to release? </Typography>
 
                     <Box id="release-modal-description" 
                         sx={{ 
@@ -83,19 +82,22 @@ const NewReleaseModalComponent: React.FC<_Props> = ({
                                 // p: "10px 29px 10px 29px",
                                 px: "15px",
                                 // py: "5px",
+                                border: `1px solid ${colors.primary}`,
                                 borderRadius: "8px",
-                                background: "#9F9F9F",
+                                // background: "#9F9F9F",
+                                color: colors.dark,
                                 ":hover": {
-                                    boxShadow: "1px 3px 18px 0px #C89FF5"
+                                    boxShadow: `1px 3px 18px 0px ${colors.primary}`,
+                                    background: "linear-gradient(180deg, #D68100 0%, #FFB01F 49%, #D68100 100%)",
+                                    color: colors.milk,
                                 }
                             }}>
-                                <Typography sx={{
+                                <Typography variant='body1' sx={{
                                     fontWeight: '900',
                                     fontSize: "25px",
                                     lineHeight: "40px",
                                     letterSpacing: "-0.13px",
                                     textAlign: 'center',
-                                    color: "#fff",
                                 }}> Single </Typography>
                             </Box>
                         </Link>
@@ -110,19 +112,21 @@ const NewReleaseModalComponent: React.FC<_Props> = ({
                                 // p: "10px 29px 10px 29px",
                                 px: "15px",
                                 borderRadius: "8px",
-                                background: "#9F9F9F",
+                                border: `1px solid ${colors.primary}`,
+                                color: colors.dark,
                                 ":hover": {
-                                    boxShadow: "1px 3px 18px 0px #C89FF5"
+                                    boxShadow: `1px 3px 18px 0px ${colors.primary}`,
+                                    background: "linear-gradient(180deg, #D68100 0%, #FFB01F 49%, #D68100 100%)",
+                                    color: colors.milk,
                                 }
 
                             }}>
-                                <Typography sx={{
+                                <Typography variant='body1' sx={{
                                     fontWeight: '900',
                                     fontSize: "25px",
                                     lineHeight: "40px",
                                     letterSpacing: "-0.13px",
                                     textAlign: 'center',
-                                    color: "#fff",
                                 }}> Album </Typography>
                             </Box>
                         </Link>

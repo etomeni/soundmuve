@@ -10,11 +10,12 @@ import Stack from '@mui/material/Stack';
 import Alert from '@mui/material/Alert';
 
 import { useUserStore } from '@/state/userStore';
-import { useSettingStore } from '@/state/settingStore';
+// import { useSettingStore } from '@/state/settingStore';
 
 import { apiEndpoint, formatedNumber } from '@/util/resources';
 import { withdrawInterface } from './FL_WithdrawModal';
 import { getCurrencySymbol } from '@/util/currencies';
+import colors from '@/constants/colors';
 
 
 export interface successfulWithdrawalInterface {
@@ -42,7 +43,7 @@ interface _Props {
 const FL_ReviewModalComponent: React.FC<_Props> = ({
     openModal, closeModal, saveBtn, formDetails
 }) => {
-    const darkTheme = useSettingStore((state) => state.darkTheme);
+    // const darkTheme = useSettingStore((state) => state.darkTheme);
     const accessToken = useUserStore((state) => state.accessToken);
     const userData = useUserStore((state) => state.userData);
 
@@ -130,14 +131,14 @@ const FL_ReviewModalComponent: React.FC<_Props> = ({
             >
                 <Box 
                     sx={{
-                        bgcolor: darkTheme ? "#272727" : "#fff",
+                        bgcolor: colors.bg,
                         width: "100%",
                         maxWidth: {xs: "92%", sm: "496px"},
                         // maxHeight: "605px",
                         maxHeight: "95%",
                         borderRadius: "12px",
                         p: "25px",
-                        color: darkTheme ? "#fff" : "#000",
+                        color: colors.dark,
                         overflow: "scroll"
                     }}
                 >
@@ -145,7 +146,7 @@ const FL_ReviewModalComponent: React.FC<_Props> = ({
                         <Box sx={{textAlign: "right"}}>
                             <IconButton onClick={() => closeModal() }>
                                 <CloseIcon 
-                                    sx={{color: darkTheme ? "#fff" : "#000", fontSize: "30px"}} 
+                                    sx={{color: colors.primary, fontSize: "30px"}} 
                                 />
                             </IconButton>
                         </Box>
@@ -160,9 +161,7 @@ const FL_ReviewModalComponent: React.FC<_Props> = ({
                                 textAlign: "center",
                                 // mt: 2
                             }}
-                        >
-                            Payout Review
-                        </Typography>
+                        > Payout Review </Typography>
 
                     </Box>
 
@@ -231,8 +230,8 @@ const FL_ReviewModalComponent: React.FC<_Props> = ({
                                 sx={{
                                     p: "10px 25px",
                                     borderRadius: "17px",
-                                    background: darkTheme ? "#fff" : "#272727",
-                                    color: darkTheme ? "#000" : "#fff",
+                                    background: colors.primary,
+                                    color: colors.milk,
                                     cursor: "pointer",
                                     display: "inline-block"
                                 }}
@@ -253,9 +252,8 @@ const FL_ReviewModalComponent: React.FC<_Props> = ({
                                 sx={{
                                     p: "10px 25px",
                                     borderRadius: "17px",
-                                    // background: darkTheme ? "#fff" : "#272727",
-                                    border: darkTheme ? "1px solid #fff" : "1px solid #000000",
-                                    color: darkTheme ? "#fff" : "#000",
+                                    border: `1px solid ${colors.dark}`,
+                                    color: colors.dark,
                                     cursor: "pointer",
                                     display: "inline-block"
                                 }}

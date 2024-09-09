@@ -13,17 +13,16 @@ import Alert from '@mui/material/Alert';
 import Button from '@mui/material/Button';
 import CircularProgress from '@mui/material/CircularProgress';
 import FormControl from '@mui/material/FormControl';
-import { ThemeProvider, useTheme } from '@mui/material/styles';
 
 import { useUserStore } from '@/state/userStore';
 import { useSettingStore } from '@/state/settingStore';
 import { createReleaseStore } from '@/state/createReleaseStore';
 
 import AccountWrapper from '@/components/AccountWrapper';
-import { customTextFieldTheme } from '@/util/mui';
 import { apiEndpoint, musicStores, socialPlatformStores } from '@/util/resources';
 import axios from 'axios';
 import MultipleSelectCheckmarks from '@/components/MultipleSelectCheckmarks';
+import colors from '@/constants/colors';
 
 const formSchema = yup.object({
     store: yup.string().trim().label("Store"),
@@ -33,7 +32,6 @@ const formSchema = yup.object({
 
 function CreateAlbumReleaseSelectStores() {
     const navigate = useNavigate();
-    const outerTheme = useTheme();
     const darkTheme = useSettingStore((state) => state.darkTheme);
     const userData = useUserStore((state) => state.userData);
     const accessToken = useUserStore((state) => state.accessToken);
@@ -163,8 +161,8 @@ function CreateAlbumReleaseSelectStores() {
 
 
     return (
-        <AccountWrapper>
-            <Box sx={{ position: "relative", zIndex: 10 }}>
+        <AccountWrapper bottomSpacing={0} topSpacing={false}>
+            <Box>
 
                 <Box sx={{ display: {xs: 'initial', sm: 'flex'}, height: "100%" }}>
                     <SideNav activePageNumber={3} />
@@ -176,221 +174,221 @@ function CreateAlbumReleaseSelectStores() {
 
 
                         <Box sx={{my: 3}}>
-                            <ThemeProvider theme={customTextFieldTheme(outerTheme, darkTheme)}>
-                                <form noValidate onSubmit={ handleSubmit(onSubmit) } 
-                                    style={{ width: "100%", maxWidth: "916px" }}
-                                >
-                                                
-                                    <Box
-                                        sx={{
-                                            maxWidth: {xs: "330px", md: "892px"},
-                                            border: {xs: "0.45px solid #FFFFFF", md: "1px solid #FFFFFF"},
-                                            borderRadius: {xs: "5.42px", md: "12px"},
-                                            overflow: "hidden",
-                                            width: "100%"
-                                        }}
-                                    >
-                                        <Box
-                                            sx={{
-                                                height: {xs: "32.53px", md: "72px"},
-                                                bgcolor: "#272727",
-                                                borderBottom: {xs: "0.45px solid #FFFFFF", md: "1px solid #FFFFFF"},
-                                                px: {xs: "10px", md: "25px"},
-                                                display: "flex",
-                                                flexDirection: "row",
-                                                gap: "20px",
-                                                justifyContent: "space-between",
-                                                alignItems: "center"
-                                            }}
-                                        >
-                                            <Typography
-                                                sx={{
-                                                    fontWeight: "400",
-                                                    fontSize: {xs: "15px", md: "20px"},
-                                                    lineHeight: {xs: "20px", md: "40px"},
-                                                    letterSpacing: {xs: "-0.06px", md: "-0.13px"}
-                                                }}
-                                            >Select Stores</Typography>
+                            <form noValidate onSubmit={ handleSubmit(onSubmit) } 
+                                style={{ width: "100%", maxWidth: "916px" }}
+                            >
                                             
-                                            <Box></Box>
-                                        </Box>
-
-                                        <Box
+                                <Box
+                                    sx={{
+                                        maxWidth: {xs: "330px", md: "892px"},
+                                        border: {xs: "0.45px solid #FFFFFF", md: "1px solid #FFFFFF"},
+                                        borderRadius: {xs: "5.42px", md: "12px"},
+                                        overflow: "hidden",
+                                        width: "100%"
+                                    }}
+                                >
+                                    <Box
+                                        sx={{
+                                            height: {xs: "32.53px", md: "72px"},
+                                            bgcolor: colors.tertiary,
+                                            color: colors.milk,
+                                            borderBottom: {xs: "0.45px solid #FFFFFF", md: "1px solid #FFFFFF"},
+                                            px: {xs: "10px", md: "25px"},
+                                            display: "flex",
+                                            flexDirection: "row",
+                                            gap: "20px",
+                                            justifyContent: "space-between",
+                                            alignItems: "center"
+                                        }}
+                                    >
+                                        <Typography
                                             sx={{
-                                                p: {xs: "10px", md: "25px"},
-                                                bgcolor: darkTheme ? "#000" : "#797979",
-
-                                                display: "flex",
-                                                justifyItems: "center",
-                                                alignItems: "center"
+                                                fontWeight: "400",
+                                                fontSize: {xs: "15px", md: "20px"},
+                                                lineHeight: {xs: "20px", md: "40px"},
+                                                letterSpacing: {xs: "-0.06px", md: "-0.13px"}
                                             }}
-                                        >
-
-                                            <FormControl fullWidth sx={{ mx: "auto", my: {xs: "20px", md: "50px"}, maxWidth: {xs: "200px", md: "391px"} }}>
-                                                <MultipleSelectCheckmarks 
-                                                    options={musicStores}
-                                                    darkTheme={darkTheme}
-                                                    handleSelected={handleStoreSelect}
-                                                    selectedValue={selectStores}
-                                                    error={ errors.store ? true : false }
-                                                />
-
-                                                { errors.store && <Box sx={{fontSize: 13, color: "red", textAlign: "left"}}>{ errors.store?.message }</Box> }
-                                            </FormControl>
-                                        </Box>
+                                        >Select Stores</Typography>
+                                        
+                                        <Box></Box>
                                     </Box>
 
                                     <Box
                                         sx={{
-                                            maxWidth: {xs: "330px", md: "892px"},
-                                            border: {xs: "0.45px solid #FFFFFF", md: "1px solid #FFFFFF"},
-                                            borderRadius: {xs: "5.42px", md: "12px"},
-                                            overflow: "hidden",
-                                            mt: "25px"
+                                            p: {xs: "10px", md: "25px"},
+                                            bgcolor: colors.secondary,
+
+                                            display: "flex",
+                                            justifyItems: "center",
+                                            alignItems: "center"
                                         }}
                                     >
-                                        <Box
+
+                                        <FormControl fullWidth sx={{ mx: "auto", my: {xs: "20px", md: "50px"}, maxWidth: {xs: "200px", md: "391px"} }}>
+                                            <MultipleSelectCheckmarks 
+                                                options={musicStores}
+                                                darkTheme={darkTheme}
+                                                handleSelected={handleStoreSelect}
+                                                selectedValue={selectStores}
+                                                error={ errors.store ? true : false }
+                                            />
+
+                                            { errors.store && <Box sx={{fontSize: 13, color: "red", textAlign: "left"}}>{ errors.store?.message }</Box> }
+                                        </FormControl>
+                                    </Box>
+                                </Box>
+
+                                <Box
+                                    sx={{
+                                        maxWidth: {xs: "330px", md: "892px"},
+                                        border: {xs: "0.45px solid #FFFFFF", md: "1px solid #FFFFFF"},
+                                        borderRadius: {xs: "5.42px", md: "12px"},
+                                        overflow: "hidden",
+                                        mt: "25px"
+                                    }}
+                                >
+                                    <Box
+                                        sx={{
+                                            height: {xs: "32.53px", md: "72px"},
+                                            bgcolor: colors.tertiary,
+                                            color: colors.milk,
+                                            borderBottom: {xs: "0.45px solid #FFFFFF", md: "1px solid #FFFFFF"},
+                                            px: {xs: "10px", md: "25px"},
+                                            display: "flex",
+                                            flexDirection: "row",
+                                            gap: {xs: "10px", md: "20px"},
+                                            justifyContent: "space-between",
+                                            alignItems: "center"
+                                        }}
+                                    >
+                                        <Typography
                                             sx={{
-                                                height: {xs: "32.53px", md: "72px"},
-                                                bgcolor: "#272727",
-                                                borderBottom: {xs: "0.45px solid #FFFFFF", md: "1px solid #FFFFFF"},
-                                                px: {xs: "10px", md: "25px"},
-                                                display: "flex",
-                                                flexDirection: "row",
-                                                gap: {xs: "10px", md: "20px"},
-                                                justifyContent: "space-between",
-                                                alignItems: "center"
+                                                fontWeight: "400",
+                                                fontSize: {xs: "14px", md: "20px"},
+                                                lineHeight: {xs: "20px", md: "40px"},
+                                                letterSpacing: {xs: "-0.06px", md: "-0.13px"}
                                             }}
-                                        >
-                                            <Typography
-                                                sx={{
-                                                    fontWeight: "400",
-                                                    fontSize: {xs: "14px", md: "20px"},
-                                                    lineHeight: {xs: "20px", md: "40px"},
-                                                    letterSpacing: {xs: "-0.06px", md: "-0.13px"}
-                                                }}
-                                            >Social Platforms - Automatically Selected</Typography>
+                                        >Social Platforms - Automatically Selected</Typography>
 
-                                            <Box></Box>
-                                        </Box>
-
-                                        <Box
-                                            sx={{
-                                                p: {xs: "10px", md: "25px"},
-                                                bgcolor: darkTheme ? "#000" : "#797979",
-
-                                                display: "flex",
-                                                flexDirection: "column",
-                                                justifyItems: "center",
-                                                alignItems: "center"
-                                            }}
-                                        >
-                                            <Typography
-                                                sx={{
-                                                    fontWeight: "400",
-                                                    fontSize: {xs: "15px", md: "20px"},
-                                                    lineHeight: {xs: "25px", md: "40px"},
-                                                    letterSpacing: "-0.13px"
-                                                }}
-                                            >
-                                                You keep 80% of social platform revenue. Please review monetization eligibility requirements for. &#32;
-                                                <span style={{textDecoration: "underline"}}>YouTube Content ID </span> &#32; and &#32;
-                                                <span style={{textDecoration: "underline"}}>Facebook/Instagram/Reels.</span> &#32;
-                                                Delivering ineligible content can result in account suspension. 
-                                                <b> Click 'Edit' to remove a social platform. </b>
-                                            </Typography>
-
-                                            <FormControl fullWidth sx={{ mx: "auto", my: {xs: "20px", md: "50px"}, maxWidth: {xs: "200px", md: "391px"} }}>
-                                                <MultipleSelectCheckmarks 
-                                                    options={socialPlatformStores}
-                                                    darkTheme={darkTheme}
-                                                    handleSelected={handleSocialStoreSelect}
-                                                    selectedValue={selectSocialStores}
-                                                    error={ errors.socialPlatform ? true : false }
-                                                />
-
-                                                { errors.socialPlatform && <Box sx={{fontSize: 13, color: "red", textAlign: "left"}}>{ errors.socialPlatform?.message }</Box> }
-                                            </FormControl>
-                                        </Box>
+                                        <Box></Box>
                                     </Box>
 
+                                    <Box
+                                        sx={{
+                                            p: {xs: "10px", md: "25px"},
+                                            bgcolor: colors.secondary,
+
+                                            display: "flex",
+                                            flexDirection: "column",
+                                            justifyItems: "center",
+                                            alignItems: "center"
+                                        }}
+                                    >
+                                        <Typography
+                                            sx={{
+                                                fontWeight: "400",
+                                                fontSize: {xs: "15px", md: "20px"},
+                                                lineHeight: {xs: "25px", md: "40px"},
+                                                letterSpacing: "-0.13px"
+                                            }}
+                                        >
+                                            You keep 80% of social platform revenue. Please review monetization eligibility requirements for. &#32;
+                                            <span style={{textDecoration: "underline"}}>YouTube Content ID </span> &#32; and &#32;
+                                            <span style={{textDecoration: "underline"}}>Facebook/Instagram/Reels.</span> &#32;
+                                            Delivering ineligible content can result in account suspension. 
+                                            <b> Click 'Edit' to remove a social platform. </b>
+                                        </Typography>
+
+                                        <FormControl fullWidth sx={{ mx: "auto", my: {xs: "20px", md: "50px"}, maxWidth: {xs: "200px", md: "391px"} }}>
+                                            <MultipleSelectCheckmarks 
+                                                options={socialPlatformStores}
+                                                darkTheme={darkTheme}
+                                                handleSelected={handleSocialStoreSelect}
+                                                selectedValue={selectSocialStores}
+                                                error={ errors.socialPlatform ? true : false }
+                                            />
+
+                                            { errors.socialPlatform && <Box sx={{fontSize: 13, color: "red", textAlign: "left"}}>{ errors.socialPlatform?.message }</Box> }
+                                        </FormControl>
+                                    </Box>
+                                </Box>
 
 
-                                    {
-                                        apiResponse.display && (
-                                            <Stack sx={{ width: '100%', mt: 5, mb: 2 }}>
-                                                <Alert severity={apiResponse.status ? "success" : "error"}>{apiResponse.message}</Alert>
-                                            </Stack>
-                                        )
-                                    }
 
-                                    <Box mt="100px">
-                                        <Stack direction="row" justifyContent="space-between" spacing="20px" alignItems="center">
-                                            <Button variant="contained" 
-                                                fullWidth type='button'
-                                                onClick={() => navigate("/account/create-album-release-advance-features")}
-                                                sx={{ 
-                                                    bgcolor: darkTheme ? "#4C4C4C57" : "#9c9c9c",
-                                                    maxWidth: "312px",
-                                                    "&.Mui-disabled": {
-                                                        background: "#9c9c9c",
-                                                        color: "#797979"
-                                                    },
-                                                    "&:hover": {
-                                                        bgcolor: darkTheme ? "#4C4C4C57" : "#9c9c9c",
-                                                    },
-                                                    "&:active": {
-                                                        bgcolor: darkTheme ? "#4C4C4C57" : "#9c9c9c",
-                                                    },
-                                                    "&:focus": {
-                                                        bgcolor: darkTheme ? "#4C4C4C57" : "#9c9c9c",
-                                                    },
-                                                    color: "#fff",
-                                                    borderRadius: "12px",
-                                                    my: 3, py: 1.5,
-                                                    fontSize: {md: "15.38px"},
-                                                    fontWeight: "900",
-                                                    letterSpacing: "-0.12px",
-                                                    textTransform: "none"
-                                                }}
-                                            > Previous step </Button>
-
-                                            <Button variant="contained" 
-                                                fullWidth type="submit" 
-                                                disabled={ !isValid || isSubmitting } 
-                                                sx={{ 
-                                                    bgcolor: "#644986",
-                                                    maxWidth: "312px",
-                                                    "&.Mui-disabled": {
-                                                        background: "#9c9c9c",
-                                                        color: "#797979"
-                                                    },
-                                                    "&:hover": {
-                                                        bgcolor: "#644986",
-                                                    },
-                                                    "&:active": {
-                                                        bgcolor: "#644986",
-                                                    },
-                                                    "&:focus": {
-                                                        bgcolor: "#644986",
-                                                    },
-                                                    color: "#fff",
-                                                    borderRadius: "12px",
-                                                    my: 3, py: 1.5,
-                                                    fontSize: {md: "15.38px"},
-                                                    fontWeight: "900",
-                                                    letterSpacing: "-0.12px",
-                                                    textTransform: "none"
-                                                }}
-                                            >
-                                                <span style={{ display: isSubmitting ? "none" : "initial" }}>Next</span>
-                                                <CircularProgress size={25} sx={{ display: isSubmitting ? "initial" : "none", color: "#8638E5", fontWeight: "bold" }} />
-                                            </Button>
+                                {
+                                    apiResponse.display && (
+                                        <Stack sx={{ width: '100%', mt: 5, mb: 2 }}>
+                                            <Alert severity={apiResponse.status ? "success" : "error"}>{apiResponse.message}</Alert>
                                         </Stack>
-                                    </Box>
+                                    )
+                                }
 
-                                </form>
-                            </ThemeProvider>
+                                <Box mt="100px">
+                                    <Stack direction="row" justifyContent="space-between" spacing="20px" alignItems="center">
+                                        <Button variant="contained" 
+                                            fullWidth type='button'
+                                            onClick={() => navigate("/account/create-album-release-advance-features")}
+                                            sx={{ 
+                                                bgcolor: "#9c9c9c",
+                                                color: "#fff",
+                                                maxWidth: "312px",
+                                                "&.Mui-disabled": {
+                                                    background: "#9c9c9c",
+                                                    color: "#797979"
+                                                },
+                                                "&:hover": {
+                                                    bgcolor: "#4C4C4C57",
+                                                },
+                                                "&:active": {
+                                                    bgcolor: "#4C4C4C57",
+                                                },
+                                                "&:focus": {
+                                                    bgcolor: "#4C4C4C57",
+                                                },
+                                                borderRadius: "12px",
+                                                my: 3, py: 1.5,
+                                                fontSize: {md: "15.38px"},
+                                                fontWeight: "900",
+                                                letterSpacing: "-0.12px",
+                                                textTransform: "none"
+                                            }}
+                                        > Previous step </Button>
+
+                                        <Button variant="contained" 
+                                            fullWidth type="submit" 
+                                            disabled={ !isValid || isSubmitting } 
+                                            sx={{ 
+                                                bgcolor: colors.primary,
+                                                maxWidth: "312px",
+                                                color: colors.milk,
+                                                "&.Mui-disabled": {
+                                                    background: "#9c9c9c",
+                                                    color: "#797979"
+                                                },
+                                                "&:hover": {
+                                                    bgcolor: colors.primary,
+                                                },
+                                                "&:active": {
+                                                    bgcolor: colors.primary,
+                                                },
+                                                "&:focus": {
+                                                    bgcolor: colors.primary,
+                                                },
+                                                borderRadius: "12px",
+                                                my: 3, py: 1.5,
+                                                fontSize: {md: "15.38px"},
+                                                fontWeight: "900",
+                                                letterSpacing: "-0.12px",
+                                                textTransform: "none"
+                                            }}
+                                        >
+                                            <span style={{ display: isSubmitting ? "none" : "initial" }}>Next</span>
+                                            <CircularProgress size={25} sx={{ display: isSubmitting ? "initial" : "none", color: "#8638E5", fontWeight: "bold" }} />
+                                        </Button>
+                                    </Stack>
+                                </Box>
+
+                            </form>
                         </Box>
                     </Box>
                 </Box>

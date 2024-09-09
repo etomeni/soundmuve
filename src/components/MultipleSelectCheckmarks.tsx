@@ -3,6 +3,7 @@ import MenuItem from '@mui/material/MenuItem';
 import ListItemText from '@mui/material/ListItemText';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import Checkbox from '@mui/material/Checkbox';
+import { releaseSelectStyle3 } from '@/util/mui';
 
 
 const ITEM_HEIGHT = 48;
@@ -21,12 +22,12 @@ interface MyProps {
     options: string[],
     handleSelected: (selected: string[]) => void,
     selectedValue: string[],
-    darkTheme: boolean,
+    darkTheme?: boolean,
     error?: boolean,
 };
 
 const MultipleSelectCheckmarks: React.FC<MyProps> = ({
-    options, selectedValue, handleSelected, darkTheme, error = false
+    options, selectedValue, handleSelected, error = false
 }) => {
 
     const handleChange = (_event: SelectChangeEvent<typeof selectedValue>) => {
@@ -46,25 +47,7 @@ const MultipleSelectCheckmarks: React.FC<MyProps> = ({
             id="demo-multiple-checkbox"
             label=""
 
-            sx={{
-                color: darkTheme ? "#000" : "#000",
-                borderRadius: {xs: "7.19px", md: "16px"},
-                bgcolor: darkTheme ? "#fff" : "#fff",
-                
-                '.MuiOutlinedInput-notchedOutline': {
-                    borderColor: darkTheme ? '#fff' : "#fff",
-                },
-                '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                    borderColor: darkTheme ? '#fff' : "#fff",
-                },
-                '&:hover .MuiOutlinedInput-notchedOutline': {
-                    borderColor: darkTheme ? '#fff' : "#fff",
-                },
-                '.MuiSvgIcon-root ': {
-                    // fill: "#797979 !important",
-                    fill: darkTheme ? "#797979" : "#797979",
-                }
-            }}
+            sx={releaseSelectStyle3}
 
             multiple
             value={selectedValue}

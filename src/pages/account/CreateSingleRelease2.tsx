@@ -42,6 +42,8 @@ import { languages } from '@/util/languages';
 
 import cloudUploadIconImg from "@/assets/images/cloudUploadIcon.png";
 import MultipleSelectCheckmarks from '@/components/MultipleSelectCheckmarks';
+import colors from '@/constants/colors';
+import { releaseSelectStyle3, releaseTextFieldStyle } from '@/util/mui';
 
 
 const formSchema = yup.object({
@@ -70,7 +72,7 @@ interface creativeType {
 
 function CreateSingleRelease2() {
     const navigate = useNavigate();
-    const darkTheme = useSettingStore((state) => state.darkTheme);
+    // const darkTheme = useSettingStore((state) => state.darkTheme);
     const userData = useUserStore((state) => state.userData);
     const accessToken = useUserStore((state) => state.accessToken);
     const singleRelease1 = createReleaseStore((state) => state.singleRelease1);
@@ -461,7 +463,7 @@ function CreateSingleRelease2() {
                 _clearSingleRelease();
             }, 1000);
         } catch (error: any) {
-            const err = error.response.data;
+            const err = error.response ? error.response.data : error || '';
             console.log(err);
 
             setApiResponse({
@@ -475,12 +477,12 @@ function CreateSingleRelease2() {
 
     return (
         <AccountWrapper>
-            <Box sx={{px: {xs: 2, md: 5, lg: 12}, pb: 5, position: "relative", zIndex: 10, mt: {xs: 5, md: 10} }}>
+            <Box>
                 <Box>
                     <IconButton 
                         onClick={() => navigate(-1)}
                         sx={{
-                            color: darkTheme ? "#fff" : "#000", 
+                            color: colors.dark, 
                             mb: 2,
                             display: {xs: "none", md: "block"}
                         }}
@@ -495,17 +497,15 @@ function CreateSingleRelease2() {
                             lineHeight: {xs: "26.31px", md: "63.8px"},
                             letterSpacing: {xs: "-0.55px", md: "-1.34px"},
                         }}
-                    >
-                        Create a Single
-                    </Typography>
+                    > Create a Single </Typography>
                 </Box>
 
                 <form noValidate onSubmit={ handleSubmit(onSubmit) } >   
-                    <Stack sx={{mt: "35px", color: darkTheme ? "inherit" : "#fff"}} spacing={"35px"} alignItems={"center"}>
+                    <Stack sx={{mt: "35px", color: colors.dark }} spacing={"35px"} alignItems={"center"}>
                         <Box
                             sx={{
                                 maxWidth: {xs: "330px", md: "892px"},
-                                border: {xs: "0.45px solid #FFFFFF", md: "1px solid #FFFFFF"},
+                                // border: {xs: "0.45px solid #FFFFFF", md: "1px solid #FFFFFF"},
                                 borderRadius: {xs: "5.42px", md: "12px"},
                                 overflow: "hidden",
                                 width: "100%"
@@ -514,8 +514,9 @@ function CreateSingleRelease2() {
                             <Box
                                 sx={{
                                     height: {xs: "32.53px", md: "72px"},
-                                    bgcolor: "#272727",
-                                    borderBottom: {xs: "0.45px solid #FFFFFF", md: "1px solid #FFFFFF"},
+                                    bgcolor: colors.tertiary,
+                                    color: colors.milk,
+                                    // borderBottom: {xs: `0.45px solid ${colors.dark}`, md: `1px solid ${colors.dark}`},
                                     px: {xs: "10px", md: "25px"},
                                     display: "flex",
                                     flexDirection: "row",
@@ -524,7 +525,7 @@ function CreateSingleRelease2() {
                                     alignItems: "center"
                                 }}
                             >
-                                <Typography
+                                <Typography variant='body1'
                                     sx={{
                                         fontWeight: "400",
                                         fontSize: {xs: "15px", md: "20px"},
@@ -533,7 +534,8 @@ function CreateSingleRelease2() {
                                     }}
                                 >Details</Typography>
 
-                                <Typography onClick={() => navigate("/account/create-single-release")}
+                                <Typography variant='body1'
+                                    onClick={() => navigate("/account/create-single-release")}
                                     sx={{
                                         fontWeight: "400",
                                         fontSize: {xs: "15px", md: "20px"},
@@ -547,7 +549,7 @@ function CreateSingleRelease2() {
                             <Box
                                 sx={{
                                     p: {xs: "10px", md: "25px"},
-                                    bgcolor: darkTheme ? "#000" : "#797979",
+                                    bgcolor: colors.secondary,
                                     mt: {xs: "15px", md: "0px"}
                                 }}
                             >
@@ -707,7 +709,7 @@ function CreateSingleRelease2() {
                         <Box
                             sx={{
                                 maxWidth: {xs: "330px", md: "892px"},
-                                border: {xs: "0.45px solid #FFFFFF", md: "1px solid #FFFFFF"},
+                                // border: {xs: "0.45px solid #FFFFFF", md: "1px solid #FFFFFF"},
                                 borderRadius: {xs: "5.42px", md: "12px"},
                                 overflow: "hidden",
                                 width: "100%"
@@ -716,8 +718,9 @@ function CreateSingleRelease2() {
                             <Box
                                 sx={{
                                     height: {xs: "32.53px", md: "72px"},
-                                    bgcolor: "#272727",
-                                    borderBottom: {xs: "0.45px solid #FFFFFF", md: "1px solid #FFFFFF"},
+                                    bgcolor: colors.tertiary,
+                                    color: colors.milk,
+                                    // borderBottom: {xs: "0.45px solid #FFFFFF", md: "1px solid #FFFFFF"},
                                     px: {xs: "10px", md: "25px"},
                                     display: "flex",
                                     flexDirection: "row",
@@ -726,7 +729,7 @@ function CreateSingleRelease2() {
                                     alignItems: "center"
                                 }}
                             >
-                                <Typography
+                                <Typography variant='body1'
                                     sx={{
                                         fontWeight: "400",
                                         fontSize: {xs: "15px", md: "20px"},
@@ -741,7 +744,7 @@ function CreateSingleRelease2() {
                             <Box
                                 sx={{
                                     p: {xs: "10px", md: "25px"},
-                                    bgcolor: darkTheme ? "#000" : "#797979",
+                                    bgcolor: colors.secondary,
 
                                     display: "flex",
                                     flexDirection: 'column',
@@ -753,7 +756,7 @@ function CreateSingleRelease2() {
                                 <FormControl fullWidth sx={{ mx: "auto", my: {xs: "20px", md: "50px"}, maxWidth: {xs: "200px", md: "391px"} }}>
                                     <MultipleSelectCheckmarks 
                                         options={musicStores}
-                                        darkTheme={darkTheme}
+                                        // darkTheme={darkTheme}
                                         handleSelected={handleStoreSelect}
                                         selectedValue={selectStores}
                                         error={ errors.store ? true : false }
@@ -768,7 +771,7 @@ function CreateSingleRelease2() {
                         <Box
                             sx={{
                                 maxWidth: {xs: "330px", md: "892px"},
-                                border: {xs: "0.45px solid #FFFFFF", md: "1px solid #FFFFFF"},
+                                // border: {xs: "0.45px solid #FFFFFF", md: "1px solid #FFFFFF"},
                                 borderRadius: {xs: "5.42px", md: "12px"},
                                 overflow: "hidden"
                             }}
@@ -776,8 +779,9 @@ function CreateSingleRelease2() {
                             <Box
                                 sx={{
                                     height: {xs: "32.53px", md: "72px"},
-                                    bgcolor: "#272727",
-                                    borderBottom: {xs: "0.45px solid #FFFFFF", md: "1px solid #FFFFFF"},
+                                    bgcolor: colors.tertiary,
+                                    color: colors.milk,
+                                    // borderBottom: {xs: "0.45px solid #FFFFFF", md: "1px solid #FFFFFF"},
                                     px: {xs: "10px", md: "25px"},
                                     display: "flex",
                                     flexDirection: "row",
@@ -786,7 +790,7 @@ function CreateSingleRelease2() {
                                     alignItems: "center"
                                 }}
                             >
-                                <Typography
+                                <Typography variant='body1'
                                     sx={{
                                         fontWeight: "400",
                                         fontSize: {xs: "14px", md: "20px"},
@@ -801,8 +805,7 @@ function CreateSingleRelease2() {
                             <Box
                                 sx={{
                                     p: {xs: "10px", md: "25px"},
-                                    bgcolor: darkTheme ? "#000" : "#797979",
-
+                                    bgcolor: colors.secondary,
                                     display: "flex",
                                     flexDirection: "column",
                                     justifyItems: "center",
@@ -827,7 +830,7 @@ function CreateSingleRelease2() {
                                 <FormControl fullWidth sx={{ mx: "auto", my: {xs: "20px", md: "50px"}, maxWidth: {xs: "200px", md: "391px"} }}>
                                     <MultipleSelectCheckmarks 
                                         options={socialPlatformStores}
-                                        darkTheme={darkTheme}
+                                        // darkTheme={darkTheme}
                                         handleSelected={handleSocialStoreSelect}
                                         selectedValue={selectSocialStores}
                                         error={ errors.socialPlatform ? true : false }
@@ -841,7 +844,7 @@ function CreateSingleRelease2() {
                         <Box
                             sx={{
                                 maxWidth: {xs: "330px", md: "892px"},
-                                border: {xs: "0.45px solid #FFFFFF", md: "1px solid #FFFFFF"},
+                                // border: {xs: "0.45px solid #FFFFFF", md: "1px solid #FFFFFF"},
                                 borderRadius: {xs: "5.42px", md: "12px"},
                                 overflow: "hidden"
                             }}
@@ -849,8 +852,9 @@ function CreateSingleRelease2() {
                             <Box
                                 sx={{
                                     height: {xs: "32.53px", md: "72px"},
-                                    bgcolor: "#272727",
-                                    borderBottom: {xs: "0.45px solid #FFFFFF", md: "1px solid #FFFFFF"},
+                                    bgcolor: colors.tertiary,
+                                    color: colors.milk,
+                                    borderBottom: {xs: `0.45px solid ${colors.dark}`, md: `1px solid ${colors.dark}`},
                                     px: {xs: "10px", md: "25px"},
                                     display: "flex",
                                     flexDirection: "row",
@@ -859,12 +863,12 @@ function CreateSingleRelease2() {
                                     alignItems: "center"
                                 }}
                             >
-                                <Typography
+                                <Typography variant='body1'
                                     sx={{
                                         fontWeight: "400",
                                         fontSize: {xs: "15px", md: "20px"},
                                         lineHeight: {xs: "20px", md: "40px"},
-                                        letterSpacing: {xs: "-0.06px", md: "-0.13px"}
+                                        letterSpacing: {xs: "-0.06px", md: "-0.13px"},
                                     }}
                                 >Song</Typography>
 
@@ -874,7 +878,7 @@ function CreateSingleRelease2() {
                             <Box
                                 sx={{
                                     p: {xs: "10px", md: "25px"},
-                                    bgcolor: darkTheme ? "#000" : "#797979",
+                                    bgcolor: colors.tertiary,
 
                                     display: "flex",
                                     flexDirection: "column",
@@ -882,12 +886,13 @@ function CreateSingleRelease2() {
                                     alignItems: "center"
                                 }}
                             >
-                                <Typography
+                                <Typography variant='body1'
                                     sx={{
                                         fontWeight: "400",
                                         fontSize: {xs: "15px", md: "20px"},
                                         lineHeight: {xs: "25px", md: "40px"},
-                                        letterSpacing: "-0.13px"
+                                        letterSpacing: "-0.13px",
+                                        color: colors.milk,
                                     }}
                                 >
                                     Before you upload your song, please make sure that files are in an accepted format.
@@ -900,8 +905,8 @@ function CreateSingleRelease2() {
                                         p: {xs: "", md: "10px 25px"},
                                         borderRadius: '16px',
                                         width: "459px",
-                                        bgcolor: "#fff",
-                                        color: "#000",
+                                        bgcolor: colors.primary,
+                                        color: colors.milk,
                                         my: 3,
                                         cursor: "pointer"
                                     }}
@@ -909,9 +914,8 @@ function CreateSingleRelease2() {
                                     onClick={() => {
                                         document.getElementById("songAudioUpload")?.click();
                                     }}
-
                                 >
-                                    <Typography
+                                    <Typography 
                                         sx={{
                                             fontWeight: "900",
                                             fontSize: "23px",
@@ -939,7 +943,7 @@ function CreateSingleRelease2() {
                                 <Stack spacing={{xs: "20px", md: "35px"}} sx={{width: "100%"}}>
                                     <Box
                                         sx={{
-                                            bgcolor: "#272727",
+                                            bgcolor: colors.secondary,
                                             p: {xs: "10px", md: "25px"},
                                             borderRadius: "12px"
                                         }}
@@ -984,15 +988,15 @@ function CreateSingleRelease2() {
                                                     <Stack key={i} direction="row" alignItems="center" spacing="5px"
                                                         sx={{
                                                             p: "10px",
-                                                            bgcolor: "#644986",
+                                                            bgcolor: colors.bg,
                                                             width: "fit-content",
                                                             borderRadius: "10px"
                                                         }}
                                                     >
                                                         <CancelIcon 
                                                             sx={{ 
-                                                                color: "#fff",
-                                                                ":hover": { color: "#de2341" },
+                                                                color: colors.tertiary,
+                                                                ":hover": { color: colors.primary },
                                                                 fontSize: {xs: "15px", md: "18px"}
                                                             }} 
                                                             onClick={() => {
@@ -1006,6 +1010,7 @@ function CreateSingleRelease2() {
                                                             sx={{
                                                                 fontWeight: "400",
                                                                 fontSize: {xs: "13px", md: "15px"},
+                                                                color: colors.primary
                                                             }}
                                                         > { writerName } </Typography>
                                                     </Stack>
@@ -1024,31 +1029,8 @@ function CreateSingleRelease2() {
                                                 inputMode='text'
                                                 defaultValue=""
                                                 placeholder='E.g Joseph Solomon'
-                                                InputLabelProps={{
-                                                    style: { color: '#c1c1c1', fontWeight: "400" },
-                                                }}
-                                                InputProps={{
-                                                    sx: {
-                                                        borderRadius: "16px",
-                                                        color: darkTheme ? '#fff' : '#fff', // Change to your desired text color
-                                                    },
-                                                }}
-                                                sx={{
-                                                    "& .MuiOutlinedInput-root": {
-                                                        '& fieldset.MuiOutlinedInput-notchedOutline': {
-                                                            borderColor: darkTheme ? '#fff' : '#fff',
-                                                        },
-                                                        // '&:hover .MuiOutlinedInput-notchedOutline': {
-                                                        //     borderColor: darkTheme ? '#fff' : '#000',
-                                                        // },
-                                                        // "&.Mui-focused fieldset": {
-                                                        //     borderColor: darkTheme ? '#fff' : '#000',
-                                                        // },
-                                                        // "& ::placeholder": {
-                                                        //     color: "gray"
-                                                        // },
-                                                    },
-                                                }}
+                                        
+                                                sx={releaseTextFieldStyle}
                                                 error={ errors.songWriter ? true : false }
                                                 { ...register('songWriter') }
                                                 onKeyUp={(e: any) => {
@@ -1098,7 +1080,7 @@ function CreateSingleRelease2() {
 
                                     <Box
                                         sx={{
-                                            bgcolor: "#272727",
+                                            bgcolor: colors.secondary,
                                             p: {xs: "10px", md: "25px"},
                                             borderRadius: "12px"
                                         }}
@@ -1140,15 +1122,15 @@ function CreateSingleRelease2() {
                                                     <Stack key={i} direction="row" alignItems="center" spacing="10px"
                                                         sx={{
                                                             p: "10px",
-                                                            bgcolor: "#644986",
+                                                            bgcolor: colors.bg,
                                                             width: "fit-content",
                                                             borderRadius: "10px"
                                                         }}
                                                     >
                                                         <CancelIcon 
                                                             sx={{ 
-                                                                color: "#fff",
-                                                                ":hover": { color: "#de2341" },
+                                                                color: colors.tertiary,
+                                                                ":hover": { color: colors.primary },
                                                                 fontSize: {xs: "15px", md: "18px"}
                                                             }} 
                                                             onClick={() => {
@@ -1159,17 +1141,19 @@ function CreateSingleRelease2() {
                                                         />
 
                                                         <Box>
-                                                            <Typography
+                                                            <Typography variant='body1'
                                                                 sx={{
                                                                     fontWeight: "700",
                                                                     fontSize: {xs: "13px", md: "15px"},
+                                                                    color: colors.primary
                                                                 }}
                                                             > { creative.creativeRole } </Typography>
 
-                                                            <Typography
+                                                            <Typography variant='body2'
                                                                 sx={{
                                                                     fontWeight: "400",
                                                                     fontSize: {xs: "13px", md: "15px"},
+                                                                    color: colors.tertiary
                                                                 }}
                                                             > { creative.creativeName } </Typography>
                                                         </Box>
@@ -1198,31 +1182,8 @@ function CreateSingleRelease2() {
                                                 inputMode='text'
                                                 defaultValue=""
                                                 placeholder='E.g Joseph Solomon'
-                                                InputLabelProps={{
-                                                    style: { color: '#c1c1c1', fontWeight: "400" },
-                                                }}
-                                                InputProps={{
-                                                    sx: {
-                                                        borderRadius: "16px",
-                                                        color: darkTheme ? '#fff' : '#fff', // Change to your desired text color
-                                                    },
-                                                }}
-                                                sx={{
-                                                    "& .MuiOutlinedInput-root": {
-                                                        '& fieldset.MuiOutlinedInput-notchedOutline': {
-                                                            borderColor: darkTheme ? '#fff' : '#fff',
-                                                        },
-                                                        // '&:hover .MuiOutlinedInput-notchedOutline': {
-                                                        //     borderColor: darkTheme ? '#fff' : '#000',
-                                                        // },
-                                                        // "&.Mui-focused fieldset": {
-                                                        //     borderColor: darkTheme ? '#fff' : '#000',
-                                                        // },
-                                                        // "& ::placeholder": {
-                                                        //     color: "gray"
-                                                        // },
-                                                    },
-                                                }}
+                                         
+                                                sx={releaseTextFieldStyle}
                                                 error={ errors.artistCreativeName ? true : false }
                                                 { ...register('artistCreativeName') }
                                             />
@@ -1250,25 +1211,7 @@ function CreateSingleRelease2() {
                                                     placeholder='Choose Roles'
                                                     value={selectCreativeRoleValue}
 
-                                                    sx={{
-                                                        color: darkTheme ? "#000" : "#000",
-                                                        borderRadius: "16px",
-                                                        bgcolor: darkTheme ? "#fff" : "#fff",
-                                                        
-                                                        '.MuiOutlinedInput-notchedOutline': {
-                                                            borderColor: darkTheme ? '#fff' : "#fff",
-                                                        },
-                                                        '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                                                            borderColor: darkTheme ? '#fff' : "#fff",
-                                                        },
-                                                        '&:hover .MuiOutlinedInput-notchedOutline': {
-                                                            borderColor: darkTheme ? '#fff' : "#fff",
-                                                        },
-                                                        '.MuiSvgIcon-root ': {
-                                                            // fill: "#797979 !important",
-                                                            fill: darkTheme ? "#797979" : "#797979",
-                                                        }
-                                                    }}
+                                                    sx={releaseSelectStyle3}
                                                     
                                                     error={ errors.songArtistsCreativeRole ? true : false }
                                                     // { ...register('songArtistsCreativeRole') }
@@ -1351,7 +1294,7 @@ function CreateSingleRelease2() {
 
                                     <Box
                                         sx={{
-                                            bgcolor: "#272727",
+                                            bgcolor: colors.secondary,
                                             p: {xs: "10px", md: "25px"},
                                             borderRadius: "12px"
                                         }}
@@ -1366,7 +1309,7 @@ function CreateSingleRelease2() {
                                                 }}
                                             >Copyright Ownership</Typography>
 
-                                            <Typography
+                                            <Typography variant='body1'
                                                 sx={{
                                                     fontWeight: "400",
                                                     fontSize: {xs: "15px", md: "20px"},
@@ -1381,8 +1324,8 @@ function CreateSingleRelease2() {
                                                         sx={{
                                                             p: {xs: "10.18px 19.68px 10.18px 19.68px", md: "15px 29px 15px 29px"},
                                                             borderRadius: {xs: "8.14px", md: "12px"},
-                                                            background: copyrightOwnership == "Yes" ? "#644986" : "#fff",
-                                                            color: copyrightOwnership == "Yes" ? "#fff" : "#000",
+                                                            background: copyrightOwnership == "Yes" ? colors.primary : colors.milk,
+                                                            color: copyrightOwnership == "Yes" ? colors.milk : colors.dark,
                                                             cursor: "pointer",
                                                             display: "inline-block"
                                                         }}
@@ -1405,7 +1348,7 @@ function CreateSingleRelease2() {
                                                     { copyrightOwnership == "Yes" ? 
                                                         <CheckCircleIcon 
                                                             sx={{ 
-                                                                color: darkTheme ? "#fff" : "#c4c4c4",
+                                                                color: colors.tertiary,
                                                                 position: "relative", 
                                                                 left: -15,
                                                                 top: -8,
@@ -1419,8 +1362,8 @@ function CreateSingleRelease2() {
                                                         sx={{
                                                             p: {xs: "10.18px 19.68px 10.18px 19.68px", md: "15px 29px 15px 29px"},
                                                             borderRadius: {xs: "8.14px", md: "12px"},
-                                                            background: copyrightOwnership == "No" ? "#644986" : "#fff",
-                                                            color: copyrightOwnership == "No" ? "#fff" : "#000",
+                                                            background: copyrightOwnership == "No" ? colors.primary : colors.milk,
+                                                            color: copyrightOwnership == "No" ? colors.milk : colors.dark,
                                                             cursor: "pointer",
                                                             display: "inline-block"
                                                         }}
@@ -1444,7 +1387,7 @@ function CreateSingleRelease2() {
                                                     { copyrightOwnership == "No" ? 
                                                         <CheckCircleIcon 
                                                             sx={{ 
-                                                                color: darkTheme ? "#fff" : "#c4c4c4",
+                                                                color: colors.tertiary,
                                                                 position: "relative", 
                                                                 left: -15,
                                                                 top: -8,
@@ -1478,8 +1421,8 @@ function CreateSingleRelease2() {
                                                                 sx={{
                                                                     p: {xs: "10.18px 19.68px 10.18px 19.68px", md: "15px 29px 15px 29px"},
                                                                     borderRadius: {xs: "8.14px", md: "12px"},
-                                                                    background: copyrightOwnershipPermission == "Yes" ? "#644986" : "#fff" ,
-                                                                    color: copyrightOwnershipPermission == "Yes" ? "#fff" : "#000",
+                                                                    background: copyrightOwnershipPermission == "Yes" ? colors.primary : colors.milk ,
+                                                                    color: copyrightOwnershipPermission == "Yes" ? colors.milk : colors.dark,
                                                                     cursor: "pointer",
                                                                     display: "inline-block"
                                                                 }}
@@ -1502,7 +1445,7 @@ function CreateSingleRelease2() {
                                                             { copyrightOwnershipPermission == "Yes" ? 
                                                                 <CheckCircleIcon 
                                                                     sx={{ 
-                                                                        color: darkTheme ? "#fff" : "#c4c4c4",
+                                                                        color: colors.tertiary,
                                                                         position: "relative", 
                                                                         left: -15,
                                                                         top: -8,
@@ -1516,8 +1459,8 @@ function CreateSingleRelease2() {
                                                                 sx={{
                                                                     p: {xs: "10.18px 19.68px 10.18px 19.68px", md: "15px 29px 15px 29px"},
                                                                     borderRadius: {xs: "8.14px", md: "12px"},
-                                                                    background: copyrightOwnershipPermission == "No" ? "#644986" : "#fff",
-                                                                    color: copyrightOwnershipPermission == "No" ? "#fff" : "#000",
+                                                                    background: copyrightOwnershipPermission == "No" ? colors.primary : colors.milk,
+                                                                    color: copyrightOwnershipPermission == "No" ? colors.milk : colors.dark,
                                                                     cursor: "pointer",
                                                                     display: "inline-block"
                                                                 }}
@@ -1540,7 +1483,7 @@ function CreateSingleRelease2() {
                                                             { copyrightOwnershipPermission == "No" ? 
                                                                 <CheckCircleIcon 
                                                                     sx={{ 
-                                                                        color: darkTheme ? "#fff" : "#c4c4c4",
+                                                                        color: colors.tertiary,
                                                                         position: "relative", 
                                                                         left: -15,
                                                                         top: -8,
@@ -1559,7 +1502,7 @@ function CreateSingleRelease2() {
 
                                     <Box
                                         sx={{
-                                            bgcolor: "#272727",
+                                            bgcolor: colors.secondary,
                                             p: {xs: "10px", md: "25px"},
                                             borderRadius: "12px"
                                         }}
@@ -1574,7 +1517,7 @@ function CreateSingleRelease2() {
                                         >Additional Information</Typography>
 
                                         <Box sx={{my: "20px"}}>
-                                            <Typography
+                                            <Typography variant='h3'
                                                 sx={{
                                                     fontWeight: "900",
                                                     fontSize: {xs: "15px", md: "20px"},
@@ -1593,9 +1536,7 @@ function CreateSingleRelease2() {
                                                 inputMode='text'
                                                 defaultValue=""
                                                 placeholder='E.g TCAII2406427'
-                                                InputLabelProps={{
-                                                    style: { color: '#c1c1c1', fontWeight: "400" },
-                                                }}
+
                                                 InputProps={{
                                                     sx: {
                                                         borderRadius: "16px",
@@ -1603,24 +1544,7 @@ function CreateSingleRelease2() {
                                                         maxWidth: {xs: "337px", md: "100%"},
                                                     },
                                                 }}
-                                                sx={{
-                                                    "& .MuiOutlinedInput-root": {
-                                                        '& fieldset.MuiOutlinedInput-notchedOutline': {
-                                                            borderColor: '#fff',
-                                                        },
-                                                        // '&:hover .MuiOutlinedInput-notchedOutline': {
-                                                        //     borderColor: darkTheme ? '#fff' : '#000',
-                                                        // },
-                                                        // "&.Mui-focused fieldset": {
-                                                        //     borderColor: darkTheme ? '#fff' : '#000',
-                                                        // },
-                                                        // "& ::placeholder": {
-                                                        //     color: "gray"
-                                                        // },
-                                                    },
-
-                                            
-                                                }}
+                                                sx={releaseTextFieldStyle}
                                                 error={ errors.ISRC_Number ? true : false }
                                                 { ...register('ISRC_Number') }
                                             />
@@ -1645,25 +1569,7 @@ function CreateSingleRelease2() {
                                                     defaultValue="English"
                                                     placeholder='English'
 
-                                                    sx={{
-                                                        color: "#000",
-                                                        borderRadius: "16px",
-                                                        bgcolor: "#fff",
-                                                        
-                                                        '.MuiOutlinedInput-notchedOutline': {
-                                                            borderColor: '#fff',
-                                                        },
-                                                        '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                                                            borderColor: '#fff',
-                                                        },
-                                                        '&:hover .MuiOutlinedInput-notchedOutline': {
-                                                            borderColor: '#fff',
-                                                        },
-                                                        '.MuiSvgIcon-root ': {
-                                                            // fill: "#797979 !important",
-                                                            fill: "#797979",
-                                                        }
-                                                    }}
+                                                    sx={releaseSelectStyle3}
                                                     
                                                     error={ errors.lyricsLanguage ? true : false }
                                                     { ...register('lyricsLanguage') }
@@ -1682,7 +1588,7 @@ function CreateSingleRelease2() {
                                         </Box>
 
                                         <Box sx={{my: "20px"}}>
-                                            <Typography
+                                            <Typography variant='h3'
                                                 sx={{
                                                     fontWeight: "900",
                                                     fontSize: {xs: "15px", md: "20px"},
@@ -1702,9 +1608,6 @@ function CreateSingleRelease2() {
                                                 defaultValue=""
                                                 multiline
                                                 rows={6}
-                                                InputLabelProps={{
-                                                    style: { color: '#c1c1c1', fontWeight: "400" },
-                                                }}
                                                 InputProps={{
                                                     sx: {
                                                         borderRadius: "16px",
@@ -1712,22 +1615,7 @@ function CreateSingleRelease2() {
                                                         maxWidth: {xs: "337px", md: "100%"},
                                                     },
                                                 }}
-                                                sx={{
-                                                    "& .MuiOutlinedInput-root": {
-                                                        '& fieldset.MuiOutlinedInput-notchedOutline': {
-                                                            borderColor: '#fff',
-                                                        },
-                                                        // '&:hover .MuiOutlinedInput-notchedOutline': {
-                                                        //     borderColor: darkTheme ? '#fff' : '#000',
-                                                        // },
-                                                        // "&.Mui-focused fieldset": {
-                                                        //     borderColor: darkTheme ? '#fff' : '#000',
-                                                        // },
-                                                        // "& ::placeholder": {
-                                                        //     color: "gray"
-                                                        // },
-                                                    },
-                                                }}
+                                                sx={releaseTextFieldStyle}
                                                 error={ errors.songLyrics ? true : false }
                                                 { ...register('songLyrics') }
                                             />
@@ -1737,7 +1625,7 @@ function CreateSingleRelease2() {
 
                                     <Box
                                         sx={{
-                                            bgcolor: "#272727",
+                                            bgcolor: colors.secondary,
                                             p: {xs: "10px", md: "25px"},
                                             borderRadius: "12px"
                                         }}
@@ -1770,25 +1658,7 @@ function CreateSingleRelease2() {
                                                     defaultValue="00"
                                                     placeholder='00'
 
-                                                    sx={{
-                                                        color: "#000",
-                                                        borderRadius: "16px",
-                                                        bgcolor: "#fff",
-                                                        // textAlign: "center",
-
-                                                        '.MuiOutlinedInput-notchedOutline': {
-                                                            borderColor: '#fff',
-                                                        },
-                                                        '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                                                            borderColor: '#fff',
-                                                        },
-                                                        '&:hover .MuiOutlinedInput-notchedOutline': {
-                                                            borderColor: '#fff',
-                                                        },
-                                                        '.MuiSvgIcon-root ': {
-                                                            fill: "#797979",
-                                                        }
-                                                    }}
+                                                    sx={releaseSelectStyle3}
                                                     
                                                     error={ errors.tikTokClipStartTime_Minutes ? true : false }
                                                     { ...register('tikTokClipStartTime_Minutes') }
@@ -1819,25 +1689,7 @@ function CreateSingleRelease2() {
                                                     defaultValue="00"
                                                     placeholder='00'
 
-                                                    sx={{
-                                                        color: "#000",
-                                                        borderRadius: "16px",
-                                                        bgcolor: "#fff",
-                                                        // textAlign: "center",
-
-                                                        '.MuiOutlinedInput-notchedOutline': {
-                                                            borderColor: '#fff',
-                                                        },
-                                                        '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                                                            borderColor: '#fff',
-                                                        },
-                                                        '&:hover .MuiOutlinedInput-notchedOutline': {
-                                                            borderColor: '#fff',
-                                                        },
-                                                        '.MuiSvgIcon-root ': {
-                                                            fill: "#797979",
-                                                        }
-                                                    }}
+                                                    sx={releaseSelectStyle3}
                                                     
                                                     error={ errors.tikTokClipStartTime_Seconds ? true : false }
                                                     { ...register('tikTokClipStartTime_Seconds') }
@@ -1867,11 +1719,12 @@ function CreateSingleRelease2() {
                                                     fontWeight: "900",
                                                     fontSize: {xs: "15px", md: "20px"},
                                                     lineHeight: {xs: "25px", md: "40px"},
-                                                    letterSpacing: "-0.13px"
+                                                    letterSpacing: "-0.13px",
+                                                    color: colors.milk
                                                 }}
                                             >Upload Song Cover</Typography>
 
-                                            <ArtWorkFileInfoComponent iconColor="#fff" />
+                                            <ArtWorkFileInfoComponent iconColor={colors.milk} />
                                         </Stack>
 
                                         <Box
@@ -1880,7 +1733,7 @@ function CreateSingleRelease2() {
                                                 flexDirection: "column",
                                                 justifyContent: "end",
                                                 alignItems: "center",
-                                                bgcolor: "#272727",
+                                                bgcolor: colors.secondary,
                                                 borderRadius: "12px",
                                                 height: {xs: "146.55px", md: "326px"},
                                                 width: {xs: "128.45px", md: "347px"},
@@ -1921,8 +1774,8 @@ function CreateSingleRelease2() {
                                                 sx={{
                                                     p: {xs: "10.18px 19.68px 10.18px 19.68px", md: "15px 29px 15px 29px"},
                                                     borderRadius: {xs: "8.14px", md: "12px"},
-                                                    background: "#fff",
-                                                    color: "#000",
+                                                    background: colors.milk,
+                                                    color: colors.dark,
                                                     cursor: "pointer",
                                                     display: "inline-block",
                                                     mt: {xs: "7px", md: "15px"}
@@ -1964,22 +1817,22 @@ function CreateSingleRelease2() {
                             fullWidth type="submit" 
                             disabled={ !isValid || isSubmitting } 
                             sx={{ 
-                                bgcolor: darkTheme ? "#fff" : "#000",
+                                bgcolor: colors.primary,
                                 maxWidth: "312px",
                                 "&.Mui-disabled": {
-                                    background: "#9c9c9c",
-                                    color: "#797979"
+                                    background: colors.secondary,
+                                    color: "#797979",
                                 },
                                 "&:hover": {
-                                    bgcolor: darkTheme ? "#fff" : "#000",
+                                    bgcolor: colors.primary,
                                 },
                                 "&:active": {
-                                    bgcolor: darkTheme ? "#fff" : "#000",
+                                    bgcolor: colors.primary,
                                 },
                                 "&:focus": {
-                                    bgcolor: darkTheme ? "#fff" : "#000",
+                                    bgcolor: colors.primary,
                                 },
-                                color: darkTheme ? "#000" : "#fff",
+                                color: colors.milk,
                                 borderRadius: "12px",
                                 my: 3, py: 1.5,
                                 fontSize: {md: "15.38px"},

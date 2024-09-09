@@ -30,6 +30,7 @@ import spotify from "@/assets/images/partners/spotify_.png";
 import tiktok from "@/assets/images/partners/tiktok_.png";
 import youtube from "@/assets/images/partners/youtube_.png";
 import SalesReportStoresAnalyticsTableComponent from '@/components/account/SalesReportStoresAnalyticsTable';
+import colors from '@/constants/colors';
 
   
 const releaseHeaderTitle = [
@@ -438,12 +439,12 @@ function SalesReport_RL() {
 
     return (
         <AccountWrapper>
-            <Box sx={{px: {xs: 2, md: 5, lg: 12}, pb: 5, position: "relative", zIndex: 10, mt: {xs: 7, md: 10}  }}>
+            <Box>
                 <Stack direction={"row"} spacing={"20px"} justifyContent={"space-between"} alignItems={"center"}>
                     <IconButton 
                         onClick={() => navigate(-1)}
                         sx={{
-                            color: darkTheme ? "#fff" : "#000", 
+                            color: colors.primary, 
                             mb: 2,
                         }}
                     >
@@ -459,9 +460,9 @@ function SalesReport_RL() {
 
                     <Box
                         sx={{
-                            border: "1px solid #D9D9D9",
+                            border: `1px solid ${colors.dark}`,
+                            bgcolor: colors.secondary,
                             borderRadius: "13px",
-                            bgcolor: darkTheme ? "#000" : "#272727",
                             p: {xs: "15px", md: "25px"},
                             mb: {xs: "50px", md: "70px"}
                         }}
@@ -478,7 +479,7 @@ function SalesReport_RL() {
                                     sx={{
                                         color: "#fff",
                                         borderRadius: "8px",
-                                        bgcolor: darkTheme ? "#272727" : "#414141",
+                                        bgcolor: colors.dark,
                                         // textAlign: "center",
                                         fontWeight: "900",
                                         border: "none",
@@ -524,7 +525,7 @@ function SalesReport_RL() {
                                     fontSize: {xs: "10px", md: "18px"},
                                     lineHeight: {xs: "12px", md: "24px"},
                                     letterSpacing: {xs: "-0.67px", md: "-1.34px"},
-                                    color: "#fff",
+                                    // color: colors.dark,
                                 }}
                             >April 22 - May 21</Typography>
                         </Stack>
@@ -552,7 +553,7 @@ function SalesReport_RL() {
                                     fontWeight: "400",
                                     fontSize: "8px",
                                     lineHeight: "8px",
-                                    color: darkTheme ? "#4C4C4C" : "#FBFBFB",
+                                    color: "#4C4C4C",
                                 }}
                             >Balance</Typography>
                         </Box>
@@ -565,7 +566,7 @@ function SalesReport_RL() {
                                             fontWeight: "400",
                                             fontSize: {xs: "13.54px", md: "18px"},
                                             lineHeight: {xs: "18.06px", md: "24px"},
-                                            color: darkTheme ? "#666666" : "#FBFBFB",
+                                            color: "#666666",
                                             mb: 1
                                         }}
                                     >Releases</Typography>
@@ -574,8 +575,8 @@ function SalesReport_RL() {
                                         sx={{
                                             p: {xs: "10px 15px", md: "10px 27px"},
                                             borderRadius: {xs: "5.27px", md: "7px"},
-                                            bgcolor: "#FFFFFF" ,
-                                            color: "#000",
+                                            bgcolor: colors.milk,
+                                            color: colors.dark,
                                             cursor: "pointer",
                                             display: "inline-block"
                                         }}
@@ -596,7 +597,7 @@ function SalesReport_RL() {
                                             fontWeight: {xs: "700", md: "400"},
                                             fontSize: {xs: "13.54px", md: "18px"},
                                             lineHeight: {xs: "18.06px", md: "24px"},
-                                            color: darkTheme ? "#666666" : "#FBFBFB",
+                                            color: "#666666",
                                             mt: 1
                                         }}
                                     >84 Sold</Typography>
@@ -608,7 +609,7 @@ function SalesReport_RL() {
                                             fontWeight: "400",
                                             fontSize: {xs: "13.54px", md: "18px"},
                                             lineHeight: {xs: "18.06px", md: "24px"},
-                                            color: darkTheme ? "#666666" : "#FBFBFB",
+                                            color: "#666666",
                                             mb: 1
                                         }}
                                     >Songs</Typography>
@@ -617,8 +618,8 @@ function SalesReport_RL() {
                                         sx={{
                                             p: {xs: "10px 15px", md: "10px 27px"},
                                             borderRadius: {xs: "5.27px", md: "7px"},
-                                            bgcolor: "#FFFFFF" ,
-                                            color: "#000",
+                                            bgcolor: colors.milk,
+                                            color: colors.dark,
                                             cursor: "pointer",
                                             display: "inline-block"
                                         }}
@@ -639,7 +640,7 @@ function SalesReport_RL() {
                                             fontWeight: {xs: "700", md: "400"},
                                             fontSize: {xs: "13.54px", md: "18px"},
                                             lineHeight: {xs: "18.06px", md: "24px"},
-                                            color: darkTheme ? "#666666" : "#FBFBFB",
+                                            color: "#666666",
                                             mt: 1
                                         }}
                                     >84 Sold</Typography>
@@ -651,7 +652,7 @@ function SalesReport_RL() {
                                             fontWeight: "400",
                                             fontSize: {xs: "13.54px", md: "18px"},
                                             lineHeight: {xs: "18.06px", md: "24px"},
-                                            color: darkTheme ? "#666666" : "#FBFBFB",
+                                            color: "#666666",
                                             mb: 1
                                         }}
                                     >Streams</Typography>
@@ -660,8 +661,8 @@ function SalesReport_RL() {
                                         sx={{
                                             p: {xs: "10px 15px", md: "10px 27px"},
                                             borderRadius: {xs: "5.27px", md: "7px"},
-                                            bgcolor: "#FFFFFF" ,
-                                            color: "#000",
+                                            bgcolor: colors.milk,
+                                            color: colors.dark,
                                             cursor: "pointer",
                                             display: "inline-block"
                                         }}
@@ -682,20 +683,20 @@ function SalesReport_RL() {
                                             fontWeight: {xs: "700", md: "400"},
                                             fontSize: {xs: "13.54px", md: "18px"},
                                             lineHeight: {xs: "18.06px", md: "24px"},
-                                            color: darkTheme ? "#666666" : "#FBFBFB",
+                                            color: "#666666",
                                             mt: 1
                                         }}
                                     >4,000,000 Plays</Typography>
                                 </Box>
                             </Stack>
-
+                            
                             <Box sx={{ display: {xs: "none", md: "initial"} }}>
                                 <Typography
                                     sx={{
                                         fontWeight: "400",
                                         fontSize: {xs: "13.54px", md: "18px"},
                                         lineHeight: {xs: "18.06px", md: "24px"},
-                                        color: darkTheme ? "#666666" : "#FBFBFB",
+                                        color: "#666666",
                                         mb: 1
                                     }}
                                 >Total Earned</Typography>
@@ -726,7 +727,7 @@ function SalesReport_RL() {
                                         fontWeight: "400",
                                         fontSize: {xs: "13.54px", md: "18px"},
                                         lineHeight: {xs: "18.06px", md: "24px"},
-                                        color: darkTheme ? "#666666" : "#FBFBFB",
+                                        color: "#666666",
                                         mt: 1
                                     }}
                                 >April 22 - May 21</Typography>
@@ -740,10 +741,10 @@ function SalesReport_RL() {
                             <Box 
                                 sx={{
                                     p: "10px",
-                                    border: reportType == 'Release' ? "1px solid #FBFBFB" : 'none',
+                                    // border: reportType == 'Release' ? "1px solid #FBFBFB" : 'none',
                                     borderRadius: "11px",
-                                    bgcolor: reportType == 'Release' ? "#4C4C4C" : "#313131" ,
-                                    color: "#CACACA",
+                                    bgcolor: reportType == 'Release' ? colors.tertiary : colors.secondary,
+                                    color: colors.milk,
                                     cursor: "pointer",
                                     display: "inline-block"
                                 }}
@@ -763,10 +764,10 @@ function SalesReport_RL() {
                             <Box 
                                 sx={{
                                     p: "10px",
-                                    border: reportType == 'Songs' ? "1px solid #FBFBFB" : 'none',
+                                    // border: reportType == 'Songs' ? "1px solid #FBFBFB" : 'none',
                                     borderRadius: "11px",
-                                    bgcolor: reportType == 'Songs' ? "#4C4C4C" : "#313131" ,
-                                    color: "#CACACA",
+                                    bgcolor: reportType == 'Songs' ? colors.tertiary : colors.secondary,
+                                    color: colors.milk,
                                     cursor: "pointer",
                                     display: "inline-block"
                                 }}
@@ -786,10 +787,10 @@ function SalesReport_RL() {
                             <Box 
                                 sx={{
                                     p: "10px",
-                                    border: reportType == 'Stores' ? "1px solid #FBFBFB" : 'none',
+                                    // border: reportType == 'Stores' ? "1px solid #FBFBFB" : 'none',
                                     borderRadius: "11px",
-                                    bgcolor: reportType == 'Stores' ? "#4C4C4C" : "#313131",
-                                    color: "#CACACA",
+                                    bgcolor: reportType == 'Stores' ? colors.tertiary : colors.secondary,
+                                    color:colors.milk,
                                     cursor: "pointer",
                                     display: "inline-block"
                                 }}
@@ -809,10 +810,10 @@ function SalesReport_RL() {
                             <Box 
                                 sx={{
                                     p: "10px",
-                                    border: reportType == 'Location' ? "1px solid #FBFBFB" : 'none',
+                                    // border: reportType == 'Location' ? "1px solid #FBFBFB" : 'none',
                                     borderRadius: "11px",
-                                    bgcolor: reportType == 'Location' ? "#4C4C4C" : "#313131",
-                                    color: "#CACACA",
+                                    bgcolor: reportType == 'Location' ? colors.tertiary : colors.secondary,
+                                    color: colors.milk,
                                     cursor: "pointer",
                                     display: "inline-block"
                                 }}
@@ -832,10 +833,10 @@ function SalesReport_RL() {
                             <Box 
                                 sx={{
                                     p: "10px",
-                                    border: reportType == 'Months' ? "1px solid #FBFBFB" : 'none',
+                                    // border: reportType == 'Months' ? "1px solid #FBFBFB" : 'none',
                                     borderRadius: "11px",
-                                    bgcolor: reportType == 'Months' ? "#4C4C4C" : "#313131",
-                                    color: "#CACACA",
+                                    bgcolor: reportType == 'Months' ? colors.tertiary : colors.secondary,
+                                    color: colors.milk,
                                     cursor: "pointer",
                                     display: "inline-block"
                                 }}
@@ -854,7 +855,6 @@ function SalesReport_RL() {
                         
                         </Stack>
                     </Box>
-
 
                     {
                         reportType == "Release" &&

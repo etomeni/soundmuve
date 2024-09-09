@@ -170,6 +170,207 @@ export const auth2MuiTextFieldStyle: SxProps<Theme> = {
     },
 }
 
+export const releaseTextFieldStyle: SxProps<Theme> = {
+    '& label.Mui-focused': {
+        color: 'var(--TextField-brandBorderFocusedColor)',
+    },
+    '& .MuiInputBase-input': { // Target input text
+        color: colors.dark,
+        fontSize: '1rem',
+        fontWeight: '400',
+        lineHeight: 1.5
+    },
+    '& .MuiInputBase-placeholder': { // Target placeholder text
+        color: 'gray',
+        fontSize: '1rem',
+        fontWeight: '400',
+        lineHeight: 1.5
+    },
+    '& .MuiOutlinedInput-root': {
+        // bgcolor: darkTheme ? '#1C1B1F' : '#EFEFEF',
+        borderRadius: '13.79px',
+        // height: '42px',
+
+        '& fieldset': {
+            // border: `1px solid ${colors.primary}`,
+        },
+        '&:hover fieldset': {
+            border: `2px solid ${colors.primary}`,
+        },
+        '&.Mui-focused fieldset': {
+            border: `1px solid ${colors.primary}`,
+        },
+    },
+
+
+
+    "& input::-webkit-outer-spin-button, & input::-webkit-inner-spin-button": {
+        display: "none",
+    },
+    
+    "& input[type=number]": {
+        MozAppearance: "textfield",
+    },
+}
+
+export const releaseTextFieldStyle2: SxProps<Theme> = {
+    '& label.Mui-focused': {
+        color: 'var(--TextField-brandBorderFocusedColor)',
+    },
+    '& .MuiInputBase-input': { // Target input text
+        color: "#fff", // colors.milk,
+        fontSize: '1rem',
+        fontWeight: '400',
+        lineHeight: 1.5
+    },
+    '& .MuiInputBase-placeholder': { // Target placeholder text
+        color: 'gray',
+        fontSize: '1rem',
+        fontWeight: '400',
+        lineHeight: 1.5
+    },
+    '& .MuiOutlinedInput-root': {
+        // bgcolor: darkTheme ? '#1C1B1F' : '#EFEFEF',
+        borderRadius: '13.79px',
+        // height: '42px',
+
+        '& fieldset': {
+            border: `1px solid ${colors.milk}`,
+        },
+        '&:hover fieldset': {
+            border: `2px solid ${colors.primary}`,
+        },
+        '&.Mui-focused fieldset': {
+            border: `1px solid ${colors.primary}`,
+        },
+    },
+
+
+
+    "& input::-webkit-outer-spin-button, & input::-webkit-inner-spin-button": {
+        display: "none",
+    },
+    
+    "& input[type=number]": {
+        MozAppearance: "textfield",
+    },
+}
+
+export const paymentTextFieldStyle: SxProps<Theme> = {
+    '& label.Mui-focused': {
+        color: 'var(--TextField-brandBorderFocusedColor)',
+    },
+    '& .MuiInputBase-input': { // Target input text
+        color: colors.dark,
+        fontSize: '1rem',
+        fontWeight: '400',
+        lineHeight: 1.5
+    },
+    '& .MuiInputBase-placeholder': { // Target placeholder text
+        color: 'gray',
+        fontSize: '1rem',
+        fontWeight: '400',
+        lineHeight: 1.5
+    },
+    '& .MuiOutlinedInput-root': {
+        // bgcolor: darkTheme ? '#1C1B1F' : '#EFEFEF',
+        borderRadius: '13.79px',
+        // height: '42px',
+
+        '& fieldset': {
+            border: `1px solid ${colors.dark}`,
+        },
+        '&:hover fieldset': {
+            border: `2px solid ${colors.primary}`,
+        },
+        '&.Mui-focused fieldset': {
+            border: `1px solid ${colors.primary}`,
+        },
+    },
+
+
+
+    "& input::-webkit-outer-spin-button, & input::-webkit-inner-spin-button": {
+        display: "none",
+    },
+    
+    "& input[type=number]": {
+        MozAppearance: "textfield",
+    },
+}
+
+export const releaseSelectStyle3: SxProps<Theme> = {
+    color: colors.dark,
+    borderRadius: "16px",
+    bgcolor: colors.milk,
+    '.MuiOutlinedInput-notchedOutline': {
+        borderColor: colors.milk,
+    },
+    '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+        borderColor: colors.primary, // 'rgba(228, 219, 233, 0.25)',
+    },
+    '&:hover .MuiOutlinedInput-notchedOutline': {
+        borderColor: colors.primary, // 'var(--TextField-brandBorderHoverColor)',
+    },
+    '.MuiSvgIcon-root ': {
+        fill: colors.dark,
+    }
+}
+
+export const releaseSelectStyle2: SxProps<Theme> = {
+    color: colors.dark,
+    borderRadius: "16px",
+    // bgcolor: colors.primary,
+    '.MuiOutlinedInput-notchedOutline': {
+        borderColor: colors.dark,
+    },
+    '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+        borderColor: colors.primary, // 'rgba(228, 219, 233, 0.25)',
+    },
+    '&:hover .MuiOutlinedInput-notchedOutline': {
+        borderColor: colors.primary, // 'var(--TextField-brandBorderHoverColor)',
+    },
+    '.MuiSvgIcon-root ': {
+        fill: colors.dark,
+    }
+}
+
+export const releaseSelectStyle: SxProps<Theme> = {
+    color: colors.milk,
+    borderRadius: "16px",
+    bgcolor: colors.primary,
+    '.MuiOutlinedInput-notchedOutline': {
+        borderColor: colors.primary,
+    },
+    '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+        borderColor: 'rgba(228, 219, 233, 0.25)',
+    },
+    '&:hover .MuiOutlinedInput-notchedOutline': {
+        borderColor: 'var(--TextField-brandBorderHoverColor)',
+    },
+    '.MuiSvgIcon-root ': {
+        fill: colors.milk,
+    }
+}
+
+export const homeSelectStyle: SxProps<Theme> = {
+    color: colors.milk,
+    borderRadius: "16px",
+    bgcolor: colors.dark,
+    '.MuiOutlinedInput-notchedOutline': {
+        borderColor: colors.dark,
+    },
+    '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+        borderColor: 'rgba(228, 219, 233, 0.25)',
+    },
+    '&:hover .MuiOutlinedInput-notchedOutline': {
+        borderColor: 'var(--TextField-brandBorderHoverColor)',
+    },
+    '.MuiSvgIcon-root ': {
+        fill: colors.milk,
+    }
+}
+
 export const authMuiTextFieldStyle: SxProps<Theme> = {
     '& label.Mui-focused': {
         color: 'var(--TextField-brandBorderFocusedColor)',
@@ -301,5 +502,6 @@ export const MuiSelectFieldStyle = (darkTheme: boolean = true) =>{
 
 export const contentWidth: SxProps<Theme> = {
     width: {xs: "calc(100% - 40px)", sm: "calc(100% - 100px)", md: "calc(100% - 140px)" },
+    maxWidth: "1300px",
     mx: "auto",
 }

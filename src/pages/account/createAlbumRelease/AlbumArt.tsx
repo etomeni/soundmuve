@@ -19,6 +19,7 @@ import cloudUploadIconImg from "@/assets/images/cloudUploadIcon.png";
 import { apiEndpoint, artWorkAllowedTypes, convertToBase64, validateImageArtWork } from '@/util/resources';
 import CircularProgress from '@mui/material/CircularProgress';
 import ArtWorkFileInfoComponent from '@/components/ArtWorkFileInfo';
+import colors from '@/constants/colors';
 
 
 function CreateAlbumReleaseAlbumArt() {
@@ -149,8 +150,8 @@ function CreateAlbumReleaseAlbumArt() {
 
 
     return (
-        <AccountWrapper>
-            <Box sx={{ position: "relative", zIndex: 10 }}>
+        <AccountWrapper bottomSpacing={0} topSpacing={false}>
+            <Box>
 
                 <Box sx={{ display: {xs: 'initial', sm: 'flex'}, height: "100%" }}>
                     <SideNav activePageNumber={5} />
@@ -180,7 +181,7 @@ function CreateAlbumReleaseAlbumArt() {
                                             lineHeight: {xs: "25px", md: "32px"},
                                             letterSpacing: "-0.13px",
                                         }}
-                                    > Album art </Typography>
+                                    > Upload Album Cover </Typography>
 
                                     <ArtWorkFileInfoComponent />
                                 </Stack>
@@ -310,22 +311,22 @@ function CreateAlbumReleaseAlbumArt() {
                                     onClick={() => onSubmit()}
                                     disabled={ isBtnSubmitting } 
                                     sx={{ 
-                                        bgcolor: darkTheme ? "#fff" : "#644986",
+                                        bgcolor: colors.primary,
+                                        color: colors.milk,
                                         maxWidth: "312px",
                                         "&.Mui-disabled": {
                                             background: "#9c9c9c",
                                             color: "#797979"
                                         },
                                         "&:hover": {
-                                            bgcolor: darkTheme ? "#fff" : "#644986",
+                                            bgcolor: colors.primary,
                                         },
                                         "&:active": {
-                                            bgcolor: darkTheme ? "#fff" : "#644986",
+                                            bgcolor: colors.primary,
                                         },
                                         "&:focus": {
-                                            bgcolor: darkTheme ? "#fff" : "#644986",
+                                            bgcolor: colors.primary,
                                         },
-                                        color: darkTheme ? "#000" : "#fff",
                                         borderRadius: "12px",
                                         my: 3, py: 1.5,
                                         fontSize: {md: "15.38px"},

@@ -5,23 +5,24 @@ import Typography from '@mui/material/Typography'
 
 import { PieChart } from '@mui/x-charts/PieChart';
 import CircleIcon from '@mui/icons-material/Circle';
+import colors from '@/constants/colors';
 
 
 interface _Props {
     // children: React.ReactNode,
-    darkTheme: boolean,
+    darkTheme?: boolean,
     menPercentage: number,
     womenPercentage: number,
 }
 
 const TopGenderComponent: React.FC<_Props> = ({
-    darkTheme, menPercentage, womenPercentage
+    menPercentage, womenPercentage
 }) => {
 
     return (
         <Box
             sx={{
-                border: darkTheme ? "1.08px solid #fff" : "1.08px solid #000",
+                border: `1.08px solid ${colors.dark}`,
                 borderRadius: "10.8px",
                 p: "15px",
                 height: "100%"
@@ -59,6 +60,7 @@ const TopGenderComponent: React.FC<_Props> = ({
                         Women 
                         <CircleIcon 
                             sx={{
+                                color: colors.secondary,
                                 fontSize: "7.02px",
                                 ml: "5px"
                             }}
@@ -94,7 +96,7 @@ const TopGenderComponent: React.FC<_Props> = ({
                     height={125}
                     width={1}
                     // margin={{right: 5}}
-                    colors={ darkTheme ? ['#C89FF5', 'white'] : ['#C89FF5', '#343434'] }
+                    colors={ [colors.primary, colors.secondary] }
                 />
 
                 <Box>
@@ -120,7 +122,7 @@ const TopGenderComponent: React.FC<_Props> = ({
                         <CircleIcon 
                             sx={{
                                 fontSize: "7.02px",
-                                color: "#C89FF5",
+                                color: colors.primary,
                                 ml: "5px"
                             }}
                         />

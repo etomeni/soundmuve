@@ -2,6 +2,7 @@ import React from 'react';
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import CheckIcon from '@mui/icons-material/Check';
+import colors from '@/constants/colors';
 // import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 
 interface _Props {
@@ -13,7 +14,8 @@ interface _Props {
 }
 
 const AppleSportifyCheckmark: React.FC<_Props> = ({
-    dspName, bgColor = "#C89FF5", textColor = "#581D3A", iconColor = "#000", iconBgColor = '#fff'
+    dspName, bgColor = colors.primary, textColor = colors.tertiary, 
+    iconColor = colors.dark, iconBgColor = colors.milk
 }) => {
 
     return (

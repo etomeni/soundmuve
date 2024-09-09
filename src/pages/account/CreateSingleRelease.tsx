@@ -19,7 +19,6 @@ import MenuItem from '@mui/material/MenuItem';
 import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
-import { ThemeProvider, useTheme } from '@mui/material/styles';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
@@ -37,7 +36,6 @@ import { createReleaseStore } from '@/state/createReleaseStore';
 
 import { languages } from '@/util/languages';
 import { apiEndpoint, hours, minReleaseDate, minutes, primaryGenre, secondaryGenre } from '@/util/resources';
-import { customTextFieldTheme } from '@/util/mui';
 
 import AccountWrapper from '@/components/AccountWrapper';
 import SearchArtistModalComponent from '@/components/account/SearchArtistModal';
@@ -47,6 +45,8 @@ import { restCountries } from '@/util/countries';
 import LongSelectList from '@/components/LongSelectList';
 import ArtistProfileInfoComponent from '@/components/ArtistProfileInfo';
 import ExplicitLyricsReadMoreInfoComponent from '@/components/ExplicitLyricsReadMoreInfo';
+import colors from '@/constants/colors';
+import { releaseSelectStyle, releaseSelectStyle2, releaseTextFieldStyle } from '@/util/mui';
 
 
 const formSchema = yup.object({
@@ -79,8 +79,7 @@ contriesss.unshift("All");
 
 function CreateSingleRelease() {
     const navigate = useNavigate();
-    const outerTheme = useTheme();
-    const darkTheme = useSettingStore((state) => state.darkTheme);
+    // const darkTheme = useSettingStore((state) => state.darkTheme);
     const [explicitLyrics, setExplicitLyrics] = useState(""); // No
     const [soldWorldwide, setSoldWorldwide] = useState(""); // Yes
     const userData = useUserStore((state) => state.userData);
@@ -378,11 +377,11 @@ function CreateSingleRelease() {
 
     return (
         <AccountWrapper>
-            <Box sx={{px: {xs: 2, md: 5, lg: 12}, pb: 5, position: "relative", zIndex: 10, mt: {xs: 5, md: 10}  }}>
+            <Box>
                 <IconButton 
                     onClick={() => navigate(-1)}
                     sx={{
-                        color: darkTheme ? "#fff" : "#000", 
+                        color: colors.dark, 
                         mb: 2,
                         display: {xs: "none", md: "block"}
                     }}
@@ -390,465 +389,723 @@ function CreateSingleRelease() {
                     <ChevronLeftIcon />
                 </IconButton>
 
-                <Typography 
+                <Typography variant='h3'
                     sx={{
                         fontWeight: "900",
                         fontSize: {xs: "24.74px", md: "60px"},
                         lineHeight: {xs: "26.31px", md: "63.8px"},
                         letterSpacing: {xs: "-0.55px", md: "-1.34px"},
                     }}
-                >
-                    Create a Single
-                </Typography>
+                > Create a Single </Typography>
 
                 <Box sx={{my: 3}}>
-                    <ThemeProvider theme={customTextFieldTheme(outerTheme, darkTheme)}>
-                        <form noValidate onSubmit={ handleSubmit(onSubmit) } 
-                            style={{ width: "100%", maxWidth: "916px" }}
-                        >
-                            
-                            <Grid container spacing="20px" sx={{my: "31px"}}>
-                                <Grid item xs={12} md={4}
-                                    sx={{ alignSelf: "center"}}
-                                >
-                                    <Typography sx={{
-                                        fontWeight: {xs: "700", md: "900"},
-                                        fontSize: {xs: "13.12px", md: "25px"},
-                                        lineHeight: {xs: "21px", md: "40px"},
-                                        letterSpacing: {xs: "-0.07px", md: "-0.13px"}
-                                    }}>
-                                        Single Title
-                                    </Typography>
-                                </Grid>
+                    <form noValidate onSubmit={ handleSubmit(onSubmit) } 
+                        style={{ width: "100%", maxWidth: "916px" }}
+                    >
+                        
+                        <Grid container spacing="20px" sx={{my: "31px"}}>
+                            <Grid item xs={12} md={4}
+                                sx={{ alignSelf: "center"}}
+                            >
+                                <Typography variant='h4' sx={{
+                                    fontWeight: {xs: "700", md: "900"},
+                                    fontSize: {xs: "13.12px", md: "25px"},
+                                    lineHeight: {xs: "21px", md: "40px"},
+                                    letterSpacing: {xs: "-0.07px", md: "-0.13px"}
+                                }}> Single Title </Typography>
+                            </Grid>
 
-                                <Grid item xs={12} md={8}
-                                    sx={{ alignSelf: "center" }}
-                                >
+                            <Grid item xs={12} md={8}
+                                sx={{ alignSelf: "center" }}
+                            >
+                                <TextField 
+                                    variant="outlined" 
+                                    fullWidth 
+                                    id='songTitle'
+                                    type='text'
+                                    label=''
+                                    inputMode='text'
+                                    defaultValue=""
+                                    sx={releaseTextFieldStyle}
+                                    InputProps={{
+                                        sx: {
+                                            borderRadius: "16px",
+                                            maxWidth: {xs: "337px", md: "100%"}
+                                        },
+                                    }}
+                                    error={ errors.songTitle ? true : false }
+                                    { ...register('songTitle') }
+                                />
+                                { errors.songTitle && <Box sx={{fontSize: 13, color: "red", textAlign: "left"}}>{ errors.songTitle?.message }</Box> }
+                            </Grid>
+                        </Grid>
+
+                        <Grid container spacing="20px" sx={{my: "31px"}}>
+                            <Grid item xs={12} md={4}>
+                                <Typography sx={{
+                                    fontWeight: {xs: "900", md: "900"},
+                                    fontSize: {xs: "13.12px", md: "25px"},
+                                    lineHeight: {xs: "21px", md: "40px"},
+                                    letterSpacing: {xs: "-0.07px", md: "-0.13px"}
+                                }}> Main Artist Name </Typography>
+                            </Grid>
+
+                            <Grid item xs={12} md={8}>
+                                <Box>
                                     <TextField 
                                         variant="outlined" 
                                         fullWidth 
-                                        id='songTitle'
+                                        id='artistName'
                                         type='text'
                                         label=''
                                         inputMode='text'
                                         defaultValue=""
-                                        InputLabelProps={{
-                                            style: { color: '#c1c1c1', fontWeight: "400" },
-                                        }}
+                                        sx={releaseTextFieldStyle}
                                         InputProps={{
                                             sx: {
                                                 borderRadius: "16px",
                                                 maxWidth: {xs: "337px", md: "100%"}
                                             },
                                         }}
-                                        error={ errors.songTitle ? true : false }
-                                        { ...register('songTitle') }
+                                        error={ errors.artistName ? true : false }
+                                        { ...register('artistName') }
                                     />
-                                    { errors.songTitle && <Box sx={{fontSize: 13, color: "red", textAlign: "left"}}>{ errors.songTitle?.message }</Box> }
-                                </Grid>
+                                    
+                                    { errors.artistName && <Box sx={{fontSize: 13, color: "red", textAlign: "left"}}>{ errors.artistName?.message }</Box> }
+                                </Box> 
+
+
+
+                                {/* <Box>
+                                    <Box 
+                                        sx={{
+                                            p: {xs: "11.25px 21.75px 11.25px 21.75px", md: "15px 29px 15px 29px"},
+                                            borderRadius: {xs: "9px", md: "12px"},
+                                            background: darkTheme ? "#fff" : "#272727",
+                                            color: "#000000",
+                                            cursor: "pointer",
+                                            display: "inline-block"
+                                        }}
+                                        onClick={() => setOpenSearchArtistModal(true) }
+                                    >
+                                        <Typography 
+                                            sx={{
+                                                fontWeight: '900',
+                                                fontSize: {xs: "11.25px", md: "15px"},
+                                                lineHeight: {xs: "9.75px", md: "13px"},
+                                                letterSpacing: {xs: "-0.1px", md: "-0.13px"},
+                                                textAlign: 'center',
+                                                color: darkTheme ? "#000" : "#fff",
+                                            }}
+                                        > Add&nbsp;Artist </Typography>
+                                    </Box>
+                                    { errors.artistName && <Box sx={{fontSize: 13, color: "red", textAlign: "left"}}>{ errors.artistName?.message }</Box> }
+
+                                    {
+                                        selectArtistName ? (
+                                            <Box
+                                                sx={{
+                                                    height: {xs: "82px", md: "82.92px"}, 
+                                                    borderRadius: "8.65px",
+
+                                                    bgcolor: "#6449868F",
+                                                    py: {xs: "6.02px",md: "6.5px"},
+                                                    px: "7.2px",
+                                                    maxWidth: {xs: "337px", md: "100%"},
+
+                                                    display: "flex",
+                                                    flexDirection: "row",
+                                                    alignItems: "center",
+                                                    gap: "8.65px",
+                                                    my: 2
+                                                }}
+                                            >
+                                                <Box
+                                                    sx={{
+                                                        width: "70.67px",
+                                                        height: "69.94px",
+                                                        borderRadius: "5.77px",
+                                                        overflow: "hidden"
+                                                    }}
+                                                >
+                                                    <img 
+                                                        src={albumSampleArt} alt="album Art"
+                                                        style={{ width: "100%", objectFit: "contain" }}
+                                                    />
+                                                </Box>
+
+                                                <Box>
+                                                    <Box 
+                                                        sx={{
+                                                            display: "flex",
+                                                            flexDirection: "row",
+                                                            gap: "5px",
+                                                            alignItems: "center"
+                                                        }}
+                                                    >
+                                                        <Typography
+                                                            sx={{
+                                                                fontWeight: "700",
+                                                                fontSize: "25px",
+                                                                lineHeight: "20px",
+                                                                letterSpacing: "-0.13px",
+                                                                color: "#fff"
+                                                            }}
+                                                        > 
+                                                            { getValues("artistName") }
+                                                        </Typography>
+                                                    </Box>
+
+                                                    <Box
+                                                        sx={{
+                                                            display: "flex",
+                                                            flexDirection: "row",
+                                                            alignItems: "center",
+                                                            gap: "10px",
+                                                            mt:  "7.2px",
+                                                        }}
+                                                    >
+                                                        { selectArtistName.apple ? <AppleSportifyCheckmark dspName="Apple" bgColor='#D9D9D9' /> : <></> }
+                                                        { selectArtistName.spotify ? <AppleSportifyCheckmark dspName="Spotify" bgColor='#D9D9D9' /> : <></> }
+                                                    </Box>
+                                                </Box>
+                                            </Box>
+                                        ) : <></>
+                                    }
+
+                                </Box> */}
+                            </Grid>
+                        </Grid>
+
+                        <Grid container spacing="20px" sx={{my: "31px"}}>
+                            <Grid item xs={12} md={4}>
+                                <Stack direction="row">
+                                    <Box>
+                                        <Typography sx={{
+                                            fontWeight: {xs: "700", md: "900"},
+                                            fontSize: {xs: "13.12px", md: "25px"},
+                                            lineHeight: {xs: "21px", md: "40px"},
+                                            letterSpacing: {xs: "-0.07px", md: "-0.13px"}
+                                        }}> Artist Profile </Typography>
+
+                                        <Typography sx={{
+                                            fontWeight: "400",
+                                            fontSize: {xs: "13.88px", md: "18px"},
+                                            lineHeight: {xs: "9.25px", md: "12px"},
+                                            letterSpacing: {xs: "-0.1px", md: "-0.13px"},
+                                            // mt: "9px"
+                                        }}> Optional </Typography>
+                                    </Box>
+
+                                    <ArtistProfileInfoComponent  />
+                                </Stack>
                             </Grid>
 
-                            <Grid container spacing="20px" sx={{my: "31px"}}>
-                                <Grid item xs={12} md={4}>
-                                    <Typography sx={{
-                                        fontWeight: {xs: "900", md: "900"},
-                                        fontSize: {xs: "13.12px", md: "25px"},
-                                        lineHeight: {xs: "21px", md: "40px"},
-                                        letterSpacing: {xs: "-0.07px", md: "-0.13px"}
-                                    }}> Main Artist Name </Typography>
-                                </Grid>
+                            <Grid item xs={12} md={8}>
+                                <Box>
+                                    <Grid container spacing="20px">
 
-                                <Grid item xs={12} md={8}>
+                                        <Grid item xs={12} md={6}>
+                                            <TextField 
+                                                variant="outlined" 
+                                                fullWidth 
+                                                id='spotifyMusicUrl'
+                                                type='url'
+                                                inputMode='url'
+                                                label=''
+                                                placeholder='Add your soptify profile link'
+                                                defaultValue=""
+                                                sx={releaseTextFieldStyle}
+                                                InputProps={{
+                                                    sx: {
+                                                        borderRadius: "16px",
+                                                        maxWidth: {xs: "337px", md: "100%"}
+                                                    },
+                                                }}
+                                                error={ errors.spotifyMusicUrl ? true : false }
+                                                { ...register('spotifyMusicUrl') }
+                                            />
+                                            
+                                            { errors.spotifyMusicUrl && <Box sx={{fontSize: 13, color: "red", textAlign: "left"}}>{ errors.spotifyMusicUrl?.message }</Box> }
+
+                                        </Grid>
+
+                                        <Grid item xs={12} md={6}>
+                                            <TextField 
+                                                variant="outlined" 
+                                                fullWidth 
+                                                id='appleMusicUrl'
+                                                inputMode='url'
+                                                type='url'
+                                                label=''
+                                                placeholder='Add your apple music profile link'
+                                                defaultValue=""
+                                                sx={releaseTextFieldStyle}
+                                                InputProps={{
+                                                    sx: {
+                                                        borderRadius: "16px",
+                                                        maxWidth: {xs: "337px", md: "100%"}
+                                                    },
+                                                }}
+                                                error={ errors.appleMusicUrl ? true : false }
+                                                { ...register('appleMusicUrl') }
+                                            />
+                                            
+                                            { errors.appleMusicUrl && <Box sx={{fontSize: 13, color: "red", textAlign: "left"}}>{ errors.appleMusicUrl?.message }</Box> }
+
+                                        </Grid>
+
+                                    </Grid>
+
+                                    
+                                </Box>
+                            </Grid>
+                        </Grid>
+
+                        <Grid container spacing="20px" sx={{my: "31px"}}>
+                            <Grid item xs={12} md={4}> </Grid>
+
+                            <Grid item xs={12} md={8}>
+                                <Stack direction="row" alignItems="center" spacing="8px">
+                                    <Typography variant='body2' component="div"
+                                        sx={{
+                                            fontWeight: "400",
+                                            fontSize: {xs: "16.96px", md: "25px"},
+                                            lineHeight: {xs: "27.14px", md: "40px"},
+                                            letterSpacing: {xs: "-0.09px", md: "-0.13px"},
+                                            // mt: "21px"
+                                        }}
+                                    >
+                                        Does this song have explicit lyrics? 
+                                    </Typography>
+
+                                    <ExplicitLyricsReadMoreInfoComponent />
+                                </Stack>
+
+                                <Box
+                                    sx={{
+                                        display: "flex",
+                                        flexDirection: "row",
+                                        alignItems: "center",
+                                        gap: explicitLyrics == "Yes" ? "5px" : "15px",
+                                        // mb: "21px",
+                                        mt: "5px"
+                                    }}
+                                >
+
                                     <Box>
-                                        <TextField 
-                                            variant="outlined" 
-                                            fullWidth 
-                                            id='artistName'
-                                            type='text'
-                                            label=''
-                                            inputMode='text'
-                                            defaultValue=""
-                                            InputLabelProps={{
-                                                style: { color: '#c1c1c1', fontWeight: "400" },
-                                            }}
-                                            InputProps={{
-                                                sx: {
-                                                    borderRadius: "16px",
-                                                    maxWidth: {xs: "337px", md: "100%"}
-                                                },
-                                            }}
-                                            error={ errors.artistName ? true : false }
-                                            { ...register('artistName') }
-                                        />
-                                        
-                                        { errors.artistName && <Box sx={{fontSize: 13, color: "red", textAlign: "left"}}>{ errors.artistName?.message }</Box> }
-                                    </Box> 
-
-
-
-                                    {/* <Box>
                                         <Box 
                                             sx={{
-                                                p: {xs: "11.25px 21.75px 11.25px 21.75px", md: "15px 29px 15px 29px"},
-                                                borderRadius: {xs: "9px", md: "12px"},
-                                                background: darkTheme ? "#fff" : "#272727",
-                                                color: "#000000",
+                                                p: {xs: "10.18px 19.68px", md: "15px 29px"},
+                                                borderRadius: {xs: "8.14px", md: "12px"},
+                                                background: getValues("explicitSongLyrics") == "Yes" ? colors.primary : colors.bg,
+                                                color: getValues("explicitSongLyrics") == "Yes" ? colors.milk : colors.dark,
+                                                border: `1px solid ${ getValues("explicitSongLyrics") == "Yes" ? colors.primary : "#212121" }`,
                                                 cursor: "pointer",
                                                 display: "inline-block"
                                             }}
-                                            onClick={() => setOpenSearchArtistModal(true) }
+                                            onClick={() => {
+                                                setValue("explicitSongLyrics", "Yes");
+                                                setExplicitLyrics("Yes");
+                                            }}
                                         >
                                             <Typography 
                                                 sx={{
                                                     fontWeight: '900',
-                                                    fontSize: {xs: "11.25px", md: "15px"},
-                                                    lineHeight: {xs: "9.75px", md: "13px"},
-                                                    letterSpacing: {xs: "-0.1px", md: "-0.13px"},
+                                                    fontSize: {xs: "10.18px", md: "15px"},
+                                                    lineHeight: {xs: "8.82px", md: "13px"},
+                                                    letterSpacing: {xs: "-0.09px", md: "-0.13px"},
                                                     textAlign: 'center',
-                                                    color: darkTheme ? "#000" : "#fff",
                                                 }}
-                                            > Add&nbsp;Artist </Typography>
+                                            > Yes </Typography>
                                         </Box>
-                                        { errors.artistName && <Box sx={{fontSize: 13, color: "red", textAlign: "left"}}>{ errors.artistName?.message }</Box> }
 
-                                        {
-                                            selectArtistName ? (
-                                                <Box
-                                                    sx={{
-                                                        height: {xs: "82px", md: "82.92px"}, 
-                                                        borderRadius: "8.65px",
-
-                                                        bgcolor: "#6449868F",
-                                                        py: {xs: "6.02px",md: "6.5px"},
-                                                        px: "7.2px",
-                                                        maxWidth: {xs: "337px", md: "100%"},
-
-                                                        display: "flex",
-                                                        flexDirection: "row",
-                                                        alignItems: "center",
-                                                        gap: "8.65px",
-                                                        my: 2
-                                                    }}
-                                                >
-                                                    <Box
-                                                        sx={{
-                                                            width: "70.67px",
-                                                            height: "69.94px",
-                                                            borderRadius: "5.77px",
-                                                            overflow: "hidden"
-                                                        }}
-                                                    >
-                                                        <img 
-                                                            src={albumSampleArt} alt="album Art"
-                                                            style={{ width: "100%", objectFit: "contain" }}
-                                                        />
-                                                    </Box>
-
-                                                    <Box>
-                                                        <Box 
-                                                            sx={{
-                                                                display: "flex",
-                                                                flexDirection: "row",
-                                                                gap: "5px",
-                                                                alignItems: "center"
-                                                            }}
-                                                        >
-                                                            <Typography
-                                                                sx={{
-                                                                    fontWeight: "700",
-                                                                    fontSize: "25px",
-                                                                    lineHeight: "20px",
-                                                                    letterSpacing: "-0.13px",
-                                                                    color: "#fff"
-                                                                }}
-                                                            > 
-                                                                { getValues("artistName") }
-                                                            </Typography>
-                                                        </Box>
-
-                                                        <Box
-                                                            sx={{
-                                                                display: "flex",
-                                                                flexDirection: "row",
-                                                                alignItems: "center",
-                                                                gap: "10px",
-                                                                mt:  "7.2px",
-                                                            }}
-                                                        >
-                                                            { selectArtistName.apple ? <AppleSportifyCheckmark dspName="Apple" bgColor='#D9D9D9' /> : <></> }
-                                                            { selectArtistName.spotify ? <AppleSportifyCheckmark dspName="Spotify" bgColor='#D9D9D9' /> : <></> }
-                                                        </Box>
-                                                    </Box>
-                                                </Box>
-                                            ) : <></>
+                                        { explicitLyrics == "Yes" ? 
+                                            <CheckCircleIcon 
+                                                sx={{ 
+                                                    color: "green", // colors.tertiary,
+                                                    position: "relative", 
+                                                    left: -15,
+                                                    top: -8,
+                                                }} 
+                                            /> : <></>
                                         }
-
-                                    </Box> */}
-                                </Grid>
-                            </Grid>
-
-                            <Grid container spacing="20px" sx={{my: "31px"}}>
-                                <Grid item xs={12} md={4}>
-                                    <Stack direction="row">
-                                        <Box>
-                                            <Typography sx={{
-                                                fontWeight: {xs: "700", md: "900"},
-                                                fontSize: {xs: "13.12px", md: "25px"},
-                                                lineHeight: {xs: "21px", md: "40px"},
-                                                letterSpacing: {xs: "-0.07px", md: "-0.13px"}
-                                            }}> Artist Profile </Typography>
-
-                                            <Typography sx={{
-                                                fontWeight: "400",
-                                                fontSize: {xs: "13.88px", md: "18px"},
-                                                lineHeight: {xs: "9.25px", md: "12px"},
-                                                letterSpacing: {xs: "-0.1px", md: "-0.13px"},
-                                                // mt: "9px"
-                                            }}> Optional </Typography>
-                                        </Box>
-
-                                        <ArtistProfileInfoComponent  />
-                                    </Stack>
-                                </Grid>
-
-                                <Grid item xs={12} md={8}>
-                                    <Box>
-                                        <Grid container spacing="20px">
-
-                                            <Grid item xs={12} md={6}>
-                                                <TextField 
-                                                    variant="outlined" 
-                                                    fullWidth 
-                                                    id='spotifyMusicUrl'
-                                                    type='url'
-                                                    inputMode='url'
-                                                    label=''
-                                                    placeholder='Add your soptify profile link'
-                                                    defaultValue=""
-                                                    InputLabelProps={{
-                                                        style: { color: '#c1c1c1', fontWeight: "400" },
-                                                    }}
-                                                    InputProps={{
-                                                        sx: {
-                                                            borderRadius: "16px",
-                                                            maxWidth: {xs: "337px", md: "100%"}
-                                                        },
-                                                    }}
-                                                    error={ errors.spotifyMusicUrl ? true : false }
-                                                    { ...register('spotifyMusicUrl') }
-                                                />
-                                                
-                                                { errors.spotifyMusicUrl && <Box sx={{fontSize: 13, color: "red", textAlign: "left"}}>{ errors.spotifyMusicUrl?.message }</Box> }
-
-                                            </Grid>
-
-                                            <Grid item xs={12} md={6}>
-                                                <TextField 
-                                                    variant="outlined" 
-                                                    fullWidth 
-                                                    id='appleMusicUrl'
-                                                    inputMode='url'
-                                                    type='url'
-                                                    label=''
-                                                    placeholder='Add your apple music profile link'
-                                                    defaultValue=""
-                                                    InputLabelProps={{
-                                                        style: { color: '#c1c1c1', fontWeight: "400" },
-                                                    }}
-                                                    InputProps={{
-                                                        sx: {
-                                                            borderRadius: "16px",
-                                                            maxWidth: {xs: "337px", md: "100%"}
-                                                        },
-                                                    }}
-                                                    error={ errors.appleMusicUrl ? true : false }
-                                                    { ...register('appleMusicUrl') }
-                                                />
-                                                
-                                                { errors.appleMusicUrl && <Box sx={{fontSize: 13, color: "red", textAlign: "left"}}>{ errors.appleMusicUrl?.message }</Box> }
-
-                                            </Grid>
-
-                                        </Grid>
-
-                                        
                                     </Box>
-                                </Grid>
-                            </Grid>
 
-                            <Grid container spacing="20px" sx={{my: "31px"}}>
-                                <Grid item xs={12} md={4}> </Grid>
-
-                                <Grid item xs={12} md={8}>
-                                    <Stack direction="row" alignItems="center" spacing="8px">
-                                        <Typography variant='body2' component="div"
+                                    <Box>
+                                        <Box 
                                             sx={{
-                                                fontWeight: "400",
-                                                fontSize: {xs: "16.96px", md: "25px"},
-                                                lineHeight: {xs: "27.14px", md: "40px"},
-                                                letterSpacing: {xs: "-0.09px", md: "-0.13px"},
-                                                // mt: "21px"
+                                                p: {xs: "10.18px 19.68px 10.18px 19.68px", md: "15px 29px 15px 29px"},
+                                                borderRadius: {xs: "8.14px", md: "12px"},
+                                                background: getValues("explicitSongLyrics") == "No" ? colors.primary : colors.bg,
+                                                color: getValues("explicitSongLyrics") == "No" ? colors.milk : colors.dark,
+                                                border: `1px solid ${ getValues("explicitSongLyrics") == "No" ? colors.primary : "#212121" }`,
+                                                cursor: "pointer",
+                                                display: "inline-block"
+                                            }}
+                                            onClick={() => {
+                                                setValue("explicitSongLyrics", "No");
+                                                setExplicitLyrics("No");
                                             }}
                                         >
-                                            Does this song have explicit lyrics? 
-                                            {/* &#32; */}
-
-                                            {/* <span
-                                                style={{
-                                                    color: "#C8F452",
-                                                    cursor: "pointer"
+                                            <Typography 
+                                                sx={{
+                                                    fontWeight: '900',
+                                                    fontSize: {xs: "10.18px", md: "15px"},
+                                                    lineHeight: {xs: "8.82px", md: "13px"},
+                                                    letterSpacing: {xs: "-0.09px", md: "-0.13px"},
+                                                    textAlign: 'center',
                                                 }}
-                                            >
-                                                Read More
-                                            </span> */}
-                                        </Typography>
+                                            > No </Typography>
+                                        </Box>
 
-                                        <ExplicitLyricsReadMoreInfoComponent />
-                                    </Stack>
+                                        { explicitLyrics == "No" ? 
+                                            <CheckCircleIcon 
+                                                sx={{ 
+                                                    color: "green",
+                                                    position: "relative", 
+                                                    left: -15,
+                                                    top: -8,
+                                                }} 
+                                            /> : <></>
+                                        }
+                                    </Box>
 
+                                </Box>
+                            </Grid>
+                        </Grid>
+
+                        <Grid container spacing="20px" sx={{my: "31px"}}>
+                            <Grid item xs={12} md={4}>
+                                <Typography variant='h3' sx={{
+                                    fontWeight: "900",
+                                    fontSize: {xs: "13.12px", md: "25px"},
+                                    lineHeight: {xs: "21px", md: "40px"},
+                                    letterSpacing: {xs: "-0.07px", md: "-0.13px"}
+                                }}> Language </Typography>
+                            </Grid>
+
+                            <Grid item xs={12} md={8}
+                                sx={{maxWidth: {xs: "320px", md: "284px"}}}
+                            >
+                                <Box>
+                                    <FormControl fullWidth>
+                                        <Select
+                                            labelId="language"
+                                            id="language-select"
+                                            label=""
+                                            // defaultValue="Select Language"
+                                            placeholder='Select Language'
+                                            value={selectLanguageValue}
+
+                                            sx={releaseSelectStyle}
+                                            
+                                            error={ errors.language ? true : false }
+                                            // { ...register('language') }
+
+                                            onChange={(event) => {
+                                                const value: any = event.target.value;
+                                                setSelectLanguageValue(value);
+
+                                                setValue(
+                                                    "language", 
+                                                    value, 
+                                                    {
+                                                        shouldDirty: true,
+                                                        shouldTouch: true,
+                                                        shouldValidate: true
+                                                    }
+                                                );
+                                            }}
+                                        >
+                                            <MenuItem value="Select Language" disabled>
+                                                Select Language
+                                            </MenuItem>
+                                            { languages.map((langItem: any, index) => (
+                                                <MenuItem key={index} value={langItem.englishName}>
+                                                    {langItem.englishName}
+                                                </MenuItem>
+                                            )) }
+                                        </Select>
+                                    </FormControl>
+
+                                    { errors.language && <Box sx={{fontSize: 13, color: "red", textAlign: "left"}}>{ errors.language?.message }</Box> }
+                                </Box>
+                            </Grid>
+                        </Grid>
+
+                        <Grid container spacing="20px" sx={{my: "31px"}}>
+                            <Grid item xs={12} md={4}>
+                                <Typography sx={{
+                                    fontWeight: "900",
+                                    fontSize: {xs: "13.12px", md: "25px"},
+                                    lineHeight: {xs: "21px", md: "40px"},
+                                    letterSpacing: {xs: "-0.07px", md: "-0.13px"}
+                                }}> Primary Genre </Typography>
+                            </Grid>
+
+                            <Grid item xs={12} md={8}
+                                sx={{maxWidth: {xs: "320px", md: "284px"}}}
+                            >
+                                <Box>
+                                    <FormControl fullWidth>
+                                        <Select
+                                            labelId="primaryGenre"
+                                            id="primaryGenre-select"
+                                            label=""
+                                            placeholder='Select Primary Genre'
+                                            value={selectPrimaryGenreValue}
+                                            sx={releaseSelectStyle}
+                                            
+                                            error={ errors.primaryGenre ? true : false }
+                                            // { ...register('primaryGenre') }
+
+                                            onChange={(event) => {
+                                                const value: any = event.target.value;
+                                                setSelectPrimaryGenreValue(value);
+
+                                                setValue(
+                                                    "primaryGenre", 
+                                                    value, 
+                                                    {
+                                                        shouldDirty: true,
+                                                        shouldTouch: true,
+                                                        shouldValidate: true
+                                                    }
+                                                );
+                                            }}
+                                        >
+                                            <MenuItem value="Select Primary Genre" disabled>
+                                                Select Primary Genre
+                                            </MenuItem>
+                                            { primaryGenre.map((item: any, index) => (
+                                                <MenuItem key={index} value={item}>
+                                                    {item}
+                                                </MenuItem>
+                                            )) }
+                                        </Select>
+                                    </FormControl>
+
+                                    { errors.primaryGenre && <Box sx={{fontSize: 13, color: "red", textAlign: "left"}}>{ errors.primaryGenre?.message }</Box> }
+                                </Box>
+                            </Grid>
+                        </Grid>
+
+                        <Grid container spacing="20px" sx={{my: "31px"}}>
+                            <Grid item xs={12} md={4}>
+                                <Typography sx={{
+                                    fontWeight: "900",
+                                    fontSize: {xs: "13.12px", md: "25px"},
+                                    lineHeight: {xs: "21px", md: "40px"},
+                                    letterSpacing: {xs: "-0.07px", md: "-0.13px"}
+                                }}> Secondary Genre </Typography>
+                            </Grid>
+
+                            <Grid item xs={12} md={8}
+                                sx={{maxWidth: {xs: "320px", md: "284px"}}}
+                            >
+                                <Box>
+                                    <FormControl fullWidth>
+                                        <Select
+                                            labelId="secondaryGenre"
+                                            id="secondaryGenre-select"
+                                            label=""
+                                            placeholder='Select Secondary Genre'
+                                            value={selectSecondaryGenreValue}
+                                            sx={releaseSelectStyle}
+                                            
+                                            error={ errors.secondaryGenre ? true : false }
+                                            // { ...register('secondaryGenre') }
+
+                                            onChange={(event) => {
+                                                const value: any = event.target.value;
+                                                setSelectSecondaryGenreValue(value);
+
+                                                setValue(
+                                                    "secondaryGenre", 
+                                                    value, 
+                                                    {
+                                                        shouldDirty: true,
+                                                        shouldTouch: true,
+                                                        shouldValidate: true
+                                                    }
+                                                );
+                                            }}
+                                        >
+                                            <MenuItem value="Select Secondary Genre" disabled>
+                                                Select Secondary Genre
+                                            </MenuItem>
+                                            { secondaryGenre.map((item: any, index) => (
+                                                <MenuItem key={index} value={item}>
+                                                    {item}
+                                                </MenuItem>
+                                            )) }
+                                        </Select>
+                                    </FormControl>
+
+                                    { errors.secondaryGenre && <Box sx={{fontSize: 13, color: "red", textAlign: "left"}}>{ errors.secondaryGenre?.message }</Box> }
+                                </Box>
+                            </Grid>
+                        </Grid>
+
+                        <Grid container spacing="20px" sx={{my: "31px"}}>
+                            <Grid item xs={12} md={4}>
+                                <Typography sx={{
+                                    fontWeight: "900",
+                                    fontSize: {xs: "13.12px", md: "25px"},
+                                    lineHeight: {xs: "21px", md: "40px"},
+                                    letterSpacing: {xs: "-0.07px", md: "-0.13px"}
+                                }}> Release Date </Typography>
+                            </Grid>
+
+                            <Grid item xs={12} md={8}
+                                sx={{maxWidth: {xs: "320px", md: "284px"}}}
+                            >
+                                <Box id='releaseDate'>
+                                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                        <DemoContainer 
+                                            components={['DatePicker', 'DatePicker']}
+                                        >
+                                            <DatePicker 
+                                                label="" 
+                                                // defaultValue={dayjs('2022-04-17')} 
+                                                value={ selectReleaseDateValue ? dayjs(selectReleaseDateValue) : null }
+                                                minDate={dayjs(minReleaseDate())}
+                                                name='releaseDate'
+                                                
+                                                sx={{
+                                                    width: "100%",
+                                                    borderColor: colors.primary,
+
+                                                    ".MuiSvgIcon-root": {
+                                                        color: `${colors.milk} !important`,
+                                                    },   
+
+                                                    "& .MuiInputBase-input": {
+                                                        color: colors.milk,
+                                                        borderColor: colors.primary
+                                                    },
+
+                                                    '& .MuiOutlinedInput-root': {
+                                                        '& fieldset': {
+                                                            borderColor: colors.primary,
+                                                        },
+                                                        '&:hover fieldset': {
+                                                            borderColor: colors.primary,
+                                                        },
+                                                        '&.Mui-focused fieldset': {
+                                                            borderColor: colors.primary,
+                                                        },
+                                                    },
+
+                                                }}
+                                                slotProps={{
+                                                    textField: {
+                                                        InputProps: {
+                                                            sx: {
+                                                                borderRadius: "16px",
+                                                                bgcolor: colors.primary,
+                                                                color: `${colors.primary} !important`,
+                                                            }
+                                                        },
+                                                    },
+                                                    day: {
+                                                        sx: {
+                                                            // "&.MuiPickersDay-root.Mui-selected": {
+                                                            //     backgroundColor: "#644986",
+                                                            // },
+
+                                                            // "& .MuiPickersYear-yearButton.Mui-selected": {
+                                                            //     backgroundColor: "#644986",
+                                                            // }
+                                                        },
+                                                    },
+                                                }}
+                                                format='DD/MM/YYYY'
+                                                onChange={(newValue) => {
+                                                    // const value = dayjs(newValue).format('DD/MM/YYYY');
+                                                    const value = dayjs(newValue).format('YYYY/MM/DD');
+                                                    setValue("releaseDate", value, {shouldDirty: true, shouldTouch: true, shouldValidate: true});
+                                                    setSelectReleaseDateValue(value);
+                                                }}
+                                            />
+                                        </DemoContainer>
+                                    </LocalizationProvider>
+
+                                    { errors.releaseDate && <Box sx={{fontSize: 13, color: "red", textAlign: "left"}}>{ errors.releaseDate?.message }</Box> }
+                                </Box>
+                            </Grid>
+                        </Grid>
+
+                        <Grid container spacing="20px" sx={{my: "31px"}}>
+                            <Grid item xs={12} md={4} sx={{ display: {xs: "none", md: "initial"}}}></Grid>
+
+                            <Grid item xs={12} md={8} sx={{maxWidth: {xs: "337px", md: "100%"}}}>
+                                <Box
+                                    sx={{
+                                        bgcolor: colors.secondary,
+                                        color: colors.dark,
+                                        p: "25px 20px",
+                                        borderRadius: "12px"
+                                    }}
+                                >
+                                    <Typography
+                                        sx={{
+                                            fontWeight: "400",
+                                            fontSize: {xs: "10.52px", md: "15px"},
+                                            lineHeight: {xs: "12.92px", md: "24px"},
+                                            letterSpacing: {xs: "-0.07px", md: "-0.13px"}
+                                        }}
+                                    >
+                                        TIP: Set your release date 4 weeks from today to give stores time to review your release
+                                    </Typography>
+                                </Box>
+                            </Grid>
+                        </Grid>
+
+                        <Grid container spacing="20px" sx={{my: "31px"}}>
+                            <Grid item xs={12} md={4}>
+                                <Typography sx={{
+                                    fontWeight: "900",
+                                    fontSize: {xs: "11px", md: "25px"},
+                                    lineHeight: {xs: "17.6px", md: "40px"},
+                                    letterSpacing: {xs: "-0.06px", md: "-0.13px"}
+                                }}>
+                                    Release Time (Spotify Only)
+                                </Typography>
+                            </Grid>
+
+                            <Grid item xs={12} md={8}>
+                                <Box>
+                                        
                                     <Box
                                         sx={{
                                             display: "flex",
                                             flexDirection: "row",
+                                            // justifyContent: "space-between",
                                             alignItems: "center",
-                                            gap: explicitLyrics == "Yes" ? "5px" : "15px",
-                                            // mb: "21px",
-                                            mt: "5px"
+                                            gap: "20px"
                                         }}
                                     >
-
-                                        <Box>
-                                            <Box 
-                                                sx={{
-                                                    p: {xs: "10.18px 19.68px 10.18px 19.68px", md: "15px 29px 15px 29px"},
-                                                    borderRadius: {xs: "8.14px", md: "12px"},
-                                                    background: getValues("explicitSongLyrics") == "Yes" ? "#644986" : darkTheme ? "#fff" : "#272727",
-                                                    color: getValues("explicitSongLyrics") == "Yes" ? "#fff" : darkTheme ? "#000" : "#fff",
-                                                    cursor: "pointer",
-                                                    display: "inline-block"
-                                                }}
-                                                onClick={() => {
-                                                    setValue("explicitSongLyrics", "Yes");
-                                                    setExplicitLyrics("Yes");
-                                                }}
-                                            >
-                                                <Typography 
-                                                    sx={{
-                                                        fontWeight: '900',
-                                                        fontSize: {xs: "10.18px", md: "15px"},
-                                                        lineHeight: {xs: "8.82px", md: "13px"},
-                                                        letterSpacing: {xs: "-0.09px", md: "-0.13px"},
-                                                        textAlign: 'center',
-                                                    }}
-                                                > Yes </Typography>
-                                            </Box>
-
-                                            { explicitLyrics == "Yes" ? 
-                                                <CheckCircleIcon 
-                                                    sx={{ 
-                                                        color: darkTheme ? "#fff" : "#c4c4c4",
-                                                        position: "relative", 
-                                                        left: -15,
-                                                        top: -8,
-                                                    }} 
-                                                /> : <></>
-                                            }
-                                        </Box>
-
-                                        <Box>
-                                            <Box 
-                                                sx={{
-                                                    p: {xs: "10.18px 19.68px 10.18px 19.68px", md: "15px 29px 15px 29px"},
-                                                    borderRadius: {xs: "8.14px", md: "12px"},
-                                                    background: getValues("explicitSongLyrics") == "No" ? "#644986" : darkTheme ? "#fff" : "#272727",
-                                                    color: getValues("explicitSongLyrics") == "No" ? "#fff" : darkTheme ? "#000" : "#fff",
-                                                    cursor: "pointer",
-                                                    display: "inline-block"
-                                                }}
-                                                onClick={() => {
-                                                    setValue("explicitSongLyrics", "No");
-                                                    setExplicitLyrics("No");
-                                                }}
-                                            >
-                                                <Typography 
-                                                    sx={{
-                                                        fontWeight: '900',
-                                                        fontSize: {xs: "10.18px", md: "15px"},
-                                                        lineHeight: {xs: "8.82px", md: "13px"},
-                                                        letterSpacing: {xs: "-0.09px", md: "-0.13px"},
-                                                        textAlign: 'center',
-                                                    }}
-                                                > No </Typography>
-                                            </Box>
-
-                                            { explicitLyrics == "No" ? 
-                                                <CheckCircleIcon 
-                                                    sx={{ 
-                                                        color: darkTheme ? "#fff" : "#c4c4c4",
-                                                        position: "relative", 
-                                                        left: -15,
-                                                        top: -8,
-                                                    }} 
-                                                /> : <></>
-                                            }
-                                        </Box>
-
-                                    </Box>
-                                </Grid>
-                            </Grid>
-
-                            <Grid container spacing="20px" sx={{my: "31px"}}>
-                                <Grid item xs={12} md={4}>
-                                    <Typography sx={{
-                                        fontWeight: "900",
-                                        fontSize: {xs: "13.12px", md: "25px"},
-                                        lineHeight: {xs: "21px", md: "40px"},
-                                        letterSpacing: {xs: "-0.07px", md: "-0.13px"}
-                                    }}>
-                                        Language
-                                    </Typography>
-                                </Grid>
-
-                                <Grid item xs={12} md={8}
-                                    sx={{maxWidth: {xs: "320px", md: "284px"}}}
-                                >
-                                    <Box>
-                                        <FormControl fullWidth>
+                                        <FormControl fullWidth sx={{maxWidth: {sx: "119.43px", md: "145px"},}}>
                                             <Select
-                                                labelId="language"
-                                                id="language-select"
+                                                labelId="releaseTimeHours"
+                                                id="releaseTimeHours-select"
                                                 label=""
-                                                // defaultValue="Select Language"
-                                                placeholder='Select Language'
-                                                value={selectLanguageValue}
+                                                placeholder='12'
+                                                value={selectReleaseTimeHoursValue}
 
-                                                sx={{
-                                                    color: darkTheme ? "#000" : "#fff",
-                                                    borderRadius: "16px",
-                                                    bgcolor: darkTheme ? "#fff" : "#272727",
-                                                    '.MuiOutlinedInput-notchedOutline': {
-                                                        borderColor: darkTheme ? '#fff' : "#000",
-                                                    },
-                                                    '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                                                        borderColor: 'rgba(228, 219, 233, 0.25)',
-                                                    },
-                                                    '&:hover .MuiOutlinedInput-notchedOutline': {
-                                                        borderColor: 'var(--TextField-brandBorderHoverColor)', // 'rgba(228, 219, 233, 0.25)',
-                                                    },
-                                                    '.MuiSvgIcon-root ': {
-                                                        fill: darkTheme ? "#797979" : "#fff",
-                                                    }
-                                                }}
-                                                
-                                                error={ errors.language ? true : false }
-                                                // { ...register('language') }
+                                                sx={releaseSelectStyle2}
+
+                                                error={ errors.releaseTimeHours ? true : false }
+                                                // { ...register('releaseTimeHours') }
 
                                                 onChange={(event) => {
                                                     const value: any = event.target.value;
-                                                    setSelectLanguageValue(value);
+                                                    setSelectReleaseTimeHoursValue(value);
 
                                                     setValue(
-                                                        "language", 
+                                                        "releaseTimeHours", 
                                                         value, 
                                                         {
                                                             shouldDirty: true,
@@ -858,74 +1115,33 @@ function CreateSingleRelease() {
                                                     );
                                                 }}
                                             >
-                                                <MenuItem value="Select Language" disabled>
-                                                    Select Language
-                                                </MenuItem>
-                                                { languages.map((langItem: any, index) => (
-                                                    <MenuItem key={index} value={langItem.englishName}>
-                                                        {langItem.englishName}
+                                                { hours.map((hourItem: any, index) => (
+                                                    <MenuItem key={index} value={hourItem}>
+                                                        {hourItem}
                                                     </MenuItem>
                                                 )) }
                                             </Select>
                                         </FormControl>
 
-                                        { errors.language && <Box sx={{fontSize: 13, color: "red", textAlign: "left"}}>{ errors.language?.message }</Box> }
-                                    </Box>
-                                </Grid>
-                            </Grid>
-
-                            <Grid container spacing="20px" sx={{my: "31px"}}>
-                                <Grid item xs={12} md={4}>
-                                    <Typography sx={{
-                                        fontWeight: "900",
-                                        fontSize: {xs: "13.12px", md: "25px"},
-                                        lineHeight: {xs: "21px", md: "40px"},
-                                        letterSpacing: {xs: "-0.07px", md: "-0.13px"}
-                                    }}>
-                                        Primary Genre
-                                    </Typography>
-                                </Grid>
-
-                                <Grid item xs={12} md={8}
-                                    sx={{maxWidth: {xs: "320px", md: "284px"}}}
-                                >
-                                    <Box>
-                                        <FormControl fullWidth>
+                                        <FormControl fullWidth sx={{maxWidth: {sx: "119.43px", md: "145px"},}}>
                                             <Select
-                                                labelId="primaryGenre"
-                                                id="primaryGenre-select"
+                                                labelId="releaseTimeMinutes"
+                                                id="releaseTimeMinutes-select"
                                                 label=""
-                                                placeholder='Select Primary Genre'
-                                                value={selectPrimaryGenreValue}
+                                                placeholder='00'
+                                                value={selectReleaseTimeMinutesValue}
 
-                                                sx={{
-                                                    color: darkTheme ? "#000" : "#fff",
-                                                    borderRadius: "16px",
-                                                    bgcolor: darkTheme ? "#fff" : "#272727",
-                                                    '.MuiOutlinedInput-notchedOutline': {
-                                                        borderColor: darkTheme ? '#fff' : "#000",
-                                                    },
-                                                    '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                                                        borderColor: 'rgba(228, 219, 233, 0.25)',
-                                                    },
-                                                    '&:hover .MuiOutlinedInput-notchedOutline': {
-                                                        borderColor: 'var(--TextField-brandBorderHoverColor)', // 'rgba(228, 219, 233, 0.25)',
-                                                    },
-                                                    '.MuiSvgIcon-root ': {
-                                                        // fill: "#797979 !important",
-                                                        fill: darkTheme ? "#797979" : "#fff",
-                                                    }
-                                                }}
+                                                sx={releaseSelectStyle2}
                                                 
-                                                error={ errors.primaryGenre ? true : false }
-                                                // { ...register('primaryGenre') }
+                                                error={ errors.releaseTimeMinutes ? true : false }
+                                                // { ...register('releaseTimeMinutes') }
 
                                                 onChange={(event) => {
                                                     const value: any = event.target.value;
-                                                    setSelectPrimaryGenreValue(value);
+                                                    setSelectReleaseTimeMinutesValue(value);
 
                                                     setValue(
-                                                        "primaryGenre", 
+                                                        "releaseTimeMinutes", 
                                                         value, 
                                                         {
                                                             shouldDirty: true,
@@ -935,74 +1151,33 @@ function CreateSingleRelease() {
                                                     );
                                                 }}
                                             >
-                                                <MenuItem value="Select Primary Genre" disabled>
-                                                    Select Primary Genre
-                                                </MenuItem>
-                                                { primaryGenre.map((item: any, index) => (
-                                                    <MenuItem key={index} value={item}>
-                                                        {item}
+                                                { minutes.map((minItem: any, index) => (
+                                                    <MenuItem key={index} value={minItem}>
+                                                        {minItem}
                                                     </MenuItem>
                                                 )) }
                                             </Select>
                                         </FormControl>
 
-                                        { errors.primaryGenre && <Box sx={{fontSize: 13, color: "red", textAlign: "left"}}>{ errors.primaryGenre?.message }</Box> }
-                                    </Box>
-                                </Grid>
-                            </Grid>
-
-                            <Grid container spacing="20px" sx={{my: "31px"}}>
-                                <Grid item xs={12} md={4}>
-                                    <Typography sx={{
-                                        fontWeight: "900",
-                                        fontSize: {xs: "13.12px", md: "25px"},
-                                        lineHeight: {xs: "21px", md: "40px"},
-                                        letterSpacing: {xs: "-0.07px", md: "-0.13px"}
-                                    }}>
-                                        Secondary Genre
-                                    </Typography>
-                                </Grid>
-
-                                <Grid item xs={12} md={8}
-                                    sx={{maxWidth: {xs: "320px", md: "284px"}}}
-                                >
-                                    <Box>
-                                        <FormControl fullWidth>
+                                        <FormControl fullWidth sx={{maxWidth: {sx: "119.43px", md: "145px"},}}>
                                             <Select
-                                                labelId="secondaryGenre"
-                                                id="secondaryGenre-select"
+                                                labelId="releaseTimeHourFormat"
+                                                id="releaseTimeHourFormat-select"
                                                 label=""
-                                                placeholder='Select Secondary Genre'
-                                                value={selectSecondaryGenreValue}
+                                                placeholder='AM'
+                                                value={selectReleaseTimeFormatValue}
 
-                                                sx={{
-                                                    color: darkTheme ? "#000" : "#fff",
-                                                    borderRadius: "16px",
-                                                    bgcolor: darkTheme ? "#fff" : "#272727",
-                                                    '.MuiOutlinedInput-notchedOutline': {
-                                                        borderColor: darkTheme ? '#fff' : "#000",
-                                                    },
-                                                    '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                                                        borderColor: 'rgba(228, 219, 233, 0.25)',
-                                                    },
-                                                    '&:hover .MuiOutlinedInput-notchedOutline': {
-                                                        borderColor: 'var(--TextField-brandBorderHoverColor)', // 'rgba(228, 219, 233, 0.25)',
-                                                    },
-                                                    '.MuiSvgIcon-root ': {
-                                                        // fill: "#797979 !important",
-                                                        fill: darkTheme ? "#797979" : "#fff",
-                                                    }
-                                                }}
+                                                sx={releaseSelectStyle2}
                                                 
-                                                error={ errors.secondaryGenre ? true : false }
-                                                // { ...register('secondaryGenre') }
+                                                error={ errors.releaseTimeHourFormat ? true : false }
+                                                // { ...register('releaseTimeHourFormat') }
 
                                                 onChange={(event) => {
                                                     const value: any = event.target.value;
-                                                    setSelectSecondaryGenreValue(value);
+                                                    setSelectReleaseTimeFormatValue(value);
 
                                                     setValue(
-                                                        "secondaryGenre", 
+                                                        "releaseTimeHourFormat", 
                                                         value, 
                                                         {
                                                             shouldDirty: true,
@@ -1012,793 +1187,476 @@ function CreateSingleRelease() {
                                                     );
                                                 }}
                                             >
-                                                <MenuItem value="Select Secondary Genre" disabled>
-                                                    Select Secondary Genre
+                                                <MenuItem value="AM">
+                                                    AM
                                                 </MenuItem>
-                                                { secondaryGenre.map((item: any, index) => (
-                                                    <MenuItem key={index} value={item}>
-                                                        {item}
-                                                    </MenuItem>
-                                                )) }
+
+                                                <MenuItem value="PM">
+                                                    PM
+                                                </MenuItem>
                                             </Select>
                                         </FormControl>
-
-                                        { errors.secondaryGenre && <Box sx={{fontSize: 13, color: "red", textAlign: "left"}}>{ errors.secondaryGenre?.message }</Box> }
                                     </Box>
-                                </Grid>
-                            </Grid>
 
-                            <Grid container spacing="20px" sx={{my: "31px"}}>
-                                <Grid item xs={12} md={4}>
-                                    <Typography sx={{
-                                        fontWeight: "900",
-                                        fontSize: {xs: "13.12px", md: "25px"},
-                                        lineHeight: {xs: "21px", md: "40px"},
-                                        letterSpacing: {xs: "-0.07px", md: "-0.13px"}
-                                    }}>
-                                        Release Date
+                                    <Typography
+                                        sx={{
+                                            fontWeight: "300",
+                                            fontSize: {xs: "11.37px", md: "18px"},
+                                            lineHeight: {xs: "25.27px", md: "40px"},
+                                            letterSpacing: {xs: "-0.08px", md: "-0.13px"},
+                                            my: {xs: "16px", md: "25px"}
+                                        }}
+                                    >
+                                        Set the time you'd like your release to go live on Spotify.
                                     </Typography>
-                                </Grid>
 
-                                <Grid item xs={12} md={8}
-                                    sx={{maxWidth: {xs: "320px", md: "284px"}}}
-                                >
-                                    <Box id='releaseDate'>
-                                        <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                            <DemoContainer 
-                                                components={['DatePicker', 'DatePicker']}
-                                            >
-                                                <DatePicker 
-                                                    label="" 
-                                                    // defaultValue={dayjs('2022-04-17')} 
-                                                    value={ selectReleaseDateValue ? dayjs(selectReleaseDateValue) : null }
-                                                    minDate={dayjs(minReleaseDate())}
-                                                    name='releaseDate'
+                                    <FormGroup>
+                                        <FormControlLabel 
+                                            control={<Checkbox 
+                                                // defaultChecked 
+                                                checked={selectListenerTimezoneValue}
+                                                sx={{
+                                                    color: "#797979",
+                                                    '&.Mui-checked': {
+                                                        color: colors.primary,
+                                                    },
+                                                    marginTop: -1,
+                                                }}
+                                            />} 
+                                            // label="Label" 
+                                            label={<Box 
+                                                sx={{
+                                                    lineHeight: {xs: "25.27px", md: "40px"}, 
+                                                    letterSpacing: {xs: "-0.08px", md: "-0.13px"}, 
+                                                    fontSize: {xs: "11.37px", md: "18px"},
+                                                }}>
+                                                <Typography sx={{ fontWeight: "700" }}>
+                                                    12:00 AM in the listener's timezone
+                                                </Typography>
+
+                                                <Typography sx={{ fontWeight: "300" }}>
+                                                    Example: 12:00 AM in NYC, 12:00 AM in London
+                                                </Typography>
+                                            </Box>}
+                                            sx={{ mb: 2, alignItems: 'flex-start' }}
+                                            onChange={(event) => {
+                                                const eValue: any = event.target;
+
+                                                setValue("listenerTimezone", eValue.checked, {shouldDirty: true, shouldTouch: true, shouldValidate: true});
+                                                setSelectListenerTimezoneValue(eValue.checked);
+
+                                                setValue("generalTimezone", !eValue.checked, {shouldDirty: true, shouldTouch: true, shouldValidate: true} );
+                                                setSelectGeneralTimezoneValue(!eValue.checked);
+
+                                                // if (eValue.checked == true) {
+                                                //     setValue("listenerTimezone", eValue.checked, {shouldDirty: true, shouldTouch: true, shouldValidate: true});
+                                                //     setSelectListenerTimezoneValue(eValue.checked);
+
+                                                //     setValue("generalTimezone", !eValue.checked, {shouldDirty: true, shouldTouch: true, shouldValidate: true} );
+                                                //     setSelectGeneralTimezoneValue(!eValue.checked);
+                                                // }
+                                            }}
+                                        />
+
+                                        <FormControlLabel 
+                                            control={<Checkbox 
+                                                // defaultChecked 
+                                                checked={selectGeneralTimezoneValue}
+                                                sx={{
+                                                    color: "#797979",
+                                                    '&.Mui-checked': {
+                                                        color: colors.primary,
+                                                    },
+                                                    marginTop: -1,
+                                                }}
+                                            />} 
+                                            // label="Label" 
+                                            label={<Box sx={{lineHeight: "40px", letterSpacing: "-0.13px", fontSize: "18px",}}>
+                                                <Typography sx={{ fontWeight: "700" }}>
+                                                    12:00 AM EST / NYC and at the same time across all countries/territories regardless of timezone
+                                                </Typography>
+
+                                                <Typography sx={{ fontWeight: "300" }}>
+                                                    Example: 12:00 AM in NYC, 12:00 AM in London
+                                                </Typography>
+                                            </Box>}
+                                            sx={{ alignItems: 'flex-start' }}
+                                            onChange={(event) => {
+                                                const eValue: any = event.target;
+                                                // console.log(eValue.checked);
+                                                setValue("generalTimezone", eValue.checked, {shouldDirty: true, shouldTouch: true, shouldValidate: true} );
+                                                setSelectGeneralTimezoneValue(eValue.checked);
+                                                
+                                                setValue("listenerTimezone", !eValue.checked, {shouldDirty: true, shouldTouch: true, shouldValidate: true} );
+                                                setSelectListenerTimezoneValue(!eValue.checked);
+
+                                                // if (eValue.checked == true) {
+                                                //     setValue("generalTimezone", eValue.checked, {shouldDirty: true, shouldTouch: true, shouldValidate: true} );
+                                                //     setSelectGeneralTimezoneValue(eValue.checked);
                                                     
-                                                    sx={{
-                                                        width: "100%",
-                                                        // bgcolor: "yellow",
-                                                        color: "yellow !important",
-                                                        ".MuiSvgIcon-root": {
-                                                            // color: "green",
-                                                            color: darkTheme ? "#797979 !important" : "#fff !important",
-                                                        },   
+                                                //     setValue("listenerTimezone", false, {shouldDirty: true, shouldTouch: true, shouldValidate: true} );
+                                                //     setSelectListenerTimezoneValue(false);
+                                                // }
+                                            }}
+                                        />
+                                    </FormGroup>
+                                </Box>
+                            </Grid>
+                        </Grid>
 
-                                                        "& .MuiInputBase-input": {
-                                                            color: darkTheme ? "#000" : "#fff",
-                                                        },
+                        <Box sx={{
+                            border: "0.1px solid #FFFFFF",
+                            position: "absolute",
+                            width: "100%",
+                            left: 0,
+                        }}></Box>
+                        <Box sx={{my: 10}}></Box>
 
-                                                    }}
-                                                    slotProps={{
-                                                        textField: {
-                                                            InputProps: {
-                                                                sx: {
-                                                                    borderRadius: "16px",
-                                                                    bgcolor: darkTheme ? "#fff" : "#272727",
-                                                                    color: "green !important",
+                        <Box>
+                            <Typography
+                                sx={{
+                                    fontWeight: "900",
+                                    fontSize: {xs: "16.69px", md: "35px"},
+                                    lineHeight: {xs: "19.07px", md: "40px"},
+                                    letterSpacing: {xs: "-0.06px", md: "-0.13px"},
+                                }}
+                            > Advanced Distribution Features </Typography>
 
-                                                                }
-                                                            },
-                                                        },
-                                                        day: {
-                                                            sx: {
-                                                                // "&.MuiPickersDay-root.Mui-selected": {
-                                                                //     backgroundColor: "#644986",
-                                                                // },
 
-                                                                // "& .MuiPickersYear-yearButton.Mui-selected": {
-                                                                //     backgroundColor: "#644986",
-                                                                // }
-                                                            },
-                                                        },
-                                                    }}
-                                                    format='DD/MM/YYYY'
-                                                    onChange={(newValue) => {
-                                                        // const value = dayjs(newValue).format('DD/MM/YYYY');
-                                                        const value = dayjs(newValue).format('YYYY/MM/DD');
-                                                        setValue("releaseDate", value, {shouldDirty: true, shouldTouch: true, shouldValidate: true});
-                                                        setSelectReleaseDateValue(value);
-                                                    }}
-                                                />
-                                            </DemoContainer>
-                                        </LocalizationProvider>
+                            <Grid container spacing="20px" sx={{my: "31px"}}>
+                                <Grid item xs={12} md={4} sx={{ alignSelf: "center"}}>
+                                    <Typography variant='h3' sx={{
+                                        fontWeight: "900",
+                                        fontSize: {xs: "19.28px", md: "25px"},
+                                        lineHeight: {xs: "15.42px", md: "20px"},
+                                        letterSpacing: {xs: "-0.1px", md: "-0.13px"}
+                                    }}> Label Name </Typography>
 
-                                        { errors.releaseDate && <Box sx={{fontSize: 13, color: "red", textAlign: "left"}}>{ errors.releaseDate?.message }</Box> }
-                                    </Box>
+                                    <Typography variant='body2' sx={{
+                                        fontWeight: "400",
+                                        fontSize: {xs: "13.88px", md: "18px"},
+                                        lineHeight: {xs: "9.25px", md: "12px"},
+                                        letterSpacing: {xs: "-0.1px", md: "-0.13px"},
+                                        mt: "9px"
+                                    }}> Optional </Typography>
+                                </Grid>
+
+                                <Grid item xs={12} md={8} sx={{ alignSelf: "center" }}>
+                                    <TextField 
+                                        variant="outlined" 
+                                        fullWidth 
+                                        id='labelName'
+                                        type='text'
+                                        label=''
+                                        inputMode='text'
+                                        defaultValue=""
+
+                                        sx={releaseTextFieldStyle}
+                                        InputProps={{
+                                            sx: {
+                                                borderRadius: "16px",
+                                                maxWidth: {xs: "337px", md: "100%"}
+                                            },
+                                        }}
+                                        
+                                        error={ errors.labelName ? true : false }
+                                        { ...register('labelName') }
+                                    />
+                                    { errors.labelName && <Box sx={{fontSize: 13, color: "red", textAlign: "left"}}>{ errors.labelName?.message }</Box> }
                                 </Grid>
                             </Grid>
 
                             <Grid container spacing="20px" sx={{my: "31px"}}>
-                                <Grid item xs={12} md={4} sx={{ display: {xs: "none", md: "initial"}}}></Grid>
+                                <Grid item
+                                    xs={12} md={4}
+                                    sx={{ alignSelf: "center"}}
+                                >
+                                    <Typography variant='h3' sx={{
+                                        fontWeight: "900",
+                                        fontSize: {xs: "19.28px", md: "25px"},
+                                        lineHeight: {xs: "15.42px", md: "20px"},
+                                        letterSpacing: {xs: "-0.1px", md: "-0.13px"}
+                                    }}> Recording Location </Typography>
 
-                                <Grid item xs={12} md={8} sx={{maxWidth: {xs: "337px", md: "100%"}}}>
+                                    <Typography variant='body2' sx={{
+                                        fontWeight: "400",
+                                        fontSize: {xs: "13.88px", md: "18px"},
+                                        lineHeight: {xs: "9.25px", md: "12px"},
+                                        letterSpacing: {xs: "-0.1px", md: "-0.13px"},
+                                        mt: "9px"
+                                    }}> Optional </Typography>
+                                </Grid>
+
+                                <Grid item xs={12} md={8} sx={{ alignSelf: "center" }}>
+                                    <TextField 
+                                        variant="outlined" 
+                                        fullWidth 
+                                        id='recordingLocation'
+                                        type='text'
+                                        label=''
+                                        inputMode='text'
+                                        defaultValue=""
+
+                                        sx={releaseTextFieldStyle}
+                                        InputProps={{
+                                            sx: {
+                                                borderRadius: "16px",
+                                                maxWidth: {xs: "337px", md: "100%"}
+                                            },
+                                        }}
+                                        
+                                        error={ errors.recordingLocation ? true : false }
+                                        { ...register('recordingLocation') }
+                                    />
+                                    { errors.recordingLocation && <Box sx={{fontSize: 13, color: "red", textAlign: "left"}}>{ errors.recordingLocation?.message }</Box> }
+                                </Grid>
+                            </Grid>
+
+                            <Grid container spacing="20px" sx={{my: "31px"}}>
+                                <Grid item xs={12} md={4} sx={{display: {xs: "none", md: "initial"}}}></Grid>
+
+                                <Grid item xs={12} md={8}>
                                     <Box
                                         sx={{
-                                            bgcolor: darkTheme ? "#CACACA40" : "#272727",
-                                            color: "#fff",
-                                            p: "25px 20px",
-                                            borderRadius: "12px"
+                                            display: "flex",
+                                            flexDirection: "column",
+                                            // justifyContent: "center",
+                                            alignItems: {xs: "center", sm: "initial"}
                                         }}
                                     >
                                         <Typography
                                             sx={{
-                                                fontWeight: "400",
-                                                fontSize: {xs: "10.52px", md: "15px"},
-                                                lineHeight: {xs: "12.92px", md: "24px"},
-                                                letterSpacing: {xs: "-0.07px", md: "-0.13px"}
+                                                fontWeight: "900",
+                                                fontSize: {xs: "12.4px", md: "26px"},
+                                                lineHeight: {xs: "19.07px", md: "40px"},
+                                                letterSpacing: {xs: "-0.06px", md: "-0.13px"}
                                             }}
                                         >
-                                            TIP: Set your release date 4 weeks from today to give stores time to review your release
+                                            Can this release be sold worldwide?
                                         </Typography>
-                                    </Box>
-                                </Grid>
-                            </Grid>
 
-                            <Grid container spacing="20px" sx={{my: "31px"}}>
-                                <Grid item xs={12} md={4}>
-                                    <Typography sx={{
-                                        fontWeight: "900",
-                                        fontSize: {xs: "11px", md: "25px"},
-                                        lineHeight: {xs: "17.6px", md: "40px"},
-                                        letterSpacing: {xs: "-0.06px", md: "-0.13px"}
-                                    }}>
-                                        Release Time (Spotify Only)
-                                    </Typography>
-                                </Grid>
-
-                                <Grid item xs={12} md={8}>
-                                    <Box>
-                                            
                                         <Box
                                             sx={{
                                                 display: "flex",
                                                 flexDirection: "row",
-                                                // justifyContent: "space-between",
                                                 alignItems: "center",
-                                                gap: "20px"
+                                                gap: soldWorldwide == "Yes" ? "5px" : "15px",
+                                                mt: "21px",
                                             }}
                                         >
-                                            <FormControl fullWidth sx={{maxWidth: {sx: "119.43px", md: "145px"},}}>
-                                                <Select
-                                                    labelId="releaseTimeHours"
-                                                    id="releaseTimeHours-select"
-                                                    label=""
-                                                    placeholder='12'
-                                                    value={selectReleaseTimeHoursValue}
-
-                                                    sx={{
-                                                        color: darkTheme ? "#fff" : "#000",
-                                                        borderRadius: "16px",
-                                                        '.MuiOutlinedInput-notchedOutline': {
-                                                            borderColor: darkTheme ? '#fff' : "#000",
-                                                        },
-                                                        '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                                                            borderColor: darkTheme ? '#fff' : "#000",
-                                                        },
-                                                        '&:hover .MuiOutlinedInput-notchedOutline': {
-                                                            borderColor: darkTheme ? '#fff' : "#000",
-                                                        },
-                                                        '.MuiSvgIcon-root ': {
-                                                            display: "none",
-                                                        }
+                                            <Box>
+                                                <Box 
+                                                    onClick={() => {
+                                                        setValue("soldWorldwide", "Yes", {shouldDirty: true, shouldTouch: true, shouldValidate: true});
+                                                        setSoldWorldwide("Yes");
                                                     }}
-                                                    
-                                                    error={ errors.releaseTimeHours ? true : false }
-                                                    // { ...register('releaseTimeHours') }
+                                                    sx={{
+                                                        p: {xs: "10.18px 19.68px 10.18px 19.68px", md: "15px 29px 15px 29px"},
+                                                        borderRadius: {xs: "8.14px", md: "12px"},
 
-                                                    onChange={(event) => {
-                                                        const value: any = event.target.value;
-                                                        setSelectReleaseTimeHoursValue(value);
+                                                        border: `1px solid ${ soldWorldwide == "Yes" ? colors.primary : colors.dark }`,
+                                                        background: soldWorldwide == "Yes" ? colors.primary : colors.bg,
+                                                        color: soldWorldwide == "Yes" ? colors.milk : colors.dark,
 
-                                                        setValue(
-                                                            "releaseTimeHours", 
-                                                            value, 
-                                                            {
-                                                                shouldDirty: true,
-                                                                shouldTouch: true,
-                                                                shouldValidate: true
-                                                            }
-                                                        );
+                                                        cursor: "pointer",
+                                                        display: "inline-block"
                                                     }}
                                                 >
-                                                    { hours.map((hourItem: any, index) => (
-                                                        <MenuItem key={index} value={hourItem}>
-                                                            {hourItem}
-                                                        </MenuItem>
-                                                    )) }
-                                                </Select>
-                                            </FormControl>
+                                                    <Typography 
+                                                        sx={{
+                                                            fontWeight: '900',
+                                                            fontSize: {xs: "10.18px", md: "15px"},
+                                                            lineHeight: {xs: "8.82px", md: "13px"},
+                                                            letterSpacing: {xs: "-0.09px", md: "-0.13px"},
+                                                            textAlign: 'center',
+                                                        }}
+                                                    > Yes </Typography>
+                                                </Box>
 
-                                            <FormControl fullWidth sx={{maxWidth: {sx: "119.43px", md: "145px"},}}>
-                                                <Select
-                                                    labelId="releaseTimeMinutes"
-                                                    id="releaseTimeMinutes-select"
-                                                    label=""
-                                                    placeholder='00'
-                                                    value={selectReleaseTimeMinutesValue}
+                                                { soldWorldwide == "Yes" ? 
+                                                    <CheckCircleIcon 
+                                                        sx={{ 
+                                                            color: 'green',
+                                                            position: "relative", 
+                                                            left: -15,
+                                                            top: -8,
+                                                        }} 
+                                                    /> : <></>
+                                                }
+                                            </Box>
 
-                                                    sx={{
-                                                        color: darkTheme ? "#fff" : "#000",
-                                                        borderRadius: "16px",
-                                                        '.MuiOutlinedInput-notchedOutline': {
-                                                            borderColor: darkTheme ? '#fff' : "#000",
-                                                        },
-                                                        '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                                                            borderColor: darkTheme ? '#fff' : "#000",
-                                                        },
-                                                        '&:hover .MuiOutlinedInput-notchedOutline': {
-                                                            borderColor: darkTheme ? '#fff' : "#000",
-                                                        },
-                                                        '.MuiSvgIcon-root ': {
-                                                            display: "none",
-                                                        }
+                                            <Box>
+                                                <Box 
+                                                    onClick={() => {
+                                                        setValue("soldWorldwide", "No", {shouldDirty: true, shouldTouch: true, shouldValidate: true});
+                                                        setSoldWorldwide("No");
                                                     }}
-                                                    
-                                                    error={ errors.releaseTimeMinutes ? true : false }
-                                                    // { ...register('releaseTimeMinutes') }
+                                                    sx={{
+                                                        p: {xs: "10.18px 19.68px 10.18px 19.68px", md: "15px 29px 15px 29px"},
+                                                        borderRadius: {xs: "8.14px", md: "12px"},
 
-                                                    onChange={(event) => {
-                                                        const value: any = event.target.value;
-                                                        setSelectReleaseTimeMinutesValue(value);
+                                                        border: `1px solid ${ soldWorldwide == "No" ? colors.primary : colors.dark }`,
+                                                        background: soldWorldwide == "No" ? colors.primary : colors.bg,
+                                                        color: soldWorldwide == "No" ? colors.milk : colors.dark,
 
-                                                        setValue(
-                                                            "releaseTimeMinutes", 
-                                                            value, 
-                                                            {
-                                                                shouldDirty: true,
-                                                                shouldTouch: true,
-                                                                shouldValidate: true
-                                                            }
-                                                        );
+                                                        cursor: "pointer",
+                                                        display: "inline-block"
                                                     }}
                                                 >
-                                                    { minutes.map((minItem: any, index) => (
-                                                        <MenuItem key={index} value={minItem}>
-                                                            {minItem}
-                                                        </MenuItem>
-                                                    )) }
-                                                </Select>
-                                            </FormControl>
+                                                    <Typography 
+                                                        sx={{
+                                                            fontWeight: '900',
+                                                            fontSize: {xs: "10.18px", md: "15px"},
+                                                            lineHeight: {xs: "8.82px", md: "13px"},
+                                                            letterSpacing: {xs: "-0.09px", md: "-0.13px"},
+                                                            textAlign: 'center',
+                                                        }}
+                                                    > No </Typography>
+                                                </Box>
 
-                                            <FormControl fullWidth sx={{maxWidth: {sx: "119.43px", md: "145px"},}}>
-                                                <Select
-                                                    labelId="releaseTimeHourFormat"
-                                                    id="releaseTimeHourFormat-select"
-                                                    label=""
-                                                    placeholder='AM'
-                                                    value={selectReleaseTimeFormatValue}
-
-                                                    sx={{
-                                                        color: darkTheme ? "#fff" : "#000",
-                                                        borderRadius: "16px",
-                                                        // bgcolor: darkTheme ? "#fff" : "#272727",
-                                                        '.MuiOutlinedInput-notchedOutline': {
-                                                            borderColor: darkTheme ? '#fff' : "#000",
-                                                        },
-                                                        '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                                                            // borderColor: 'rgba(228, 219, 233, 0.25)',
-                                                            borderColor: darkTheme ? '#fff' : "#000",
-                                                        },
-                                                        '&:hover .MuiOutlinedInput-notchedOutline': {
-                                                            borderColor: darkTheme ? '#fff' : "#000",
-                                                            // borderColor: 'var(--TextField-brandBorderHoverColor)', // 'rgba(228, 219, 233, 0.25)',
-                                                        },
-                                                        '.MuiSvgIcon-root ': {
-                                                            display: "none",
-                                                        }
-                                                    }}
-                                                    
-                                                    error={ errors.releaseTimeHourFormat ? true : false }
-                                                    // { ...register('releaseTimeHourFormat') }
-
-                                                    onChange={(event) => {
-                                                        const value: any = event.target.value;
-                                                        setSelectReleaseTimeFormatValue(value);
-
-                                                        setValue(
-                                                            "releaseTimeHourFormat", 
-                                                            value, 
-                                                            {
-                                                                shouldDirty: true,
-                                                                shouldTouch: true,
-                                                                shouldValidate: true
-                                                            }
-                                                        );
-                                                    }}
-                                                >
-                                                    <MenuItem value="AM">
-                                                        AM
-                                                    </MenuItem>
-
-                                                    <MenuItem value="PM">
-                                                        PM
-                                                    </MenuItem>
-                                                </Select>
-                                            </FormControl>
+                                                { soldWorldwide == "No" ? 
+                                                    <CheckCircleIcon 
+                                                        sx={{ 
+                                                            color: 'green',
+                                                            position: "relative", 
+                                                            left: -15,
+                                                            top: -8,
+                                                        }} 
+                                                    /> : <></>
+                                                }
+                                            </Box>
                                         </Box>
 
-                                        <Typography
-                                            sx={{
-                                                fontWeight: "300",
-                                                fontSize: {xs: "11.37px", md: "18px"},
-                                                lineHeight: {xs: "25.27px", md: "40px"},
-                                                letterSpacing: {xs: "-0.08px", md: "-0.13px"},
-                                                my: {xs: "16px", md: "25px"}
-                                            }}
-                                        >
-                                            Set the time you'd like your release to go live on Spotify.
-                                        </Typography>
 
-                                        <FormGroup>
-                                            <FormControlLabel 
-                                                control={<Checkbox 
-                                                    // defaultChecked 
-                                                    checked={selectListenerTimezoneValue}
-                                                    sx={{
-                                                        color: darkTheme ? "#fff" : "#797979",
-                                                        '&.Mui-checked': {
-                                                            color: darkTheme ? "#fff" : "#797979",
-                                                        },
-                                                        marginTop: -1,
-                                                    }}
-                                                />} 
-                                                // label="Label" 
-                                                label={<Box 
-                                                    sx={{
-                                                        lineHeight: {xs: "25.27px", md: "40px"}, 
-                                                        letterSpacing: {xs: "-0.08px", md: "-0.13px"}, 
-                                                        fontSize: {xs: "11.37px", md: "18px"},
-                                                    }}>
-                                                    <Typography sx={{ fontWeight: "700" }}>
-                                                        12:00 AM in the listener's timezone
-                                                    </Typography>
+                                        { soldWorldwide == "No" ? 
+                                            <FormControl fullWidth sx={{mt: 2}}>
 
-                                                    <Typography sx={{ fontWeight: "300" }}>
-                                                        Example: 12:00 AM in NYC, 12:00 AM in London
-                                                    </Typography>
-                                                </Box>}
-                                                sx={{ mb: 2, alignItems: 'flex-start' }}
-                                                onChange={(event) => {
-                                                    const eValue: any = event.target;
+                                                <Typography id="soldCountriesSelect" sx={{color: "grey"}}>
+                                                    Where would you like your music to be sold
+                                                </Typography>
 
-                                                    setValue("listenerTimezone", eValue.checked, {shouldDirty: true, shouldTouch: true, shouldValidate: true});
-                                                    setSelectListenerTimezoneValue(eValue.checked);
+                                                <LongSelectList 
+                                                    options={contriesss}
+                                                    // darkTheme={darkTheme}
+                                                    handleSelected={handleSoldCountriesSelect}
+                                                    selectedValue={selectSoldCountries}
+                                                    error={ errors.soldWorldwide ? true : false }
+                                                />
+                                            </FormControl>
+                                            : <></>
+                                        }
 
-                                                    setValue("generalTimezone", !eValue.checked, {shouldDirty: true, shouldTouch: true, shouldValidate: true} );
-                                                    setSelectGeneralTimezoneValue(!eValue.checked);
-
-                                                    // if (eValue.checked == true) {
-                                                    //     setValue("listenerTimezone", eValue.checked, {shouldDirty: true, shouldTouch: true, shouldValidate: true});
-                                                    //     setSelectListenerTimezoneValue(eValue.checked);
-
-                                                    //     setValue("generalTimezone", !eValue.checked, {shouldDirty: true, shouldTouch: true, shouldValidate: true} );
-                                                    //     setSelectGeneralTimezoneValue(!eValue.checked);
-                                                    // }
-                                                }}
-                                            />
-
-                                            <FormControlLabel 
-                                                control={<Checkbox 
-                                                    // defaultChecked 
-                                                    checked={selectGeneralTimezoneValue}
-                                                    sx={{
-                                                        color: darkTheme ? "#fff" : "#797979",
-                                                        '&.Mui-checked': {
-                                                            color: darkTheme ? "#fff" : "#797979",
-                                                        },
-                                                        marginTop: -1,
-                                                    }}
-                                                />} 
-                                                // label="Label" 
-                                                label={<Box sx={{lineHeight: "40px", letterSpacing: "-0.13px", fontSize: "18px",}}>
-                                                    <Typography sx={{ fontWeight: "700" }}>
-                                                        12:00 AM EST / NYC and at the same time across all countries/territories regardless of timezone
-                                                    </Typography>
-
-                                                    <Typography sx={{ fontWeight: "300" }}>
-                                                        Example: 12:00 AM in NYC, 12:00 AM in London
-                                                    </Typography>
-                                                </Box>}
-                                                sx={{ alignItems: 'flex-start' }}
-                                                onChange={(event) => {
-                                                    const eValue: any = event.target;
-                                                    // console.log(eValue.checked);
-                                                    setValue("generalTimezone", eValue.checked, {shouldDirty: true, shouldTouch: true, shouldValidate: true} );
-                                                    setSelectGeneralTimezoneValue(eValue.checked);
-                                                    
-                                                    setValue("listenerTimezone", !eValue.checked, {shouldDirty: true, shouldTouch: true, shouldValidate: true} );
-                                                    setSelectListenerTimezoneValue(!eValue.checked);
-
-                                                    // if (eValue.checked == true) {
-                                                    //     setValue("generalTimezone", eValue.checked, {shouldDirty: true, shouldTouch: true, shouldValidate: true} );
-                                                    //     setSelectGeneralTimezoneValue(eValue.checked);
-                                                        
-                                                    //     setValue("listenerTimezone", false, {shouldDirty: true, shouldTouch: true, shouldValidate: true} );
-                                                    //     setSelectListenerTimezoneValue(false);
-                                                    // }
-                                                }}
-                                            />
-                                        </FormGroup>
+                                        { errors.soldWorldwide && <Box sx={{fontSize: 13, color: "red", textAlign: "left"}}>{ errors.soldWorldwide?.message }</Box> }
                                     </Box>
                                 </Grid>
                             </Grid>
 
-                            <Box sx={{
-                                border: "0.1px solid #FFFFFF",
-                                position: "absolute",
-                                width: "100%",
-                                left: 0,
-                            }}></Box>
-                            <Box sx={{my: 10}}></Box>
-
-                            <Box>
-                                <Typography
-                                    sx={{
+                            <Grid container spacing="20px" sx={{my: "31px"}}>
+                                <Grid item xs={12} md={4} >
+                                    <Typography variant='h3' sx={{
                                         fontWeight: "900",
-                                        fontSize: {xs: "16.69px", md: "35px"},
-                                        lineHeight: {xs: "19.07px", md: "40px"},
-                                        letterSpacing: {xs: "-0.06px", md: "-0.13px"},
-                                    }}
-                                > Advanced Distribution Features </Typography>
+                                        fontSize: {xs: "19.28px", md: "25px"},
+                                        lineHeight: {xs: "15.42px", md: "20px"},
+                                        letterSpacing: {xs: "-0.1px", md: "-0.13px"}
+                                    }}> UPC/EAN Code </Typography>
 
-
-                                <Grid container spacing="20px" sx={{my: "31px"}}>
-                                    <Grid item
-                                        xs={12} md={4}
-                                        sx={{ alignSelf: "center"}}
-                                    >
-                                        <Typography sx={{
-                                            fontWeight: "900",
-                                            fontSize: {xs: "19.28px", md: "25px"},
-                                            lineHeight: {xs: "15.42px", md: "20px"},
-                                            letterSpacing: {xs: "-0.1px", md: "-0.13px"}
-                                        }}>
-                                            Label Name
-                                        </Typography>
-
-                                        <Typography sx={{
-                                            fontWeight: "400",
-                                            fontSize: {xs: "13.88px", md: "18px"},
-                                            lineHeight: {xs: "9.25px", md: "12px"},
-                                            letterSpacing: {xs: "-0.1px", md: "-0.13px"},
-                                            mt: "9px"
-                                        }}>
-                                            Optional
-                                        </Typography>
-                                    </Grid>
-
-                                    <Grid item
-                                        xs={12} md={8}
-                                        sx={{ alignSelf: "center" }}
-                                    >
-                                        <TextField 
-                                            variant="outlined" 
-                                            fullWidth 
-                                            id='labelName'
-                                            type='text'
-                                            label=''
-                                            inputMode='text'
-                                            defaultValue=""
-                                            InputLabelProps={{
-                                                style: { color: '#c1c1c1', fontWeight: "400" },
-                                            }}
-                                            InputProps={{
-                                                sx: {
-                                                    borderRadius: "16px",
-                                                    maxWidth: {xs: "337px", md: "100%"}
-                                                },
-                                            }}
-                                            
-                                            error={ errors.labelName ? true : false }
-                                            { ...register('labelName') }
-                                        />
-                                        { errors.labelName && <Box sx={{fontSize: 13, color: "red", textAlign: "left"}}>{ errors.labelName?.message }</Box> }
-                                    </Grid>
+                                    <Typography variant='body2' sx={{
+                                        fontWeight: "400",
+                                        fontSize: {xs: "13.88px", md: "18px"},
+                                        lineHeight: {xs: "9.25px", md: "12px"},
+                                        letterSpacing: {xs: "-0.1px", md: "-0.13px"},
+                                        mt: "9px"
+                                    }}> Optional </Typography>
                                 </Grid>
 
-                                <Grid container spacing="20px" sx={{my: "31px"}}>
-                                    <Grid item
-                                        xs={12} md={4}
-                                        sx={{ alignSelf: "center"}}
+                                <Grid item xs={12} md={8}>
+                                    <TextField 
+                                        variant="outlined" 
+                                        fullWidth 
+                                        id='UPC_EANcode'
+                                        type='text'
+                                        label=''
+                                        inputMode='text'
+                                        defaultValue=""
+
+                                        sx={releaseTextFieldStyle}
+                                        InputProps={{
+                                            sx: {
+                                                borderRadius: "16px",
+                                                maxWidth: {xs: "337px", md: "100%"}
+                                            },
+                                        }}
+                                        
+                                        error={ errors.UPC_EANcode ? true : false }
+                                        { ...register('UPC_EANcode') }
+                                    />
+                                    <Typography
+                                        sx={{
+                                            fontWeight: "300",
+                                            fontSize: {xs: "11.44px", md: "16px"},
+                                            lineHeight: {xs: "11.58px", md: "16px"},
+                                            letterSpacing: {xs: "-0.09px", md: "-0.13px"},
+                                            color: "#fff",
+                                            my: 1
+                                        }}
                                     >
-                                        <Typography sx={{
-                                            fontWeight: "900",
-                                            fontSize: {xs: "19.28px", md: "25px"},
-                                            lineHeight: {xs: "15.42px", md: "20px"},
-                                            letterSpacing: {xs: "-0.1px", md: "-0.13px"}
-                                        }}>
-                                            Recording Location
-                                        </Typography>
-
-                                        <Typography sx={{
-                                            fontWeight: "400",
-                                            fontSize: {xs: "13.88px", md: "18px"},
-                                            lineHeight: {xs: "9.25px", md: "12px"},
-                                            letterSpacing: {xs: "-0.1px", md: "-0.13px"},
-                                            mt: "9px"
-                                        }}>
-                                            Optional
-                                        </Typography>
-                                    </Grid>
-
-                                    <Grid item
-                                        xs={12} md={8}
-                                        sx={{ alignSelf: "center" }}
-                                    >
-                                        <TextField 
-                                            variant="outlined" 
-                                            fullWidth 
-                                            id='recordingLocation'
-                                            type='text'
-                                            label=''
-                                            inputMode='text'
-                                            defaultValue=""
-                                            InputLabelProps={{
-                                                style: { color: '#c1c1c1', fontWeight: "400" },
-                                            }}
-                                            InputProps={{
-                                                sx: {
-                                                    borderRadius: "16px",
-                                                    maxWidth: {xs: "337px", md: "100%"}
-                                                },
-                                            }}
-                                            
-                                            error={ errors.recordingLocation ? true : false }
-                                            { ...register('recordingLocation') }
-                                        />
-                                        { errors.recordingLocation && <Box sx={{fontSize: 13, color: "red", textAlign: "left"}}>{ errors.recordingLocation?.message }</Box> }
-                                    </Grid>
+                                        If you have one, please enter it above. Otherwise, we will generate one for you
+                                    </Typography>
+                                    { errors.UPC_EANcode && <Box sx={{fontSize: 13, color: "red", textAlign: "left"}}>{ errors.UPC_EANcode?.message }</Box> }
                                 </Grid>
-
-                                <Grid container spacing="20px" sx={{my: "31px"}}>
-                                    <Grid item xs={12} md={4} sx={{display: {xs: "none", md: "initial"}}}></Grid>
-
-                                    <Grid item xs={12} md={8}>
-                                        <Box
-                                            sx={{
-                                                display: "flex",
-                                                flexDirection: "column",
-                                                // justifyContent: "center",
-                                                alignItems: {xs: "center", sm: "initial"}
-                                            }}
-                                        >
-                                            <Typography
-                                                sx={{
-                                                    fontWeight: "900",
-                                                    fontSize: {xs: "12.4px", md: "26px"},
-                                                    lineHeight: {xs: "19.07px", md: "40px"},
-                                                    letterSpacing: {xs: "-0.06px", md: "-0.13px"}
-                                                }}
-                                            >
-                                                Can this release be sold worldwide?
-                                            </Typography>
-
-                                            <Box
-                                                sx={{
-                                                    display: "flex",
-                                                    flexDirection: "row",
-                                                    alignItems: "center",
-                                                    gap: soldWorldwide == "Yes" ? "5px" : "15px",
-                                                    mt: "21px",
-                                                }}
-                                            >
-                                                <Box>
-                                                    <Box 
-                                                        onClick={() => {
-                                                            setValue("soldWorldwide", "Yes", {shouldDirty: true, shouldTouch: true, shouldValidate: true});
-                                                            setSoldWorldwide("Yes");
-                                                        }}
-                                                        sx={{
-                                                            p: {xs: "10.18px 19.68px 10.18px 19.68px", md: "15px 29px 15px 29px"},
-                                                            borderRadius: {xs: "8.14px", md: "12px"},
-
-                                                            background: getValues("soldWorldwide") == "Yes" ? "#644986" : darkTheme ? "#fff" : "#272727",
-                                                            color: getValues("soldWorldwide") == "Yes" ? "#fff" : darkTheme ? "#000" : "#fff",
-
-                                                            cursor: "pointer",
-                                                            display: "inline-block"
-                                                        }}
-                                                    >
-                                                        <Typography 
-                                                            sx={{
-                                                                fontWeight: '900',
-                                                                fontSize: {xs: "10.18px", md: "15px"},
-                                                                lineHeight: {xs: "8.82px", md: "13px"},
-                                                                letterSpacing: {xs: "-0.09px", md: "-0.13px"},
-                                                                textAlign: 'center',
-                                                            }}
-                                                        > Yes </Typography>
-                                                    </Box>
-
-                                                    { soldWorldwide == "Yes" ? 
-                                                        <CheckCircleIcon 
-                                                            sx={{ 
-                                                                color: darkTheme ? "#fff" : "#c4c4c4",
-                                                                position: "relative", 
-                                                                left: -15,
-                                                                top: -8,
-                                                            }} 
-                                                        /> : <></>
-                                                    }
-                                                </Box>
-
-                                                <Box>
-                                                    <Box 
-                                                        onClick={() => {
-                                                            setValue("soldWorldwide", "No", {shouldDirty: true, shouldTouch: true, shouldValidate: true});
-                                                            setSoldWorldwide("No");
-                                                        }}
-                                                        sx={{
-                                                            p: {xs: "10.18px 19.68px 10.18px 19.68px", md: "15px 29px 15px 29px"},
-                                                            borderRadius: {xs: "8.14px", md: "12px"},
-
-                                                            background: soldWorldwide == "No" ? "#644986" : darkTheme ? "#fff" : "#272727",
-                                                            color: soldWorldwide == "No" ? "#fff" : darkTheme ? "#000" : "#fff",
-
-                                                            cursor: "pointer",
-                                                            display: "inline-block"
-                                                        }}
-                                                    >
-                                                        <Typography 
-                                                            sx={{
-                                                                fontWeight: '900',
-                                                                fontSize: {xs: "10.18px", md: "15px"},
-                                                                lineHeight: {xs: "8.82px", md: "13px"},
-                                                                letterSpacing: {xs: "-0.09px", md: "-0.13px"},
-                                                                textAlign: 'center',
-                                                            }}
-                                                        > No </Typography>
-                                                    </Box>
-
-                                                    { soldWorldwide == "No" ? 
-                                                        <CheckCircleIcon 
-                                                            sx={{ 
-                                                                color: darkTheme ? "#fff" : "#c4c4c4",
-                                                                position: "relative", 
-                                                                left: -15,
-                                                                top: -8,
-                                                            }} 
-                                                        /> : <></>
-                                                    }
-                                                </Box>
-                                            </Box>
+                            </Grid>
+                        </Box>
 
 
-                                            { soldWorldwide == "No" ? 
-                                                <FormControl fullWidth sx={{mt: 2}}>
+                        {
+                            apiResponse.display && (
+                                <Stack sx={{ width: '100%', mt: 5, mb: 2 }}>
+                                    <Alert severity={apiResponse.status ? "success" : "error"}>{apiResponse.message}</Alert>
+                                </Stack>
+                            )
+                        }
 
-                                                    <Typography id="soldCountriesSelect" sx={{color: "grey"}}>
-                                                        Where would you like your music to be sold
-                                                    </Typography>
-
-                                                    <LongSelectList 
-                                                        options={contriesss}
-                                                        darkTheme={darkTheme}
-                                                        handleSelected={handleSoldCountriesSelect}
-                                                        selectedValue={selectSoldCountries}
-                                                        error={ errors.soldWorldwide ? true : false }
-                                                    />
-                                                </FormControl>
-                                                : <></>
-                                            }
-
-                                            { errors.soldWorldwide && <Box sx={{fontSize: 13, color: "red", textAlign: "left"}}>{ errors.soldWorldwide?.message }</Box> }
-                                        </Box>
-                                    </Grid>
-                                </Grid>
-
-                                <Grid container spacing="20px" sx={{my: "31px"}}>
-                                    <Grid item xs={12} md={4} >
-                                        <Typography sx={{
-                                            fontWeight: "900",
-                                            fontSize: {xs: "19.28px", md: "25px"},
-                                            lineHeight: {xs: "15.42px", md: "20px"},
-                                            letterSpacing: {xs: "-0.1px", md: "-0.13px"}
-                                        }}>
-                                            UPC/EAN Code
-                                        </Typography>
-
-                                        <Typography sx={{
-                                            fontWeight: "400",
-                                            fontSize: {xs: "13.88px", md: "18px"},
-                                            lineHeight: {xs: "9.25px", md: "12px"},
-                                            letterSpacing: {xs: "-0.1px", md: "-0.13px"},
-                                            mt: "9px"
-                                        }}>
-                                            Optional
-                                        </Typography>
-                                    </Grid>
-
-                                    <Grid item xs={12} md={8}>
-                                        <TextField 
-                                            variant="outlined" 
-                                            fullWidth 
-                                            id='UPC_EANcode'
-                                            type='text'
-                                            label=''
-                                            inputMode='text'
-                                            defaultValue=""
-                                            InputLabelProps={{
-                                                style: { color: '#c1c1c1', fontWeight: "400" },
-                                            }}
-                                            InputProps={{
-                                                sx: {
-                                                    borderRadius: "16px",
-                                                    maxWidth: {xs: "337px", md: "100%"}
-                                                },
-                                            }}
-                                            
-                                            error={ errors.UPC_EANcode ? true : false }
-                                            { ...register('UPC_EANcode') }
-                                        />
-                                        <Typography
-                                            sx={{
-                                                fontWeight: "300",
-                                                fontSize: {xs: "11.44px", md: "16px"},
-                                                lineHeight: {xs: "11.58px", md: "16px"},
-                                                letterSpacing: {xs: "-0.09px", md: "-0.13px"},
-                                                color: "#fff",
-                                                my: 1
-                                            }}
-                                        >
-                                            If you have one, please enter it above. Otherwise, we will generate one for you
-                                        </Typography>
-                                        { errors.UPC_EANcode && <Box sx={{fontSize: 13, color: "red", textAlign: "left"}}>{ errors.UPC_EANcode?.message }</Box> }
-                                    </Grid>
-                                </Grid>
-                            </Box>
-
-
-                            {
-                                apiResponse.display && (
-                                    <Stack sx={{ width: '100%', mt: 5, mb: 2 }}>
-                                        <Alert severity={apiResponse.status ? "success" : "error"}>{apiResponse.message}</Alert>
-                                    </Stack>
-                                )
-                            }
-
-                            <Box
-                                sx={{
-                                    display: "flex",
-                                    justifyContent: "center",
-                                    alignItems: "center"
+                        <Box
+                            sx={{
+                                display: "flex",
+                                justifyContent: "center",
+                                alignItems: "center"
+                            }}
+                        >
+                            <Button variant="contained" 
+                                fullWidth type="submit" 
+                                disabled={ !isValid || isSubmitting } 
+                                sx={{ 
+                                    bgcolor: colors.primary,
+                                    maxWidth: "312px",
+                                    "&.Mui-disabled": {
+                                        background: colors.secondary,
+                                        // color: "#797979"
+                                    },
+                                    "&:hover": {
+                                        bgcolor: colors.primary,
+                                    },
+                                    "&:active": {
+                                        bgcolor: colors.primary,
+                                    },
+                                    "&:focus": {
+                                        bgcolor: colors.primary,
+                                    },
+                                    color: colors.milk,
+                                    borderRadius: "12px",
+                                    my: 3, py: 1.5,
+                                    fontSize: {md: "15.38px"},
+                                    fontWeight: "900",
+                                    letterSpacing: "-0.12px",
+                                    textTransform: "none"
                                 }}
                             >
-                                <Button variant="contained" 
-                                    fullWidth type="submit" 
-                                    disabled={ !isValid || isSubmitting } 
-                                    sx={{ 
-                                        bgcolor: darkTheme ? "#fff" : "#000",
-                                        maxWidth: "312px",
-                                        "&.Mui-disabled": {
-                                            background: "#9c9c9c",
-                                            color: "#797979"
-                                        },
-                                        "&:hover": {
-                                            bgcolor: darkTheme ? "#fff" : "#000",
-                                        },
-                                        "&:active": {
-                                            bgcolor: darkTheme ? "#fff" : "#000",
-                                        },
-                                        "&:focus": {
-                                            bgcolor: darkTheme ? "#fff" : "#000",
-                                        },
-                                        color: darkTheme ? "#000" : "#fff",
-                                        borderRadius: "12px",
-                                        my: 3, py: 1.5,
-                                        fontSize: {md: "15.38px"},
-                                        fontWeight: "900",
-                                        letterSpacing: "-0.12px",
-                                        textTransform: "none"
-                                    }}
-                                >
-                                    <span style={{ display: isSubmitting ? "none" : "initial" }}>Continue</span>
-                                    <CircularProgress size={25} sx={{ display: isSubmitting ? "initial" : "none", color: "#8638E5", fontWeight: "bold" }} />
-                                </Button>
-                            </Box>
+                                <span style={{ display: isSubmitting ? "none" : "initial" }}>Continue</span>
+                                <CircularProgress size={25} sx={{ display: isSubmitting ? "initial" : "none", color: "#8638E5", fontWeight: "bold" }} />
+                            </Button>
+                        </Box>
 
-                        </form>
-                    </ThemeProvider>
+                    </form>
                 </Box>
             </Box>
 

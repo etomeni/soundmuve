@@ -3,6 +3,7 @@ import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { currencyDisplay, formatedNumber } from '@/util/resources';
+import colors from '@/constants/colors';
 
 
 interface _Props {
@@ -19,7 +20,7 @@ const SingleSongDspOverviewComponent: React.FC<_Props> = ({
     return (
         <Box
             sx={{
-                background: "#64498640",
+                background: colors.secondary,
                 backdropFilter: "blur(12.5px)",
                 WebkitBackdropFilter: "blur(12.5px)",
                 borderRadius: {xs: "13.43px", md: "37px"},

@@ -25,8 +25,8 @@ import Select, { SelectChangeEvent } from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 
 // import PaymentComponent from '@/components/account/PaymentComponent';
-import LoadingComponent from '@/components/Loading';
 import EmptyListComponent from '@/components/EmptyList';
+import LoadingDataComponent from '@/components/LoadingData';
 import PaymentzComponent from '@/components/account/payments/PaymentzComponent';
 import ArtistAnalyticsNavComponent from '@/components/account/ArtistAnalyticsNav';
 
@@ -34,6 +34,7 @@ import { useUserStore } from '@/state/userStore';
 import { balTransactionsInterface } from '@/constants/typesInterface';
 import { apiEndpoint, formatedNumber } from '@/util/resources';
 import { formatTransactionDate, getDateRange, getFormattedDateRange } from '@/util/dateTime';
+import colors from '@/constants/colors';
 
   
 const headerTitle = [
@@ -228,11 +229,11 @@ function BalanceHistory() {
 
     return (
         <AccountWrapper>
-            <Box sx={{px: {xs: 2, md: 5, lg: 12}, pb: 5, position: "relative", zIndex: 10, mt: {xs: 7, md: 10}  }}>
+            <Box>
                 <Stack direction={"row"} spacing={"20px"} justifyContent={"space-between"} alignItems={"center"}>
                     <IconButton 
                         onClick={() => navigate(-1)}
-                        sx={{ color: darkTheme ? "#fff" : "#000", mb: 2 }}
+                        sx={{ color: colors.primary, mb: 2 }}
                     >
                         <ChevronLeftIcon sx={{ display: {xs: "none", md: "block"} }} />
                     </IconButton>
@@ -246,11 +247,11 @@ function BalanceHistory() {
                     <Paper 
                         sx={{ 
                             width: '100%',
-                            border: "1px solid #D9D9D9",
+                            border: `1px solid ${colors.dark}`,
                             borderRadius: "13px",
                             overflow: "hidden",
-                            bgcolor: darkTheme ? "#000" : "#fff",
-                            color: darkTheme ? "#fff" : "#000"
+                            bgcolor: colors.secondary,
+                            color: colors.dark
                         }}
                     >
                         <TableContainer sx={{ maxHeight: 440 }}>
@@ -263,7 +264,7 @@ function BalanceHistory() {
                             >
                                 <TableHead>
                                     <TableRow>
-                                        <TableCell align="left" colSpan={3} sx={{ bgcolor: darkTheme ? "#000" : "#fff" }}>
+                                        <TableCell align="left" colSpan={3} sx={{ bgcolor: colors.secondary }}>
                                             <FormControl fullWidth sx={{ width: "fit-content" }}>
                                                 <Select
                                                     labelId="sortByDays"
@@ -319,33 +320,39 @@ function BalanceHistory() {
                                             </FormControl>
                                         </TableCell>
 
-                                        <TableCell align="right" colSpan={3} sx={{ bgcolor: darkTheme ? "#000" : "#fff" }}>
+                                        <TableCell align="right" colSpan={3} sx={{ bgcolor: colors.secondary }}>
                                             <Typography
                                                 sx={{
                                                     fontWeight: "900",
                                                     fontSize: {xs: "10px", md: "18px"},
                                                     lineHeight: {xs: "12px", md: "24px"},
                                                     letterSpacing: {xs: "-0.67px", md: "-1.34px"},
-                                                    color: darkTheme ? "#fff" : "#000"
+                                                    color: colors.dark
                                                 }}
                                             >{ sortByDays == "All" ? '' : sortByDays  }</Typography>
                                         </TableCell>
                                     </TableRow>
 
-                                    <TableRow>
+                                    <TableRow
+                                        sx={{ 
+                                            [`& .${tableCellClasses.root}`]: {
+                                                borderBottom: `1px solid ${colors.dark}`,
+                                            }
+                                        }}
+                                    >
                                         {headerTitle.map((title, index) => (
                                             <TableCell
                                                 key={index}
                                                 align={index == 0 ? "left" : index == headerTitle.length - 1 ? "right" : 'center' }
                                                 // style={{ top: 57, minWidth: column.minWidth }}
-                                                sx={{ bgcolor: darkTheme ? "#000" : "#fff" }}
+                                                sx={{ bgcolor: colors.secondary }}
                                             >
                                                 <Box 
                                                     sx={{
-                                                        p: {xs: "10.18px 19.68px 10.18px 19.68px", md: "15px 29px 15px 29px"},
+                                                        p: {xs: "10.18px 19.68px", md: "15px 29px"},
                                                         borderRadius: {xs: "8.14px", md: "12px"},
-                                                        background: darkTheme ? "#fff" : "#272727",
-                                                        color: darkTheme ? "#000" : "#fff",
+                                                        background: colors.milk,
+                                                        color: colors.dark,
                                                         cursor: "pointer",
                                                         display: "inline-block"
                                                     }}
@@ -375,7 +382,7 @@ function BalanceHistory() {
                                                     <TableCell 
                                                         align='left'
                                                         sx={{ 
-                                                            color: darkTheme ? "#fff" : "#000",
+                                                            color: colors.dark,
                                                             fontWeight: "400",
                                                             fontSize: {xs: "9.07px", md: "18px"},
                                                             lineHeight: {xs: "12.1px", md: "24px"},
@@ -387,7 +394,7 @@ function BalanceHistory() {
                                                     <TableCell 
                                                         align='center'
                                                         sx={{ 
-                                                            color: darkTheme ? "#fff" : "#000",
+                                                            color: colors.dark,
                                                             fontWeight: "400",
                                                             fontSize: {xs: "9.07px", md: "18px"},
                                                             lineHeight: {xs: "12.1px", md: "24px"},
@@ -399,7 +406,7 @@ function BalanceHistory() {
                                                     <TableCell 
                                                         align='center'
                                                         sx={{ 
-                                                            color: darkTheme ? "#fff" : "#000",
+                                                            color: colors.dark,
                                                             fontWeight: "400",
                                                             fontSize: {xs: "9.07px", md: "18px"},
                                                             lineHeight: {xs: "12.1px", md: "24px"},
@@ -411,7 +418,7 @@ function BalanceHistory() {
                                                     <TableCell 
                                                         align='center'
                                                         sx={{ 
-                                                            color: darkTheme ? "#fff" : "#000",
+                                                            color: colors.dark,
                                                             fontWeight: "400",
                                                             fontSize: {xs: "9.07px", md: "18px"},
                                                             lineHeight: {xs: "12.1px", md: "24px"},
@@ -423,7 +430,7 @@ function BalanceHistory() {
                                                     <TableCell 
                                                         align='center'
                                                         sx={{ 
-                                                            color: darkTheme ? "#fff" : "#000",
+                                                            color: colors.dark,
                                                             fontWeight: "400",
                                                             fontSize: {xs: "9.07px", md: "18px"},
                                                             lineHeight: {xs: "12.1px", md: "24px"},
@@ -436,7 +443,7 @@ function BalanceHistory() {
                                                         // align='right'
                                                         align='center'
                                                         sx={{ 
-                                                            color: darkTheme ? "#fff" : "#000",
+                                                            color: colors.dark,
                                                             fontWeight: "400",
                                                             fontSize: {xs: "9.07px", md: "18px"},
                                                             lineHeight: {xs: "12.1px", md: "24px"},
@@ -449,7 +456,7 @@ function BalanceHistory() {
                                                         // align='right'
                                                         align='center'
                                                         sx={{ 
-                                                            color: darkTheme ? "#fff" : "#000",
+                                                            color: colors.dark,
                                                             fontWeight: "400",
                                                             fontSize: {xs: "9.07px", md: "18px"},
                                                             lineHeight: {xs: "12.1px", md: "24px"},
@@ -475,8 +482,8 @@ function BalanceHistory() {
                                             sx={{
                                                 p: {xs: "10.18px 19.68px", md: "10px 29px"},
                                                 borderRadius: {xs: "8.14px", md: "5px"},
-                                                background: darkTheme ? "#fff" : "#272727",
-                                                color: darkTheme ? "#000" : "#fff",
+                                                background: colors.milk,
+                                                color: colors.dark,
                                                 cursor: "pointer",
                                                 display: "inline-block",
                                                 // m: 2,
@@ -500,7 +507,7 @@ function BalanceHistory() {
                                         <EmptyListComponent notFoundText='No transaction has been carried out yet.' />
                                     </Box>
                             ):
-                            <LoadingComponent />
+                            <LoadingDataComponent />
                         }
 
                     </Paper>

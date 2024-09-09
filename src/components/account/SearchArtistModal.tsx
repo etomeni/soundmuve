@@ -6,8 +6,7 @@ import Typography from '@mui/material/Typography';
 import CloseIcon from '@mui/icons-material/Close';
 import TextField from '@mui/material/TextField';
 import Stack from '@mui/material/Stack';
-import { customTextFieldTheme } from '@/util/mui';
-import { ThemeProvider, useTheme } from '@mui/material/styles';
+import { releaseTextFieldStyle } from '@/util/mui';
 import { useSettingStore } from '@/state/settingStore';
 
 import appleMusiclogo from '@/assets/images/apple.png';
@@ -16,6 +15,7 @@ import spotifylogo from '@/assets/images/spotify.png';
 import spotifyLghtThemelogo from '@/assets/images/spotifyLghtTheme.png';
 import albumSampleArt from "@/assets/images/albumSampleArt.png"
 import AppleSportifyCheckmark from '../AppleSportifyCheckmark';
+import colors from '@/constants/colors';
 
 
 interface _Props {
@@ -66,7 +66,6 @@ const artistData = [
 const SearchArtistModalComponent: React.FC<_Props> = ({
     openSearchArtistModal, closeSearchArtistModal, onSaveSelection
 }) => {
-    const outerTheme = useTheme();
     const darkTheme = useSettingStore((state) => state.darkTheme);
     const [artistNameInput, setArtistNameInput] = useState('');
 
@@ -147,7 +146,7 @@ const SearchArtistModalComponent: React.FC<_Props> = ({
             >
                 <Box 
                     sx={{
-                        bgcolor: darkTheme ? "#272727" : "#FBFBFB",
+                        bgcolor: colors.bg,
                         width: {xs: "92%", sm: "85%", md: "846px"},
                         minHeight: "404px",
                         maxHeight: '90%',
@@ -167,44 +166,40 @@ const SearchArtistModalComponent: React.FC<_Props> = ({
                                     fontSize: "25px",
                                     lineHeight: "12px",
                                     letterSpacing: "-0.13px",
-                                    color: darkTheme ? "#fff" : "#000",
+                                    color: colors.dark,
                                 }}
                             >Main Artist name?</Typography>
 
                             <Box>
                                 <IconButton onClick={() => closeSearchArtistModal() }>
                                     <CloseIcon 
-                                        sx={{color: darkTheme ? "#fff" : "#000", fontSize: "16px"}} 
+                                        sx={{color: colors.primary, fontSize: "16px"}} 
                                     />
                                 </IconButton>
                             </Box>
                         </Stack>
 
                         <Box mt="20px">
-                            <ThemeProvider theme={customTextFieldTheme(outerTheme, darkTheme)}>
-                                <TextField 
-                                    variant="outlined" 
-                                    fullWidth 
-                                    id='artistName'
-                                    name='artistName'
-                                    type='search'
-                                    label=''
-                                    inputMode='search'
-                                    placeholder='Eg. Joseph solomon'
-                                    InputLabelProps={{
-                                        style: { color: '#c1c1c1', fontWeight: "400" },
-                                    }}
-                                    InputProps={{
-                                        sx: {
-                                            borderRadius: "16px",
-                                            maxWidth: {xs: "337px", md: "100%"},
-                                        },
-                                    }}
+                            <TextField 
+                                variant="outlined" 
+                                fullWidth 
+                                id='artistName'
+                                name='artistName'
+                                type='search'
+                                label=''
+                                inputMode='search'
+                                placeholder='Eg. Joseph solomon'
+                                sx={releaseTextFieldStyle}
+                                InputProps={{
+                                    sx: {
+                                        borderRadius: "16px",
+                                        maxWidth: {xs: "337px", md: "100%"},
+                                    },
+                                }}
 
-                                    value={artistNameInput}
-                                    onChange={(e) => handleSearchInput(e)}
-                                />
-                            </ThemeProvider>
+                                value={artistNameInput}
+                                onChange={(e) => handleSearchInput(e)}
+                            />
                         </Box>
 
                         
@@ -444,8 +439,8 @@ const SearchArtistModalComponent: React.FC<_Props> = ({
                         sx={{
                             p: "15px 25px",
                             borderRadius: "12px",
-                            bgcolor: darkTheme ? "#fff" : "#272727",
-                            color: darkTheme ? "#000" : "#fff",
+                            bgcolor: colors.primary,
+                            color: colors.milk,
                             width: "263px",
                             textAlign: "center",
                             mt: searchResult.length ? "15px" : "60px",

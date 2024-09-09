@@ -21,6 +21,7 @@ import SongPreviewComponent from '@/components/account/SongPreview';
 import SuccessModalComponent from '@/components/account/SuccessModal';
 import { apiEndpoint } from '@/util/resources';
 import { albumInterface } from '@/constants/typesInterface';
+import colors from '@/constants/colors';
 
 
 function CreateAlbumReleaseOverview() {
@@ -127,8 +128,8 @@ function CreateAlbumReleaseOverview() {
 
 
     return (
-        <AccountWrapper>
-            <Box sx={{ position: "relative", zIndex: 10 }}>
+        <AccountWrapper bottomSpacing={0} topSpacing={false}>
+            <Box>
 
                 <Box sx={{ display: {xs: 'initial', sm: 'flex'}, height: "100%" }}>
                     <SideNav activePageNumber={6} />
@@ -141,7 +142,7 @@ function CreateAlbumReleaseOverview() {
                                 <IconButton 
                                     onClick={() => navigate(-1)}
                                     sx={{
-                                        color: darkTheme ? "#fff" : "#000", 
+                                        color: colors.primary, 
                                         mb: 2,
                                         display: {xs: "none", sm: "block"}
                                     }}
@@ -149,16 +150,14 @@ function CreateAlbumReleaseOverview() {
                                     <ChevronLeftIcon />
                                 </IconButton>
 
-                                <Typography 
+                                <Typography variant='h3'
                                     sx={{
                                         fontWeight: "900",
                                         fontSize: {xs: "24.74px", sm: "30px"},
                                         lineHeight: {xs: "26.31px", sm: "50.77px"},
                                         letterSpacing: {xs: "-0.55px", sm: "-1.07px"},
                                     }}
-                                >
-                                    Overview
-                                </Typography>
+                                > Overview </Typography>
                             </Stack>
                         </Box>
 
@@ -178,9 +177,9 @@ function CreateAlbumReleaseOverview() {
                                 <Box
                                     sx={{
                                         height: {xs: "32.53px", sm: "72px"},
-                                        bgcolor: "#272727",
-                                        color: "#fff",
-                                        borderBottom: darkTheme ? {xs: "0.45px solid #FFFFFF", sm: "1px solid #FFFFFF"} : "none",
+                                        bgcolor: colors.tertiary,
+                                        color: colors.milk,
+                                        borderBottom: {xs: "0.45px solid #FFFFFF", sm: "1px solid #FFFFFF"},
                                         px: {xs: "10px", sm: "25px"},
                                         display: "flex",
                                         flexDirection: "row",
@@ -189,7 +188,7 @@ function CreateAlbumReleaseOverview() {
                                         alignItems: "center"
                                     }}
                                 >
-                                    <Typography
+                                    <Typography variant='h3'
                                         sx={{
                                             fontWeight: "400",
                                             fontSize: {xs: "15px", sm: "20px"},
@@ -212,7 +211,7 @@ function CreateAlbumReleaseOverview() {
                                 <Box
                                     sx={{
                                         p: {xs: "10px", sm: "25px"},
-                                        bgcolor: darkTheme ? "#000" : "#B0AFAF",
+                                        bgcolor: colors.secondary,
                                         mt: {xs: "15px", sm: "0px"}
                                     }}
                                 >
@@ -363,9 +362,9 @@ function CreateAlbumReleaseOverview() {
                                 <Box
                                     sx={{
                                         height: {xs: "32.53px", sm: "72px"},
-                                        bgcolor: "#272727",
-                                        color: "#fff",
-                                        borderBottom: darkTheme ? {xs: "0.45px solid #FFFFFF", sm: "1px solid #FFFFFF"} : 'none',
+                                        bgcolor: colors.tertiary,
+                                        color: colors.milk,
+                                        borderBottom: {xs: "0.45px solid #FFFFFF", sm: "1px solid #FFFFFF"},
                                         px: {xs: "10px", sm: "25px"},
                                         display: "flex",
                                         flexDirection: "row",
@@ -398,11 +397,12 @@ function CreateAlbumReleaseOverview() {
                                 <Box
                                     sx={{
                                         p: {xs: "10px", sm: "25px"},
-                                        bgcolor: darkTheme ? "#000" : "#B0AFAF",
+                                        bgcolor: colors.secondary,
 
                                         display: "flex",
                                         justifyItems: "center",
-                                        alignItems: "center"
+                                        alignItems: "center",
+                                        textAlign: "center"
                                     }}
                                 >
                                     { releasedAlbum?.store || albumReleaseStores.stores }
@@ -422,8 +422,8 @@ function CreateAlbumReleaseOverview() {
                                 <Box
                                     sx={{
                                         height: {xs: "32.53px", sm: "72px"},
-                                        bgcolor: "#272727",
-                                        color: "#fff",
+                                        bgcolor: colors.tertiary,
+                                        color: colors.milk,
                                         borderBottom: {xs: "0.45px solid #FFFFFF", sm: "1px solid #FFFFFF"},
                                         px: {xs: "10px", sm: "25px"},
                                         display: "flex",
@@ -457,7 +457,7 @@ function CreateAlbumReleaseOverview() {
                                 <Box
                                     sx={{
                                         p: {xs: "10px", sm: "25px"},
-                                        bgcolor: darkTheme ? "#000" : "#B0AFAF",
+                                        bgcolor: colors.secondary,
                                         display: "flex",
                                         flexDirection: "column",
                                         justifyItems: "center",
@@ -501,8 +501,8 @@ function CreateAlbumReleaseOverview() {
                                 <Box
                                     sx={{
                                         height: {xs: "32.53px", sm: "72px"},
-                                        bgcolor: "#272727",
-                                        color: "#fff",
+                                        bgcolor: colors.tertiary,
+                                        color: colors.milk,
                                         borderBottom: {xs: "0.45px solid #FFFFFF", sm: "1px solid #FFFFFF"},
                                         px: {xs: "10px", sm: "25px"},
                                         display: "flex",
@@ -536,7 +536,7 @@ function CreateAlbumReleaseOverview() {
                                 <Box
                                     sx={{
                                         p: {xs: "10px", sm: "25px"},
-                                        bgcolor: darkTheme ? "#000" : "#fff",
+                                        bgcolor: colors.secondary,
                                         display: "flex",
                                         flexDirection: "column",
                                         justifyItems: "center",
@@ -574,13 +574,14 @@ function CreateAlbumReleaseOverview() {
                                     overflow: "hidden",
                                     mt: "25px",
                                     mx: "auto",
+                                    bgcolor: colors.secondary
                                 }}
                             >
                                 <Box
                                     sx={{
                                         height: {xs: "32.53px", sm: "72px"},
-                                        bgcolor: "#272727",
-                                        color: "#fff",
+                                        bgcolor: colors.tertiary,
+                                        color: colors.milk,
                                         borderBottom: {xs: "0.45px solid #FFFFFF", sm: "1px solid #FFFFFF"},
                                         px: {xs: "10px", sm: "25px"},
                                         display: "flex",
@@ -611,15 +612,20 @@ function CreateAlbumReleaseOverview() {
                                     > Edit </Typography>
                                 </Box>
 
-
-                                <Box sx={{ width: {xs: "90%", sm: "347px"}, maxWidth: {xs: "330px", sm: "892px"}, mx: "auto" }}>
+                                <Box 
+                                    sx={{ 
+                                        width: {xs: "90%", sm: "347px"}, 
+                                        maxWidth: {xs: "330px", sm: "892px"}, 
+                                        mx: "auto",
+                                    }}
+                                >
                                     <Box
                                         sx={{
                                             display: "flex",
                                             flexDirection: "column",
                                             justifyContent: "end",
                                             alignItems: "center",
-                                            bgcolor: "#272727",
+                                            bgcolor: colors.tertiary,
                                             borderRadius: "12px",
                                             height: {xs: "146.55px", sm: "326px"},
                                             // width: {xs: "128.45px", sm: "347px"},
@@ -633,7 +639,6 @@ function CreateAlbumReleaseOverview() {
                                         }}
                                     ></Box>
                                 </Box>
-
                             </Box>
 
 
@@ -719,22 +724,22 @@ function CreateAlbumReleaseOverview() {
                                     onClick={() => onSubmit()}
                                     // disabled={ !isValid || isSubmitting } 
                                     sx={{ 
-                                        bgcolor: darkTheme ? "#fff" : "#644986",
+                                        bgcolor: colors.primary,
                                         maxWidth: "312px",
+                                        color: colors.milk,
                                         "&.Mui-disabled": {
                                             background: "#9c9c9c",
                                             color: "#797979"
                                         },
                                         "&:hover": {
-                                            bgcolor: darkTheme ? "#fff" : "#644986",
+                                            bgcolor: colors.primary,
                                         },
                                         "&:active": {
-                                            bgcolor: darkTheme ? "#fff" : "#644986",
+                                            bgcolor: colors.primary,
                                         },
                                         "&:focus": {
-                                            bgcolor: darkTheme ? "#fff" : "#644986",
+                                            bgcolor: colors.primary,
                                         },
-                                        color: darkTheme ? "#000" : "#fff",
                                         borderRadius: "12px",
                                         my: 3, py: 1.5,
                                         fontSize: {sm: "15.38px"},

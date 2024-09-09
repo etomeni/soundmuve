@@ -5,6 +5,7 @@ import { Stack } from '@mui/material';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 
 import AppleSportifyCheckmark from '../AppleSportifyCheckmark';
+import colors from '@/constants/colors';
 
 
 interface _Props {
@@ -28,7 +29,7 @@ const AlbumSongItem: React.FC<_Props> = ({
                 // height: {xs: "82px", md: "82.92px"}, 
                 borderRadius: "8.65px",
                 // border: "0.07px solid #FFFFFF",
-                bgcolor: "#581D3A",
+                bgcolor: colors.tertiary,
                 py: {xs: "6.02px",md: "6.5px"},
                 px: "7.2px",
 
@@ -63,7 +64,7 @@ const AlbumSongItem: React.FC<_Props> = ({
                                 fontSize: "18.03px",
                                 lineHeight: "14.42px",
                                 letterSpacing: "-0.09px",
-                                color: "#fff"
+                                color: colors.milk
                             }}
                         >{songTitle}</Typography>
 
@@ -73,7 +74,7 @@ const AlbumSongItem: React.FC<_Props> = ({
                                 fontSize: "12px",
                                 lineHeight: "12px",
                                 letterSpacing: "-0.09px",
-                                color: "#AC3A72"
+                                color: colors.milk
                             }}
                         >{artistName}</Typography>
                     </Stack>
@@ -99,8 +100,8 @@ const AlbumSongItem: React.FC<_Props> = ({
                     <Stack direction="row" alignItems="center" spacing="5px"
                         sx={{
                             p: "10px 18px",
-                            bgcolor: "#943363",
-                            color: "#FBFBFB",
+                            bgcolor: "#E2CBA2", // "#943363",
+                            color: colors.tertiary,
                             borderRadius: "8px",
                             mr: 2,
                             display: {xs: "none", sm: "flex"}
