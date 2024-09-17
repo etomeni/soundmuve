@@ -219,7 +219,7 @@ function BalanceHistory() {
             const dateRange = getDateRange(Number(value));
             setSortByDays(dateRange);
             const betweenDates = getFormattedDateRange(Number(value));
-            getBalanceBetweenDates(betweenDates.startDate, betweenDates.endDate);
+            getBalanceBetweenDates(betweenDates.startDate, betweenDates.todayDate);
         } else {
             setSortByDays(value);
             getAllBalanceHistory();
@@ -353,7 +353,6 @@ function BalanceHistory() {
                                                         borderRadius: {xs: "8.14px", md: "12px"},
                                                         background: colors.milk,
                                                         color: colors.dark,
-                                                        cursor: "pointer",
                                                         display: "inline-block"
                                                     }}
                                                 >

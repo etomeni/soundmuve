@@ -1,25 +1,25 @@
 import { create } from "zustand";
-import albumSampleArtImg from '@/assets/images/albumSampleArt.png';
+import temptCoverPhotoImg from '@/assets/images/album.png';
 
 
 const songDetails = {
     email: "",
     // release_type: "",
-    song_title: "Sensami",
-    artist_name: "Skiibii",
+    song_title: "", // Sensami
+    artist_name: "", //Skiibii
 
-    cover_photo: albumSampleArtImg,
+    cover_photo: temptCoverPhotoImg,
 
     // language: 'Select Language',
-    primary_genre: 'Dance',
-    secondary_genre: 'Alternative',
+    primary_genre: '', // Dance
+    secondary_genre: '', // Alternative
 
-    label_name: "More Grace Music",
-    upc_ean: "123456789",
+    label_name: "", // More Grace Music
+    upc_ean: "", // 123456789
 
-    total_revenue: '$60,000.00',
-    streams: '80,000,000',
-    stream_time: '120hrs',
+    total_revenue: '', // $60,000.00
+    streams: '', // 80,000,000
+    stream_time: '', // 120hrs
 }
 
 type _typeInterface_ = {

@@ -330,7 +330,7 @@ export const currencyDisplay = (amount: number) => {
   const formattedAmount = amount.toLocaleString("en-US", {
     style: "currency",
     currency: "USD",
-    maximumFractionDigits: 0,
+    maximumFractionDigits: 2,
   });
 
   return formattedAmount;

@@ -1,23 +1,23 @@
 export function getDateRange(days: number) {
     const today = new Date();
     const endDate = new Date(today);
-    endDate.setDate(today.getDate() + days);
+    endDate.setDate(today.getDate() - days);
   
     const formatDate = (date: Date) => {
         const options: any = { month: 'short', day: 'numeric' };
         return date.toLocaleDateString('en-US', options);
     };
   
-    const startDateStr = formatDate(today);
-    const endDateStr = formatDate(endDate);
+    const todayDateStr = formatDate(today);
+    const startDateStr = formatDate(endDate);
   
-    return `${startDateStr} - ${endDateStr}`;
+    return `${startDateStr} - ${todayDateStr}`;
 }
 
 export function getFormattedDateRange(days: number) {
     const today = new Date();
     const endDate = new Date(today);
-    endDate.setDate(today.getDate() + days);
+    endDate.setDate(today.getDate() - days);
   
     const formatDate = (date: Date) => {
       const year = date.getFullYear();
@@ -26,10 +26,10 @@ export function getFormattedDateRange(days: number) {
       return `${year}-${month}-${day}`;
     };
   
-    const startDateStr = formatDate(today);
-    const endDateStr = formatDate(endDate);
+    const startDateStr = formatDate(endDate);
+    const todayDateStr = formatDate(today); 
   
-    return { startDate: startDateStr, endDate: endDateStr };
+    return { startDate: startDateStr, todayDate: todayDateStr };
 } 
 
 

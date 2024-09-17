@@ -133,49 +133,53 @@ export default function FooterComponent() {
     );
 
     const desktopView = (
-        <Box>
-            <div style={{
-                display: "flex", whiteSpace: "nowrap",
-                flexDirection: "row", alignItems: "center"
-            }}>
-                <input 
-                    type="email" 
-                    placeholder='Email Address' 
-                    className={style.desktopInput}
-                    autoComplete="email" 
-                    value={email}
-                    required
-                    onChange={e => setEmail(e.currentTarget.value)}
-                />
+        <Box
+            sx={{
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "center",
+                // whiteSpace: "nowrap",
+                position: "relative",
+                zIndex: 999
+            }}
+        >
+            <input 
+                type="email" 
+                placeholder='Email Address' 
+                className={style.desktopInput}
+                autoComplete="email" 
+                value={email}
+                required
+                onChange={e => setEmail(e.currentTarget.value)}
+            />
 
-                <Box onClick={() => onSubmit()} 
-                    sx={{
-                        border: `0.57px solid ${colors.primary}`,
-                        borderRadius: "0px 5.33px 5.33px 0px",
-                        bgcolor: colors.primary,
-                        
-                        // px: 1,
-                        width: "54.67px",
-                        height: "34.66px",
-                        alignSelf: "center",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        cursor: "pointer"
-                    }}
-                >
-                    <Typography sx={{
-                        fontWeight: "700",
-                        fontSize: "9.67px",
-                        lineHeight: "17.67px",
-                        textAlign: "center",
-                        color: "#fff",
-                    }}>
-                        Join
-                    </Typography>
-                </Box>
-
-            </div>
+            <Box onClick={() => onSubmit()} 
+                sx={{
+                    border: `0.57px solid ${colors.primary}`,
+                    borderRadius: "0px 5.33px 5.33px 0px",
+                    bgcolor: colors.primary,
+                    
+                    // px: 1,
+                    width: "54.67px",
+                    height: "34.66px",
+                    alignSelf: "center",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    cursor: "pointer"
+                }}
+            >
+                <Typography sx={{
+                    fontWeight: "700",
+                    fontSize: "9.67px",
+                    lineHeight: "17.67px",
+                    textAlign: "center",
+                    color: "#fff",
+                }}>
+                    Join
+                </Typography>
+            </Box>
         </Box>
     );
 
@@ -328,7 +332,7 @@ export default function FooterComponent() {
                 </Grid>
 
                 <Grid container spacing={2} sx={{ position: "relative", top: "-30px" }}>
-                    <Grid item xs={4} sm={3}>
+                    <Grid item xs={6} sm={3} md={2}>
                         <Link to="mailto:help@soundmuve.com">
                             <Typography variant='body2'
                                 sx={{
@@ -342,14 +346,15 @@ export default function FooterComponent() {
                         </Link>
                     </Grid>
 
-                    <Grid item xs={8} sm={9}>
+                    <Grid item xs={6} sm={9} md={10}>
                         <Typography variant='body2'
                             sx={{
                                 fontFamily: "Geist",
                                 fontWeight: "600",
                                 fontSize: "11.15px",
                                 lineHeight: "19.26px",
-                                color: "#CACACA"
+                                color: "#CACACA",
+                                width: "fit-content"
                             }}
                         >
                             2261 Market street STE 86008, San Francisco, 

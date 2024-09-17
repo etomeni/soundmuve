@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
@@ -22,17 +22,19 @@ import { contentWidth } from '../util/mui';
 import logo from "@/assets/branded/logo.png";
 import icon from "@/assets/branded/icon.png";
 import colors from '@/constants/colors';
+import AccountCircleOutlined from '@mui/icons-material/AccountCircleOutlined';
+import { useUserStore } from '@/state/userStore';
 
 
 // const drawerWidth = 240;
 
 export default function HeaderComponent() {
-    // const navigate = useNavigate();
+    const navigate = useNavigate();
     const location = useLocation();
     const pathname = location.pathname;
 
     const [mobileOpen, setMobileOpen] = React.useState(false);
-    // const isLoggedIn = useUserStore((state) => state.isLoggedIn);
+    const isLoggedIn = useUserStore((state) => state.isLoggedIn);
 
 
 
@@ -129,49 +131,80 @@ export default function HeaderComponent() {
             </Box>
 
             <Box mt="70px">
-                <Link to="/auth/login">
-                    <Box
-                        sx={{
-                            p: "10px 50px",
-                            borderRadius: "12px",
-                            border: `0.3px solid ${colors.primary}`,
-                            textAlign: "center"
-                        }}  
-                    >
-                        <Typography variant='button'
-                            sx={{
-                                fontFamily: "Nohemi",
-                                fontWeight: "600",
-                                fontSize: "13px",
-                                lineHeight: "13.06px",
-                                color: colors.primary
-                            }}
-                        >Login</Typography>
-                    </Box>
-                </Link>
+                { 
+                    isLoggedIn ? (
+                        <Box>
+                            <Link to="/account/">
+                                <Box
+                                    sx={{
+                                        p: "10px 50px",
+                                        borderRadius: "12px",
+                                        border: `0.3px solid ${colors.primary}`,
+                                        textAlign: "center",
+                                        bgcolor: colors.primary,
+                                        mt: "15px",
+                                    }}  
+                                >
+                                    <Typography variant='button'
+                                        sx={{
+                                            fontFamily: "Nohemi",
+                                            fontWeight: "600",
+                                            fontSize: "13px",
+                                            lineHeight: "13.06px",
+                                            color: colors.milk
+                                        }}
+                                    >Dashboard</Typography>
+                                </Box>
+                            </Link>
+                        </Box>
+                    ) : (
+                        <>
+                            <Link to="/auth/login">
+                                <Box
+                                    sx={{
+                                        p: "10px 50px",
+                                        borderRadius: "12px",
+                                        border: `0.3px solid ${colors.primary}`,
+                                        textAlign: "center"
+                                    }}  
+                                >
+                                    <Typography variant='button'
+                                        sx={{
+                                            fontFamily: "Nohemi",
+                                            fontWeight: "600",
+                                            fontSize: "13px",
+                                            lineHeight: "13.06px",
+                                            color: colors.primary
+                                        }}
+                                    >Login</Typography>
+                                </Box>
+                            </Link>
 
-                <Link to="/auth/signup">
-                    <Box
-                        sx={{
-                            p: "10px 50px",
-                            borderRadius: "12px",
-                            border: `0.3px solid ${colors.primary}`,
-                            textAlign: "center",
-                            bgcolor: colors.primary,
-                            mt: "15px",
-                        }}  
-                    >
-                        <Typography variant='button'
-                            sx={{
-                                fontFamily: "Nohemi",
-                                fontWeight: "600",
-                                fontSize: "13px",
-                                lineHeight: "13.06px",
-                                color: colors.milk
-                            }}
-                        >Create an account</Typography>
-                    </Box>
-                </Link>
+                            <Link to="/auth/signup">
+                                <Box
+                                    sx={{
+                                        p: "10px 50px",
+                                        borderRadius: "12px",
+                                        border: `0.3px solid ${colors.primary}`,
+                                        textAlign: "center",
+                                        bgcolor: colors.primary,
+                                        mt: "15px",
+                                    }}  
+                                >
+                                    <Typography variant='button'
+                                        sx={{
+                                            fontFamily: "Nohemi",
+                                            fontWeight: "600",
+                                            fontSize: "13px",
+                                            lineHeight: "13.06px",
+                                            color: colors.milk
+                                        }}
+                                    >Create an account</Typography>
+                                </Box>
+                            </Link>
+                        </>
+                    )
+                }
             </Box>
         </Box>
     );
@@ -223,30 +256,10 @@ export default function HeaderComponent() {
                                         </Box>
                                     </Box>
 
-                                    <Link to="/auth/signup" style={{
-                                        fontFamily: "Geist",
-                                        textDecoration: "none",
-                                        color: "#fff",
-                                        fontSize: "15px",
-                                        fontWeight: "bolder"
-                                    }}> Sign&nbsp;Up </Link>
-
-                                    <Link to="/auth/login" style={{
-                                        fontFamily: "Geist",
-                                        textDecoration: "none",
-                                        color: "#000000",
-                                        fontSize: "15px",
-                                        background: "#fff",
-                                        padding: "5px 7px",
-                                        border: "none",
-                                        outline: "none",
-                                        borderRadius: "7px",
-                                        fontWeight: "bolder"
-                                    }}> Login </Link>
 
 
 
-                                    {/* { isLoggedIn ? (
+                                    { isLoggedIn ? (
                                         <IconButton 
                                             onClick={() => navigate("/account/") }
                                             sx={{color: "#fff"}}
@@ -255,16 +268,16 @@ export default function HeaderComponent() {
                                         </IconButton>
                                     ) : (
                                         <>
-                                            <Link href="/auth/signup" style={{
+                                            <Link to="/auth/signup" style={{
+                                                fontFamily: "Geist",
                                                 textDecoration: "none",
                                                 color: "#fff",
                                                 fontSize: "15px",
                                                 fontWeight: "bolder"
-                                            }}>
-                                                Sign Up
-                                            </Link>
+                                            }}> Sign&nbsp;Up </Link>
 
-                                            <Link href="/auth/login" style={{
+                                            <Link to="/auth/login" style={{
+                                                fontFamily: "Geist",
                                                 textDecoration: "none",
                                                 color: "#000000",
                                                 fontSize: "15px",
@@ -274,11 +287,9 @@ export default function HeaderComponent() {
                                                 outline: "none",
                                                 borderRadius: "7px",
                                                 fontWeight: "bolder"
-                                            }}>
-                                                Login
-                                            </Link>
+                                            }}> Login </Link>
                                         </>
-                                    )} */}
+                                    )}
 
                                 </Stack>
                             </Box>

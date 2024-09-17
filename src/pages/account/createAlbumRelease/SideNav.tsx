@@ -72,7 +72,8 @@ const SideNav: React.FC<MyComponentProps> = ({activePageNumber}) => {
                 <List sx={{ position: "sticky", top: 100 }}>
                     { menuItems.map((item, index) => (
                         <ListItem key={index} disablePadding>
-                            <ListItemButton disabled={ index + 1 > activePageNumber }>
+                            {/* <ListItemButton disabled={ index + 1 > activePageNumber }> */}
+                            <ListItemButton disableGutters disableRipple disableTouchRipple sx={{cursor: "default"}}>
                                 <ListItemIcon>
                                     {
                                         index + 1 < activePageNumber ? (

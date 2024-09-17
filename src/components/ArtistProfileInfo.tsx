@@ -4,7 +4,7 @@ import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
-import { useSettingStore } from '@/state/settingStore';
+import colors from '@/constants/colors';
 
 
 interface myProps {
@@ -12,7 +12,6 @@ interface myProps {
 };
 
 const ArtistProfileInfoComponent: React.FC<myProps> = ({iconColor}) => {
-    const darkTheme = useSettingStore((state) => state.darkTheme);
     const [openDescriptionTooltip, setOpenDescriptionTooltip] = React.useState(false);
 
     return (
@@ -64,11 +63,7 @@ const ArtistProfileInfoComponent: React.FC<myProps> = ({iconColor}) => {
                     </Box>}
                 >
                     <IconButton onClick={() => setOpenDescriptionTooltip(!openDescriptionTooltip)} aria-label="More Information">
-                        <InfoOutlinedIcon 
-                            sx={{
-                                color: iconColor ? iconColor : darkTheme ? "#fbfbfb" : "black"
-                            }}
-                        />
+                        <InfoOutlinedIcon sx={{ color: iconColor ? iconColor : colors.primary }} />
                     </IconButton>
                 </Tooltip>
         //     </div>

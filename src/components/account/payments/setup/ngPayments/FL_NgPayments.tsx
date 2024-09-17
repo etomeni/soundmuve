@@ -6,10 +6,10 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import axios from 'axios';
 
 import Box from '@mui/material/Box';
-import IconButton from '@mui/material/IconButton';
-import Modal from '@mui/material/Modal';
+// import IconButton from '@mui/material/IconButton';
+// import Modal from '@mui/material/Modal';
+// import CloseIcon from '@mui/icons-material/Close';
 import Typography from '@mui/material/Typography';
-import CloseIcon from '@mui/icons-material/Close';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
@@ -27,6 +27,7 @@ import { allNgBanks } from '@/util/banks';
 import { useUserStore } from '@/state/userStore';
 import { apiEndpoint } from '@/util/resources';
 import colors from '@/constants/colors';
+import PaymentModalWrapper from '../../PaymentWrapper';
 
 
 export const ngPaymentFormSchema = yup.object({
@@ -100,73 +101,99 @@ const FL_NgPaymentsModalComponent: React.FC<_Props> = ({
 
 
     return (
-        <Modal
-            open={openModal}
-            onClose={() => closeModal() }
-            aria-labelledby="payout-modal-title"
-            aria-describedby="payout-modal-description"
+        <PaymentModalWrapper title='Set up bank payout'
+            closeModal={closeModal}
+            openModal={openModal}
+            poweredBy='Flutterwave'
         >
-            <Box
-                sx={{
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    height: "100%",
-                    outline: "none",
-                }}
-            >
-                <Box 
-                    sx={{
-                        bgcolor: colors.bg,
-                        width: "100%",
-                        maxWidth: {xs: "92%", sm: "496px"},
-                        // maxHeight: "605px",
-                        maxHeight: "95%",
-                        borderRadius: "12px",
-                        p: "25px",
-                        color: colors.dark,
-                        overflow: "scroll"
-                    }}
-                >
-                    <Box  id="payout-modal-title">
-                        <Box sx={{textAlign: "right"}}>
-                            <IconButton onClick={() => closeModal() }>
-                                <CloseIcon 
-                                    sx={{color: colors.primary, fontSize: "30px"}} 
-                                />
-                            </IconButton>
-                        </Box>
+            <Box id="payout-modal-description" sx={{mt: 2}}>
 
-                        {/* <Box sx={{textAlign: 'center'}}>
-                            <img
-                                src={FlutterwaveLogo2} alt='Flutterwave Logo Image'
-                                style={{
-                                    objectFit: "contain",
-                                    width: "60%"
-                                }}
-                            />
-                        </Box> */}
+                <form noValidate onSubmit={ handleSubmit(onSubmit) } >
+                    <Box>
+                        <Typography sx={{
+                            fontWeight: "400",
+                            fontSize: "15.38px",
+                            lineHeight: "38.44px",
+                            letterSpacing: "-0.12px",
+                            textAlign: "left"
+                        }}> Beneficiary name </Typography>
+
+                        <TextField 
+                            variant="outlined" 
+                            fullWidth 
+                            id='beneficiaryName'
+                            type='text'
+                            inputMode='text'
+                            label=''
+                            defaultValue=""
+                            
+                            InputProps={{
+                                sx: {
+                                    borderRadius: "16px",
+                                },
+                            }}
+
+                            sx={paymentTextFieldStyle}
+                            
+                            error={ errors.beneficiaryName ? true : false }
+                            { ...register('beneficiaryName') }
+                        />
+
+                        { errors.beneficiaryName && <Box sx={{fontSize: 13, color: "red", textAlign: "left"}}>{ errors.beneficiaryName?.message }</Box> }
                     </Box>
 
-                    <Box id="payout-modal-description" sx={{mt: 2}}>
+                    <Grid container spacing={2} mt={1}>
 
-                        <form noValidate onSubmit={ handleSubmit(onSubmit) } >
+                        <Grid item xs={12} md={6}>
                             <Box>
                                 <Typography sx={{
                                     fontWeight: "400",
                                     fontSize: "15.38px",
                                     lineHeight: "38.44px",
-                                    letterSpacing: "-0.12px",
-                                    textAlign: "left"
-                                }}> Beneficiary name </Typography>
+                                    letterSpacing: "-0.12px"
+                                }}> Bank </Typography>
+
+                                <FormControl fullWidth>
+                                    <Select
+                                        // labelId="bank"
+                                        id="bank-select"
+                                        label=""
+                                        defaultValue=''
+
+                                        sx={releaseSelectStyle2}
+                                        
+                                        error={ errors.bank ? true : false }
+                                        { ...register('bank') }
+                                    >
+                                        { banks.map((bank, index) => (
+                                            <MenuItem key={index} value={bank.name}>
+                                                {bank.name}
+                                            </MenuItem>
+                                        )) }
+                                    </Select>
+                                </FormControl>
+
+                                { errors.bank && <Box sx={{fontSize: 13, color: "red", textAlign: "left"}}>{ errors.bank?.message }</Box> }
+                            </Box>
+                        </Grid>
+
+
+                        <Grid item xs={12} md={6}>
+                            <Box>
+                                <Typography sx={{
+                                    fontWeight: "400",
+                                    fontSize: "15.38px",
+                                    lineHeight: "38.44px",
+                                    letterSpacing: "-0.12px"
+                                }}> Account Number </Typography>
 
                                 <TextField 
                                     variant="outlined" 
                                     fullWidth 
-                                    id='beneficiaryName'
-                                    type='text'
-                                    inputMode='text'
+                                    id='accountNumber'
+                                    type='number'
                                     label=''
+                                    inputMode='numeric'
                                     defaultValue=""
                                     
                                     InputProps={{
@@ -177,155 +204,84 @@ const FL_NgPaymentsModalComponent: React.FC<_Props> = ({
 
                                     sx={paymentTextFieldStyle}
                                     
-                                    error={ errors.beneficiaryName ? true : false }
-                                    { ...register('beneficiaryName') }
+                                    error={ errors.accountNumber ? true : false }
+                                    { ...register('accountNumber') }
                                 />
-
-                                { errors.beneficiaryName && <Box sx={{fontSize: 13, color: "red", textAlign: "left"}}>{ errors.beneficiaryName?.message }</Box> }
+                                { errors.accountNumber && <Box sx={{fontSize: 13, color: "red", textAlign: "left"}}>{ errors.accountNumber?.message }</Box> }
                             </Box>
+                        </Grid>
 
-                            <Grid container spacing={2} mt={1}>
-
-                                <Grid item xs={12} md={6}>
-                                    <Box>
-                                        <Typography sx={{
-                                            fontWeight: "400",
-                                            fontSize: "15.38px",
-                                            lineHeight: "38.44px",
-                                            letterSpacing: "-0.12px"
-                                        }}> Bank </Typography>
-
-                                        <FormControl fullWidth>
-                                            <Select
-                                                // labelId="bank"
-                                                id="bank-select"
-                                                label=""
-                                                defaultValue=''
-
-                                                sx={releaseSelectStyle2}
-                                                
-                                                error={ errors.bank ? true : false }
-                                                { ...register('bank') }
-                                            >
-                                                { banks.map((bank, index) => (
-                                                    <MenuItem key={index} value={bank.name}>
-                                                        {bank.name}
-                                                    </MenuItem>
-                                                )) }
-                                            </Select>
-                                        </FormControl>
-
-                                        { errors.bank && <Box sx={{fontSize: 13, color: "red", textAlign: "left"}}>{ errors.bank?.message }</Box> }
-                                    </Box>
-                                </Grid>
+                    </Grid>
 
 
-                                <Grid item xs={12} md={6}>
-                                    <Box>
-                                        <Typography sx={{
-                                            fontWeight: "400",
-                                            fontSize: "15.38px",
-                                            lineHeight: "38.44px",
-                                            letterSpacing: "-0.12px"
-                                        }}> Account Number </Typography>
+                    <Box 
+                        sx={{ 
+                            my: 5,
+                            display: "flex",
+                            flexDirection: "column",
+                            justifyContent: "center",
+                            alignItems: "center"
+                        }}
+                    >
+                        <Button variant="contained" 
+                            fullWidth type="submit" 
+                            disabled={ !isValid || isSubmitting } 
+                            sx={{ 
+                                bgcolor: colors.primary,
+                                borderRadius: "17px",
+                                // p: "10px 26px 10px 26px",
+                                p: "16px 25px",
+                                width: "fit-content",
+                                height: "auto",
+                                "&.Mui-disabled": {
+                                    background: "#9c9c9c",
+                                    color: "#797979"
+                                },
+                                "&:hover": {
+                                    bgcolor: colors.primary,
+                                },
+                                "&:active": {
+                                    bgcolor: colors.primary,
+                                },
+                                "&:focus": {
+                                    bgcolor: colors.primary,
+                                },
 
-                                        <TextField 
-                                            variant="outlined" 
-                                            fullWidth 
-                                            id='accountNumber'
-                                            type='number'
-                                            label=''
-                                            inputMode='numeric'
-                                            defaultValue=""
-                                            
-                                            InputProps={{
-                                                sx: {
-                                                    borderRadius: "16px",
-                                                },
-                                            }}
-
-                                            sx={paymentTextFieldStyle}
-                                            
-                                            error={ errors.accountNumber ? true : false }
-                                            { ...register('accountNumber') }
-                                        />
-                                        { errors.accountNumber && <Box sx={{fontSize: 13, color: "red", textAlign: "left"}}>{ errors.accountNumber?.message }</Box> }
-                                    </Box>
-                                </Grid>
-
-                            </Grid>
-
-
-                            <Box 
+                                fontWeight: '700',
+                                fontSize: "12px",
+                                lineHeight: "12px",
+                                // letterSpacing: "-0.13px",
+                                // textAlign: 'center',
+                                color: colors.milk,
+                                textTransform: "none"
+                            }}
+                        >
+                            <span style={{ display: isSubmitting ? "none" : "initial" }}>Confirm</span>
+                            <CircularProgress size={25} 
                                 sx={{ 
-                                    my: 5,
-                                    display: "flex",
-                                    flexDirection: "column",
-                                    justifyContent: "center",
-                                    alignItems: "center"
-                                }}
-                            >
-                                <Button variant="contained" 
-                                    fullWidth type="submit" 
-                                    disabled={ !isValid || isSubmitting } 
-                                    sx={{ 
-                                        bgcolor: colors.primary,
-                                        borderRadius: "17px",
-                                        // p: "10px 26px 10px 26px",
-                                        p: "16px 25px",
-                                        width: "fit-content",
-                                        height: "auto",
-                                        "&.Mui-disabled": {
-                                            background: "#9c9c9c",
-                                            color: "#797979"
-                                        },
-                                        "&:hover": {
-                                            bgcolor: colors.primary,
-                                        },
-                                        "&:active": {
-                                            bgcolor: colors.primary,
-                                        },
-                                        "&:focus": {
-                                            bgcolor: colors.primary,
-                                        },
-
-                                        fontWeight: '700',
-                                        fontSize: "12px",
-                                        lineHeight: "12px",
-                                        // letterSpacing: "-0.13px",
-                                        // textAlign: 'center',
-                                        color: colors.milk,
-                                        textTransform: "none"
-                                    }}
-                                >
-                                    <span style={{ display: isSubmitting ? "none" : "initial" }}>Confirm</span>
-                                    <CircularProgress size={25} 
-                                        sx={{ 
-                                            display: isSubmitting ? "initial" : "none", 
-                                            color: colors.primary,
-                                            fontWeight: "bold" 
-                                        }} 
-                                    />
-                                </Button>
-                            </Box>
-
-                            <Typography variant='body2'
-                                onClick={() => changeMethod()}
-                                sx={{
-                                    fontWeight: '400',
-                                    fontSize: '14px',
-                                    // lineHeight: '8px',
-                                    letterSpacing: '-0.31px',
-                                    textAlign: 'center',
-                                    cursor: "pointer"
-                                }}
-                            >Change Payment method</Typography>
-
-                        </form>
+                                    display: isSubmitting ? "initial" : "none", 
+                                    color: colors.primary,
+                                    fontWeight: "bold" 
+                                }} 
+                            />
+                        </Button>
                     </Box>
-                </Box>
+
+                    <Typography variant='body2'
+                        onClick={() => changeMethod()}
+                        sx={{
+                            fontWeight: '400',
+                            fontSize: '14px',
+                            // lineHeight: '8px',
+                            letterSpacing: '-0.31px',
+                            textAlign: 'center',
+                            cursor: "pointer"
+                        }}
+                    >Change Payment method</Typography>
+
+                </form>
             </Box>
-        </Modal>
+        </PaymentModalWrapper>
     )
 }
 

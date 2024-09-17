@@ -47,6 +47,7 @@ import SongDetails_RL from "@/pages/account/recordLabel/SongDetails.tsx";
 import AlbumDetails_RL from "@/pages/account/recordLabel/AlbumDetails_RL.tsx";
 import AllMusic_RL from "@/pages/account/recordLabel/AllMusic_RL.tsx";
 import ArtistList_RL from "@/pages/account/recordLabel/ArtistList.tsx";
+import AccountFaq from "./pages/account/AccountFaq";
 
 
 export const router = createBrowserRouter([
@@ -137,6 +138,10 @@ export const router = createBrowserRouter([
             {
               path: "",
               element: <DashboardHome />
+            },
+            {
+              path: "faq",
+              element: <AccountFaq />
             },
 
             {

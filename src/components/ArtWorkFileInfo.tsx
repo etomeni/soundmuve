@@ -11,7 +11,7 @@ import ListItemText from '@mui/material/ListItemText';
 import ClickAwayListener from '@mui/material/ClickAwayListener';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
-import { useSettingStore } from '@/state/settingStore';
+import colors from '@/constants/colors';
 
 
 interface myProps {
@@ -19,7 +19,6 @@ interface myProps {
 };
 
 const ArtWorkFileInfoComponent: React.FC<myProps> = ({iconColor}) => {
-    const darkTheme = useSettingStore((state) => state.darkTheme);
     const [openDescriptionTooltip, setOpenDescriptionTooltip] = React.useState(false);
 
     return (
@@ -293,11 +292,7 @@ const ArtWorkFileInfoComponent: React.FC<myProps> = ({iconColor}) => {
                         </Box>}
                     >
                         <IconButton onClick={() => setOpenDescriptionTooltip(!openDescriptionTooltip)} aria-label="More Information">
-                            <InfoOutlinedIcon 
-                                sx={{
-                                    color: iconColor ? iconColor : darkTheme ? "#fbfbfb" : "black"
-                                }}
-                            />
+                            <InfoOutlinedIcon sx={{ color: iconColor ? iconColor : colors.primary }} />
                         </IconButton>
                     </Tooltip>
                 </div>

@@ -14,7 +14,6 @@ import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import AccountWrapper from '@/components/AccountWrapper';
 import { useSettingStore } from '@/state/settingStore';
 
-import albumSampleArtImg from '@/assets/images/albumSampleArt.png';
 // import appleMusiclogo from '@/assets/images/apple.png';
 import appleMusicLightlogo from '@/assets/images/appleLightTheme.png';
 // import spotifylogo from '@/assets/images/spotify.png';
@@ -26,6 +25,12 @@ import { useReleaseStore } from '@/state/releaseStore';
 import BarChartGraphComponent from '@/components/analytics/BarChartGraph';
 import SingleSongDspOverviewComponent from '@/components/analytics/SingleSongDspOverview';
 import colors from '@/constants/colors';
+import { useUserStore } from '@/state/userStore';
+import { getLocalStorage } from '@/util/storage';
+import axios from 'axios';
+import { apiEndpoint, currencyDisplay, formatedNumber } from '@/util/resources';
+import { getDateRange, getFormattedDateRange } from '@/util/dateTime';
+import { useEffect } from 'react';
 
 
 const dataset = [
@@ -121,9 +126,84 @@ const dataset = [
 function SongDetails() {
     const navigate = useNavigate();
     const darkTheme = useSettingStore((state) => state.darkTheme);
-    
+    const userData = useUserStore((state) => state.userData); 
+    const accessToken = useUserStore((state) => state.accessToken);
+    const _setToastNotification = useSettingStore((state) => state._setToastNotification);
+
     const songDetails = useReleaseStore((state) => state.songDetails);
 
+    // const [reportAnalytics, setReportAnalytics] = useState<temptAnalyticsInterface[]>();
+    // const [reportMainDashData, setReportMainDashData] = useState<temptAnalyticsInterface>();
+
+
+
+    useEffect(() => {
+        const localReportAnalytics = getLocalStorage("reportAnalytics");
+        if (localReportAnalytics && localReportAnalytics.length) {
+            // setReportAnalytics(localReportAnalytics);
+            // setReportMainDashData(localReportAnalytics[0]);
+        }
+
+        getAnalyticsData();
+    }, []);
+
+    
+    const getAnalyticsData = async () => {
+        // if (reportType == "this block of code is to be deleted ") {
+        //     console.log(reportAnalytics);
+        //     console.log(reportMainDashData);
+        // };
+
+        try {
+            const response = (await axios.get(`${apiEndpoint}/analytics/analytics/data`, {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`,
+                },
+                params: {
+                    // email: "latham01@yopmail.com",
+                    email: userData.email,
+                }
+            })).data;
+            console.log(response);
+
+            // setReportAnalytics(response);
+            // setLocalStorage("reportAnalytics", response);
+
+            // if (response.length) {
+            //     setReportMainDashData(response[0]);
+            // }
+            
+            if (!response.length) {
+                _setToastNotification({
+                    display: true,
+                    status: "error",
+                    message: response.message || "Ooops and error occurred!"
+                });
+            }
+    
+        } catch (error: any) {
+            const errorResponse = error.response.data || error;
+            console.error(errorResponse);
+    
+            _setToastNotification({
+                display: true,
+                status: "error",
+                message: errorResponse.message || "Ooops and error occurred!"
+            });
+        }
+    }
+
+    const handleDataRangeData = (newValue: string) => {
+        // console.log(newValue);
+        const dateRange = getDateRange(Number(newValue));
+        // setTempData({ ...tempData, dateRange });
+        console.log(dateRange);
+        const betweenDates = getFormattedDateRange(Number(newValue));
+        console.log(betweenDates);
+        
+        // getBalanceBetweenDates(betweenDates.startDate, betweenDates.endDate);
+        
+    }
 
 
     return (
@@ -154,7 +234,7 @@ function SongDetails() {
                                     labelId="sortByDays"
                                     id="sortByDays-select"
                                     label=""
-                                    defaultValue="Last 30 Days"
+                                    defaultValue="30"
                                     placeholder='Last 30 Days'
 
                                     sx={{
@@ -187,14 +267,17 @@ function SongDetails() {
                                             fill: "#797979",
                                         }
                                     }}
+                                    onChange={(e) => {
+                                        handleDataRangeData(e.target.value);
+                                    }}
                                 >
-                                    <MenuItem value="Last 30 Days">
+                                    <MenuItem value="7">
                                         Last 7 Days
                                     </MenuItem>
-                                    <MenuItem value="Last 30 Days">
+                                    <MenuItem value="14">
                                         Last 14 Days
                                     </MenuItem>
-                                    <MenuItem value="Last 30 Days">
+                                    <MenuItem value="30">
                                         Last 30 Days
                                     </MenuItem>
                                 </Select>
@@ -326,7 +409,8 @@ function SongDetails() {
                                     fontSize: {xs: '12px', md: '24px'},
                                     lineHeight: {xs: '8.71px', md: '24px'}
                                 }}
-                            >$60,000.00</Typography>
+                            >{ currencyDisplay(Number(songDetails.total_revenue)) }</Typography>
+
                             <Typography
                                 sx={{
                                     fontWeight: "400",
@@ -343,7 +427,8 @@ function SongDetails() {
                                     fontSize: {xs: '12px', md: '24px'},
                                     lineHeight: {xs: '8.71px', md: '24px'}
                                 }}
-                            >80,000,000</Typography>
+                            >{ formatedNumber(Number(songDetails.streams)) } </Typography>
+
                             <Typography
                                 sx={{
                                     fontWeight: "400",
@@ -360,7 +445,8 @@ function SongDetails() {
                                     fontSize: {xs: '12px', md: '24px'},
                                     lineHeight: {xs: '8.71px', md: '24px'}
                                 }}
-                            >120hrs</Typography>
+                            >{formatedNumber(Number(songDetails.stream_time))}hrs</Typography>
+
                             <Typography
                                 sx={{
                                     fontWeight: "400",
@@ -389,7 +475,7 @@ function SongDetails() {
                                     labelId="sortByDays"
                                     id="sortByDays-select"
                                     label=""
-                                    defaultValue="Last 30 Days"
+                                    defaultValue="30"
                                     placeholder='Last 30 Days'
 
                                     sx={{
@@ -423,13 +509,13 @@ function SongDetails() {
                                         }
                                     }}
                                 >
-                                    <MenuItem value="Last 30 Days">
+                                    <MenuItem value="7">
                                         Last 7 Days
                                     </MenuItem>
-                                    <MenuItem value="Last 30 Days">
+                                    <MenuItem value="14">
                                         Last 14 Days
                                     </MenuItem>
-                                    <MenuItem value="Last 30 Days">
+                                    <MenuItem value="30">
                                         Last 30 Days
                                     </MenuItem>
                                 </Select>
@@ -466,7 +552,7 @@ function SongDetails() {
                         }}
                     >
                         <img
-                            src={ albumSampleArtImg } alt='album image'
+                            src={ songDetails.cover_photo } alt='album image'
                             style={{
                                 width: "100%",
                                 height: "100%",
@@ -483,7 +569,8 @@ function SongDetails() {
                                     fontSize: "17.8px",
                                     lineHeight: "17.8px"
                                 }}
-                            >$60,000.00</Typography>
+                            >{ currencyDisplay(Number(songDetails.total_revenue)) }</Typography>
+
                             <Typography
                                 sx={{
                                     fontWeight: "400",
@@ -500,7 +587,8 @@ function SongDetails() {
                                     fontSize: "17.8px",
                                     lineHeight: "17.8px"
                                 }}
-                            >80,000,000</Typography>
+                            >{ formatedNumber(Number(songDetails.streams)) }</Typography>
+
                             <Typography
                                 sx={{
                                     fontWeight: "400",
@@ -517,7 +605,8 @@ function SongDetails() {
                                     fontSize: "17.8px",
                                     lineHeight: "17.8px"
                                 }}
-                            >120hrs</Typography>
+                            >{ formatedNumber(Number(songDetails.streams)) }hrs</Typography>
+
                             <Typography
                                 sx={{
                                     fontWeight: "400",

@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import PayoutMethodModalComponent from './setup/PayoutMethodModal';
-import FL_RequestConfirmationModalComponent from './withdrawal/FL_RequestConfirmationModal';
-import FL_ReviewModalComponent from './withdrawal/FL_ReviewModal';
-import FL_WithdrawModalComponent from './withdrawal/FL_WithdrawModal';
+import WithdrawConfirmationModalComponent from './withdrawal/RequestConfirmationModal';
+import WithdrawReviewModalComponent from './withdrawal/ReviewModal';
+import WithdrawModalComponent from './withdrawal/WithdrawModal';
 import FL_CurrencyModalComponent from './setup/FL_Currency';
 import FL_USpaymentsModalComponent, { usPaymentsInterface } from './setup/usPayments/FL_USpayments';
 import FL_US_ConfirmationModalComponent from './setup/usPayments/FL_US_Confirmation';
@@ -14,7 +14,8 @@ import FL_AfroPaymentsModalComponent, { afroPaymentsInterface } from './setup/af
 import FL_AfroConfirmationModalComponent from './setup/afroPayments/FL_AfroConfirmation';
 import FL_EuroPaymentsModalComponent, { euroPaymentsInterface } from './setup/euroPayments/FL_Europayments';
 import FL_EuroConfirmationModalComponent from './setup/euroPayments/FL_EuroConfirmation';
-import PayoutFL_SuccessModalComponent from './setup/PayoutSetFlutterwaveSuccessModal';
+import PayoutSetupSuccessModalComponent from './setup/PayoutSetupSuccessModal';
+import PaypalSetupModalComponent from './setup/PaypalSetup';
 
 
 interface _Props {
@@ -32,6 +33,8 @@ const PaymentzComponent: React.FC<_Props> = ({
     const navigate = useNavigate();
 
     const [flutterwaveCurrencyModal, setFlutterwaveCurrencyModal] = useState(false);
+
+    const [paypalSetupModal, setPaypalSetupModal] = useState(false);
 
     // const [selectedFL_Currency, setSelectedFL_Currency] = useState('');
 
@@ -175,6 +178,14 @@ const PaymentzComponent: React.FC<_Props> = ({
     }
 
 
+    const confirmPaypalSetupBtn = (data: {email: string}) => {
+        console.log(data);
+        navigate(`?paymentMethod=Paypal`);
+
+        setPaypalSetupModal(false);
+        setSuccessModal(true);
+    }
+
     const confirmFL_CurrencyBtn = (currency: string) => {
         // console.log(currency);
         // setSelectedFL_Currency(currency);
@@ -245,13 +256,22 @@ const PaymentzComponent: React.FC<_Props> = ({
 
     return (
         <>
-
             <PayoutMethodModalComponent 
                 openModal={openPayoutModal}
                 closeModal={() => setOpenPayoutModal(false)}
                 
-                openBankPayoutModal={() => {}}
+                openPayPalModal={() => setPaypalSetupModal(true)}
                 openFlutterwavePayoutModal={() => setFlutterwaveCurrencyModal(true)}
+            />
+
+            <PaypalSetupModalComponent 
+                openModal={paypalSetupModal}
+                closeModal={() => setPaypalSetupModal(false)}
+                changeMethod={() => {
+                    setPaypalSetupModal(false);
+                    setOpenPayoutModal(true);
+                }}
+                confirmBtn={confirmPaypalSetupBtn}
             />
 
             <FL_CurrencyModalComponent 
@@ -335,7 +355,7 @@ const PaymentzComponent: React.FC<_Props> = ({
                 saveBtn={saveEuroPaymentBtn}
             />
 
-            <PayoutFL_SuccessModalComponent 
+            <PayoutSetupSuccessModalComponent 
                 openModal={successModal}
                 closeModal={() => setSuccessModal(false)}
             />
@@ -343,7 +363,7 @@ const PaymentzComponent: React.FC<_Props> = ({
 
 
 
-            <FL_WithdrawModalComponent 
+            <WithdrawModalComponent 
                 openModal={withdrawlModal}
                 closeModal={() => setWithdrawlModal(false)}
                 changeMethod={() => {
@@ -354,7 +374,7 @@ const PaymentzComponent: React.FC<_Props> = ({
             />
 
 
-            <FL_ReviewModalComponent 
+            <WithdrawReviewModalComponent 
                 openModal={withdrawalReview}
                 closeModal={() => setWithdrawalReview(false) }
                 formDetails={withdrawlDetails}
@@ -366,7 +386,7 @@ const PaymentzComponent: React.FC<_Props> = ({
                 // }}
             />
 
-            <FL_RequestConfirmationModalComponent
+            <WithdrawConfirmationModalComponent
                 openModal={withdrawSuccess}
                 withdrawlData={successfulWithdrawlDetails}
                 closeModal={() => setWithdrawSuccess(false)}
@@ -375,6 +395,7 @@ const PaymentzComponent: React.FC<_Props> = ({
 
         </>
     )
+
 }
 
 export default PaymentzComponent;

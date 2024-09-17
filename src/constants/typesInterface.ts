@@ -143,6 +143,7 @@ export type releaseSongsInterface = {
     copyright_ownership: string,
     copyright_ownership_permissions: string,
     isrc_number: string,
+    upc_ean?: string,
     language_of_lyrics: string,
     lyrics: string,
     ticktokClipStartTime: string,

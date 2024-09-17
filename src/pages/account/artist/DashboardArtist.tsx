@@ -17,13 +17,10 @@ import AccountWrapper from '@/components/AccountWrapper';
 import AlbumSongItem from '@/components/account/AlbumSongItem';
 import NewReleaseModalComponent from '@/components/account/NewReleaseModal';
 import ReleaseStatusComponent from '@/components/ReleaseStatus';
-// import PaymentComponent from '@/components/account/PaymentComponent';
-// import EmptyListComponent from '@/components/EmptyList';
-// import LoadingDataComponent from '@/components/LoadingData';
 import PaymentzComponent from '@/components/account/payments/PaymentzComponent';
 
 import { useUserStore } from '@/state/userStore';
-import { useSettingStore } from '@/state/settingStore';
+// import { useSettingStore } from '@/state/settingStore';
 import { useReleaseStore } from '@/state/releaseStore';
 
 import { apiEndpoint, currencyDisplay } from '@/util/resources';
@@ -34,6 +31,7 @@ import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import { homeSelectStyle } from '@/util/mui';
+import { usePayoutData } from '@/hooks/payments/usePayoutInfo';
 
 
 function DashboardArtist() {
@@ -43,8 +41,9 @@ function DashboardArtist() {
     const accessToken = useUserStore((state) => state.accessToken);
     const _setSongDetails = useReleaseStore((state) => state._setSongDetails);
     const [releases, setReleases] = useState<releaseInterface[]>();
+    const { paymentDetails, getPayoutInfo } = usePayoutData();
 
-    const _setToastNotification = useSettingStore((state) => state._setToastNotification);
+    // const _setToastNotification = useSettingStore((state) => state._setToastNotification);
     // const [apiResponse, setApiResponse] = useState({
     //     display: false,
     //     status: true,
@@ -57,7 +56,6 @@ function DashboardArtist() {
     const [openPayoutModal, setOpenPayoutModal] = useState(false);
     const [withdrawlModal, setWithdrawlModal] = useState(false);
 
-
     const handleGetSingleRelease = () => {
         setReleases(undefined);
 
@@ -67,9 +65,9 @@ function DashboardArtist() {
         getSingleRelease();
     }
 
-
     useEffect(() => {
         handleGetSingleRelease();
+        getPayoutInfo();
     }, []);
 
     const getSingleRelease = async () => {
@@ -98,17 +96,11 @@ function DashboardArtist() {
 
             setReleases([]);
 
-            // setApiResponse({
+            // _setToastNotification({
             //     display: true,
-            //     status: false,
+            //     status: "error",
             //     message: errorResponse.message || "Ooops and error occurred!"
             // });
-
-            _setToastNotification({
-                display: true,
-                status: "error",
-                message: errorResponse.message || "Ooops and error occurred!"
-            });
         }
     }
 
@@ -143,17 +135,11 @@ function DashboardArtist() {
 
             setReleases([]);
 
-            // setApiResponse({
+            // _setToastNotification({
             //     display: true,
-            //     status: false,
+            //     status: "error",
             //     message: errorResponse.message || "Ooops and error occurred!"
             // });
-
-            _setToastNotification({
-                display: true,
-                status: "error",
-                message: errorResponse.message || "Ooops and error occurred!"
-            });
         }
     }
 
@@ -241,6 +227,51 @@ function DashboardArtist() {
             </Box>
         </Grid>
     )
+
+    const handleOnclickedSong = (release: releaseInterface, albumSongIndex: number = 0) => {
+
+        // albumType == "Album" 
+
+        if (albumType == "Single") {
+            
+            _setSongDetails({
+                email: release.email,
+                song_title: release.song_title || '',
+                artist_name: release.artist_name,
+                cover_photo: release.song_cover || release.song_cover_url || '',
+                primary_genre: release.primary_genre || '',
+                secondary_genre: release.secondary_genre || '',
+                label_name: release.label_name || '',
+                upc_ean: release.upc_ean || '',
+                total_revenue: '',
+                streams: '',
+                stream_time: '',
+            });
+            
+        } else if (albumType == "Album") {
+            let upc_ean = '';
+            if (release.songs) {
+                upc_ean = release.songs[albumSongIndex].upc_ean || release.songs[albumSongIndex].isrc_number;
+            }
+            
+            _setSongDetails({
+                email: release.email,
+                song_title: release.song_title || '',
+                artist_name: release.artist_name,
+                cover_photo: release.song_cover_url || release.song_cover || '',
+                primary_genre: release.primary_genre,
+                secondary_genre: release.secondary_genre,
+                label_name: release.label_name,
+                upc_ean: upc_ean,
+                total_revenue: '',
+                streams: '',
+                stream_time: '',
+            });
+            
+        }
+
+        navigate("/account/artist/song-details");
+    }
 
 
     return (
@@ -657,6 +688,7 @@ function DashboardArtist() {
                     </Box>
                 </Box>
 
+                {/* Setup pAyout */}
                 <Box
                     sx={{
                         borderRadius: "4.48px",
@@ -664,7 +696,7 @@ function DashboardArtist() {
                         bgcolor: "#E2CBA2",
                         color: colors.dark,
 
-                        display: "flex",
+                        display: paymentDetails.length ? "none" : "flex",
                         flexDirection: "row",
                         justifyContent: "space-between",
                         alignItems: "center",
@@ -1097,7 +1129,7 @@ function DashboardArtist() {
                                     releases[0].songs && releases[0].songs.length ? (
                                         <Box>
                                             {releases[0].songs.map((item, index) => (
-                                                <Box key={index} onClick={() => navigate("/account/artist/song-details")}>
+                                                <Box key={index} onClick={() => handleOnclickedSong(releases[0], index) }>
                                                     <AlbumSongItem 
                                                         artistName={ releases[0].artist_name}
                                                         artworkImage={releases[0].song_cover_url}
@@ -1132,7 +1164,7 @@ function DashboardArtist() {
                                             releases[1].songs && releases[1].songs.length ? (
                                                 <Box>
                                                     {releases[1].songs.map((item, index) => (
-                                                        <Box key={index} onClick={() => navigate("/account/artist/song-details")}>
+                                                        <Box key={index} onClick={() => handleOnclickedSong(releases[1], index) }>
                                                             <AlbumSongItem 
                                                                 artistName={ releases[1].artist_name}
                                                                 artworkImage={releases[1].song_cover_url}

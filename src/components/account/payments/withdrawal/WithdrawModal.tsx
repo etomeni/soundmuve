@@ -5,31 +5,33 @@ import * as yup from "yup";
 import { yupResolver } from '@hookform/resolvers/yup';
 
 import Box from '@mui/material/Box';
-import IconButton from '@mui/material/IconButton';
-import Modal from '@mui/material/Modal';
 import Typography from '@mui/material/Typography';
-import CloseIcon from '@mui/icons-material/Close';
 import Stack from '@mui/material/Stack';
 import Alert from '@mui/material/Alert';
 import Button from '@mui/material/Button';
 import CircularProgress from '@mui/material/CircularProgress';
 import TextField from '@mui/material/TextField';
 
-import { ThemeProvider, useTheme } from '@mui/material/styles';
-
 // import FlutterwaveLogo2 from "@/assets/images/FlutterwaveLogo2.png";
-import { useSettingStore } from '@/state/settingStore';
 import { 
-    customTextFieldTheme, releaseSelectStyle2, paymentTextFieldStyle
+    releaseSelectStyle2, paymentTextFieldStyle
 } from '@/util/mui';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 
-import { currencyLists, getSupportedCurrency } from '@/util/currencies';
+// import { getSupportedCurrency } from '@/util/currencies';
 import axios from 'axios';
-import { apiEndpoint } from '@/util/resources';
+import { apiEndpoint, currencyDisplay } from '@/util/resources';
 import colors from '@/constants/colors';
+import { useUserStore } from '@/state/userStore';
+import PaymentModalWrapper from '../PaymentWrapper';
+// import { getLocalStorage, setLocalStorage } from '@/util/storage';
+import LoadingDataComponent from '@/components/LoadingData';
+import InputAdornment from '@mui/material/InputAdornment';
+import { getCurrencySymbol } from '@/util/currencies';
+import { paymentDetailsInterface, usePayoutData } from '@/hooks/payments/usePayoutInfo';
+
 
 const formSchema = yup.object({
     amount: yup.string().required().trim().label("Account Number"),
@@ -40,7 +42,21 @@ export type withdrawInterface = {
     currency: string;
     narration: string;
     amount: string;
+    paymentDetails?: paymentDetailsInterface
 }
+
+type exchangeInterface = {
+    rate: number,
+    source: {
+        currency: string,
+        amount: number
+    },
+    destination: {
+        currency: string,
+        amount: number
+    }
+}
+
 
 interface _Props {
     openModal: boolean,
@@ -49,20 +65,38 @@ interface _Props {
     confirmBtn: (data: withdrawInterface) => void;
 }
 
-const FL_WithdrawModalComponent: React.FC<_Props> = ({
+const WithdrawModalComponent: React.FC<_Props> = ({
     openModal, closeModal, changeMethod, confirmBtn
 }) => {
-    const outerTheme = useTheme();
-    const darkTheme = useSettingStore((state) => state.darkTheme);
-    const [currencies, setCurrencies] = useState(currencyLists);
-    const [selectedCurrency, setSelectedCurrency] = useState('');
+    const accessToken = useUserStore((state) => state.accessToken);
     const [errorMsg, setErrorMsg] = useState('');
+
+    const { paymentDetails, selectedPaymentDetails, setSelectedPaymentDetails, getPayoutInfo } = usePayoutData();
+
+    const [exchangeData, setExchangeData] = useState<exchangeInterface>();
 
     useEffect(() => {
         if (!openModal) {
-            reset()
+            reset();
+
+            if (exchangeData) {
+                setExchangeData({
+                    ...exchangeData,
+                    source: {
+                        amount: 0,
+                        currency: exchangeData?.source.currency
+                    }
+                });
+            }
         } else {
-            getSupportedCurrencies();
+            // getSupportedCurrencies();
+
+            // const localPayoutDetails = getLocalStorage("payoutDetails");
+            // if (localPayoutDetails && localPayoutDetails.length) {
+            //     setPaymentDetails(localPayoutDetails)
+            // }
+
+            getPayoutInfo();
         }
     }, [openModal]);
 
@@ -73,35 +107,74 @@ const FL_WithdrawModalComponent: React.FC<_Props> = ({
     });
     
     const {
-        handleSubmit, register, reset, formState: { errors, isSubmitting, isValid } 
+        handleSubmit, register, getValues, setValue, reset, formState: { errors, isSubmitting, isValid } 
     } = useForm({ resolver: yupResolver(formSchema), mode: 'onBlur', reValidateMode: 'onChange' });
 
 
-    const getSupportedCurrencies = async () => {
+    const getExchangeRate = async (amount: string, currency: string) => {
         try {
-            const response = (await axios.get(`${apiEndpoint}/currency/currencies`, {
-                // headers: {
-                //     Authorization: `Bearer ${accessToken}`
-                // }
+            const response = (await axios.get(`${apiEndpoint}/transactionInit/exchange-rate`, {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`
+                },
+                params: {
+                    amount: amount,
+                    currency: currency
+                }
             })).data;
             // console.log(response);
 
-            const supportedCurrency = getSupportedCurrency(response);
+            setExchangeData(response.data);
 
-            setCurrencies(supportedCurrency);
+            if (response.length == 1) {
+                setSelectedPaymentDetails(response[0]._id);
+            }
 
         } catch (error: any) {
             const errorResponse = error.response.data;
             console.error(errorResponse);
+            // setPaymentDetails([]);
         }
     }
 
+    const displayExchange = (enteredAmount: string = '') => {
+        if (selectedPaymentDetails) {
+            const payoutData = paymentDetails?.filter(data => data._id == selectedPaymentDetails);
+
+            const amount = enteredAmount ? enteredAmount : getValues().amount || '0';
+            
+            if (exchangeData) {
+                const calculatedAmount = Number(enteredAmount || 0) * exchangeData?.rate;
+                
+                setExchangeData({
+                    ...exchangeData,
+                    source: {
+                        amount: calculatedAmount,
+                        currency: exchangeData?.source.currency
+                    }
+                });
+            }
+
+            getExchangeRate( amount, payoutData ? payoutData[0].currency : '' );
+        }
+    }
+
+    const displayCurrencySymbol = () => {
+        if (selectedPaymentDetails) {
+            const payoutData = paymentDetails?.filter(data => data._id == selectedPaymentDetails);
+
+            return getCurrencySymbol(payoutData ? payoutData[0].currency : '');
+        }
+
+        return '';
+    }
+
     const onSubmit = async (formData: typeof formSchema.__outputType) => {
-        if (!selectedCurrency) {
+        if (!selectedPaymentDetails) {
             setErrorMsg("Please select your preffered currency.");
             return;
         }
-        // console.log(formData);
+        console.log(formData);
 
         setApiResponse({
             display: false,
@@ -109,62 +182,91 @@ const FL_WithdrawModalComponent: React.FC<_Props> = ({
             message: ""
         });
 
-        confirmBtn({...formData, currency: selectedCurrency });
+        const payoutData = paymentDetails?.filter(data => data._id == selectedPaymentDetails);
+
+        confirmBtn({
+            ...formData, 
+            currency: payoutData ? payoutData[0].currency : '',
+            paymentDetails: payoutData ? payoutData[0] : undefined
+        });
     }
+
+    const noPaymentDetails = (
+        <Box>
+            <Typography variant='h4'
+                sx={{
+                    fontWeight: "900",
+                    fontSize: {xs: "20px", md: "35px"},
+                    lineHeight: {xs: "20px", md: "24px"},
+                    letterSpacing: {xs: "-0.34px", md: "-1.34px"},
+                    textAlign: "center",
+                    // mt: 2
+                }}
+            > No Payment Details </Typography>
+
+            <Typography variant='body1'
+                sx={{
+                    textAlign: 'center',
+                    my: 2
+                }}
+            > Please setup your payment details to countinue. </Typography>
+
+            <Box 
+                sx={{ 
+                    my: 5,
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "center",
+                    alignItems: "center"
+                }}
+            >
+                <Button variant="contained" 
+                    fullWidth type="button" 
+                    onClick={() => changeMethod()}
+                    sx={{ 
+                        bgcolor: colors.primary,
+                        borderRadius: "17px",
+                        color: colors.milk,
+                        p: "16px 25px",
+                        width: "fit-content",
+                        height: "auto",
+                        "&.Mui-disabled": {
+                            background: "#9c9c9c",
+                            color: "#797979"
+                        },
+                        "&:hover": {
+                            bgcolor: colors.primary,
+                        },
+                        "&:active": {
+                            bgcolor: colors.primary,
+                        },
+                        "&:focus": {
+                            bgcolor: colors.primary,
+                        },
+
+                        fontWeight: '700',
+                        fontSize: "12px",
+                        lineHeight: "12px",
+                        // letterSpacing: "-0.13px",
+                        // textAlign: 'center',
+                        textTransform: "none"
+                    }}
+                > Setup Payment method </Button>
+            </Box>
+        </Box>
+    );
 
 
     return (
-        <Modal
-            open={openModal}
-            onClose={() => closeModal() }
-            aria-labelledby="payout-modal-title"
-            aria-describedby="payout-modal-description"
+        <PaymentModalWrapper title=''
+            closeModal={closeModal}
+            openModal={openModal}
+            // poweredBy=''
         >
-            <Box
-                sx={{
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    height: "100%",
-                    outline: "none",
-                }}
-            >
-                <Box 
-                    sx={{
-                        bgcolor: colors.bg,
-                        width: "100%",
-                        maxWidth: {xs: "92%", sm: "496px"},
-                        // maxHeight: "605px",
-                        maxHeight: "95%",
-                        borderRadius: "12px",
-                        p: "25px",
-                        color: colors.dark,
-                        overflow: "scroll"
-                    }}
-                >
-                    <Box  id="payout-modal-title">
-                        <Box sx={{textAlign: "right"}}>
-                            <IconButton onClick={() => closeModal() }>
-                                <CloseIcon 
-                                    sx={{color: colors.primary, fontSize: "30px"}} 
-                                />
-                            </IconButton>
-                        </Box>
-
-                        {/* <Box sx={{textAlign: 'center'}}>
-                            <img
-                                src={FlutterwaveLogo2} alt='Flutterwave Logo Image'
-                                style={{
-                                    objectFit: "contain",
-                                    width: "60%"
-                                }}
-                            />
-                        </Box> */}
-                    </Box>
-
-                    <Box id="payout-modal-description" sx={{mt: 5}}>
-
-                        <ThemeProvider theme={customTextFieldTheme(outerTheme, darkTheme)}>
+            <Box id="payout-modal-description" sx={{mt: 5}}>
+                {
+                    paymentDetails ? (
+                        paymentDetails.length ? (
                             <form noValidate onSubmit={ handleSubmit(onSubmit) } >
 
                                 <Box>
@@ -173,33 +275,35 @@ const FL_WithdrawModalComponent: React.FC<_Props> = ({
                                         fontSize: "15.38px",
                                         lineHeight: "38.44px",
                                         letterSpacing: "-0.12px"
-                                    }}> Currency </Typography>
+                                    }}> Payment Details </Typography>
 
                                     <FormControl fullWidth>
                                         <Select
-                                            labelId="currency"
                                             id="currency-select"
                                             label=""
-                                            value={selectedCurrency}
+                                            value={selectedPaymentDetails}
                                             // defaultValue={selectedCurrency}
 
                                             sx={releaseSelectStyle2}
                                             error={ errorMsg.length ? true : false }
                                             onChange={(e) => {
-                                                setSelectedCurrency(e.target.value);
+                                                setSelectedPaymentDetails(e.target.value);
                                                 setErrorMsg('');
+                                                displayExchange();
                                             }}
                                         >
-                                            { currencies.map((currency, index) => (
-                                                <MenuItem key={index} value={ currency.currency_symbol }
-                                                    title={ currency.currency_name }
+                                            { paymentDetails.map((payoutData, index) => (
+                                                <MenuItem key={index} value={ payoutData._id }
+                                                    title={ payoutData.account_number }
                                                 >
-                                                    { currency.currency_symbol }
+                                                    { payoutData.currency } -&nbsp;
+                                                    { payoutData.account_number || payoutData.email || ' ' } 
+                                                    { payoutData.beneficiary_name ? ` (${ payoutData.beneficiary_name })` : '' }
                                                 </MenuItem>
                                             )) }
                                         </Select>
                                     </FormControl>
-        
+
                                     { errorMsg && <Box sx={{fontSize: 13, color: "red", textAlign: "left"}}>{ errorMsg }</Box> }
                                 </Box>
 
@@ -220,6 +324,9 @@ const FL_WithdrawModalComponent: React.FC<_Props> = ({
                                         label=''
                                         defaultValue=""
                                         InputProps={{
+                                            startAdornment: <InputAdornment position="start">
+                                                { displayCurrencySymbol() }
+                                            </InputAdornment>,
                                             sx: {
                                                 borderRadius: "16px",
                                             },
@@ -228,10 +335,23 @@ const FL_WithdrawModalComponent: React.FC<_Props> = ({
                                         sx={paymentTextFieldStyle}
                                         
                                         error={ errors.amount ? true : false }
-                                        { ...register('amount') }
-                                    />
-                                    { errors.amount && <Box sx={{fontSize: 13, color: "red", textAlign: "left"}}>{ errors.amount?.message }</Box> }
+                                        // { ...register('amount') }
 
+                                        onChange={(e) => {
+                                            console.log();
+                                            const value = e.target.value;
+                                            setValue("amount", value, {shouldDirty: true, shouldTouch: true, shouldValidate: true});
+                                            displayExchange(value);
+                                        }}
+                                    />
+                                    { 
+                                        exchangeData ? (
+                                            <Typography variant='body2'
+                                            > { currencyDisplay(Number(exchangeData.source.amount)) } </Typography>
+                                        ) : <></>
+                                    }
+
+                                    { errors.amount && <Box sx={{fontSize: 13, color: "red", textAlign: "left"}}>{ errors.amount?.message }</Box> }
                                 </Box>
 
                                 <Box mt={2}>
@@ -328,17 +448,25 @@ const FL_WithdrawModalComponent: React.FC<_Props> = ({
                                         // lineHeight: '8px',
                                         letterSpacing: '-0.31px',
                                         textAlign: 'center',
-                                        cursor: "pointer"
+                                        cursor: "pointer",
+                                        bgcolor: "#FDFDCC",
+                                        p: "5px 10px",
+                                        width: "fit-content",
+                                        mx: "auto"
                                     }}
-                                >Change Payment method</Typography>
+                                >Add other payment method</Typography>
 
                             </form>
-                        </ThemeProvider>
-                    </Box>
-                </Box>
+                        ) : noPaymentDetails
+                    ) : (
+                        <Box>
+                            <LoadingDataComponent />
+                        </Box>
+                    )
+                }
             </Box>
-        </Modal>
+        </PaymentModalWrapper>
     )
 }
 
-export default FL_WithdrawModalComponent;
+export default WithdrawModalComponent;

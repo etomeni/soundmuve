@@ -9,7 +9,7 @@ import Stack from '@mui/material/Stack';
 import CloseIcon from '@mui/icons-material/Close';
 
 // import { useSettingStore } from '@/state/settingStore';
-import { successfulWithdrawalInterface } from './FL_ReviewModal';
+import { successfulWithdrawalInterface } from './ReviewModal';
 import { getCurrencySymbol } from '@/util/currencies';
 import { formatedNumber } from '@/util/resources';
 import colors from '@/constants/colors';

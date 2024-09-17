@@ -28,7 +28,7 @@ import ClickAwayListener from '@mui/material/ClickAwayListener';
 
 import HomeIcon from '@mui/icons-material/Home';
 import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
-import AssessmentOutlinedIcon from '@mui/icons-material/AssessmentOutlined';
+// import AssessmentOutlinedIcon from '@mui/icons-material/AssessmentOutlined';
 import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
 
 import SoundMuve from "@/assets/branded/logo.png";
@@ -41,6 +41,8 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import LanguageTranslate from './LanguageTranslate';
 import { contentWidth } from '@/util/mui';
 import colors from '@/constants/colors';
+import PaymentModalWrapper from './account/payments/PaymentWrapper';
+import ContactUsComponent from './ContactUsComponent';
 
 
 interface _Props {
@@ -61,8 +63,9 @@ export default function AccountHeaderComponent({headerSpacing = false} : _Props)
     // const isLoggedIn = useUserStore((state) => state.isLoggedIn);
     const [openAccountProfile, setOpenAccountProfile] = useState(false);
 
+    const [contactUsModal, setContactUs] = useState(false);
     const [openReleaseModal, setOpenReleaseModal] = useState(false);
-    const closeReleaseModal = () => { setOpenReleaseModal(false) }
+    // const closeReleaseModal = () => { setOpenReleaseModal(false) }
 
 
     const handleDrawerToggle = () => {
@@ -80,31 +83,31 @@ export default function AccountHeaderComponent({headerSpacing = false} : _Props)
             title: "Sales report",
             link: "/account",
             icon: ReceiptLongIcon,
-            active: pathname.startsWith('/account/Sales report'),
+            active: pathname.includes('/sales-report'),
         },
         {
             title: "Balance history",
             link: "/contact",
             icon: AccountBalanceWalletIcon,
-            active: pathname.startsWith('/contact'),
+            active: pathname.includes('/balance-history'),
         },
-        {
-            title: "Reach",
-            link: "/faq",
-            icon: AssessmentOutlinedIcon,
-            active: pathname.startsWith('/faq'),
-        },
+        // {
+        //     title: "Reach",
+        //     link: "/faq",
+        //     icon: AssessmentOutlinedIcon,
+        //     active: pathname.startsWith('/faq'),
+        // },
         {
             title: "Contact",
-            link: "/contact",
+            link: "#", // "/contact",
             icon: '',
-            active: pathname.startsWith('/contact'),
+            active: contactUsModal,
         },
         {
             title: "FAQ",
-            link: "/faq",
+            link: "/account/faq",
             icon: '',
-            active: pathname.startsWith('/faq'),
+            active: pathname.includes('/faq'),
         }
     ];
 
@@ -117,19 +120,25 @@ export default function AccountHeaderComponent({headerSpacing = false} : _Props)
         {
             title: "Dashboard",
             link: "/account",
-            active: pathname.startsWith('/account'),
+            active: pathname.includes('/account/artist') || pathname.includes('/account/record-label'),
         },
         {
             title: "Contact",
-            link: "/contact",
-            active: pathname.startsWith('/contact'),
+            link: "#", // "/contact",
+            active: contactUsModal,
         },
         {
             title: "FAQ",
-            link: "/faq",
-            active: pathname.startsWith('/faq'),
+            link: "/account/faq",
+            active: pathname.includes('/faq'),
         }
     ];
+
+    const handleContactUsDisplay = (title: string) => {
+        if (title == "Contact") {
+            setContactUs(true);
+        }
+    }
 
     const mobileDrawerContent = (
         <Box 
@@ -176,7 +185,7 @@ export default function AccountHeaderComponent({headerSpacing = false} : _Props)
                                             color: item.active ? colors.milk : colors.dark
                                         }}
                                     >
-                                        <ListItemButton>
+                                        <ListItemButton onClick={() => handleContactUsDisplay(item.title)}>
                                             <ListItemText primary={item.title} />
                                         </ListItemButton>
                                     </ListItem>
@@ -192,7 +201,7 @@ export default function AccountHeaderComponent({headerSpacing = false} : _Props)
                                             color: item.active ? colors.milk : colors.dark
                                         }}
                                     >
-                                        <ListItemButton>
+                                        <ListItemButton onClick={() => handleContactUsDisplay(item.title)}>
                                             { item.icon && 
                                                 <ListItemIcon
                                                     sx={{
@@ -362,17 +371,20 @@ export default function AccountHeaderComponent({headerSpacing = false} : _Props)
                  }} 
             >
                 <Toolbar sx={{ px: {xs: 2, md: 5, lg: 12} }}>
-                    <Box sx={{flexGrow: 1, cursor: 'pointer' }} onClick={() => navigate("/") }>
+                    <Box sx={{flexGrow: 1, cursor: 'pointer' }} onClick={() => navigate("/account/") }>
                         <img src={SoundMuve} alt="SoundMuve logo" style={{width: 130, objectFit: "contain"}} />
                     </Box>
 
                     <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
                         <Box sx={{display: "flex", flexDirection: "row", gap: 2}}>
                             {menuItems.map((item) => (
-                                <Link key={item.title} to={ item.link } style={{ 
-                                    borderBottom: item.active ? "1px solid #fff" : "none",
-                                    color: item.active ? "#fff" : "#c1c1c1",
-                                }}>
+                                <Link key={item.title} to={ item.link } 
+                                    onClick={() => handleContactUsDisplay(item.title)} 
+                                    style={{ 
+                                        borderBottom: item.active ? "1px solid #fff" : "none",
+                                        color: item.active ? "#fff" : "#c1c1c1",
+                                    }}
+                                >
                                     <Typography>
                                         {item.title}
                                     </Typography>
@@ -471,7 +483,6 @@ export default function AccountHeaderComponent({headerSpacing = false} : _Props)
                                         </Tooltip>
                                     </div>
                                 </ClickAwayListener>
-
                             </Box>
                         </Stack>
 
@@ -517,8 +528,24 @@ export default function AccountHeaderComponent({headerSpacing = false} : _Props)
 
             <NewReleaseModalComponent 
                 openReleaseModal={openReleaseModal}
-                closeReleaseModal={closeReleaseModal}
+                closeReleaseModal={() => setOpenReleaseModal(false)}
             />
+
+            
+            {/* Contact Us modal */}
+            <PaymentModalWrapper title=''
+                closeModal={() => setContactUs(false)}
+                openModal={contactUsModal}
+                // poweredBy=''
+            >
+                <Box id="payout-modal-description">
+                    <ContactUsComponent 
+                        placeholderDisplay={true} 
+                        isModalView={true}
+                        btnColor={colors.primary} 
+                    />
+                </Box>
+            </PaymentModalWrapper>
 
             { headerSpacing ? <Toolbar /> : <></> }
         </>

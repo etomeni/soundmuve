@@ -13,15 +13,33 @@ import Stack from '@mui/material/Stack';
 import colors from '@/constants/colors';
 
 interface _Props {
-    headerTitle: any[],
+    // headerTitle: any[],
     tBodyContent: any[],
-    darkTheme?: boolean,
+    // darkTheme?: boolean,
     displayDownloadReport?: boolean,
+    currentTab: "Album" | "Singles" | "Location" | "Months"
 }
 
+
+let headerTitle: string[] = [];
+
 const SalesReportAnalyticsTableComponent: React.FC<_Props> = ({
-    headerTitle, tBodyContent, displayDownloadReport = false
+    tBodyContent, currentTab, displayDownloadReport = false
 }) => {
+
+
+    if (currentTab == "Album") {
+        headerTitle = [ "Album name", "Album sold", "Streams", "Total" ];
+    } else if (currentTab == "Singles") {
+        headerTitle = [ "Title", "Songs sold", "Streams", "Total" ];
+    } else if (currentTab == "Location") {
+        headerTitle = [ "Location", "Album Sold", "Songs sold", "Streams", "Total" ];
+    }else if (currentTab == "Months") {
+        headerTitle = [ "Sales Period", "Album sold", "Songs sold", "Streams", "Total" ];
+    } else {
+        headerTitle = [];
+    }
+
 
     return (
         <Box>
