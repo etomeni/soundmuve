@@ -17,12 +17,12 @@ import cssStyle from '@/components/home/homeStyle.module.css';
 // import logo from "@/assets/branded/logo.png";
 import headerSectionBg from "@/assets/branded/images/home/headerSectionBg.png";
 import spaceDude from "@/assets/branded/images/home/spaceDude.png";
-import animatedGif from "@/assets/branded/images/animation.gif";
 
 import soundmuveText from "@/assets/branded/images/home/soundmuveText.png";
 import { MdSectionScroll } from '@/components/home/MdSectionScroll';
 import { XsSectionScroll } from '@/components/home/XsSectionScroll';
 import { DesktopTestimonial } from '@/components/home/DesktopTestimonial';
+import AnimatedSection from '@/components/home/AnimatedSection';
 
 // import Lottie from 'react-lottie';
 // import musicAnimation from "@/assets/lottie/dektop/animations/animation_1.json";
@@ -38,7 +38,7 @@ export default function Home() {
             <Box
                 sx={{
                     position: "relative",
-                    mb: "200px",
+                    mb: {xs: "120px", sm: "220px", md: "250px", lg: "320px" }, // "200px",
                 }}
             >
 
@@ -158,58 +158,9 @@ export default function Home() {
                     </Box>
                 </Box>
 
-                <Box
-                    sx={{
-                        height: {xs: "400px", sm: "500px", md: "600px"},
-                        // ...contentWidth,
-                        width: {xs: "100%", sm: "calc(100% - 50px)", md: "calc(100% - 140px)" },
-
-                        maxWidth: "1300px",
-                        // bgcolor: colors.secondary,
-
-                        position: "absolute",
-                        // bottom: {xs: "-15%", sm: "-25%", md: "-20%"},
-                        bottom: {xs: "-12%", sm: "-27%", md: "-22%"},
-                        // bottom: {xs: "0%", md: "0%"},
-                        // bottom: {xs: "0%", sm: "-15%", md: "-20%", lg: "-25%"},
-                        left: 0,
-                        right: 0,
-                        marginInline: "auto",
-
-                        backgroundImage: `url(${animatedGif})`,
-                        backgroundSize: "cover",
-                        backgroundPosition: "bottom center",
-                        backgroundRepeat: "no-repeat",
-                    }}
-                >
-                    {/* <img src={animatedGif} alt='animated Gif'
-                        style={{
-                            width: "100%",
-                            height: "100%",
-                            objectFit: "contain",
-                            textAlign: "center",
-                        }}
-                    /> */}
-                </Box>
+                <AnimatedSection />
 
             </Box>
-
-
-            {/* <Box>
-                <Lottie 
-                    options={{
-                        animationData: musicAnimation,
-                        autoplay: true,
-                        loop: true,
-                        // rendererSettings: {}
-                    }}
-                    height={800}
-                    width={800}
-                    // isStopped={this.state.isStopped}
-                    // isPaused={this.state.isPaused}
-                />
-
-            </Box> */}
 
             
             <Box bgcolor={colors.bg} zIndex={2}>

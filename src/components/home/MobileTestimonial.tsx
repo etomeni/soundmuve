@@ -48,7 +48,12 @@ export const MobileTestimonial = () => {
     //   const smMatches = useMediaQuery(theme.breakpoints.up('sm'));
     //   const mdMatches = useMediaQuery(theme.breakpoints.up('md'));
 
-    const text = "@franklin:I totally love how they make my music make money for me";
+
+    const text1 = "SoundMuve made releasing my music so easy. I'm seeing real results!";
+    // const text2 = "SoundMuve is legit. The platform is smooth and I love how quickly I get paid.";
+    const text3 = "This has been a game-changer for my music journey.";
+    const text4 = "I am constantly supported by SoundMuve as an independent artist.";
+    const text5 = "Finally found a distribution service that works for me.";
 
 
     return (
@@ -75,7 +80,7 @@ export const MobileTestimonial = () => {
                         >
                             <Tooltip arrow open placement="top-start"
                                 componentsProps={componentsPropz}
-                                title={ testimonyText(text) }
+                                title={ testimonyText(text3) }
                             >
                                 <img src={testimonyAvatar3} alt="user testimony avatar" />
                             </Tooltip>
@@ -90,7 +95,7 @@ export const MobileTestimonial = () => {
                         >
                             <Tooltip arrow open placement="top-end"
                                 componentsProps={componentsPropz}
-                                title={ testimonyText(text) }
+                                title={ testimonyText(text5) }
                             >
                                 <img src={testimonyAvatar5} alt="user testimony avatar" />
                             </Tooltip>
@@ -105,7 +110,7 @@ export const MobileTestimonial = () => {
                         >
                             <Tooltip arrow open placement="right"
                                 componentsProps={componentsPropz}
-                                title={ testimonyText(text) }
+                                title={ testimonyText(text4) }
                             >
                                 <img src={testimonyAvatar4} alt="user testimony avatar" />
                             </Tooltip>
@@ -186,7 +191,7 @@ export const MobileTestimonial = () => {
                         >
                             <Tooltip arrow open placement="right"
                                 componentsProps={componentsPropz}
-                                title={ testimonyText(text) }
+                                title={ testimonyText(text1) }
                             >
                                 <img src={testimonyAvatar} alt="user testimony avatar" />
                             </Tooltip>
