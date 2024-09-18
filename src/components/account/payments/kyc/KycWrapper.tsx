@@ -8,6 +8,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import colors from '@/constants/colors';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import Stack from '@mui/material/Stack';
+import { SxProps, Theme } from '@mui/material/styles';
 
 interface _Props {
     openModal: boolean,
@@ -15,12 +16,22 @@ interface _Props {
     goBackState?: boolean,
     backBtnFunction?: () => void;
 
+    currentView: number;
+
     children: React.ReactNode,
 }
 
 
+const tapStyle: SxProps<Theme> = {
+    height: "10px",
+    width: "100%",
+    borderRadius: "10px",
+    bgcolor: colors.secondary,
+}
+
 const KycModalWrapper: React.FC<_Props> = ({
-    openModal, closeModal, children, goBackState = false, backBtnFunction
+    openModal, closeModal, children, goBackState = false, backBtnFunction,
+    currentView
 }) => {
 
     return (
@@ -59,9 +70,20 @@ const KycModalWrapper: React.FC<_Props> = ({
                             //     borderRadius: "25px"
                             // }}
                         >
-                            <Box></Box>
-                            <Box></Box>
-                            <Box></Box>
+                            <Box sx={{
+                                ...tapStyle,
+                                bgcolor: currentView > 0 ? colors.primary : "#F6F6CA",
+                            }}> </Box>
+
+                            <Box sx={{
+                                ...tapStyle,
+                                bgcolor: currentView >= 2 ? colors.primary : "#F6F6CA",
+                            }}></Box>
+
+                            <Box sx={{
+                                ...tapStyle,
+                                bgcolor: currentView >= 3 ? colors.primary : "#F6F6CA",
+                            }}></Box>
                         </Stack>
 
                         <Box sx={{textAlign: "right"}}>

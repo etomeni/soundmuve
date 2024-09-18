@@ -16,6 +16,7 @@ import FL_EuroPaymentsModalComponent, { euroPaymentsInterface } from './setup/eu
 import FL_EuroConfirmationModalComponent from './setup/euroPayments/FL_EuroConfirmation';
 import PayoutSetupSuccessModalComponent from './setup/PayoutSetupSuccessModal';
 import PaypalSetupModalComponent from './setup/PaypalSetup';
+import KycSetupModalComponent from './kyc/KycSetup';
 
 
 interface _Props {
@@ -34,6 +35,7 @@ const PaymentzComponent: React.FC<_Props> = ({
 
     const [flutterwaveCurrencyModal, setFlutterwaveCurrencyModal] = useState(false);
 
+    const [kycSetupModal, setKycSetupModal] = useState(false);
     const [paypalSetupModal, setPaypalSetupModal] = useState(false);
 
     // const [selectedFL_Currency, setSelectedFL_Currency] = useState('');
@@ -256,10 +258,18 @@ const PaymentzComponent: React.FC<_Props> = ({
 
     return (
         <>
+            <KycSetupModalComponent 
+                closeModal={() => setKycSetupModal(false)}
+                openModal={kycSetupModal}
+                openSetupPaymentModal={() => setOpenPayoutModal(true)}
+            />
+
             <PayoutMethodModalComponent 
                 openModal={openPayoutModal}
                 closeModal={() => setOpenPayoutModal(false)}
-                
+
+                openKycModal={() => setKycSetupModal(true)}
+
                 openPayPalModal={() => setPaypalSetupModal(true)}
                 openFlutterwavePayoutModal={() => setFlutterwaveCurrencyModal(true)}
             />

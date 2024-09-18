@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Box from '@mui/material/Box';
 // import IconButton from '@mui/material/IconButton';
 // import Modal from '@mui/material/Modal';
@@ -21,14 +21,26 @@ interface _Props {
     openModal: boolean,
     closeModal: () => void;
 
+    openKycModal: () => void;
     openPayPalModal: () => void;
     // openBankPayoutModal: () => void;
     openFlutterwavePayoutModal: () => void;
 }
 
 const PayoutMethodModalComponent: React.FC<_Props> = ({
-    openModal, closeModal, openFlutterwavePayoutModal, openPayPalModal
+    openModal, closeModal, openKycModal, 
+    openFlutterwavePayoutModal, openPayPalModal
 }) => {
+
+    useEffect(() => {
+        if (openModal) {
+            // write a function that check if KYC is set aleady or not
+            closeModal();
+            openKycModal();
+        }
+    }, [openModal]);
+    
+
 
     const handleOpenFlutterwaveModal = () => {
         closeModal();

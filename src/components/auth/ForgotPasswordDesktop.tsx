@@ -1,10 +1,4 @@
-import axios from 'axios';
-import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useForm } from 'react-hook-form';
-import * as yup from "yup";
-import { yupResolver } from '@hookform/resolvers/yup';
-
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 
@@ -16,82 +10,20 @@ import Alert from '@mui/material/Alert';
 import CircularProgress from '@mui/material/CircularProgress';
 import WestIcon from '@mui/icons-material/West';
 
-import { apiEndpoint } from '@/util/resources';
 import resetPasswordImg from "@/assets/branded/images/auth/newPassword.png";
-import SnackbarToast, { SnackbarToastInterface } from '@/components/ToastNotification';
-import { useUserStore } from '@/state/userStore';
+import SnackbarToast from '@/components/ToastNotification';
 import colors from '@/constants/colors';
 import { authMuiTextFieldStyle } from '@/util/mui';
-
-
-const formSchema = yup.object({
-    email: yup.string().required()
-    .email("Please enter a valid email address.")
-    .matches(/^([a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+(?:\.[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+)*|\"([^\\]\\\"]|\\.)*\")@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\.)+[a-zA-Z]{2,}$/
-    , "Please enter a valid email address.")
-    .trim().label("Email Address")
-});
+import { useForgotPasswordAuth } from '@/hooks/auth/useForgotPassword';
 
   
 function ForgotPasswordDesktopComponent() {
     const navigate = useNavigate();
-    const _updateUser = useUserStore((state) => state._updateUser);
-    const userData = useUserStore((state) => state.userData);
-  
-    const [apiResponse, setApiResponse] = useState({
-        display: false,
-        status: true,
-        message: ""
-    });
-    const [toastNotification, setToastNotification] = useState<SnackbarToastInterface>({
-        display: false,
-        status: "success",
-        message: ""
-    });
 
     const { 
-        handleSubmit, register, formState: { errors, isValid, isSubmitting } 
-    } = useForm({ resolver: yupResolver(formSchema), mode: 'onBlur', reValidateMode: 'onBlur' });
-
-        
-    const onSubmit = async (formData: typeof formSchema.__outputType) => {
-        setApiResponse({
-            display: false,
-            status: true,
-            message: ""
-        });
-
-        try {
-            const response = (await axios.post(`${apiEndpoint}/auth/sendotp-email`, formData )).data;
-            // console.log(response);
-
-            _updateUser({ ...userData, email: formData.email });
-            
-            setApiResponse({
-                display: true,
-                status: true,
-                message: response.message
-            });
-            setToastNotification({
-                display: true,
-                status: "success",
-                message: response.message
-            });
-
-            navigate("/auth/verify-email");
-
-        } catch (error: any) {
-            // console.log(error);
-            const err = error.response.data;
-
-            setApiResponse({
-                display: true,
-                status: false,
-                message: err.message || "Oooops, failed to send email otp. please try again."
-            });
-        }
-    }
-
+        apiResponse, toastNotification, setToastNotification,
+        isSubmitting, isValid, onSubmit, register, errors, // formSchema,
+    } = useForgotPasswordAuth();
     
 
     return (
@@ -106,7 +38,7 @@ function ForgotPasswordDesktopComponent() {
                     alignItems: "center",
                     textAlign: "center"
                 }}>
-                    <form noValidate onSubmit={ handleSubmit(onSubmit) } 
+                    <form noValidate onSubmit={ onSubmit } // onSubmit={ handleSubmit(onSubmit) } 
                         style={{
                             maxWidth: "653px",
                             width: "100%",

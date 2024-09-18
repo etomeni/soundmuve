@@ -1,9 +1,4 @@
-import axios from 'axios';
-import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { useForm } from 'react-hook-form';
-import * as yup from "yup";
-import { yupResolver } from '@hookform/resolvers/yup';
 
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
@@ -19,114 +14,23 @@ import IconButton from '@mui/material/IconButton';
 import Stack from '@mui/material/Stack';
 import Alert from '@mui/material/Alert';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
-import { apiEndpoint } from '@/util/resources';
-import { useUserStore } from '@/state/userStore';
-import { getUserIP } from '@/util/location';
 import colors from '@/constants/colors';
 import bgImage from "@/assets/branded/images/auth/background.png";
 import soundMuve from "@/assets/branded/soundMuve.png";
 import { authMuiTextFieldStyle } from '@/util/mui';
 import WestIcon from '@mui/icons-material/West';
-
-
-const formSchema = yup.object({
-    firstName: yup.string().required().min(2).trim().label("First Name"),
-    lastName: yup.string().required().min(2).trim().label("Last Name"),
-
-    email: yup.string().required()
-    .email("Please enter a valid email address.")
-    .matches(/^([a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+(?:\.[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+)*|\"([^\\]\\\"]|\\.)*\")@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\.)+[a-zA-Z]{2,}$/
-    , "Please enter a valid email address.")
-    .trim().label("Email Address"),
-
-    password: yup.string().required()
-    .min(6, 'Password must be at least 6 characters')
-    .matches(
-      /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]+$/,
-      'Password must include uppercase, lowercase, digit, and special character'
-    ).trim().label("Password"),
-
-    confirmPassword: yup.string().required()
-    .min(6, 'Password must be at least 6 characters')
-    .matches(
-      /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]+$/,
-      'Password must include uppercase, lowercase, digit, and special character'
-    ).trim().label("Confirm Password"),
-
-    // tnc: yup.boolean().required().label("Terms and conditions")
-});
-
-  
+import { useSignupAuth } from '@/hooks/auth/useSignup';
 
 
 function SignupDesktopComponent() {
-    const [tnc, setTnc] = useState(true);
     const navigate = useNavigate();
-    const [apiResponse, setApiResponse] = useState({
-        display: false,
-        status: true,
-        message: ""
-    });
-    
-    const _signUpUser = useUserStore((state) => state._signUpUser);
-    const [userIP, setUserIP] = useState("");
-  
-    useEffect(() => {
-        getUserIP().then((res: string) => {
-            if (res) {
-                setUserIP(res);
-            }
-        });
-    }, []);
-    
-    const [showPassword, setShowPassword] = useState(false);
-    const handleClickShowPassword = () => setShowPassword((show) => !show);
-  
+
     const { 
-        handleSubmit, register, setError, formState: { errors, isValid, isSubmitting } 
-    } = useForm({ resolver: yupResolver(formSchema), mode: 'onBlur', reValidateMode: 'onChange' });
+        apiResponse, handleClickShowPassword,
+        isSubmitting, isValid, onSubmit, register, errors, // formSchema,
+        tnc, setTnc, showPassword, // setShowPassword, 
+    } = useSignupAuth();
 
-    const onSubmit = async (formData: typeof formSchema.__outputType) => {
-        if (formData.password !== formData.confirmPassword) {
-            setError("password", {message: "Passwords do not match"});
-            setError("confirmPassword", {message: "Passwords do not match"});
-            return;
-        }
-
-        try {
-            const response = (await axios.post(`${apiEndpoint}/auth/sign-up`, { ...formData, ip: userIP })).data;
-            // console.log(response);
-            
-            if (response && response.savedUser) {
-                setApiResponse({
-                    display: true,
-                    status: true,
-                    message: response.message
-                });
-
-                _signUpUser(response.savedUser);
-
-                navigate("/auth/signup-type");
-                return;
-            }
-
-            setApiResponse({
-                display: true,
-                status: false,
-                message: response.message || "Oooops, registration failed. please try again."
-            });
-        } catch (error: any) {
-            // console.log(error);
-            const err = error.response.data;
-
-            setApiResponse({
-                display: true,
-                status: false,
-                message: err.message || "Oooops, registration failed. please try again."
-            });
-        }
-
-    }
 
     return (
         <Box bgcolor={colors.bg} minHeight="100vh">
@@ -195,7 +99,7 @@ function SignupDesktopComponent() {
                                         // maxWidth: "120%",
                                     }}
                                 >
-                                    <form noValidate onSubmit={ handleSubmit(onSubmit) } 
+                                    <form noValidate onSubmit={ onSubmit } // onSubmit={ handleSubmit(onSubmit) } 
                                         style={{ maxWidth: "549px", width: "100%", alignSelf: "center" }}
                                     >
                                         <Box sx={{ 

@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react'
 
 import * as yup from "yup";
 import { useForm } from 'react-hook-form';
@@ -13,24 +13,20 @@ import Button from '@mui/material/Button';
 import CircularProgress from '@mui/material/CircularProgress';
 
 
-
-const formSchema: any = yup.object({
-    question1: yup.string().required().trim().label("question"),
-    question2: yup.string().required().trim().label("question"),
-    question3: yup.string().required().trim().label("question"),
+const formSchema = yup.object({
+    phoneNumber: yup.string().required().trim().label("Phone Number"),
 });
+
 
 interface _Props {
     // openModal: boolean,
-    phoneNumber: string,
-    questions: string[],
-    isCompleteState: (state: boolean) => void;
-
+    // closeModal: () => void;
+    setPhoneNumber: (number: string) => void;
+    handleCurrentView: (number: number) => void;
 }
 
-const KycAnswersComponent: React.FC<_Props> = ({
-    phoneNumber, questions, isCompleteState
-
+const KycPhoneNumber: React.FC<_Props> = ({
+    setPhoneNumber, handleCurrentView
 }) => {
 
     const {
@@ -39,19 +35,11 @@ const KycAnswersComponent: React.FC<_Props> = ({
 
 
     const onSubmit = async (formData: typeof formSchema.__outputType) => {
-        console.log(phoneNumber);
         console.log(formData);
-        console.log(formData);
+        setPhoneNumber(formData.phoneNumber);
+        handleCurrentView(2);
 
-        isCompleteState(true);
-
-    }
-
-    const resolveErrorMessage = (index: number) => {
-        // errors[`question${index + 1}`]?.message
-        const err: any = errors[`question${index + 1}`]?.message;
-
-        return err || '';
+        // confirmBtn(formData);
     }
 
 
@@ -62,50 +50,79 @@ const KycAnswersComponent: React.FC<_Props> = ({
                 sx={{
                     fontWeight: "900",
                     fontSize: {xs: "20px", md: "35px"},
-                    lineHeight: {xs: "20px", md: "37px"},
+                    lineHeight: {xs: "20px", md: "24px"},
                     letterSpacing: {xs: "-0.34px", md: "-1.34px"},
                     textAlign: "center",
                     mb: 2,
                     color: colors.dark
                 }}
-            >  Provide answers for the following questions </Typography>
+            > Ready to set up your payment? </Typography>
 
+            <Typography variant='body2'
+                sx={{
+                    fontWeight: "400",
+                    fontSize: "14px",
+                    lineHeight: "16px", 
+                    letterSpacing: "-0.341px",
+                    color: colors.dark,
+                    textAlign: "center",
+                    mb: 2
+                }}
+            >
+                Please answer the following KYC 
+                questions to help us serve you better
+            </Typography>
 
             <Box my={3}>
                 <form noValidate onSubmit={ handleSubmit(onSubmit) } >
-                    <Box my={5}>
-                        {
-                            questions.map((value, index) => (
-                                <Box key={index} mb={2}>
-                                    <Typography sx={{
-                                        fontWeight: "400",
-                                        fontSize: "14px",
-                                        lineHeight: "16px",
-                                        letterSpacing: "-0.34px",
-                                        textAlign: "left",
-                                        mb: 1
-                                    }}> { value } </Typography>
+                    <Box>
+                        <Typography sx={{
+                            fontWeight: "700",
+                            fontSize: "14px",
+                            lineHeight: "16px",
+                            letterSpacing: "-0.34px",
+                            textAlign: "left",
+                            mb: 1
+                        }}> Phone Number </Typography>
 
-                                    <TextField 
-                                        variant="outlined" 
-                                        fullWidth 
-                                        id={`question${index + 1}`}
-                                        type='text'
-                                        inputMode='text'
-                                        label=''
-                                        defaultValue=""
+                        <TextField 
+                            variant="outlined" 
+                            fullWidth 
+                            id='phoneNumber'
+                            type='tel'
+                            inputMode='tel'
+                            label=''
+                            defaultValue=""
+                            
+                            InputProps={{
+                                sx: {
+                                    borderRadius: "16px",
+                                },
+                            }}
 
-                                        sx={paymentTextFieldStyle}
-                                        
-                                        error={ errors[`question${index + 1}`] ? true : false }
-                                        { ...register(`question${index + 1}`) }
-                                    />
+                            sx={paymentTextFieldStyle}
+                            
+                            error={ errors.phoneNumber ? true : false }
+                            { ...register('phoneNumber') }
+                        />
 
-                                    { errors[`question${index + 1}`] && <Box sx={{fontSize: 13, color: "red", textAlign: "left"}}>{ resolveErrorMessage(index) }</Box> }
-                                </Box>
-                            ))
-                        }
+                        { errors.phoneNumber && <Box sx={{fontSize: 13, color: "red", textAlign: "left"}}>{ errors.phoneNumber?.message }</Box> }
                     </Box>
+
+                    <Typography variant='body2'
+                        sx={{
+                            fontWeight: "400",
+                            fontSize: "14px",
+                            lineHeight: "16px", 
+                            letterSpacing: "-0.341px",
+                            color: colors.dark,
+                            textAlign: "center",
+                            my: 5,
+                        }}
+                    >
+                        <b>Note: </b> please use a phone number you can easily remember
+                    </Typography>
+
 
                     <Box 
                         sx={{ 
@@ -167,4 +184,4 @@ const KycAnswersComponent: React.FC<_Props> = ({
     )
 }
 
-export default KycAnswersComponent;
+export default KycPhoneNumber

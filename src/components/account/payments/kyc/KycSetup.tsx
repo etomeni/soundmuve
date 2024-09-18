@@ -1,19 +1,74 @@
-import React from 'react';
-import Box from '@mui/material/Box';
+import React, { useEffect, useState } from 'react';
+
 import KycModalWrapper from './KycWrapper';
-import Typography from '@mui/material/Typography';
-import colors from '@/constants/colors';
+import KycPhoneNumber from './KycPhoneNumber';
+import Box from '@mui/material/Box';
+import KycSetupQuestionsComponent from './KycSetupQuestions';
+import KycAnswersComponent from './KycAnswers';
+
+
 
 
 interface _Props {
     openModal: boolean,
     closeModal: () => void;
+    openSetupPaymentModal: () => void;
 }
 
 const KycSetupModalComponent: React.FC<_Props> = ({
-    openModal, closeModal
+    openModal, closeModal, openSetupPaymentModal
 }) => {
     // const darkTheme = useSettingStore((state) => state.darkTheme);
+    const [currentView, setCurrentView] = useState(0);
+    const [phoneNumber, setPhoneNumber] = useState('');
+    const [questions, setQuestions] = useState<string[]>([]);
+    const [isCompleted, setIsCompleted] = useState(false);
+
+    useEffect(() => {
+        if (!openModal) {
+            // reset()
+            setCurrentView(1);
+            setPhoneNumber('');
+            setQuestions([]);
+            // setIsCompleted(false);
+        }
+    }, [openModal]);
+
+    useEffect(() => {
+        if (isCompleted) {
+            closeModal();
+            openSetupPaymentModal();
+        }
+    }, [isCompleted]);
+
+    const handleView = () => {
+        if (currentView == 1) {
+            return (
+                <KycPhoneNumber 
+                    setPhoneNumber={setPhoneNumber} 
+                    handleCurrentView={setCurrentView} 
+                />
+            )
+        } else if (currentView == 2) {
+            return (
+                <KycSetupQuestionsComponent 
+                    setQuestions={setQuestions} 
+                    handleCurrentView={setCurrentView} 
+                />
+            )
+        } else if (currentView == 3) {
+            return (
+                <KycAnswersComponent 
+                    phoneNumber={phoneNumber}
+                    questions={questions}
+                    isCompleteState={setIsCompleted}
+                />
+            )
+        } else {
+            return <></>
+        }
+
+    }
 
 
 
@@ -21,57 +76,10 @@ const KycSetupModalComponent: React.FC<_Props> = ({
         <KycModalWrapper 
             closeModal={closeModal}
             openModal={openModal}
-            // poweredBy=''
+            currentView={currentView}
         >
             <Box>
-
-                <Typography variant="h6" component="h2"
-                    sx={{
-                        fontWeight: "900",
-                        fontSize: {xs: "20px", md: "35px"},
-                        lineHeight: {xs: "20px", md: "24px"},
-                        letterSpacing: {xs: "-0.34px", md: "-1.34px"},
-                        textAlign: "center",
-                        // mt: 2
-                        color: colors.dark
-                    }}
-                > Ready to set up your payment? </Typography>
-
-                <Typography variant='body2'
-                    sx={{
-                        fontWeight: "400",
-                        fontSize: "14px",
-                        lineHeight: "16px", 
-                        letterSpacing: "-0.341px",
-                        color: colors.dark,
-                        textAlign: "center"
-                    }}
-                >
-                    Please answer the following KYC 
-                    questions to help us serve you better
-                </Typography>
-
-
-
-
-
-
-
-                <Typography variant='body2'
-                    sx={{
-                        fontWeight: "400",
-                        fontSize: "14px",
-                        lineHeight: "16px", 
-                        letterSpacing: "-0.341px",
-                        color: colors.dark,
-                        textAlign: "center"
-                    }}
-                >
-                    <b>Note: </b> please use a phone number you can easily remember
-                </Typography>
-
-
-
+                { handleView() }
             </Box>
         </KycModalWrapper>
     )

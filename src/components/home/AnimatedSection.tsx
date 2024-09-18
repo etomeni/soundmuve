@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import Box from '@mui/material/Box';
 // import animatedGif from "@/assets/branded/images/animation.gif";
 import animatedVid from "@/assets/branded/images/home/animationVid.mp4";
@@ -19,25 +19,25 @@ const AnimatedSection: React.FC<_Props> = ({
     const videoRef = useRef<HTMLVideoElement | null>(null);
 
     // State to track if the video has already been played
-    const [hasPlayed, setHasPlayed] = useState(false);
+    // const [hasPlayed, setHasPlayed] = useState(false);
 
 
     useEffect(() => {
         const handlePlayVideo = (entries: IntersectionObserverEntry[]) => {
             const video = videoRef.current;
             entries.forEach((entry) => {
-                // if (video) {
-                //     if (entry.isIntersecting) {
-                //         video.play(); // Play video when in view
-                //     } else {
-                //         video.pause(); // Pause video when out of view
-                //     }
-                // }
-
-                if (video && entry.isIntersecting && !hasPlayed) {
-                    video.play();  // Play video when it first comes into view
-                    setHasPlayed(true);  // Mark as played to prevent replay
+                if (video) {
+                    if (entry.isIntersecting) {
+                        video.play(); // Play video when in view
+                    } else {
+                        video.pause(); // Pause video when out of view
+                    }
                 }
+
+                // if (video && entry.isIntersecting && !hasPlayed) {
+                //     video.play();  // Play video when it first comes into view
+                //     setHasPlayed(true);  // Mark as played to prevent replay
+                // }
             });
         };
     
@@ -54,7 +54,7 @@ const AnimatedSection: React.FC<_Props> = ({
                 observer.unobserve(videoRef.current);
             }
         };
-    }, [hasPlayed]);
+    }, []);
 
 
     return (

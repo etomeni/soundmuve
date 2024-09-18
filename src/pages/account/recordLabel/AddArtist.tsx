@@ -26,6 +26,7 @@ import { restCountries } from '@/util/countries';
 import { releaseSelectStyle2, releaseTextFieldStyle } from '@/util/mui';
 import cloudUploadIconImg from "@/assets/images/cloudUploadIcon.png";
 import colors from '@/constants/colors';
+import { useNavigate } from 'react-router-dom';
 
 
 const formSchema = yup.object({
@@ -45,7 +46,7 @@ const formSchema = yup.object({
 
 
 function AddArtistRecordLabel() {
-    // const navigate = useNavigate();
+    const navigate = useNavigate();
     const [countries, setCountries] = useState(restCountries);
     const [userCountry, setUserCountry] = useState("");
     const userData = useUserStore((state) => state.userData);
@@ -183,6 +184,7 @@ function AddArtistRecordLabel() {
                 status: true,
                 message: response.message
             });
+            navigate("/account/record-label/artist");
             // _setToastNotification({
             //     display: true,
             //     status: "success",

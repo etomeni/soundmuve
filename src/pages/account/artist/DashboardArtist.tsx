@@ -91,7 +91,7 @@ function DashboardArtist() {
             // }
 
         } catch (error: any) {
-            const errorResponse = error.response.data;
+            const errorResponse = error.response.data || error;
             console.error(errorResponse);
 
             setReleases([]);
@@ -688,7 +688,7 @@ function DashboardArtist() {
                     </Box>
                 </Box>
 
-                {/* Setup pAyout */}
+                {/* Setup payout */}
                 <Box
                     sx={{
                         borderRadius: "4.48px",
@@ -696,7 +696,7 @@ function DashboardArtist() {
                         bgcolor: "#E2CBA2",
                         color: colors.dark,
 
-                        display: paymentDetails.length ? "none" : "flex",
+                        display: paymentDetails && paymentDetails.length ? "none" : "flex",
                         flexDirection: "row",
                         justifyContent: "space-between",
                         alignItems: "center",
