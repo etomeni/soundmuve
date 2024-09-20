@@ -22,13 +22,13 @@ const textTitleStyle: SxProps<Theme> = {
 }
 
 const cardTitleStyle: SxProps<Theme> = {
-    maxWidth: {xs: "178.17px", md: "204px"},
+    // maxWidth: {xs: "178.17px", md: "204px"},
     ml: "auto",
     mb: {xs: "27px", md: "54px"},
     mt: {xs: "50px", md: "unset"},
     color: "#fff",
     textAlign: "right",
-    fontSize: {xs: "20px", md: "60px"},
+    fontSize: {xs: "20px", md: "50px"},
     lineHeight: {xs: "20.09px", md: "60.27px"},
 }
 
@@ -101,9 +101,10 @@ const SectionThree = () => {
                                         <Typography variant='h1' component="h1"
                                             sx={{
                                                 ...textTitleStyle,
-                                                ...cardTitleStyle
+                                                ...cardTitleStyle,
+                                                maxWidth: "auto"
                                             }}
-                                        >What we do</Typography>
+                                        >Music Distribution</Typography>
 
                                         <Typography variant='body1' component="p"
                                             sx={{
@@ -112,8 +113,9 @@ const SectionThree = () => {
                                                 textAlign: "right"
                                             }}
                                         >
-                                            To be the leading platform that amplifies and 
-                                            connects artists to the world, transforming the
+                                            We ensure your tracks are heard worldwide 
+                                            through major streaming platforms like Spotify, 
+                                            Apple Music and more.
                                         </Typography>
 
                                         <Box height={{xs: "70px", md: "70px" }}></Box>
@@ -168,7 +170,7 @@ const SectionThree = () => {
                                                 ...textTitleStyle,
                                                 ...cardTitleStyle,
                                             }}
-                                        >What we do</Typography>
+                                        >Royalty Management</Typography>
 
                                         <Typography variant='body1' component="p"
                                             sx={{
@@ -176,8 +178,8 @@ const SectionThree = () => {
                                                 textAlign: "right"
                                             }}
                                         >
-                                            To be the leading platform that amplifies and 
-                                            connects artists to the world, transforming the
+                                            We provide clear reports and timely payments, 
+                                            so you can easily track and manage your royalties
                                         </Typography>
 
                                         <Box height={{xs: "70px", md: "70px" }}></Box>
@@ -195,7 +197,6 @@ const SectionThree = () => {
                                                 }}
                                             />
                                         </Box>
-
                                     </Box>
 
                                 </Box>
@@ -215,7 +216,7 @@ const SectionThree = () => {
                                                 ...textTitleStyle,
                                                 ...cardTitleStyle,
                                             }}
-                                        >What we do</Typography>
+                                        >Artist Support</Typography>
 
                                         <Typography variant='body1' component="p"
                                             sx={{
@@ -223,8 +224,8 @@ const SectionThree = () => {
                                                 textAlign: "right"
                                             }}
                                         >
-                                            To be the leading platform that amplifies and 
-                                            connects artists to the world, transforming the
+                                            From promotion to expert advice, 
+                                            we give you the support you need to grow and thrive.
                                         </Typography>
 
 
@@ -264,7 +265,7 @@ const SectionThree = () => {
                                                 ...textTitleStyle,
                                                 ...cardTitleStyle,
                                             }}
-                                        >What we do</Typography>
+                                        >Date Insights</Typography>
 
                                         <Typography variant='body1' component="p"
                                             sx={{
@@ -272,8 +273,8 @@ const SectionThree = () => {
                                                 textAlign: "right"
                                             }}
                                         >
-                                            To be the leading platform that amplifies and 
-                                            connects artists to the world, transforming the
+                                            Get detailed analytics to understand your 
+                                            listeners and make smart decisions for your career.
                                         </Typography>
 
                                         <Box height={{xs: "70px", md: "70px" }}></Box>
@@ -291,7 +292,6 @@ const SectionThree = () => {
                                                 }}
                                             />
                                         </Box>
-
                                     </Box>
 
                                 </Box>

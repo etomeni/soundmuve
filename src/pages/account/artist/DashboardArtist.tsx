@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
 
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
@@ -9,22 +8,20 @@ import Typography from '@mui/material/Typography';
 
 import AddIcon from '@mui/icons-material/Add';
 
-import albumImage from '@/assets/images/album.png';
 import dashHappyGuyImage from '@/assets/images/dashHappyGuy.png';
 import setPayoutImg from '@/assets/branded/images/account/setPayoutImg.png';
 
 import AccountWrapper from '@/components/AccountWrapper';
 import AlbumSongItem from '@/components/account/AlbumSongItem';
 import NewReleaseModalComponent from '@/components/account/NewReleaseModal';
-import ReleaseStatusComponent from '@/components/ReleaseStatus';
 import PaymentzComponent from '@/components/account/payments/PaymentzComponent';
 
 import { useUserStore } from '@/state/userStore';
 // import { useSettingStore } from '@/state/settingStore';
 import { useReleaseStore } from '@/state/releaseStore';
 
-import { apiEndpoint, currencyDisplay } from '@/util/resources';
-import { getLocalStorage, setLocalStorage } from '@/util/storage';
+import { currencyDisplay } from '@/util/resources';
+import { getLocalStorage } from '@/util/storage';
 import colors from '@/constants/colors';
 import { releaseInterface } from '@/constants/typesInterface';
 import FormControl from '@mui/material/FormControl';
@@ -32,24 +29,27 @@ import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import { homeSelectStyle } from '@/util/mui';
 import { usePayoutData } from '@/hooks/payments/usePayoutInfo';
+import { useGetReleases } from '@/hooks/release/useGetReleases';
+import ViewSongItemComponent from '@/components/account/ViewSongItem';
 
 
 function DashboardArtist() {
     const navigate = useNavigate();
     const [albumType, setAlbumType] = useState<"Single" | "Album">("Single");
     const userData = useUserStore((state) => state.userData); 
-    const accessToken = useUserStore((state) => state.accessToken);
     const _setSongDetails = useReleaseStore((state) => state._setSongDetails);
-    const [releases, setReleases] = useState<releaseInterface[]>();
     const { paymentDetails, getPayoutInfo } = usePayoutData();
 
-    // const _setToastNotification = useSettingStore((state) => state._setToastNotification);
-    // const [apiResponse, setApiResponse] = useState({
-    //     display: false,
-    //     status: true,
-    //     message: ""
-    // });
+    const { 
+        // apiResponse, // setApiResponse, 
+        releases, setReleases,
+        getAlbumRelease, getSingleRelease
+    } = useGetReleases();
 
+    useEffect(() => {
+        getSingleRelease();
+    }, []);
+    
     const [openReleaseModal, setOpenReleaseModal] = useState(false);
     const closeReleaseModal = () => { setOpenReleaseModal(false) };
 
@@ -70,164 +70,6 @@ function DashboardArtist() {
         getPayoutInfo();
     }, []);
 
-    const getSingleRelease = async () => {
-        try {
-            const response = (await axios.get(`${apiEndpoint}/Release/getReleaseByEmail/${ userData.email }`, {
-                headers: {
-                    Authorization: `Bearer ${accessToken}`
-                }
-            })).data;
-            console.log(response);
-
-            setLocalStorage("singleRelease", response);
-            setReleases(response);
-
-            // if (!response.length) {
-            //     setApiResponse({
-            //         display: true,
-            //         status: true,
-            //         message: "You don't have any single Release yet."
-            //     });
-            // }
-
-        } catch (error: any) {
-            const errorResponse = error.response.data || error;
-            console.error(errorResponse);
-
-            setReleases([]);
-
-            // _setToastNotification({
-            //     display: true,
-            //     status: "error",
-            //     message: errorResponse.message || "Ooops and error occurred!"
-            // });
-        }
-    }
-
-    const getAlbumRelease = async () => {
-        setReleases(undefined);
-
-        // setReleases(albumSongs);
-
-        try {
-            // const response = (await axios.get(`${apiEndpoint}/songs/GetMyAlbumsByEmail?email=latham01@yopmail.com`, {
-            const response = (await axios.get(`${apiEndpoint}/songs/GetMyAlbumsByEmail?email=${ userData.email }`, {
-                headers: {
-                    Authorization: `Bearer ${accessToken}`
-                }
-            })).data;
-            console.log(response);
-
-            setLocalStorage("singleRelease", response.albums);
-            setReleases(response.albums);
-
-            // if (!response.length) {
-            //     setApiResponse({
-            //         display: true,
-            //         status: true,
-            //         message: "You don't have any single Release yet."
-            //     });
-            // }
-
-        } catch (error: any) {
-            const errorResponse = error.response.data;
-            console.error(errorResponse);
-
-            setReleases([]);
-
-            // _setToastNotification({
-            //     display: true,
-            //     status: "error",
-            //     message: errorResponse.message || "Ooops and error occurred!"
-            // });
-        }
-    }
-
-    const viewSong = (song: releaseInterface, index: number) => (
-        <Grid item xs={6} md={4} key={index}>
-            <Box 
-                sx={{ 
-                    width: "100%",
-                    maxWidth: {xs: "196.38px", md: "345px"},
-                    mx: "auto"
-                }}
-                onClick={() => {
-                    navigate(`/account/artist/${albumType == "Album" ? "album-details" : "song-details"}`);
-
-                    _setSongDetails({
-                        artist_name: song.artist_name,
-                        cover_photo: song.song_cover || song.song_cover_url || albumImage,
-                        email: song.email,
-                        label_name: song.label_name,
-                        primary_genre: song.primary_genre,
-                        secondary_genre: song.secondary_genre,
-                        song_title: song.album_title || song.song_title || '',
-                        stream_time: '',
-                        streams: "",
-                        total_revenue: "",
-                        upc_ean: song.upc_ean
-                    });
-                }}
-            >
-                <Box
-                    sx={{
-                        // width: "100%",
-                        // maxWidth: {xs: "196.38px", md: "345px"},
-                        height: {xs: "152.99px", md: "268px"},
-                        borderRadius: {xs: "6.85px", md: "12px"},
-                        bgcolor: "#343434",
-                        textAlign: "center",
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center"
-                    }}
-                >
-                    <Box 
-                        sx={{
-                            width: {xs: "124.48px", md: "218.06px"},
-                            height: {xs: "124.48px", md: "218.06px"}
-                        }}
-                    >
-                        <img
-                            src={ song.song_cover || song.song_cover_url || albumImage } 
-                            alt={`${song.song_title} song cover`}
-                            style={{
-                                width: "100%",
-                                height: "100%",
-                                objectFit: "contain"
-                            }}
-                        />
-                    </Box>
-                </Box>
-
-                <Typography
-                    sx={{
-                        fontWeight: "900",
-                        fontSize: {xs: "10.85px", md: "19px"},
-                        lineHeight: {xs: "13.7px", md: "24px"},
-                        letterSpacing: {xs: "-0.77px", md: "-1.34px"},
-                        // color: "#fff",
-                        m: {xs: "8px 0 0 0", md: "8px 0 8px 0"}
-                    }}
-                > { song.song_title } </Typography>
-
-                <Typography
-                    sx={{
-                        display: albumType == "Album" ? "block" : "none",
-                        fontWeight: "400",
-                        fontSize: {xs: "8.02px", md: "15px"},
-                        lineHeight: {xs: "12.83px", md: "24px"},
-                        // letterSpacing: {xs: "-0.77px", md: "-1.34px"},
-                        color: "#979797",
-                        mb: {md: 1}
-                    }}
-                > Album </Typography>
-
-                <ReleaseStatusComponent status={song.status} />
-            </Box>
-        </Grid>
-    )
-
     const handleOnclickedSong = (release: releaseInterface, albumSongIndex: number = 0) => {
 
         // albumType == "Album" 
@@ -235,6 +77,7 @@ function DashboardArtist() {
         if (albumType == "Single") {
             
             _setSongDetails({
+                _id: release._id,
                 email: release.email,
                 song_title: release.song_title || '',
                 artist_name: release.artist_name,
@@ -250,11 +93,14 @@ function DashboardArtist() {
             
         } else if (albumType == "Album") {
             let upc_ean = '';
+            let albumSong_id = '';
             if (release.songs) {
                 upc_ean = release.songs[albumSongIndex].upc_ean || release.songs[albumSongIndex].isrc_number;
+                albumSong_id = release.songs[albumSongIndex]._id;
             }
             
             _setSongDetails({
+                _id: albumSong_id,
                 email: release.email,
                 song_title: release.song_title || '',
                 artist_name: release.artist_name,
@@ -1056,7 +902,13 @@ function DashboardArtist() {
                     {
                         releases && releases.length ?
                             releases.slice(0, 2).map((song, index) => (
-                                viewSong(song, index)
+                                // viewSong(song, index)
+
+                                <ViewSongItemComponent 
+                                    albumType={albumType}
+                                    index={index}
+                                    song={song}
+                                />
                             ))
                         : <></>
                     }

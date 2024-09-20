@@ -18,6 +18,8 @@ function getLocalPayoutData() {
     const localPayoutDetails = getLocalStorage("payoutDetails");
     if (localPayoutDetails && localPayoutDetails.length) {
         return localPayoutDetails;
+    } else {
+        return []
     }
 }
 

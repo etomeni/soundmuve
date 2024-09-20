@@ -3,6 +3,7 @@ import temptCoverPhotoImg from '@/assets/images/album.png';
 
 
 const songDetails = {
+    _id: "",
     email: "",
     // release_type: "",
     song_title: "", // Sensami

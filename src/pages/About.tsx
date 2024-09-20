@@ -62,7 +62,8 @@ function About() {
                             mt: {xs: "15px", md: "56px"}
                         }}
                     >
-                        We provide the essential tools and support for artists, sound designers, and podcasters, creating limitless opportunities for you.
+                        We provide the essential tools and support for artists, 
+                        sound designers, and podcasters, creating limitless opportunities for you.
                     </Typography>
                 </Box>
 
@@ -221,8 +222,6 @@ function About() {
                         </Box>
                     </Link>
                 </Box>
-
-
 
             </Box>
 

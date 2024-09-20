@@ -338,7 +338,7 @@ export const currencyDisplay = (amount: number) => {
 
 export function displayMessageCount(messageCount: number) {
   if (messageCount < 1000) {
-    return messageCount.toString(); // No suffix needed for less than 1000
+    return formatedNumber(messageCount).toString(); // No suffix needed for less than 1000
   } else if (messageCount < 1000000) {
     return (messageCount / 1000).toFixed(2) + "K"; // Suffix K for thousands
   } else if (messageCount < 1000000000) {

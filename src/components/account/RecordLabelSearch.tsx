@@ -132,8 +132,8 @@ const RecordLabelSearchComponent: React.FC<_Props> = ({ artists }) => {
                     ),
                     endAdornment: searchInputValue && (
                         <IconButton
-                        aria-label="toggle password visibility"
-                        onClick={() => setSearchInputValue("")}
+                            aria-label="toggle password visibility"
+                            onClick={() => handleSearchInputValue("")}
                         ><ClearIcon sx={{ color: "gray", fontSize: '16px'}} /></IconButton>
                     ),
                     sx: {

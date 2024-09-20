@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
 
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
@@ -10,350 +9,29 @@ import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 
-import albumImage from '@/assets/images/album.png';
-
 import AccountWrapper from '@/components/AccountWrapper';
 import EmptyListComponent from '@/components/EmptyList';
 import LoadingDataComponent from '@/components/LoadingData';
-import ReleaseStatusComponent from '@/components/ReleaseStatus';
-
-import { useSettingStore } from '@/state/settingStore';
-import { useUserStore } from '@/state/userStore';
-
-import { apiEndpoint } from '@/util/resources';
-import { getLocalStorage, setLocalStorage } from '@/util/storage';
 import colors from '@/constants/colors';
-import { releaseInterface } from '@/constants/typesInterface';
-import { useReleaseStore } from '@/state/releaseStore';
+import ViewSongItemComponent from '@/components/account/ViewSongItem';
+import { useGetReleases } from '@/hooks/release/useGetReleases';
 
 // type status = "Live" | "Pending" | "Incomplete" | "Complete" | "Failed";
-
-// const albumSongs = [
-//     {
-//         song_cover: albumImage,
-//         song_title: "Good God",
-//         artist_name: "Joseph solomon",
-//         status: "Live"
-//     },
-//     {
-//         song_cover: albumImage,
-//         song_title: "Good God",
-//         artist_name: "Joseph solomon",
-//         status: "Complete"
-//     },
-//     {
-//         song_cover: albumImage,
-//         song_title: "Good God",
-//         artist_name: "Joseph solomon",
-//         status: "Incomplete"
-//     },
-//     {
-//         song_cover: albumImage,
-//         song_title: "Good God",
-//         artist_name: "Joseph solomon",
-//         status: "Pending"
-//     },
-//     {
-//         song_cover: albumImage,
-//         song_title: "Good God",
-//         artist_name: "Joseph solomon",
-//         status: "Live"
-//     },
-//     {
-//         song_cover: albumImage,
-//         song_title: "Good God",
-//         artist_name: "Joseph solomon",
-//         status: "Complete"
-//     },
-//     {
-//         song_cover: albumImage,
-//         song_title: "Good God",
-//         artist_name: "Joseph solomon",
-//         status: "Failed"
-//     },
-//     {
-//         song_cover: albumImage,
-//         song_title: "Good God",
-//         artist_name: "Joseph solomon",
-//         status: "Pending"
-//     },
-//     {
-//         song_cover: albumImage,
-//         song_title: "Good God",
-//         artist_name: "Joseph solomon",
-//         status: "Complete"
-//     },
-//     {
-//         song_cover: albumImage,
-//         song_title: "Good God",
-//         artist_name: "Joseph solomon",
-//         status: "Complete"
-//     },
-//     {
-//         song_cover: albumImage,
-//         song_title: "Good God",
-//         artist_name: "Joseph solomon",
-//         status: "Failed"
-//     },
-//     {
-//         song_cover: albumImage,
-//         song_title: "Good God",
-//         artist_name: "Joseph solomon",
-//         status: "Failed"
-//     },
-// ];
 
 
 function AllMusic_RL() {
     const navigate = useNavigate();
     const [albumType, setAlbumType] = useState<"Single" | "Album">("Single");
-    // const darkTheme = useSettingStore((state) => state.darkTheme);
-    const userData = useUserStore((state) => state.userData);
-    const accessToken = useUserStore((state) => state.accessToken);
-    // const [singleRelease, setSingleRelease] = useState<any[]>();
-
-    const [releases, setReleases] = useState<releaseInterface[]>();
-    const _setSongDetails = useReleaseStore((state) => state._setSongDetails);
-
-    const _setToastNotification = useSettingStore((state) => state._setToastNotification);
-    const [apiResponse, setApiResponse] = useState({
-        display: false,
-        status: true,
-        message: ""
-    });
-
+    
+    const { 
+        apiResponse, // setApiResponse, 
+        releases, // setReleases,
+        getAlbumRelease, getSingleRelease
+    } = useGetReleases();
 
     useEffect(() => {
         getSingleRelease();
     }, []);
-
-    const getSingleRelease = async () => {
-        const localResponds = getLocalStorage("allSingleReleases");
-        if (localResponds && localResponds.length) setReleases(localResponds);
-
-        try {
-            const response = (await axios.get(`${apiEndpoint}/Release/getReleaseByEmail/${ userData.email }`, {
-                headers: {
-                    Authorization: `Bearer ${accessToken}`
-                }
-            })).data;
-            console.log(response);
-
-            setLocalStorage("allSingleReleases", response);
-            setReleases(response);
-            // setSingleRelease(response);
-
-            if (!response.length) {
-                setApiResponse({
-                    display: true,
-                    status: true,
-                    message: "You don't have any single Release yet."
-                });
-            }
-
-        } catch (error: any) {
-            const errorResponse = error.response.data;
-            console.error(errorResponse);
-
-            setReleases([]);
-            // setSingleRelease([]);
-
-            setApiResponse({
-                display: true,
-                status: false,
-                message: errorResponse.message || "Ooops and error occurred!"
-            });
-
-            _setToastNotification({
-                display: true,
-                status: "error",
-                message: errorResponse.message || "Ooops and error occurred!"
-            });
-        }
-    }
-
-    const getAlbumRelease = async () => {
-        const localResponds = getLocalStorage("allAlbumReleases");
-        if (localResponds && localResponds.length) setReleases(localResponds);
-
-        try {
-            // const response = (await axios.get(`${apiEndpoint}/songs/GetMyAlbumsByEmail?email=latham01@yopmail.com`, {
-            const response = (await axios.get(`${apiEndpoint}/songs/GetMyAlbumsByEmail?email=${ userData.email }`, {
-                headers: {
-                    Authorization: `Bearer ${accessToken}`
-                }
-            })).data;
-            console.log(response);
-
-            setLocalStorage("allAlbumReleases", response.albums);
-            setReleases(response.albums);
-
-            if (!response.length) {
-                setApiResponse({
-                    display: true,
-                    status: true,
-                    message: "You don't have any single Release yet."
-                });
-            }
-
-        } catch (error: any) {
-            const errorResponse = error.response.data;
-            console.error(errorResponse);
-
-            _setToastNotification({
-                display: true,
-                status: "error",
-                message: errorResponse.message || "Ooops and error occurred!"
-            });
-        }
-    }
-
-    // const songView = (song: any, index: number) => (
-    //     <Grid item xs={6} md={4} key={index}>
-    //         <Box sx={{ width: "95%" }}>
-    //             <Box
-    //                 sx={{
-    //                     height: {xs: "152.99px", md: "268px"},
-    //                     borderRadius: {xs: "6.85px", md: "12px"},
-    //                     bgcolor: "#343434",
-    //                     textAlign: "center",
-    //                     display: "flex",
-    //                     justifyContent: "center",
-    //                     alignItems: "center"
-    //                 }}
-    //             >
-    //                 <Box 
-    //                     sx={{
-    //                         width: {xs: "124.48px", md: "218.06px"},
-    //                         height: {xs: "124.48px", md: "218.06px"}
-    //                     }}
-    //                 >
-    //                     <img
-    //                         src={song.song_cover} alt={`${song.song_title} song cover`}
-    //                         style={{
-    //                             width: "100%",
-    //                             height: "100%",
-    //                             objectFit: "contain"
-    //                         }}
-    //                     />
-    //                 </Box>
-    //             </Box>
-
-    //             <Typography
-    //                 sx={{
-    //                     fontWeight: "900",
-    //                     fontSize: {xs: "10.85px", md: "19px"},
-    //                     lineHeight: {xs: "13.7px", md: "24px"},
-    //                     letterSpacing: {xs: "-0.77px", md: "-1.34px"},
-    //                     // color: "#fff",
-    //                     my: {xs: "8px 0 0 0", md: "8px 0 8px 0"}
-    //                 }}
-    //             > { song.song_title } </Typography>
-
-
-    //             <Typography
-    //                 sx={{
-    //                     display: albumType == "Album" ? "block" : "none",
-    //                     fontWeight: "400",
-    //                     fontSize: {xs: "8.02px", md: "15px"},
-    //                     lineHeight: {xs: "12.83px", md: "24px"},
-    //                     // letterSpacing: {xs: "-0.77px", md: "-1.34px"},
-    //                     color: "#979797",
-    //                     mb: {md: 1}
-    //                 }}
-    //             > Album </Typography>
-
-    //             <ReleaseStatusComponent status={song.status} />
-
-    //         </Box>
-    //     </Grid>
-    // );
-
-
-    const viewSong = (song: releaseInterface, index: number) => (
-        <Grid item xs={6} md={4} key={index}>
-            <Box 
-                sx={{ 
-                    width: "100%",
-                    maxWidth: {xs: "196.38px", md: "345px"},
-                    mx: "auto"
-                }}
-                onClick={() => {
-                    navigate(`/account/artist/${albumType == "Album" ? "album-details" : "song-details"}`);
-
-                    _setSongDetails({
-                        artist_name: song.artist_name,
-                        cover_photo: song.song_cover || song.song_cover_url || albumImage,
-                        email: song.email,
-                        label_name: song.label_name,
-                        primary_genre: song.primary_genre,
-                        secondary_genre: song.secondary_genre,
-                        song_title: song.album_title || song.song_title || '',
-                        stream_time: '',
-                        streams: "",
-                        total_revenue: "",
-                        upc_ean: song.upc_ean
-                    });
-                }}
-            >
-                <Box
-                    sx={{
-                        // width: "100%",
-                        // maxWidth: {xs: "196.38px", md: "345px"},
-                        height: {xs: "152.99px", md: "268px"},
-                        borderRadius: {xs: "6.85px", md: "12px"},
-                        bgcolor: "#343434",
-                        textAlign: "center",
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center"
-                    }}
-                >
-                    <Box 
-                        sx={{
-                            width: {xs: "124.48px", md: "218.06px"},
-                            height: {xs: "124.48px", md: "218.06px"}
-                        }}
-                    >
-                        <img
-                            src={ song.song_cover || song.song_cover_url || albumImage } 
-                            alt={`${song.song_title} song cover`}
-                            style={{
-                                width: "100%",
-                                height: "100%",
-                                objectFit: "contain"
-                            }}
-                        />
-                    </Box>
-                </Box>
-
-                <Typography
-                    sx={{
-                        fontWeight: "900",
-                        fontSize: {xs: "10.85px", md: "19px"},
-                        lineHeight: {xs: "13.7px", md: "24px"},
-                        letterSpacing: {xs: "-0.77px", md: "-1.34px"},
-                        // color: "#fff",
-                        m: {xs: "8px 0 0 0", md: "8px 0 8px 0"}
-                    }}
-                > { song.song_title } </Typography>
-
-                <Typography
-                    sx={{
-                        display: albumType == "Album" ? "block" : "none",
-                        fontWeight: "400",
-                        fontSize: {xs: "8.02px", md: "15px"},
-                        lineHeight: {xs: "12.83px", md: "24px"},
-                        // letterSpacing: {xs: "-0.77px", md: "-1.34px"},
-                        color: "#979797",
-                        mb: {md: 1}
-                    }}
-                > Album </Typography>
-
-                <ReleaseStatusComponent status={song.status} />
-            </Box>
-        </Grid>
-    );
 
       
     return (
@@ -474,7 +152,13 @@ function AllMusic_RL() {
                             releases.length ?
                                 releases.map((song, index) => (
                                     // songView(song, index)
-                                    viewSong(song, index)
+                                    // viewSong(song, index)
+
+                                    <ViewSongItemComponent 
+                                        albumType={albumType}
+                                        index={index}
+                                        song={song}
+                                    />
                                 ))
                             : <EmptyListComponent notFoundText={apiResponse.message} />
                         : <LoadingDataComponent />

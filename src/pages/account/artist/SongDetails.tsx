@@ -25,12 +25,13 @@ import { useReleaseStore } from '@/state/releaseStore';
 import BarChartGraphComponent from '@/components/analytics/BarChartGraph';
 import SingleSongDspOverviewComponent from '@/components/analytics/SingleSongDspOverview';
 import colors from '@/constants/colors';
-import { useUserStore } from '@/state/userStore';
-import { getLocalStorage } from '@/util/storage';
-import axios from 'axios';
-import { apiEndpoint, currencyDisplay, formatedNumber } from '@/util/resources';
+// import { useUserStore } from '@/state/userStore';
+// import { getLocalStorage } from '@/util/storage';
+// import axios from 'axios';
+import { currencyDisplay, formatedNumber } from '@/util/resources';
 import { getDateRange, getFormattedDateRange } from '@/util/dateTime';
-import { useEffect } from 'react';
+// import { useEffect } from 'react';
+// import { useAnalytics } from '@/hooks/analytics/useAnalytics';
 
 
 const dataset = [
@@ -126,72 +127,78 @@ const dataset = [
 function SongDetails() {
     const navigate = useNavigate();
     const darkTheme = useSettingStore((state) => state.darkTheme);
-    const userData = useUserStore((state) => state.userData); 
-    const accessToken = useUserStore((state) => state.accessToken);
-    const _setToastNotification = useSettingStore((state) => state._setToastNotification);
+    // const userData = useUserStore((state) => state.userData); 
+    // const accessToken = useUserStore((state) => state.accessToken);
+    // const _setToastNotification = useSettingStore((state) => state._setToastNotification);
 
     const songDetails = useReleaseStore((state) => state.songDetails);
+
+    // const { 
+    //     appleSpotifyRecord, getAppleSpotifyRecord, 
+    //     getTotalStreamsAndRevenueRecord, totalStreamsAndRevenueRecord,
+    // } = useAnalytics();
 
     // const [reportAnalytics, setReportAnalytics] = useState<temptAnalyticsInterface[]>();
     // const [reportMainDashData, setReportMainDashData] = useState<temptAnalyticsInterface>();
 
 
-
-    useEffect(() => {
-        const localReportAnalytics = getLocalStorage("reportAnalytics");
-        if (localReportAnalytics && localReportAnalytics.length) {
-            // setReportAnalytics(localReportAnalytics);
-            // setReportMainDashData(localReportAnalytics[0]);
-        }
-
-        getAnalyticsData();
-    }, []);
+    // useEffect(() => {
+    //     // getAnalyticsData();
+    //     getTotalStreamsAndRevenueRecord();
+    // }, []);
 
     
-    const getAnalyticsData = async () => {
-        // if (reportType == "this block of code is to be deleted ") {
-        //     console.log(reportAnalytics);
-        //     console.log(reportMainDashData);
-        // };
+    // const getAnalyticsData = async () => {
+    //     // if (reportType == "this block of code is to be deleted ") {
+    //     //     console.log(reportAnalytics);
+    //     //     console.log(reportMainDashData);
+    //     // };
 
-        try {
-            const response = (await axios.get(`${apiEndpoint}/analytics/analytics/data`, {
-                headers: {
-                    Authorization: `Bearer ${accessToken}`,
-                },
-                params: {
-                    // email: "latham01@yopmail.com",
-                    email: userData.email,
-                }
-            })).data;
-            console.log(response);
+    //     const localReportAnalytics = getLocalStorage("reportAnalytics");
+    //     if (localReportAnalytics && localReportAnalytics.length) {
+    //         // setReportAnalytics(localReportAnalytics);
+    //         // setReportMainDashData(localReportAnalytics[0]);
+    //     }
 
-            // setReportAnalytics(response);
-            // setLocalStorage("reportAnalytics", response);
 
-            // if (response.length) {
-            //     setReportMainDashData(response[0]);
-            // }
+    //     try {
+    //         const response = (await axios.get(`${apiEndpoint}/analytics/analytics/data`, {
+    //             headers: {
+    //                 Authorization: `Bearer ${accessToken}`,
+    //             },
+    //             params: {
+    //                 // email: "latham01@yopmail.com",
+    //                 email: userData.email,
+    //             }
+    //         })).data;
+    //         console.log(response);
+
+    //         // setReportAnalytics(response);
+    //         // setLocalStorage("reportAnalytics", response);
+
+    //         // if (response.length) {
+    //         //     setReportMainDashData(response[0]);
+    //         // }
             
-            if (!response.length) {
-                _setToastNotification({
-                    display: true,
-                    status: "error",
-                    message: response.message || "Ooops and error occurred!"
-                });
-            }
+    //         if (!response.length) {
+    //             _setToastNotification({
+    //                 display: true,
+    //                 status: "error",
+    //                 message: response.message || "Ooops and error occurred!"
+    //             });
+    //         }
     
-        } catch (error: any) {
-            const errorResponse = error.response.data || error;
-            console.error(errorResponse);
+    //     } catch (error: any) {
+    //         const errorResponse = error.response.data || error;
+    //         console.error(errorResponse);
     
-            _setToastNotification({
-                display: true,
-                status: "error",
-                message: errorResponse.message || "Ooops and error occurred!"
-            });
-        }
-    }
+    //         _setToastNotification({
+    //             display: true,
+    //             status: "error",
+    //             message: errorResponse.message || "Ooops and error occurred!"
+    //         });
+    //     }
+    // }
 
     const handleDataRangeData = (newValue: string) => {
         // console.log(newValue);
