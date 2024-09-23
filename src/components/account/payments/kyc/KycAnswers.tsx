@@ -11,6 +11,7 @@ import TextField from '@mui/material/TextField';
 import { paymentTextFieldStyle } from '@/util/mui';
 import Button from '@mui/material/Button';
 import CircularProgress from '@mui/material/CircularProgress';
+import { setLocalStorage } from '@/util/storage';
 
 
 
@@ -43,6 +44,7 @@ const KycAnswersComponent: React.FC<_Props> = ({
         console.log(formData);
         console.log(formData);
 
+        setLocalStorage("isKYCsetupCompleted", true);
         isCompleteState(true);
 
     }

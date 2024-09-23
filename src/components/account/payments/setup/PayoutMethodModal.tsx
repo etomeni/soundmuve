@@ -13,6 +13,7 @@ import AccountBalanceOutlinedIcon from '@mui/icons-material/AccountBalanceOutlin
 import PayPalLogo from "@/assets/images/PayPalLogo.png";
 import colors from '@/constants/colors';
 import PaymentModalWrapper from '../PaymentWrapper';
+import { getLocalStorage } from '@/util/storage';
 // import PayoneerLogo from "@/assets/images/PayoneerLogo.png";
 
 
@@ -35,8 +36,12 @@ const PayoutMethodModalComponent: React.FC<_Props> = ({
     useEffect(() => {
         if (openModal) {
             // write a function that check if KYC is set aleady or not
-            closeModal();
-            openKycModal();
+            const isKYCsetupCompleted = getLocalStorage("isKYCsetupCompleted");
+            if (!isKYCsetupCompleted) {
+                closeModal();
+                openKycModal();
+            }
+
         }
     }, [openModal]);
     

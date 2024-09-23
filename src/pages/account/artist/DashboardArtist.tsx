@@ -21,7 +21,6 @@ import { useUserStore } from '@/state/userStore';
 import { useReleaseStore } from '@/state/releaseStore';
 
 import { currencyDisplay } from '@/util/resources';
-import { getLocalStorage } from '@/util/storage';
 import colors from '@/constants/colors';
 import { releaseInterface } from '@/constants/typesInterface';
 import FormControl from '@mui/material/FormControl';
@@ -47,7 +46,8 @@ function DashboardArtist() {
     } = useGetReleases();
 
     useEffect(() => {
-        getSingleRelease();
+        // getSingleRelease();
+        getPayoutInfo();
     }, []);
     
     const [openReleaseModal, setOpenReleaseModal] = useState(false);
@@ -57,18 +57,11 @@ function DashboardArtist() {
     const [withdrawlModal, setWithdrawlModal] = useState(false);
 
     const handleGetSingleRelease = () => {
-        setReleases(undefined);
+        setReleases([]);
 
-        const localResponds = getLocalStorage("singleRelease");
-        if (localResponds && localResponds.length) setReleases(localResponds);
-        
         getSingleRelease();
     }
 
-    useEffect(() => {
-        handleGetSingleRelease();
-        getPayoutInfo();
-    }, []);
 
     const handleOnclickedSong = (release: releaseInterface, albumSongIndex: number = 0) => {
 

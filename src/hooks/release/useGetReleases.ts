@@ -6,12 +6,18 @@ import { getLocalStorage, setLocalStorage } from "@/util/storage";
 import { releaseInterface } from '@/constants/typesInterface';
 
 
+function getLocalSingleRelease() {
+    const localResponds = getLocalStorage("singleRelease");
+    if (localResponds && localResponds.length) return localResponds;
+    return undefined
+}
+
 export function useGetReleases() {
     const userData = useUserStore((state) => state.userData);
     const accessToken = useUserStore((state) => state.accessToken);
     // const [singleRelease, setSingleRelease] = useState<any[]>();
 
-    const [releases, setReleases] = useState<releaseInterface[]>();
+    const [releases, setReleases] = useState<releaseInterface[]>(getLocalSingleRelease);
 
     const [apiResponse, setApiResponse] = useState({
         display: false,

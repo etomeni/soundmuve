@@ -51,8 +51,8 @@ const formSchema = yup.object({
     albumTitle: yup.string().required().trim().label("Album Title"),
     artistName: yup.string().trim().label("Artist Name"),
 
-    appleMusicUrl: yup.string().trim().label("Apple Music Profile Link"),
-    spotifyMusicUrl: yup.string().trim().label("Spotify Music Profile Link"),
+    appleMusicUrl: yup.string().required().trim().label("Apple Music Profile Link"),
+    spotifyMusicUrl: yup.string().required().trim().label("Spotify Music Profile Link"),
 
     // explicitSongLyrics: yup.string().trim(),
     language: yup.string().required().trim().label("Language"),
@@ -586,13 +586,13 @@ function AlbumDetails() {
                                                     letterSpacing: {xs: "-0.07px", md: "-0.13px"}
                                                 }}> Artist Profile </Typography>
 
-                                                <Typography sx={{
+                                                {/* <Typography sx={{
                                                     fontWeight: "400",
                                                     fontSize: {xs: "13.88px", md: "18px"},
                                                     lineHeight: {xs: "9.25px", md: "12px"},
                                                     letterSpacing: {xs: "-0.1px", md: "-0.13px"},
                                                     // mt: "9px"
-                                                }}> Optional </Typography>
+                                                }}> Optional </Typography> */}
                                             </Box>
 
                                             <ArtistProfileInfoComponent  />
