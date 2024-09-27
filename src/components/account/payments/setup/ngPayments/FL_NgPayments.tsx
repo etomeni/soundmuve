@@ -33,6 +33,7 @@ import PaymentModalWrapper from '../../PaymentWrapper';
 export const ngPaymentFormSchema = yup.object({
     beneficiaryName: yup.string().required().trim().label("Beneficiary Name"),
     bank: yup.string().required().min(2, "Please enter a valid bank name").trim().label("Bank"),
+    bankName: yup.string(),
     accountNumber: yup.string().required().length(10).trim().label("Account Number"),
 });
 
@@ -96,7 +97,39 @@ const FL_NgPaymentsModalComponent: React.FC<_Props> = ({
     const onSubmit = async (formData: ngPaymentsInterface) => {
         // console.log(formData);
 
-        confirmBtn(formData);
+        // const userAcctData = {
+        //     account_number: formData.accountNumber,
+        //     account_bank: formData.bank
+        // }
+
+        // try {
+        //     const response = (await axios.post(`${apiEndpoint}/payouts/resolve-account`,
+        //         userAcctData, {
+        //             headers: {
+        //                 Authorization: `Bearer ${accessToken}`
+        //             }
+        //         }
+        //     )).data;
+        //     console.log(response);
+        //     // setBanks(response.data);
+            
+        // } catch (error: any) {
+        //     const errorResponse = error.response.data || error;
+        //     console.error(errorResponse);
+        // }
+
+        let bankName = ''
+        // Use the filter method to find the object with the matching code
+        const result = banks.filter(obj => obj.code == formData.bank);
+        // If a match is found, return the first object
+        if (result.length > 0) {
+            bankName = result[0].name;
+        }
+        
+        confirmBtn({
+            ...formData,
+            bankName: bankName
+        });
     }
 
 
@@ -165,8 +198,8 @@ const FL_NgPaymentsModalComponent: React.FC<_Props> = ({
                                         error={ errors.bank ? true : false }
                                         { ...register('bank') }
                                     >
-                                        { banks.map((bank, index) => (
-                                            <MenuItem key={index} value={bank.name}>
+                                        { banks.map((bank, index) => ( 
+                                            <MenuItem key={index} value={bank.code}>
                                                 {bank.name}
                                             </MenuItem>
                                         )) }

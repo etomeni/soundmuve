@@ -75,6 +75,7 @@ const FL_NgConfirmationModalComponent: React.FC<_Props> = ({
             currency: currency || '',
             account_bank: formData.bank,
             account_number: formData.accountNumber,
+            beneficiary_name: formData.beneficiaryName
         }
 
         try {
@@ -175,7 +176,7 @@ const FL_NgConfirmationModalComponent: React.FC<_Props> = ({
                                     type='text'
                                     inputMode='text'
                                     label=''
-                                    defaultValue={formDetails.bank}
+                                    defaultValue={formDetails.bankName || formDetails.bank}
                                     
                                     InputProps={{
                                         sx: {

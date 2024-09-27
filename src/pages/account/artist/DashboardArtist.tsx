@@ -127,6 +127,7 @@ function DashboardArtist() {
                     }}
                 > Welcome { userData.firstName } 👋 </Typography>
 
+                {/* desktop view */}
                 <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
                     <Box 
                         sx={{
@@ -330,6 +331,7 @@ function DashboardArtist() {
                     </Box>
                 </Box>
 
+                {/* mobile view */}
                 <Box sx={{ display: { xs: 'block', sm: 'none' } }}>
                     <Box 
                         sx={{
@@ -359,36 +361,32 @@ function DashboardArtist() {
                             letterSpacing: "-0.16px",
                         }}>Add new Release</Typography>
 
-                        <Box sx={{
-                            display: "flex",
-                            flexDirection: "row",
-                            justifyContent: "space-between",
-                            alignItems: "center",
-                            gap: 10,
-                            mt: "auto",
-                            mx: "auto"
-                        }}>
-                            <Link to="/account/create-single" style={{
-                                textDecoration: "none",
-                                color: "#000000",
-                                border: "none",
-                                outline: "none",
+                        <Box onClick={() => setOpenReleaseModal(true) }
+                            sx={{
+                                display: "flex",
+                                flexDirection: "row",
+                                justifyContent: "space-between",
+                                alignItems: "center",
+                                gap: 10,
+                                mt: "auto",
+                                mx: "auto"
+                            }}
+                        >
+                            <Box sx={{
+                                p: "11.95px 34.66px",
+                                borderRadius: "14.34px",
+                                bgcolor: colors.milk,
+                                color: colors.dark
                             }}>
-                                <Box sx={{
-                                    p: "11.95px 34.66px",
-                                    borderRadius: "14.34px",
-                                    bgcolor: colors.milk,
-                                }}>
-                                    <Typography variant='body1' sx={{
-                                        fontFamily: "Geist",
-                                        fontWeight: '800',
-                                        fontSize: "17.93px",
-                                        lineHeight: "15.54px",
-                                        letterSpacing: "-0.16px",
-                                        textAlign: 'center',
-                                    }}> Get Started </Typography>
-                                </Box>
-                            </Link>
+                                <Typography variant='body1' sx={{
+                                    fontFamily: "Geist",
+                                    fontWeight: '800',
+                                    fontSize: "17.93px",
+                                    lineHeight: "15.54px",
+                                    letterSpacing: "-0.16px",
+                                    textAlign: 'center',
+                                }}> Get Started </Typography>
+                            </Box>
                         </Box>
                     </Box>
 

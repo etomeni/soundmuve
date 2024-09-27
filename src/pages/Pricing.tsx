@@ -12,7 +12,7 @@ import { useState } from "react";
 
 
 function Pricing() {
-    const [planCategory, setPlanCategory] = useState<"Unlimited" | "Pay per release">("Unlimited");
+    const [planCategory, setPlanCategory] = useState<"Unlimited" | "Pay per release">("Pay per release");
 
 
     return (
@@ -35,7 +35,7 @@ function Pricing() {
                     color: "#6C6050"
                 }}> Pricing </Typography>
 
-                <Typography variant='body1' component="p"
+                {/* <Typography variant='body1' component="p"
                     sx={{
                         pb: 4,
                         fontFamily: "Geist",
@@ -48,7 +48,7 @@ function Pricing() {
                     }}
                 >
                     You can stay on a $30 plan until you need to move to another plan
-                </Typography>
+                </Typography> */}
 
 
                 <Box sx={{
@@ -71,7 +71,7 @@ function Pricing() {
                             flexWrap: "nowrap"
                         }}
                     >
-                        <Typography variant="h2"
+                        {/* <Typography variant="h2"
                             onClick={() => setPlanCategory("Unlimited")}
                             sx={{
                                 bgcolor: planCategory == "Unlimited" ? colors.primary : "none",
@@ -85,7 +85,7 @@ function Pricing() {
                                 letterSpacing: {xs: "-0.88px", md: "-1.13px"},
                                 cursor: "pointer"
                             }}
-                        > Unlimited plan </Typography>
+                        > Unlimited plan </Typography> */}
 
                         <Typography variant="h2"
                             onClick={() => setPlanCategory("Pay per release")}
@@ -101,16 +101,14 @@ function Pricing() {
                                 letterSpacing: {xs: "-0.88px", md: "-1.13px"},
                                 cursor: "pointer"
                             }}
-                        >
-                            Pay per release
-                        </Typography>
+                        > Pay per release </Typography>
                     </Box>
                 </Box>
 
 
                 <Box sx={{my: 10}}>
                     <Grid container spacing={2}>
-                        <Grid item xs={12} md={4} sx={{order: {xs: 2, md: "unset"}}}>
+                        <Grid item xs={12} md={6} sx={{order: {xs: 2, md: "unset"}}}>
                             <Box height="100%"
                                 sx={{
                                     bgcolor: "#EFDEBF",
@@ -126,9 +124,7 @@ function Pricing() {
                                         lineHeight: {xs: "38.78px", md: "50px"},
                                         letterSpacing: {xs: "-0.88px", md: "-1.13px"},
                                     }}
-                                >
-                                    Basic plan
-                                </Typography>
+                                > Singles </Typography>
 
                                 <Typography>
                                     <Typography variant="subtitle1" component="span"
@@ -138,16 +134,29 @@ function Pricing() {
                                             lineHeight: {xs: "78.28px", md: "100.93px" },
                                             letterSpacing: {xs: "-1.77px", md: "-2.28px"},
                                         }}
-                                    > $10 </Typography>
+                                    > $25 </Typography>
 
-                                    <Typography variant="subtitle2" component="span"
+                                    {/* <Typography variant="subtitle2" component="span"
                                         sx={{
                                             fontWeight: "400",
                                             fontSize: {xs: "12.41px", md: "16px"},
                                             lineHeight: {xs: "31.02px", md: "40px" },
                                             letterSpacing: {xs: "-0.1px", md: "-0.13px"},
                                         }}
-                                    > Per year </Typography>
+                                    > Per year </Typography> */}
+                                </Typography>
+
+                                <Typography variant='body2'
+                                    sx={{
+                                        fontFamily: "Geist",
+                                        fontWeight: "600",
+                                        fontSize: {xs: "13px", md: "14px"},
+                                        lineHeight: {xs: "20px", md: "24px" },
+                                        letterSpacing: {xs: "-0.13px", md: "-0.13px"},
+                                        textAlign: "justify"
+                                    }}
+                                >
+                                    Release to all 150+ Digital Stores and Social media platforms.
                                 </Typography>
 
                                 <Box
@@ -169,7 +178,6 @@ function Pricing() {
                                         }}
                                     >Get started</Typography>
                                 </Box>
-
 
                                 <Typography variant="h3" component="h3"
                                     sx={{
@@ -212,7 +220,7 @@ function Pricing() {
                             </Box>
                         </Grid>
                         
-                        <Grid item xs={12} md={4} sx={{order: {xs: 1, md: "unset"}}}>
+                        <Grid item xs={12} md={6} sx={{order: {xs: 1, md: "unset"}}}>
                             <Box height="100%"
                                 sx={{
                                     bgcolor: "#53674C", 
@@ -228,7 +236,7 @@ function Pricing() {
                                         lineHeight: {xs: "38.78px", md: "50px"},
                                         letterSpacing: {xs: "-0.88px", md: "-1.13px"},
                                     }}
-                                > Business plan </Typography>
+                                > Album </Typography>
 
                                 <Typography>
                                     <Typography variant="subtitle1" component="span"
@@ -238,16 +246,29 @@ function Pricing() {
                                             lineHeight: {xs: "78.28px", md: "100.93px" },
                                             letterSpacing: {xs: "-1.77px", md: "-2.28px"},
                                         }}
-                                    > $30 </Typography>
+                                    > $45 </Typography>
 
-                                    <Typography variant="subtitle2" component="span"
+                                    {/* <Typography variant="subtitle2" component="span"
                                         sx={{
                                             fontWeight: "400",
                                             fontSize: {xs: "12.41px", md: "16px"},
                                             lineHeight: {xs: "31.02px", md: "40px" },
                                             letterSpacing: {xs: "-0.1px", md: "-0.13px"},
                                         }}
-                                    > Per year </Typography>
+                                    > Per year </Typography> */}
+                                </Typography>
+
+                                <Typography variant='body2'
+                                    sx={{
+                                        fontFamily: "Geist",
+                                        fontWeight: "600",
+                                        fontSize: {xs: "13px", md: "14px"},
+                                        lineHeight: {xs: "20px", md: "24px" },
+                                        letterSpacing: {xs: "-0.13px", md: "-0.13px"},
+                                        textAlign: "justify"
+                                    }}
+                                >
+                                    Release to all 150+ Digital Stores and Social media platforms.
                                 </Typography>
 
                                 <Box
@@ -314,7 +335,7 @@ function Pricing() {
                             </Box>
                         </Grid>
 
-                        <Grid item xs={12} md={4} sx={{order: {xs: 3, md: "unset"}}}>
+                        {/* <Grid item xs={12} md={4} sx={{order: {xs: 3, md: "unset"}}}>
                             <Box height="100%"
                                 sx={{
                                     bgcolor: "#EFDEBF",
@@ -408,7 +429,7 @@ function Pricing() {
                                     </li>
                                 </ul>
                             </Box>
-                        </Grid>
+                        </Grid> */}
                     </Grid>
                 </Box>
                 

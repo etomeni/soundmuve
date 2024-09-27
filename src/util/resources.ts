@@ -347,3 +347,9 @@ export function displayMessageCount(messageCount: number) {
     return (messageCount / 1000000000).toFixed(2) + "B"; // Suffix B for billions
   }
 }
+
+export function isNumeric(str: string) {
+  // Use regular expression to check if the string contains only digits
+  const regex = /^\d+$/;
+  return regex.test(str);
+}

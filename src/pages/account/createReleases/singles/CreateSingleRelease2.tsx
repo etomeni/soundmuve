@@ -44,6 +44,7 @@ import cloudUploadIconImg from "@/assets/images/cloudUploadIcon.png";
 import MultipleSelectCheckmarks from '@/components/MultipleSelectCheckmarks';
 import colors from '@/constants/colors';
 import { releaseSelectStyle3, releaseTextFieldStyle } from '@/util/mui';
+import { cartItemStore } from '@/state/cartStore';
 
 
 const formSchema = yup.object({
@@ -80,6 +81,7 @@ function CreateSingleRelease2() {
     const _setSingleRelease2 = createReleaseStore((state) => state._setSingleRelease2);
     const _clearSingleRelease = createReleaseStore((state) => state._clearSingleRelease);
     const _restoreAllRelease = createReleaseStore((state) => state._restoreAllRelease);
+    const _addToCart = cartItemStore((state) => state._addToCart);
     const [openCopyrightOwnershipModal, setOpenCopyrightOwnershipModal] = useState(false);
 
     const [openSuccessModal, setOpenSuccessModal] = useState(false);
@@ -457,8 +459,18 @@ function CreateSingleRelease2() {
 
             setOpenSuccessModal(true);
 
+            _addToCart({
+                id: singleRelease1._id,
+                email: singleRelease1.email,
+                artistName: singleRelease1.artist_name,
+                artWorkImg: imagePreview,
+                price: 25,
+                releaseType: "Single",
+                songTitle: singleRelease1.song_title
+            });
+
             setTimeout(() => {
-                navigate("/account");
+                navigate("/account/cart");
                 setOpenSuccessModal(false);
                 _clearSingleRelease();
             }, 1000);

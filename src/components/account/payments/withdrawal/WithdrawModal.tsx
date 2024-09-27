@@ -22,7 +22,7 @@ import MenuItem from '@mui/material/MenuItem';
 
 // import { getSupportedCurrency } from '@/util/currencies';
 import axios from 'axios';
-import { apiEndpoint, currencyDisplay } from '@/util/resources';
+import { apiEndpoint, currencyDisplay, isNumeric } from '@/util/resources';
 import colors from '@/constants/colors';
 import { useUserStore } from '@/state/userStore';
 import PaymentModalWrapper from '../PaymentWrapper';
@@ -31,6 +31,7 @@ import LoadingDataComponent from '@/components/LoadingData';
 import InputAdornment from '@mui/material/InputAdornment';
 import { getCurrencySymbol } from '@/util/currencies';
 import { paymentDetailsInterface, usePayoutData } from '@/hooks/payments/usePayoutInfo';
+import { allNgBanks } from '@/util/banks';
 
 
 const formSchema = yup.object({
@@ -105,6 +106,7 @@ const WithdrawModalComponent: React.FC<_Props> = ({
         status: true,
         message: ""
     });
+
     
     const {
         handleSubmit, register, getValues, setValue, reset, formState: { errors, isSubmitting, isValid } 
@@ -189,6 +191,18 @@ const WithdrawModalComponent: React.FC<_Props> = ({
             currency: payoutData ? payoutData[0].currency : '',
             paymentDetails: payoutData ? payoutData[0] : undefined
         });
+    }
+
+    const resolveAccountName = (bankName: string) => {
+        if (isNumeric(bankName)) {
+            // Use the filter method to find the object with the matching code
+            const result = allNgBanks.filter(obj => obj.code == bankName);
+            // If a match is found, return the first object
+            if (result.length > 0) return result[0].name;
+            return bankName
+        }
+
+        return bankName || ''
     }
 
     const noPaymentDetails = (
@@ -296,9 +310,17 @@ const WithdrawModalComponent: React.FC<_Props> = ({
                                                 <MenuItem key={index} value={ payoutData._id }
                                                     title={ payoutData.account_number }
                                                 >
-                                                    { payoutData.currency } -&nbsp;
-                                                    { payoutData.account_number || payoutData.email || ' ' } 
-                                                    { payoutData.beneficiary_name ? ` (${ payoutData.beneficiary_name })` : '' }
+                                                    <Box>
+                                                        <Typography variant='body1'>
+                                                            { payoutData.currency } -&nbsp;
+                                                            { payoutData.account_number || payoutData.email || ' ' } 
+                                                            { payoutData.beneficiary_name ? ` (${ payoutData.beneficiary_name })` : '' }
+                                                        </Typography>
+
+                                                        <Typography variant='body1'>
+                                                            { resolveAccountName(payoutData.account_bank || payoutData.bank_name || "") } 
+                                                        </Typography>
+                                                    </Box>
                                                 </MenuItem>
                                             )) }
                                         </Select>

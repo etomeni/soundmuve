@@ -24,21 +24,21 @@ import AccountLayout from "@/pages/account/AccountLayout.tsx";
 import DashboardHome from "@/pages/account/DashboardHome.tsx";
 
 import DashboardArtist from "@/pages/account/artist/DashboardArtist.tsx";
-import CreateSingle from "@/pages/account/CreateSingleRelease.tsx";
 import DashboardRecordLabel from "@/pages/account/recordLabel/DashboardRecordLabel.tsx";
-import CreateSingleRelease2 from "@/pages/account/CreateSingleRelease2.tsx";
+import CreateSingle from "@/pages/account/createReleases/singles/CreateSingleRelease.tsx";
+import CreateSingleRelease2 from "@/pages/account/createReleases/singles/CreateSingleRelease2.tsx";
 import BalanceHistory from "@/pages/account/artist/BalanceHistory.tsx";
 import SalesReport from "@/pages/account/artist/SalesReport.tsx";
 import AnalyticsReach from "@/pages/account/artist/AnalyticsReach.tsx";
 import SongDetails from "@/pages/account/artist/SongDetails.tsx";
 import AllMusic from "@/pages/account/artist/AllMusic.tsx";
 import AlbumDetails from "@/pages/account/artist/AlbumDetails.tsx";
-import CreateAlbumReleaseDetails from "@/pages/account/createAlbumRelease/AlbumDetails.tsx";
-import CreateAlbumReleaseAdvanceFeatures from "@/pages/account/createAlbumRelease/AdvanceFeatures.tsx";
-import CreateAlbumReleaseSelectStores from "@/pages/account/createAlbumRelease/SelectStores.tsx";
-import CreateAlbumReleaseSongUpload from "@/pages/account/createAlbumRelease/SongUpload.tsx";
-import CreateAlbumReleaseAlbumArt from "@/pages/account/createAlbumRelease/AlbumArt.tsx";
-import CreateAlbumReleaseOverview from "@/pages/account/createAlbumRelease/Overview.tsx";
+import CreateAlbumReleaseDetails from "@/pages/account/createReleases/album/AlbumDetails";
+import CreateAlbumReleaseAdvanceFeatures from "@/pages/account/createReleases/album/AdvanceFeatures";
+import CreateAlbumReleaseSelectStores from "@/pages/account/createReleases/album/SelectStores";
+import CreateAlbumReleaseSongUpload from "@/pages/account/createReleases/album/SongUpload";
+import CreateAlbumReleaseAlbumArt from "@/pages/account/createReleases/album/AlbumArt";
+import CreateAlbumReleaseOverview from "@/pages/account/createReleases/album/Overview";
 import AddArtistRecordLabel from "@/pages/account/recordLabel/AddArtist.tsx";
 import BalanceHistory_RL from "@/pages/account/recordLabel/BalanceHistory_RL.tsx";
 import SalesReport_RL from "@/pages/account/recordLabel/SalesReport.tsx";
@@ -48,6 +48,8 @@ import AlbumDetails_RL from "@/pages/account/recordLabel/AlbumDetails_RL.tsx";
 import AllMusic_RL from "@/pages/account/recordLabel/AllMusic_RL.tsx";
 import ArtistList_RL from "@/pages/account/recordLabel/ArtistList.tsx";
 import AccountFaq from "./pages/account/AccountFaq";
+import CartPage from "./pages/account/createReleases/cartCheckout/Cart";
+import CartCheckoutPage from "./pages/account/createReleases/cartCheckout/Checkout";
 
 
 export const router = createBrowserRouter([
@@ -142,6 +144,15 @@ export const router = createBrowserRouter([
             {
               path: "faq",
               element: <AccountFaq />
+            },
+
+            {
+              path: "cart",
+              element: <CartPage />
+            },
+            {
+              path: "checkout",
+              element: <CartCheckoutPage />
             },
 
             {

@@ -148,3 +148,16 @@ export type releaseSongsInterface = {
     lyrics: string,
     ticktokClipStartTime: string,
 }
+
+
+
+export interface cartItemInterface {
+    id: string,
+    email: string,
+    artistName: string,
+    releaseType: 'Single' | 'Album',
+    songTitle: string,
+    artWorkImg: any,
+    price: number,
+    // totalPrice: string
+}

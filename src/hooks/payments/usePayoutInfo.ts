@@ -11,6 +11,10 @@ export type paymentDetailsInterface = {
     account_number: string,
     beneficiary_name: string,
     email: string,
+
+    account_bank?: string,
+    bank_name?: string,
+    // bank_name?: string,
 }
 
 

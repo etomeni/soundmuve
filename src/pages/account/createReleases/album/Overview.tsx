@@ -22,6 +22,7 @@ import SuccessModalComponent from '@/components/account/SuccessModal';
 import { apiEndpoint } from '@/util/resources';
 import { albumInterface } from '@/constants/typesInterface';
 import colors from '@/constants/colors';
+import { cartItemStore } from '@/state/cartStore';
 
 
 function CreateAlbumReleaseOverview() {
@@ -37,6 +38,7 @@ function CreateAlbumReleaseOverview() {
     const _clearAlbumRelease = createReleaseStore((state) => state._clearAlbumRelease);
     const albumReleaseAlbumArt = createReleaseStore((state) => state.albumReleaseAlbumArt);
     const completeAlbumData = createReleaseStore((state) => state.completeAlbumData);
+    const _addToCart = cartItemStore((state) => state._addToCart);
 
     const [openSuccessModal, setOpenSuccessModal] = useState(false);
     const _setToastNotification = useSettingStore((state) => state._setToastNotification);
@@ -46,8 +48,6 @@ function CreateAlbumReleaseOverview() {
         message: ""
     });
     const [releasedAlbum, setReleasedAlbum] = useState<albumInterface>();
-
-
 
     useEffect(() => {
         getAlbumRelease();
@@ -119,10 +119,21 @@ function CreateAlbumReleaseOverview() {
 
         _clearAlbumRelease();
 
+
+        _addToCart({
+            id: albumReleaseDetails._id,
+            email: albumReleaseDetails.email,
+            artistName: albumReleaseDetails.artist_name,
+            artWorkImg: albumReleaseAlbumArt.imagePreview,
+            price: 45,
+            releaseType: "Album",
+            songTitle: albumReleaseDetails.album_title
+        });
+
         setTimeout(() => {
             setOpenSuccessModal(false);
 
-            navigate("/account");
+            navigate("/account/cart");
         }, 1000);
     }
 

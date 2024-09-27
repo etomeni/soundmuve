@@ -178,7 +178,7 @@ export const releaseTextFieldStyle: SxProps<Theme> = {
         color: colors.dark,
         fontSize: '1rem',
         fontWeight: '400',
-        lineHeight: 1.5
+        lineHeight: 1.5,
     },
     '& .MuiInputBase-placeholder': { // Target placeholder text
         color: 'gray',
@@ -472,6 +472,36 @@ export const contactMuiTextFieldStyle: SxProps<Theme> = {
     },
 }
 
+export const submitBtnStyle: SxProps<Theme> = { 
+    bgcolor: colors.primary,
+    borderRadius: "17px",
+    // p: "10px 26px 10px 26px",
+    p: "16px 25px",
+    // width: "fit-content",
+    height: "auto",
+    "&.Mui-disabled": {
+        background: "#9c9c9c",
+        color: "#797979"
+    },
+    "&:hover": {
+        bgcolor: colors.primary,
+    },
+    "&:active": {
+        bgcolor: colors.primary,
+    },
+    "&:focus": {
+        bgcolor: colors.primary,
+    },
+
+    fontWeight: '700',
+    fontSize: "12px",
+    lineHeight: "12px",
+    // letterSpacing: "-0.13px",
+    // textAlign: 'center',
+    color: colors.milk,
+    textTransform: "none"
+}
+
 export const MuiSelectFieldStyle = (darkTheme: boolean = true) =>{
 
     return (
@@ -497,6 +527,17 @@ export const MuiSelectFieldStyle = (darkTheme: boolean = true) =>{
             }
         }
     )
+}
+
+export const numberOfLinesTypographyStyle = (num: number) => {
+    const style: SxProps<Theme> = { 
+        display: '-webkit-box',
+        overflow: 'hidden',
+        WebkitBoxOrient: 'vertical',
+        WebkitLineClamp: num,
+    }
+
+    return style;
 }
 
 
