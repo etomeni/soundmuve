@@ -914,7 +914,15 @@ function DashboardArtist() {
                             }}
                         >
                             <Box
-                                onClick={() => setOpenReleaseModal(true) }
+                                onClick={() => {
+                                    if (albumType == "Album" ) {
+                                        navigate("/account/create-album-release-details");
+                                    } else if (albumType == "Single") {
+                                        navigate("/account/create-single-release");
+                                    } else {
+                                        setOpenReleaseModal(true);
+                                    }
+                                }}
                                 sx={{
                                     height: {xs: "152.99px", md: "268px"},
                                     borderRadius: {xs: "6.85px", md: "12px"},

@@ -1858,7 +1858,7 @@ function CreateSingleRelease2() {
                                 isSubmitting ? (
                                     <CircularProgressWithLabel 
                                         value={songUploadProgress} size={30} 
-                                        sx={{ color: "#8638E5", fontWeight: "bold", mx: 'auto' }} 
+                                        sx={{ color: colors.primary, fontWeight: "bold", mx: 'auto' }} 
                                     />
                                 ) : <span>Save Release</span>
                             }

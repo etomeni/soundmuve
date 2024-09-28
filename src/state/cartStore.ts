@@ -1,5 +1,5 @@
 import { cartItemInterface } from "@/constants/typesInterface";
-import { removeLocalStorageItem, setLocalStorage } from "@/util/storage";
+// import { removeLocalStorageItem, setLocalStorage } from "@/util/storage";
 import { create } from "zustand";
 
 
@@ -26,8 +26,7 @@ export const cartItemStore = create<_typeInterface_>((set) => ({
             );
             const result = [...remove_result, newCartItem];
 
-            setLocalStorage("cart", result);
-            // setLocalStorage("cart", [newCartItem]);
+            // setLocalStorage("cart", result);
 
             return {
                 cart: result,
@@ -39,7 +38,7 @@ export const cartItemStore = create<_typeInterface_>((set) => ({
     _removeFromCart: (cartItem) => {
         set((state) => {
             const result = state.cart.filter((item) => item.id !== cartItem.id);
-            setLocalStorage("cart", result);
+            // setLocalStorage("cart", result);
 
             return {
                 cart: result,
@@ -56,7 +55,7 @@ export const cartItemStore = create<_typeInterface_>((set) => ({
                 // If the ID doesn't match, return the original object
                 return obj;
             });
-            setLocalStorage("cart", result);
+            // setLocalStorage("cart", result);
 
             return {
                 cart: result,
@@ -74,7 +73,7 @@ export const cartItemStore = create<_typeInterface_>((set) => ({
 
     _clearCartItems: () => {
         set((_state) => {
-            removeLocalStorageItem("cart");
+            // removeLocalStorageItem("cart");
 
             return {
                 cart: [],

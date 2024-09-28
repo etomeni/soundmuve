@@ -337,7 +337,7 @@ function CreateAlbumReleaseAlbumArt() {
                                 >
                                     {
                                         isBtnSubmitting ? 
-                                        <CircularProgress size={25} sx={{ color: "#8638E5", fontWeight: "bold", mx: 'auto' }} />
+                                        <CircularProgress size={25} sx={{ color: colors.primary, fontWeight: "bold", mx: 'auto' }} />
                                         : <span>Save Release</span>
                                     }
                                 </Button>

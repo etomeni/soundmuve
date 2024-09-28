@@ -58,26 +58,26 @@ export default function FooterComponent() {
         try {
             const response = (await axios.post(`${apiEndpoint}/newsLetter/subscribe-newsletter`, { email })).data;
             
-            if (response && response.savedUser) {
-                setToastNotification({
-                    display: true,
-                    status: "success",
-                    message: response.message
-                });
-
-                return;
-            }
-
+            // if (response && response.savedUser) {
+                
+            //     return;
+            // }
             setToastNotification({
                 display: true,
-                status: "error",
-                message: response.message || "Oooops, registration failed. please try again."
+                status: "success",
+                message: response.message
             });
+
+            // setToastNotification({
+            //     display: true,
+            //     status: "error",
+            //     message: response.message || "Oooops, registration failed. please try again."
+            // });
 
             setEmail("");
         } catch (error: any) {
             // console.log(error);
-            const err = error.response.data;
+            const err = error.response.data || error;
 
             setToastNotification({
                 display: true,

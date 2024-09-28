@@ -3,6 +3,7 @@ import CircularProgress, {
 } from '@mui/material/CircularProgress';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
+import colors from '@/constants/colors';
 
 
 export default function CircularProgressWithLabel(
@@ -14,7 +15,7 @@ export default function CircularProgressWithLabel(
         <>
             {
                 props.value < 1 ?
-                <CircularProgress size={25} sx={{ color: "#8638E5", fontWeight: "bold" }} />
+                <CircularProgress size={25} sx={{ color: colors.primary, fontWeight: "bold" }} />
                 :
                 <Box sx={{ position: 'relative', display: 'inline-flex' }}>
                     <CircularProgress variant="determinate" {...props} />

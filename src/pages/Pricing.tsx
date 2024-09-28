@@ -99,7 +99,7 @@ function Pricing() {
                                 fontSize: {xs: "16px", md: "25px"},
                                 lineHeight: {xs: "38.78px", md: "50px"},
                                 letterSpacing: {xs: "-0.88px", md: "-1.13px"},
-                                cursor: "pointer"
+                                // cursor: "pointer"
                             }}
                         > Pay per release </Typography>
                     </Box>
@@ -190,31 +190,46 @@ function Pricing() {
 
                                 <ul className={style.pricingFeatures}>
                                     <li >
-                                        Unlimited releases
+                                        Unlimited Releases to all digital platforms and Social Platforms
                                     </li>
                                     <li>
-                                        Basic analytics
+                                        Schedule Your Own Release Date
                                     </li>
                                     <li>
-                                        Choose release date
+                                        Comprehensive Analytics
                                     </li>
                                     <li>
-                                        Customisable artist profile
+                                        Spotify Verified Artist Checkmark
                                     </li>
                                     <li>
-                                        Community access
+                                        Apple Music for Artists Verification
                                     </li>
                                     <li>
-                                        Music promo campaign
+                                        24-hour Customer Service Response
                                     </li>
                                     <li>
-                                        Music distribution on streaming platforms
+                                        Use Your Own ISRC
                                     </li>
                                     <li>
-                                        Support reply under 72hrs
+                                        Custom Label Name
                                     </li>
                                     <li>
-                                        Change to Business or Premium Plan anytime
+                                        Use Your Own UPC
+                                    </li>
+                                    <li>
+                                        Control which countries can access your release
+                                    </li>
+                                    <li>
+                                        Seamless Royalties collections
+                                    </li>
+                                    <li>
+                                        Add multiple artists to your record label dashboard
+                                    </li>
+                                    <li>
+                                        Access to record label dashboard
+                                    </li>
+                                    <li>
+                                        Get 85% of your revenue.
                                     </li>
                                 </ul>
                             </Box>
@@ -302,34 +317,46 @@ function Pricing() {
 
                                 <ul className={style.pricingFeatures}>
                                     <li >
-                                        Everything in the Basic Plan
+                                        Unlimited Releases to all digital platforms and Social Platforms
                                     </li>
                                     <li>
-                                        Advanced Analytics
+                                        Schedule Your Own Release Date
                                     </li>
                                     <li>
-                                        Pre-save & Smartlinks
+                                        Comprehensive Analytics
                                     </li>
                                     <li>
-                                        Youtube Content ID
+                                        Spotify Verified Artist Checkmark
                                     </li>
                                     <li>
-                                        Support reply under 48hrs
+                                        Apple Music for Artists Verification
                                     </li>
                                     <li>
-                                        Automated royalty splitting
+                                        24-hour Customer Service Response
                                     </li>
                                     <li>
-                                        Enhanced Marketing tools
+                                        Use Your Own ISRC
                                     </li>
                                     <li>
-                                        Custom release strategies
+                                        Custom Label Name
                                     </li>
                                     <li>
-                                        Additional Distribution Channels
+                                        Use Your Own UPC
                                     </li>
                                     <li>
-                                        Change to Premium Plan anytime
+                                        Control which countries can access your release
+                                    </li>
+                                    <li>
+                                        Seamless Royalties collections
+                                    </li>
+                                    <li>
+                                        Add multiple artists to your record label dashboard
+                                    </li>
+                                    <li>
+                                        Access to record label dashboard
+                                    </li>
+                                    <li>
+                                        Get 85% of your revenue.
                                     </li>
                                 </ul>
                             </Box>

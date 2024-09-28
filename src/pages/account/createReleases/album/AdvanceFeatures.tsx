@@ -554,7 +554,7 @@ function CreateAlbumReleaseAdvanceFeatures() {
                                             }}
                                         >
                                             <span style={{ display: isSubmitting ? "none" : "initial" }}>Next</span>
-                                            <CircularProgress size={25} sx={{ display: isSubmitting ? "initial" : "none", color: "#8638E5", fontWeight: "bold" }} />
+                                            <CircularProgress size={25} sx={{ display: isSubmitting ? "initial" : "none", color: colors.primary, fontWeight: "bold" }} />
                                         </Button>
                                     </Stack>
                                 </Box>

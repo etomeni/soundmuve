@@ -1744,7 +1744,7 @@ function CreateAlbumReleaseSongUpload() {
                                                             {/* <CircularProgress size={25} sx={{ color: "#8638E5", fontWeight: "bold", mx: 'auto' }} /> */}
                                                             <CircularProgressWithLabel 
                                                                 value={songUploadProgress} size={30} 
-                                                                sx={{ color: "#8638E5", fontWeight: "bold", mx: 'auto' }} 
+                                                                sx={{ color: colors.primary, fontWeight: "bold", mx: 'auto' }} 
                                                             />
                                                         </Box>
                                                     ) : (
