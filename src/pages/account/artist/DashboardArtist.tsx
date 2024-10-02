@@ -894,12 +894,13 @@ function DashboardArtist() {
                         releases && releases.length ?
                             releases.slice(0, 2).map((song, index) => (
                                 // viewSong(song, index)
-
-                                <ViewSongItemComponent 
-                                    albumType={albumType}
-                                    index={index}
-                                    song={song}
-                                />
+                                <Grid item xs={6} md={4} key={index}>
+                                    <ViewSongItemComponent 
+                                        albumType={albumType}
+                                        index={index}
+                                        song={song}
+                                    />
+                                </Grid>
                             ))
                         : <></>
                     }

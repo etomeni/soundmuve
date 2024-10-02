@@ -22,6 +22,7 @@ type _typeInterface_ = {
     userData: userInterface;
     isLoggedIn: boolean;
     _loginUser: (user: userInterface, token: string, refreshToken: string) => void;
+    _handleRefreshToken: (accessToken: string, refreshToken: string) => void;
     _autoLogin: (user: userInterface) => void;
     _logOutUser: () => void;
     _handleRestoreUser: () => void;
@@ -50,6 +51,17 @@ export const useUserStore = create<_typeInterface_>((set) => ({
                 accessToken: token,
                 refreshToken: refreshToken,
                 isLoggedIn: true,
+            };
+        });
+    },
+    _handleRefreshToken: (accessToken, refreshToken) => {
+        setLocalStorage("refreshToken", refreshToken);
+        setLocalStorage("access_token", accessToken);
+    
+        set((_state) => {
+            return {
+                accessToken: accessToken,
+                refreshToken: refreshToken,
             };
         });
     },

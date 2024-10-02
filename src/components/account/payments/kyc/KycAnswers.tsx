@@ -1,18 +1,22 @@
-import React from 'react';
+import React, { useState } from 'react';
 
+import axios from 'axios';
 import * as yup from "yup";
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 
 import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
-import colors from '@/constants/colors';
-import TextField from '@mui/material/TextField';
-import { paymentTextFieldStyle } from '@/util/mui';
+import Stack from '@mui/material/Stack';
+import Alert from '@mui/material/Alert';
 import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
+import TextField from '@mui/material/TextField';
 import CircularProgress from '@mui/material/CircularProgress';
+import colors from '@/constants/colors';
+import { paymentTextFieldStyle } from '@/util/mui';
 import { setLocalStorage } from '@/util/storage';
-
+import { useUserStore } from '@/state/userStore';
+import { apiEndpoint } from '@/util/resources';
 
 
 const formSchema: any = yup.object({
@@ -33,6 +37,14 @@ const KycAnswersComponent: React.FC<_Props> = ({
     phoneNumber, questions, isCompleteState
 
 }) => {
+    const userData = useUserStore((state) => state.userData);
+    const accessToken = useUserStore((state) => state.accessToken);
+    
+    const [apiResponse, setApiResponse] = useState({
+        display: false,
+        status: true,
+        message: ""
+    });
 
     const {
         handleSubmit, register, formState: { errors, isSubmitting, isValid } 
@@ -41,11 +53,49 @@ const KycAnswersComponent: React.FC<_Props> = ({
 
     const onSubmit = async (formData: typeof formSchema.__outputType) => {
         console.log(phoneNumber);
-        console.log(formData);
-        console.log(formData);
+        // console.log(questions);
+        // console.log(formData);
 
-        setLocalStorage("isKYCsetupCompleted", true);
-        isCompleteState(true);
+        // const answers = Object.values(formData);
+        // console.log(answers);
+
+
+        const keys = Object.keys(formData);
+        const values = [];
+
+        for (let i = 0; i < keys.length; i++) {
+            values.unshift(formData[keys[i]]);
+        }
+
+        const data2db = {
+            email: userData.email,
+            // phoneNumber,
+            answers: values
+        };
+
+        console.log(data2db);
+        
+
+        try {
+            const response = (await axios.post(`${apiEndpoint}/kyc/kyc/submit-answers`, data2db, {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`
+                }
+            })).data;
+            console.log(response);
+
+            setLocalStorage("isKYCsetupCompleted", true);
+            isCompleteState(true);
+        } catch (error: any) {
+            const errorResponse = error.response.data || error;
+            // console.error(errorResponse);
+
+            setApiResponse({
+                display: true,
+                status: false,
+                message: errorResponse.message || "Ooops and error occurred!"
+            });
+        }
 
     }
 
@@ -108,6 +158,15 @@ const KycAnswersComponent: React.FC<_Props> = ({
                             ))
                         }
                     </Box>
+
+
+                    {
+                        apiResponse.display && (
+                            <Stack sx={{ width: '100%', my: 2 }}>
+                                <Alert severity={apiResponse.status ? "success" : "error"}>{apiResponse.message}</Alert>
+                            </Stack>
+                        )
+                    }
 
                     <Box 
                         sx={{ 

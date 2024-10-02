@@ -41,89 +41,6 @@ const headerTitle = [
     "Date", "Description", "Debit", "Credit", "Balance", "Currency", "Status"
 ]
 
-// const tBodyContent = [
-//     {
-//         Date: "21/5/2024",
-//         Description: "sales",
-//         Debit: "",
-//         Credit: "$14.13",
-//         Balance: "$6,228.76",
-//         Currency: "USD"
-//     },
-//     {
-//         Date: "21/5/2024",
-//         Description: "sales",
-//         Debit: "",
-//         Credit: "$14.13",
-//         Balance: "$6,228.76",
-//         Currency: "USD"
-//     },
-//     {
-//         Date: "21/5/2024",
-//         Description: "sales",
-//         Debit: "",
-//         Credit: "$14.13",
-//         Balance: "$6,228.76",
-//         Currency: "USD"
-//     },
-//     {
-//         Date: "21/5/2024",
-//         Description: "sales",
-//         Debit: "",
-//         Credit: "$14.13",
-//         Balance: "$6,228.76",
-//         Currency: "USD"
-//     },
-//     {
-//         Date: "21/5/2024",
-//         Description: "sales",
-//         Debit: "",
-//         Credit: "$14.13",
-//         Balance: "$6,228.76",
-//         Currency: "USD"
-//     },
-//     {
-//         Date: "21/5/2024",
-//         Description: "sales",
-//         Debit: "",
-//         Credit: "$14.13",
-//         Balance: "$6,228.76",
-//         Currency: "USD"
-//     },
-//     {
-//         Date: "21/5/2024",
-//         Description: "sales",
-//         Debit: "",
-//         Credit: "$14.13",
-//         Balance: "$6,228.76",
-//         Currency: "USD"
-//     },
-//     {
-//         Date: "21/5/2024",
-//         Description: "sales",
-//         Debit: "",
-//         Credit: "$14.13",
-//         Balance: "$6,228.76",
-//         Currency: "USD"
-//     },
-//     {
-//         Date: "21/5/2024",
-//         Description: "sales",
-//         Debit: "",
-//         Credit: "$14.13",
-//         Balance: "$6,228.76",
-//         Currency: "USD"
-//     },
-//     {
-//         Date: "21/5/2024",
-//         Description: "sales",
-//         Debit: "",
-//         Credit: "$14.13",
-//         Balance: "$6,228.76",
-//         Currency: "USD"
-//     },
-// ]
-
 
 function BalanceHistory() {
     const navigate = useNavigate();
@@ -149,35 +66,19 @@ function BalanceHistory() {
                     Authorization: `Bearer ${accessToken}`
                 }
             })).data;
-            console.log(response);
+            // console.log(response);
 
             setBalTransactions(response.transactions);
 
         } catch (error: any) {
-            const errorResponse = error.response.data;
+            const errorResponse = error.response.data || error;
             console.error(errorResponse);
             setBalTransactions([]);
-
-
-            // setReleases([]);
-
-            // setApiResponse({
-            //     display: true,
-            //     status: false,
-            //     message: errorResponse.message || "Ooops and error occurred!"
-            // });
-
-            // _setToastNotification({
-            //     display: true,
-            //     status: "error",
-            //     message: errorResponse.message || "Ooops and error occurred!"
-            // });
         }
     }
     
     const getBalanceBetweenDates = async (startDate: string, endDate: string) => {
         try {
-            // https://soundmuve-backend-zrap.onrender.com/api/wallet/check-transactions?startDate=2024-06-01&endDate=2024-12-31&email=latham01@yopmail.com
             const response = (await axios.get(`${apiEndpoint}/wallet/check-transactions?startDate=${startDate}&endDate=${endDate}&email=${ userData.email }`, {
                 headers: {
                     Authorization: `Bearer ${accessToken}`

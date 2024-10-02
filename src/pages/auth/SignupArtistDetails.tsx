@@ -106,7 +106,7 @@ function SignupArtistDetails() {
 
         try {
             const response = (await axios.patch(`${apiEndpoint}/auth/updateTeam-details`, data2db )).data;
-            // console.log(response);
+            console.log(response);
 
             _signUpUser(response.singleUser);
             

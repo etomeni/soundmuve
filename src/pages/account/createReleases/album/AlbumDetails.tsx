@@ -68,6 +68,7 @@ const formSchema = yup.object({
     generalTimezone: yup.boolean().label("General Timezone"),
 });
 
+let dspToSearch: "Apple" | "Spotify";
 
 function AlbumDetails() {
     const navigate = useNavigate();
@@ -484,7 +485,10 @@ function AlbumDetails() {
                                                     cursor: "pointer",
                                                     display: "inline-block"
                                                 }}
-                                                onClick={() => setOpenSearchArtistModal(true) }
+                                                onClick={() => {
+                                                    dspToSearch = "Spotify";
+                                                    setOpenSearchArtistModal(true);
+                                                }}
                                             >
                                                 <Typography 
                                                     sx={{
@@ -1261,8 +1265,9 @@ function AlbumDetails() {
 
                 <SearchArtistModalComponent 
                     openSearchArtistModal={openSearchArtistModal}
-                    closeSearchArtistModal={() => setOpenSearchArtistModal(false) }
-                    onSaveSelection={handleSetArtistName}
+                    closeSearchArtistModal={() => setOpenSearchArtistModal(false)}
+                    onSaveSelection={handleSetArtistName} 
+                    dspName={dspToSearch}
                 />
             </Box>
         </AccountWrapper>

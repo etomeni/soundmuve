@@ -1,16 +1,11 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import Avatar from '@mui/material/Avatar';
-import Grid from '@mui/material/Grid';
 
-// import album1 from "@/assets/images/album/album1.jpeg";
-// import album2 from "@/assets/images/album/album2.jpg";
-// import album3 from "@/assets/images/album/album3.jpeg";
-// import album4 from "@/assets/images/album/album4.jpg";
 import album5 from "@/assets/images/album/album5.jpg";
 
 import albumCard3 from "@/assets/images/album/albumCard3.jpg";
@@ -18,47 +13,19 @@ import albumCard4 from "@/assets/images/album/albumCard4.jpg";
 import albumCard5 from "@/assets/images/album/albumCard5.jpg";
 import albumCard6 from "@/assets/images/album/albumCard6.jpg";
 
-import { apiEndpoint, stringAvatar } from '@/util/resources';
+import { apiEndpoint } from '@/util/resources';
 import { useSettingStore } from '@/state/settingStore';
 import AccountWrapper from '@/components/AccountWrapper';
 import PromotionalAdsComponent from '@/components/PromotionalAds';
-import RecordLabelSearchComponent from '@/components/account/RecordLabelSearch';
-import axios from 'axios';
+import RecordLabelSearchComponent from '@/components/account/recordLabel/RecordLabelSearch';
 
 // import { useSettingStore } from '@/state/settingStore';
 import { useUserStore } from '@/state/userStore';
 import { recordLabelArtistInterface } from '@/constants/typesInterface';
 import { getLocalStorage, setLocalStorage } from '@/util/storage';
-import RecordLabelWrapper from '@/components/account/RecordLabelWrapper';
+import RecordLabelWrapper from '@/components/account/recordLabel/RecordLabelWrapper';
+import ArtistListItemView from '@/components/account/recordLabel/ArtistListItemView';
 
-
-// const albumPreview = [
-//     {
-//         image: album1,
-//         title: 'David',
-//         subtitle: '5 Songs'
-//     },
-//     {
-//         image: album2,
-//         title: 'John',
-//         subtitle: '5 Songs'
-//     },
-//     {
-//         image: album3,
-//         title: 'Mavi',
-//         subtitle: '5 Songs'
-//     },
-//     {
-//         image: album4,
-//         title: 'Portable',
-//         subtitle: '5 Songs'
-//     },
-//     {
-//         image: album5,
-//         title: 'Limo',
-//         subtitle: '5 Songs'
-//     },
-// ];
 
 function DashboardRecordLabel() {
     const navigate = useNavigate();
@@ -379,55 +346,7 @@ function DashboardRecordLabel() {
                                     >See all</Typography>
                                 </Stack>
 
-                                <Grid container spacing={3}>
-                                    {
-                                        recordLabelArtist?.slice(0, 6).map((item, i) => (
-                                            <Grid item xs={6} sm={4} md={3} lg={2} key={i}>
-                                                <Stack alignItems="center">
-                                                    <Avatar
-                                                        alt={`${item.artistName} image`}
-                                                        src={item.artistAvatarUrl}
-                                                        // variant="rounded"
-                                                        aria-label={item.artistName}
-                                                        sx={{ 
-                                                            boxShadow: "0px 4px 8px -1px rgba(0, 0, 0, 0.1)",
-                                                            // bgcolor: stringToColor(project.title),
-                                                            width: "110px",
-                                                            height: "110px",
-                                                            // mb: "0.5rem",
-                                                            // p: 1
-                                                        }}
-                                                        children={<Typography sx={{
-                                                            fontSize: "15px",
-                                                            fontWeight: "bold"
-                                                        }}>{stringAvatar(item.artistName)}</Typography>}
-                                                    />
-                            
-                                                    <Typography variant='h4' component="h4"
-                                                        sx={{
-                                                            fontWeight: '900',
-                                                            fontSize: '23.73px',
-                                                            lineHeight: '14.24px',
-                                                            letterSpacing: '-0.59px',
-                                                            mt: '26px'
-                                                        }}
-                                                    >{item.artistName}</Typography>
-
-                                                    <Typography variant='body2'
-                                                        sx={{
-                                                            fontWeight: "400",
-                                                            fontSize: '14.24px',
-                                                            lineHeight: '10.68px',
-                                                            letterSpacing: '-0.59px',
-                                                            color: '#666666',
-                                                            mt: '13px'
-                                                        }}
-                                                    >{ item.songCount }</Typography>
-                                                </Stack>
-                                            </Grid>
-                                        ))
-                                    }
-                                </Grid>
+                                <ArtistListItemView recordLabelArtist={recordLabelArtist} />
                             </Box>
                         ) : <></>
                     }

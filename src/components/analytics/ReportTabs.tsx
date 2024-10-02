@@ -8,7 +8,7 @@ import colors from '@/constants/colors';
 interface _Props {
     // children: React.ReactNode,
     reportType: string,
-    setReportType: (report: string) => void,
+    setReportType: (report: 'Months' | 'Location' | 'Albums' | 'Singles') => void,
 }
 
 const ReportTabsComponent:React.FC<_Props> = ({reportType, setReportType}) => {

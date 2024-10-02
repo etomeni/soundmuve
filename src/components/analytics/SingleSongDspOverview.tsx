@@ -10,7 +10,7 @@ interface _Props {
     // children: React.ReactNode,
     totalRevenue: number,
     streams: number,
-    streamTime: string,
+    streamTime: string | number,
 }
 
 const SingleSongDspOverviewComponent: React.FC<_Props> = ({
@@ -76,7 +76,7 @@ const SingleSongDspOverviewComponent: React.FC<_Props> = ({
                             fontSize: {xs: '12px', md: '24px'},
                             lineHeight: {xs: '8.71px', md: '24px'}
                         }}
-                    >{ streamTime }</Typography>
+                    >{ formatedNumber(Number(streamTime)) }hrs</Typography>
 
                     <Typography
                         sx={{

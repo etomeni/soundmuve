@@ -1,15 +1,14 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
+import axios from "axios";
 import { useForm } from 'react-hook-form';
 import * as yup from "yup";
 import { yupResolver } from '@hookform/resolvers/yup';
 
-
 import { useUserStore } from "@/state/userStore";
 import { apiEndpoint } from "@/util/resources";
 import { getDecryptedLocalStorage, setEncryptedLocalStorage } from "@/util/storage";
-import { useNavigate } from "react-router-dom";
 import { useSettingStore } from "@/state/settingStore";
 
 
@@ -27,7 +26,6 @@ const formSchema = yup.object({
       'Password must include uppercase, lowercase, digit, and special character'
     ).trim().label("Password"),
 });
-
 
 export function useLoginAuth() {
     const navigate = useNavigate();
@@ -146,7 +144,6 @@ export function useLoginAuth() {
         setShowPassword,
 
         apiResponse,
-
     }
 }
 

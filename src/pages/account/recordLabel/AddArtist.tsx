@@ -16,7 +16,7 @@ import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 
 import AccountWrapper from '@/components/AccountWrapper';
-import RecordLabelWrapper from '@/components/account/RecordLabelWrapper';
+import RecordLabelWrapper from '@/components/account/recordLabel/RecordLabelWrapper';
 import CircularProgressWithLabel from '@/components/CircularProgressWithLabel';
 
 import { getCountries, getUserLocation } from '@/util/location';

@@ -1,4 +1,5 @@
-import loadingStyles from './loadingStyles.module.css';
+import SoundMuve from "@/assets/branded/icon.png";
+// import SoundMuve from "@/assets/branded/logo.png";
 
 
 interface _Props {
@@ -17,7 +18,29 @@ const LoadingDataComponent: React.FC<_Props> = ({ containerHeight = "30vh" }) =>
                 height: containerHeight,
             }}
         >
-            <div className={loadingStyles.loader}></div>
+
+            <div className="breathing-image">
+                <img src={SoundMuve} alt="soundmuve icon" style={{ width: "100%", maxWidth: 100, objectFit: "contain"}} />
+                <style>
+                    {`
+                        .breathing-image {
+                            animation: breathe ${2}s ease-in-out infinite;
+                        }
+
+                        @keyframes breathe {
+                            0% {
+                                transform: scale(1);
+                            }
+                            50% {
+                                transform: scale(${0.7});
+                            }
+                            100% {
+                                transform: scale(1);
+                            }
+                        }
+                    `}
+                </style>
+            </div>
         </main>
     );
 }

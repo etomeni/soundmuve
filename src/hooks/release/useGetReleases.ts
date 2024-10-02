@@ -44,7 +44,7 @@ export function useGetReleases() {
                     Authorization: `Bearer ${accessToken}`
                 }
             })).data;
-            console.log(response);
+            // console.log(response);
 
             setLocalStorage("allSingleReleases", response);
             setReleases(response);
@@ -94,7 +94,7 @@ export function useGetReleases() {
                     Authorization: `Bearer ${accessToken}`
                 }
             })).data;
-            console.log(response);
+            // console.log(response);
 
             setLocalStorage("allAlbumReleases", response.albums);
             setReleases(response.albums);

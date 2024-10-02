@@ -22,7 +22,7 @@ import AccountBalanceOutlinedIcon from '@mui/icons-material/AccountBalanceOutlin
 
 import { useUserStore } from '@/state/userStore';
 // import PaymentComponent from './PaymentComponent';
-import PaymentzComponent from './payments/PaymentzComponent';
+import PaymentzComponent from '../payments/PaymentzComponent';
 import colors from '@/constants/colors';
 
 

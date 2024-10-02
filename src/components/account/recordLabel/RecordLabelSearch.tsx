@@ -9,11 +9,11 @@ import InputAdornment from '@mui/material/InputAdornment';
 import SearchIcon from '@mui/icons-material/Search';
 import ClearIcon from '@mui/icons-material/Clear';
 
-
 import { stringAvatar } from '@/util/resources';
 import { recordLabelArtistInterface } from '@/constants/typesInterface';
 import colors from '@/constants/colors';
-
+import Stack from '@mui/material/Stack';
+import { createSearchParams, useNavigate } from 'react-router-dom';
 
 
 interface _Props {
@@ -21,8 +21,22 @@ interface _Props {
     artists: recordLabelArtistInterface[],
 }
 
-
 const ArtistListComponent: React.FC<_Props> = ({ artists }) => {
+    const navigate = useNavigate();
+
+    const handleNavigation = (artistData: recordLabelArtistInterface) => {
+        // console.log(artistData);
+        
+        const params = {
+            artistName: artistData.artistName,
+        };
+        navigate({
+            pathname: "/account/record-label/sales-report",
+            search: `?${createSearchParams(params)}`,
+        });
+        // navigate(options, { replace: true });
+    }
+
     return (
         <Box
             sx={{
@@ -42,45 +56,51 @@ const ArtistListComponent: React.FC<_Props> = ({ artists }) => {
             {
                 artists.map((item, i) => (
                     <Box key={i} alignSelf="center" textAlign="center">
-                        <Avatar
-                            alt={`${item.artistName} icon`}
-                            src={item.artistAvatarUrl}
-                            // variant="rounded"
-                            aria-label={item.artistName}
-                            sx={{ 
-                                boxShadow: "0px 4px 8px -1px rgba(0, 0, 0, 0.1)",
-                                // bgcolor: stringToColor(project.title),
-                                width: {xs: "70px", md: "110px"},
-                                height: {xs: "70px", md: "110px"},
-                                // mb: "0.5rem",
-                                // p: 1
-                            }}
-                            children={<Typography sx={{
-                                fontSize: {xs: "13px", md: "15px"},
-                                fontWeight: "bold"
-                            }}>{stringAvatar(item.artistName)}</Typography>}
-                        />
+                        <Stack direction="column" alignItems="center" 
+                            onClick={() => handleNavigation(item)}
+                            sx={{ cursor: "pointer" }}
+                        >
 
-                        <Typography variant='h4' component="h4"
-                            sx={{
-                                fontWeight: '900',
-                                fontSize: {xs: "16px", md: '23.73px'},
-                                lineHeight: '14.24px',
-                                letterSpacing: '-0.59px',
-                                mt: {xs: "13px", md: '26px'}
-                            }}
-                        >{item.artistName}</Typography>
+                            <Avatar
+                                alt={`${item.artistName} icon`}
+                                src={item.artistAvatarUrl}
+                                // variant="rounded"
+                                aria-label={item.artistName}
+                                sx={{ 
+                                    boxShadow: "0px 4px 8px -1px rgba(0, 0, 0, 0.1)",
+                                    // bgcolor: stringToColor(project.title),
+                                    width: {xs: "70px", md: "110px"},
+                                    height: {xs: "70px", md: "110px"},
+                                    // mb: "0.5rem",
+                                    // p: 1
+                                }}
+                                children={<Typography sx={{
+                                    fontSize: {xs: "13px", md: "15px"},
+                                    fontWeight: "bold"
+                                }}>{stringAvatar(item.artistName)}</Typography>}
+                            />
 
-                        <Typography variant='body2'
-                            sx={{
-                                fontWeight: "400",
-                                fontSize: {xs: "12px", md: '14.24px'},
-                                lineHeight: '10.68px',
-                                letterSpacing: '-0.59px',
-                                color: '#666666',
-                                mt: {xs: "7px", md: '13px'}
-                            }}
-                        >{item.songCount} Songs</Typography>
+                            <Typography variant='h4' component="h4"
+                                sx={{
+                                    fontWeight: '900',
+                                    fontSize: {xs: "16px", md: '23.73px'},
+                                    lineHeight: '24.24px',
+                                    letterSpacing: '-0.59px',
+                                    mt: {xs: "13px", md: '26px'}
+                                }}
+                            >{item.artistName}</Typography>
+
+                            <Typography variant='body2'
+                                sx={{
+                                    fontWeight: "400",
+                                    fontSize: {xs: "12px", md: '14.24px'},
+                                    lineHeight: '10.68px',
+                                    letterSpacing: '-0.59px',
+                                    color: '#666666',
+                                    mt: {xs: "7px", md: '13px'}
+                                }}
+                            >{item.songCount} Songs</Typography>
+                        </Stack>
                     </Box>
                 ))
             }

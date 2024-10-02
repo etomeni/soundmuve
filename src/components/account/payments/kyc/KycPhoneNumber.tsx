@@ -1,16 +1,21 @@
-import React from 'react'
+import React, { useState } from 'react'
 
+import axios from 'axios';
 import * as yup from "yup";
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
-import colors from '@/constants/colors';
 import TextField from '@mui/material/TextField';
-import { paymentTextFieldStyle } from '@/util/mui';
+import Stack from '@mui/material/Stack';
+import Alert from '@mui/material/Alert';
 import Button from '@mui/material/Button';
+import colors from '@/constants/colors';
+import { paymentTextFieldStyle } from '@/util/mui';
 import CircularProgress from '@mui/material/CircularProgress';
+import { apiEndpoint } from '@/util/resources';
+import { useUserStore } from '@/state/userStore';
 
 
 const formSchema = yup.object({
@@ -28,6 +33,14 @@ interface _Props {
 const KycPhoneNumber: React.FC<_Props> = ({
     setPhoneNumber, handleCurrentView
 }) => {
+    const userData = useUserStore((state) => state.userData);
+    const accessToken = useUserStore((state) => state.accessToken);
+
+    const [apiResponse, setApiResponse] = useState({
+        display: false,
+        status: true,
+        message: ""
+    });
 
     const {
         handleSubmit, register, formState: { errors, isSubmitting, isValid } 
@@ -35,11 +48,35 @@ const KycPhoneNumber: React.FC<_Props> = ({
 
 
     const onSubmit = async (formData: typeof formSchema.__outputType) => {
-        console.log(formData);
+        // console.log(formData);
         setPhoneNumber(formData.phoneNumber);
-        handleCurrentView(2);
 
-        // confirmBtn(formData);
+        const data2db = {
+            email: userData.email,
+            phoneNumber: formData.phoneNumber
+        };
+           
+        try {
+            const response = (await axios.post(`${apiEndpoint}/kyc/kyc/submit-phone`, data2db, {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`
+                }
+            })).data;
+            console.log(response);
+
+            handleCurrentView(2);
+            // confirmBtn(formData);
+
+        } catch (error: any) {
+            const errorResponse = error.response.data || error;
+            // console.error(errorResponse);
+
+            setApiResponse({
+                display: true,
+                status: false,
+                message: errorResponse.message || "Ooops and error occurred!"
+            });
+        }
     }
 
 
@@ -123,6 +160,14 @@ const KycPhoneNumber: React.FC<_Props> = ({
                         <b>Note: </b> please use a phone number you can easily remember
                     </Typography>
 
+
+                    {
+                        apiResponse.display && (
+                            <Stack sx={{ width: '100%', my: 2 }}>
+                                <Alert severity={apiResponse.status ? "success" : "error"}>{apiResponse.message}</Alert>
+                            </Stack>
+                        )
+                    }
 
                     <Box 
                         sx={{ 

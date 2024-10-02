@@ -16,9 +16,9 @@ interface _Props {
     setDateRange: (newValue: string) => void,
 
     totalEarnedBalance: string | number, // $13,715.98
-    releases: string | number, // $13,715.98
-    sold: string | number, // 84
-    songs: string | number, // $54.84
+    albums: string | number, // $13,715.98
+    // sold: string | number, // 84
+    singles: string | number, // $54.84
     streams: string | number, // $54.84
     plays: string | number, // 4,000,000
 
@@ -27,7 +27,7 @@ interface _Props {
 
 
 const ReportMainDashComponent:React.FC<_Props> = ({
-    totalEarnedBalance, releases, sold, songs, streams, plays,
+    totalEarnedBalance, albums, singles, streams, plays, // sold,
     dateRange, setDateRange
 }) => {
 
@@ -149,7 +149,7 @@ const ReportMainDashComponent:React.FC<_Props> = ({
                                 color: "#666666",
                                 mb: 1
                             }}
-                        >Releases</Typography>
+                        >Albums</Typography>
 
                         <Box 
                             sx={{
@@ -168,7 +168,7 @@ const ReportMainDashComponent:React.FC<_Props> = ({
                                     letterSpacing: {xs: "-0.09px", md: "-0.13px"},
                                     textAlign: 'center',
                                 }}
-                            >{ formatedNumber(Number(releases)) } </Typography>
+                            >{ formatedNumber(Number(albums)) } </Typography>
                         </Box>
 
                         <Typography
@@ -179,7 +179,7 @@ const ReportMainDashComponent:React.FC<_Props> = ({
                                 color: "#666666",
                                 mt: 1
                             }}
-                        >{ formatedNumber(Number(sold)) } Sold</Typography>
+                        >{ formatedNumber(Number(albums)) } Sold</Typography>
                     </Box>
 
                     <Box>
@@ -191,7 +191,7 @@ const ReportMainDashComponent:React.FC<_Props> = ({
                                 color: "#666666",
                                 mb: 1
                             }}
-                        >Songs</Typography>
+                        >Singles</Typography>
 
                         <Box 
                             sx={{
@@ -210,7 +210,7 @@ const ReportMainDashComponent:React.FC<_Props> = ({
                                     letterSpacing: {xs: "-0.09px", md: "-0.13px"},
                                     textAlign: 'center',
                                 }}
-                            >{ formatedNumber(Number(songs)) }</Typography>
+                            >{ formatedNumber(Number(singles)) }</Typography>
                         </Box>
 
                         <Typography variant='body1'
@@ -221,7 +221,7 @@ const ReportMainDashComponent:React.FC<_Props> = ({
                                 color: "#666666",
                                 mt: 1
                             }}
-                        >{ sold } Sold</Typography>
+                        >{ singles } Sold</Typography>
                     </Box>
 
                     <Box>

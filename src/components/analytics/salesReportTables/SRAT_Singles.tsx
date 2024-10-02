@@ -12,22 +12,18 @@ import SRAT_DownloadReportBtn from './SRAT_DownloadBtn';
 import { SxProps, Theme } from '@mui/material/styles';
 import { currencyDisplay, formatedNumber } from '@/util/resources';
 import SRAT_TableHead from './SRAT_TableHead';
+import { salesReportSingleAnalyticsInterface } from '@/constants/analyticsTypesInterface';
+import EmptyListComponent from '@/components/EmptyList';
+import LoadingDataComponent from '@/components/LoadingData';
 
-
-interface tBodyContentInterface {
-    title: string, 
-    songsSold: string,
-    streams: string,
-    total: string,
-}
 
 interface _Props {
-    tBodyContent: tBodyContentInterface[],
+    tBodyContent: salesReportSingleAnalyticsInterface[] | undefined,
     displayDownloadReport?: boolean,
 };
 
   
-const headerTitle = [ "Title", "Songs sold", "Streams", "Total" ];
+const headerTitle = [ "Title", "Singles sold", "Streams", "Total" ];
 
 const tableValueStyle: SxProps<Theme> = {
     fontWeight: "400",
@@ -62,47 +58,59 @@ const SRAT_SinglesComponent: React.FC<_Props> = ({
                     >
                         <SRAT_TableHead headerTitle={headerTitle} />
 
-                        <TableBody>
-                            {tBodyContent
-                            .map((row, index) => {
-                                return (
-                                    <TableRow hover role="checkbox" tabIndex={-1} key={index}>
-                                        
-                                        <TableCell align={"center"} 
-                                            sx={{ 
-                                                ...tableValueStyle,
-                                                color: colors.dark,
-                                            }}
-                                        > { row.title } </TableCell>
+                        {
+                            tBodyContent && tBodyContent.length ? (
+                                <TableBody>
+                                    {tBodyContent
+                                    .map((row, index) => {
+                                        return (
+                                            <TableRow hover role="checkbox" tabIndex={-1} key={index}>
+                                                
+                                                <TableCell align={"center"} 
+                                                    sx={{ 
+                                                        ...tableValueStyle,
+                                                        color: colors.dark,
+                                                    }}
+                                                > { row.title } </TableCell>
 
-                                        <TableCell align={"center"} 
-                                            sx={{ 
-                                                ...tableValueStyle,
-                                                color: colors.dark,
-                                            }}
-                                        > { formatedNumber(Number(row.songsSold)) } </TableCell>
+                                                <TableCell align={"center"} 
+                                                    sx={{ 
+                                                        ...tableValueStyle,
+                                                        color: colors.dark,
+                                                    }}
+                                                > { formatedNumber(Number(row.songs_sold)) } </TableCell>
 
-                                        <TableCell align={"center"} 
-                                            sx={{ 
-                                                ...tableValueStyle,
-                                                color: colors.dark,
-                                            }}
-                                        > { formatedNumber(Number(row.streams)) } </TableCell>
-                                        
-                                        <TableCell align={"center"} 
-                                            sx={{ 
-                                                ...tableValueStyle,
-                                                color: "#627C1D",
-                                            }}
-                                        > { currencyDisplay(Number(row.total)) } </TableCell>
+                                                <TableCell align={"center"} 
+                                                    sx={{ 
+                                                        ...tableValueStyle,
+                                                        color: colors.dark,
+                                                    }}
+                                                > { formatedNumber(Number(row.streams)) } </TableCell>
+                                                
+                                                <TableCell align={"center"} 
+                                                    sx={{ 
+                                                        ...tableValueStyle,
+                                                        color: "#627C1D",
+                                                    }}
+                                                > { currencyDisplay(Number(row.total_revenue)) } </TableCell>
 
-                                    </TableRow>
-                                );
-                            })}
-                        </TableBody>
-
+                                            </TableRow>
+                                        );
+                                    })}
+                                </TableBody>
+                            ) : <></>
+                        }
                     </Table>
                 </TableContainer>
+
+                {
+                    tBodyContent ? (
+                        tBodyContent.length ? <></> : 
+                        <Box py={5} mx="auto">
+                            <EmptyListComponent notFoundText='No data found.' />
+                        </Box>
+                    ) : <LoadingDataComponent containerHeight='45vh' />
+                }
 
 
                 {

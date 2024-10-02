@@ -25,194 +25,45 @@ import { useReleaseStore } from '@/state/releaseStore';
 import BarChartGraphComponent from '@/components/analytics/BarChartGraph';
 import SingleSongDspOverviewComponent from '@/components/analytics/SingleSongDspOverview';
 import colors from '@/constants/colors';
-// import { useUserStore } from '@/state/userStore';
-// import { getLocalStorage } from '@/util/storage';
-// import axios from 'axios';
 import { currencyDisplay, formatedNumber } from '@/util/resources';
-import { getDateRange, getFormattedDateRange } from '@/util/dateTime';
+// import { getDateRange, getFormattedDateRange } from '@/util/dateTime';
 // import { useEffect } from 'react';
-// import { useAnalytics } from '@/hooks/analytics/useAnalytics';
+import { useSongAnalytics } from '@/hooks/analytics/useSongAnalytics';
+import { useEffect } from 'react';
 
 
-const dataset = [
-    {
-      percentageValue: 21,
-      month: 'Jan',
-    },
-    {
-      percentageValue: 28,
-      month: 'Feb',
-    },
-    {
-      percentageValue: 41,
-      month: 'Mar',
-    },
-    {
-      percentageValue: 73,
-      month: 'Apr',
-    },
-    {
-      percentageValue: 99,
-      month: 'May',
-    },
-    {
-      percentageValue: 144,
-      month: 'Jun',
-    },
-    {
-      percentageValue: 319,
-      month: 'July',
-    },
-    {
-      percentageValue: 249,
-      month: 'Aug',
-    },
-    {
-      percentageValue: 131,
-      month: 'Sept',
-    },
-    {
-      percentageValue: 55,
-      month: 'Oct',
-    },
-    {
-      percentageValue: 48,
-      month: 'Nov',
-    },
-    {
-      percentageValue: 25,
-      month: 'Dec',
-    },
-];
-  
-// const topCities = [
-//     {
-//         name: "Abuja",
-//         percentage: 72.8
-//     },
-//     {
-//         name: "Enugu",
-//         percentage: 21.2
-//     },
-//     {
-//         name: "Lagos",
-//         percentage: 57.2
-//     },
-//     {
-//         name: "Port Harcourt",
-//         percentage: 40.0
-//     },
-// ];
-
-// const topCountries = [
-//     {
-//         name: "Nigeria",
-//         percentage: 72.8
-//     },
-//     {
-//         name: "United kingdom",
-//         percentage: 21.2
-//     },
-//     {
-//         name: "United States",
-//         percentage: 57.2
-//     },
-//     {
-//         name: "South Africa",
-//         percentage: 40.0
-//     },
-// ];
 
 
 function SongDetails() {
     const navigate = useNavigate();
     const darkTheme = useSettingStore((state) => state.darkTheme);
+    const songDetails = useReleaseStore((state) => state.songDetails);
     // const userData = useUserStore((state) => state.userData); 
     // const accessToken = useUserStore((state) => state.accessToken);
     // const _setToastNotification = useSettingStore((state) => state._setToastNotification);
 
-    const songDetails = useReleaseStore((state) => state.songDetails);
 
-    // const { 
-    //     appleSpotifyRecord, getAppleSpotifyRecord, 
-    //     getTotalStreamsAndRevenueRecord, totalStreamsAndRevenueRecord,
-    // } = useAnalytics();
+    const { 
+        spotifyAndAppleOverview, getSportifiyAppleOverview,
 
-    // const [reportAnalytics, setReportAnalytics] = useState<temptAnalyticsInterface[]>();
-    // const [reportMainDashData, setReportMainDashData] = useState<temptAnalyticsInterface>();
+        spotifyDataset, appleMusicDataset, // graphApiData, 
+        getGraphData,
 
+        handleDataRangeData,
+    } = useSongAnalytics();
 
-    // useEffect(() => {
-    //     // getAnalyticsData();
-    //     getTotalStreamsAndRevenueRecord();
-    // }, []);
+    useEffect(() => {
+        // getAnalyticsData();
+        // console.log(songDetails);
 
-    
-    // const getAnalyticsData = async () => {
-    //     // if (reportType == "this block of code is to be deleted ") {
-    //     //     console.log(reportAnalytics);
-    //     //     console.log(reportMainDashData);
-    //     // };
-
-    //     const localReportAnalytics = getLocalStorage("reportAnalytics");
-    //     if (localReportAnalytics && localReportAnalytics.length) {
-    //         // setReportAnalytics(localReportAnalytics);
-    //         // setReportMainDashData(localReportAnalytics[0]);
-    //     }
-
-
-    //     try {
-    //         const response = (await axios.get(`${apiEndpoint}/analytics/analytics/data`, {
-    //             headers: {
-    //                 Authorization: `Bearer ${accessToken}`,
-    //             },
-    //             params: {
-    //                 // email: "latham01@yopmail.com",
-    //                 email: userData.email,
-    //             }
-    //         })).data;
-    //         console.log(response);
-
-    //         // setReportAnalytics(response);
-    //         // setLocalStorage("reportAnalytics", response);
-
-    //         // if (response.length) {
-    //         //     setReportMainDashData(response[0]);
-    //         // }
-            
-    //         if (!response.length) {
-    //             _setToastNotification({
-    //                 display: true,
-    //                 status: "error",
-    //                 message: response.message || "Ooops and error occurred!"
-    //             });
-    //         }
-    
-    //     } catch (error: any) {
-    //         const errorResponse = error.response.data || error;
-    //         console.error(errorResponse);
-    
-    //         _setToastNotification({
-    //             display: true,
-    //             status: "error",
-    //             message: errorResponse.message || "Ooops and error occurred!"
-    //         });
-    //     }
-    // }
-
-    const handleDataRangeData = (newValue: string) => {
-        // console.log(newValue);
-        const dateRange = getDateRange(Number(newValue));
-        // setTempData({ ...tempData, dateRange });
-        console.log(dateRange);
-        const betweenDates = getFormattedDateRange(Number(newValue));
-        console.log(betweenDates);
+        getGraphData(songDetails._id, songDetails.song_title, "single");
         
-        // getBalanceBetweenDates(betweenDates.startDate, betweenDates.endDate);
-        
-    }
+        getSportifiyAppleOverview(songDetails._id, "single");
+        getSportifiyAppleOverview(songDetails._id, "single");
+    }, []);
 
 
+    
     return (
         <AccountWrapper>
             <Box>
@@ -733,6 +584,7 @@ function SongDetails() {
                 </Box>
 
 
+                {/* Apple Music analytics for the song */}
                 <Box mt={10}>
                     <Box 
                         sx={{
@@ -751,16 +603,16 @@ function SongDetails() {
                     </Box>
 
                     <SingleSongDspOverviewComponent 
-                        streamTime='120hrs'
-                        streams={80000000}
-                        totalRevenue={60000.00}
+                        streamTime={Number(spotifyAndAppleOverview?.apple.streamTime)}
+                        streams={Number(spotifyAndAppleOverview?.apple.streams)}
+                        totalRevenue={Number(spotifyAndAppleOverview?.apple.revenue)}
                     />
 
 
                     <Box mt={5}>
                         <BarChartGraphComponent 
                             darkTheme={darkTheme}
-                            dataset={dataset}
+                            dataset={appleMusicDataset}
                         />
                     </Box>
 
@@ -791,6 +643,8 @@ function SongDetails() {
                     </Grid> */}
                 </Box>
 
+
+                {/* Spotify analytics for the song */}
                 <Box mt={20}>
                     <Box sx={{ height: "35px" }}>
                         <img
@@ -803,18 +657,16 @@ function SongDetails() {
                         />
                     </Box>
                     
-
                     <SingleSongDspOverviewComponent 
-                        streamTime='120hrs'
-                        streams={80000000}
-                        totalRevenue={60000.00}
+                        streamTime={Number(spotifyAndAppleOverview?.spotify.streamTime)}
+                        streams={Number(spotifyAndAppleOverview?.spotify.streams)}
+                        totalRevenue={Number(spotifyAndAppleOverview?.spotify.revenue)}
                     />
-
 
                     <Box my={5}>
                         <BarChartGraphComponent 
                             darkTheme={darkTheme}
-                            dataset={dataset}
+                            dataset={spotifyDataset}
                         />
                     </Box>
 

@@ -1,11 +1,16 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 
 import Box from '@mui/material/Box';
-
-import Typography from '@mui/material/Typography';
-import colors from '@/constants/colors';
-import { SxProps, Theme } from '@mui/material/styles';
+import Stack from '@mui/material/Stack';
+import Alert from '@mui/material/Alert';
 import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
+import { SxProps, Theme } from '@mui/material/styles';
+
+import colors from '@/constants/colors';
+import { useUserStore } from '@/state/userStore';
+import { apiEndpoint } from '@/util/resources';
 
 
 interface _Props {
@@ -25,11 +30,18 @@ const questions = [
     "What is the name of your first school?",
 ];
 
-
 const KycSetupQuestionsComponent: React.FC<_Props> = ({
     handleCurrentView, setQuestions
 }) => {
+    const userData = useUserStore((state) => state.userData);
+    const accessToken = useUserStore((state) => state.accessToken);
+    
     const [selectedQuestions, setSelectedQuestions] = useState<string[]>([]);
+    const [apiResponse, setApiResponse] = useState({
+        display: false,
+        status: true,
+        message: ""
+    });
 
 
     const questionContainerStyle: SxProps<Theme> = {
@@ -68,12 +80,36 @@ const KycSetupQuestionsComponent: React.FC<_Props> = ({
     }
 
 
-    const handleSubmit = () => {
-        console.log(selectedQuestions);
+    const handleSubmit = async () => {
+        // console.log(selectedQuestions);
 
         if (selectedQuestions.length == 3) {
             setQuestions(selectedQuestions);
-            handleCurrentView(3);
+    
+            const data2db = {
+                email: userData.email,
+                selectedQuestions: selectedQuestions
+            };
+
+            try {
+                const response = (await axios.post(`${apiEndpoint}/kyc/kyc/select-questions`, data2db, {
+                    headers: {
+                        Authorization: `Bearer ${accessToken}`
+                    }
+                })).data;
+                console.log(response);
+    
+                handleCurrentView(3);
+            } catch (error: any) {
+                const errorResponse = error.response.data || error;
+                // console.error(errorResponse);
+    
+                setApiResponse({
+                    display: true,
+                    status: false,
+                    message: errorResponse.message || "Ooops and error occurred!"
+                });
+            }
         }
 
         // confirmBtn(formData);
@@ -117,6 +153,14 @@ const KycSetupQuestionsComponent: React.FC<_Props> = ({
                     ))
                 }
             </Box>
+
+            {
+                apiResponse.display && (
+                    <Stack sx={{ width: '100%', my: 2 }}>
+                        <Alert severity={apiResponse.status ? "success" : "error"}>{apiResponse.message}</Alert>
+                    </Stack>
+                )
+            }
 
             <Box 
                 sx={{ 

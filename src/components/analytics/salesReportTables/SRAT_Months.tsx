@@ -12,18 +12,13 @@ import SRAT_DownloadReportBtn from './SRAT_DownloadBtn';
 import { SxProps, Theme } from '@mui/material/styles';
 import SRAT_TableHead from './SRAT_TableHead';
 import { currencyDisplay, formatedNumber } from '@/util/resources';
+import { salesReportMainDashInterface } from '@/constants/analyticsTypesInterface';
+import EmptyListComponent from '@/components/EmptyList';
+import LoadingDataComponent from '@/components/LoadingData';
 
-
-interface tBodyContentInterface {
-    salesPeriod: string, 
-    albumSold: string,
-    singlesSold: string,
-    streams: string,
-    total: string,
-}
 
 interface _Props {
-    tBodyContent: tBodyContentInterface[],
+    tBodyContent: salesReportMainDashInterface[] | undefined,
     displayDownloadReport?: boolean,
 };
 
@@ -62,55 +57,66 @@ const SRAT_MonthsComponent: React.FC<_Props> = ({
                     >
                         <SRAT_TableHead headerTitle={headerTitle} />
 
-                        <TableBody>
-                            {tBodyContent
-                            .map((row, index) => {
-                                return (
-                                    <TableRow hover role="checkbox" tabIndex={-1} key={index}>
-                                        
-                                        <TableCell align={"center"} 
-                                            sx={{ 
-                                                ...tableValueStyle,
-                                                color: colors.dark,
-                                            }}
-                                        > { row.salesPeriod } </TableCell>
+                        {
+                            tBodyContent && tBodyContent.length ? (
+                                <TableBody>
+                                    {tBodyContent
+                                    .map((row, index) => {
+                                        return (
+                                            <TableRow hover role="checkbox" tabIndex={-1} key={index}>
+                                                
+                                                <TableCell align={"center"} 
+                                                    sx={{ 
+                                                        ...tableValueStyle,
+                                                        color: colors.dark,
+                                                    }}
+                                                > { row.sales_period } </TableCell>
 
-                                        <TableCell align={"center"} 
-                                            sx={{ 
-                                                ...tableValueStyle,
-                                                color: colors.dark,
-                                            }}
-                                        > { formatedNumber(Number(row.albumSold)) } </TableCell>
+                                                <TableCell align={"center"} 
+                                                    sx={{ 
+                                                        ...tableValueStyle,
+                                                        color: colors.dark,
+                                                    }}
+                                                > { formatedNumber(Number(row.album_sold)) } </TableCell>
 
-                                        <TableCell align={"center"} 
-                                            sx={{ 
-                                                ...tableValueStyle,
-                                                color: colors.dark,
-                                            }}
-                                        > { formatedNumber(Number(row.singlesSold)) } </TableCell>
+                                                <TableCell align={"center"} 
+                                                    sx={{ 
+                                                        ...tableValueStyle,
+                                                        color: colors.dark,
+                                                    }}
+                                                > { formatedNumber(Number(row.single_sold)) } </TableCell>
 
-                                        <TableCell align={"center"} 
-                                            sx={{ 
-                                                ...tableValueStyle,
-                                                color: colors.dark,
-                                            }}
-                                        > { formatedNumber(Number(row.streams)) } </TableCell>
-                                        
-                                        <TableCell align={"center"} 
-                                            sx={{ 
-                                                ...tableValueStyle,
-                                                color: "#627C1D",
-                                            }}
-                                        > { currencyDisplay(Number(row.total)) } </TableCell>
+                                                <TableCell align={"center"} 
+                                                    sx={{ 
+                                                        ...tableValueStyle,
+                                                        color: colors.dark,
+                                                    }}
+                                                > { formatedNumber(Number(row.streams.total_combined)) } </TableCell>
+                                                
+                                                <TableCell align={"center"} 
+                                                    sx={{ 
+                                                        ...tableValueStyle,
+                                                        color: "#627C1D",
+                                                    }}
+                                                > { currencyDisplay(Number(row.total_revenue)) } </TableCell>
 
-                                    </TableRow>
-                                );
-                            })}
-                        </TableBody>
-
+                                            </TableRow>
+                                        );
+                                    })}
+                                </TableBody>
+                            ) : <></>
+                        }
                     </Table>
                 </TableContainer>
 
+                {
+                    tBodyContent ? (
+                        tBodyContent.length ? <></> : 
+                        <Box py={5} mx="auto">
+                            <EmptyListComponent notFoundText='No data found.' />
+                        </Box>
+                    ) : <LoadingDataComponent containerHeight='45vh' />
+                }
 
                 {
                     displayDownloadReport && <SRAT_DownloadReportBtn />

@@ -2,21 +2,22 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 
 import Box from '@mui/material/Box';
-import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
-import Avatar from '@mui/material/Avatar';
-import Grid from '@mui/material/Grid';
+// import Stack from '@mui/material/Stack';
+// import Typography from '@mui/material/Typography';
+// import Avatar from '@mui/material/Avatar';
+// import Grid from '@mui/material/Grid';
 
-import { apiEndpoint, stringAvatar } from '@/util/resources';
+import { apiEndpoint } from '@/util/resources';
 import { useSettingStore } from '@/state/settingStore';
 import AccountWrapper from '@/components/AccountWrapper';
 import PromotionalAdsComponent from '@/components/PromotionalAds';
-import RecordLabelBigSidebarComponent from '@/components/account/RecordLabelBigSidebar';
-import RecordLabelSmallSidebarComponent from '@/components/account/RecordLabelSmallSidebar';
-import RecordLabelSearchComponent from '@/components/account/RecordLabelSearch';
+import RecordLabelBigSidebarComponent from '@/components/account/recordLabel/RecordLabelBigSidebar';
+import RecordLabelSmallSidebarComponent from '@/components/account/recordLabel/RecordLabelSmallSidebar';
+import RecordLabelSearchComponent from '@/components/account/recordLabel/RecordLabelSearch';
 import { useUserStore } from '@/state/userStore';
 import { recordLabelArtistInterface } from '@/constants/typesInterface';
 import { getLocalStorage, setLocalStorage } from '@/util/storage';
+import ArtistListItemView from '@/components/account/recordLabel/ArtistListItemView';
 
 
 const ArtistList_RL = () => {
@@ -100,57 +101,11 @@ const ArtistList_RL = () => {
                     </Box>
 
                     <Box my={5}>
-
-                        <Grid container spacing={3}>
-                            {
-                                recordLabelArtist && recordLabelArtist?.map((item, i) => (
-                                    <Grid item xs={6} sm={4} md={3} lg={2} key={i}>
-                                        <Stack alignItems="center">
-
-                                            <Avatar
-                                                alt={`${item.artistName} image`}
-                                                src={item.artistAvatarUrl}
-                                                // variant="rounded"
-                                                aria-label={item.artistName}
-                                                sx={{ 
-                                                    boxShadow: "0px 4px 8px -1px rgba(0, 0, 0, 0.1)",
-                                                    // bgcolor: stringToColor(project.title),
-                                                    width: "110px",
-                                                    height: "110px",
-                                                    // mb: "0.5rem",
-                                                    // p: 1
-                                                }}
-                                                children={<Typography sx={{
-                                                    fontSize: "15px",
-                                                    fontWeight: "bold"
-                                                }}>{stringAvatar(item.artistName)}</Typography>}
-                                            />
-                    
-                                            <Typography variant='h4' component="h4"
-                                                sx={{
-                                                    fontWeight: '900',
-                                                    fontSize: '23.73px',
-                                                    lineHeight: '14.24px',
-                                                    letterSpacing: '-0.59px',
-                                                    mt: '26px'
-                                                }}
-                                            >{item.artistName}</Typography>
-
-                                            <Typography variant='body2'
-                                                sx={{
-                                                    fontWeight: "400",
-                                                    fontSize: '14.24px',
-                                                    lineHeight: '10.68px',
-                                                    letterSpacing: '-0.59px',
-                                                    color: '#666666',
-                                                    mt: '13px'
-                                                }}
-                                            >{item.songCount}</Typography>
-                                        </Stack>
-                                    </Grid>
-                                ))
-                            }
-                        </Grid>
+                        {
+                            recordLabelArtist ? 
+                                <ArtistListItemView recordLabelArtist={recordLabelArtist} />
+                            : <></>
+                        }
                     </Box>
 
                 </Box>

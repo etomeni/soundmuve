@@ -154,11 +154,13 @@ function AllMusic_RL() {
                                     // songView(song, index)
                                     // viewSong(song, index)
 
-                                    <ViewSongItemComponent 
-                                        albumType={albumType}
-                                        index={index}
-                                        song={song}
-                                    />
+                                    <Grid item xs={6} md={4} key={index}>
+                                        <ViewSongItemComponent 
+                                            albumType={albumType}
+                                            index={index}
+                                            song={song}
+                                        />
+                                    </Grid>
                                 ))
                             : <EmptyListComponent notFoundText={apiResponse.message} />
                         : <LoadingDataComponent />

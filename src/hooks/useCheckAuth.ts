@@ -7,6 +7,7 @@ import { getLocalStorage } from "@/util/storage";
 export function useCheckAuth() {
     const _autoLogin = useUserStore((state) => state._autoLogin);
     const _logOutUser = useUserStore((state) => state._logOutUser);
+    const _handleRefreshToken = useUserStore((state) => state._handleRefreshToken);
     const [isLoading, setIsLoading] = useState(true);
 
     const reAuthUser = useCallback(() => {
@@ -28,20 +29,25 @@ export function useCheckAuth() {
         // }
     
         try {
-            (await axios.get(`${apiEndpoint}/auth/maintainPersistence`, {
+            const response = (await axios.get(`${apiEndpoint}/auth/maintainPersistence`, {
                 headers: {
                     Authorization: `Bearer ${access_token}`,
                     refresh: `Bearer ${refresh_token}`
                 }
             })).data;
             // console.log(response);
+
+            if (response.accessToken && response.refreshToken) {
+                _handleRefreshToken(response.accessToken, response.refreshToken)
+            }
+
     
             setIsLoading(false);
             if (user_data && access_token) _autoLogin(user_data);
     
             return true;
         } catch (error: any) {
-            const err = error.response.data;
+            const err = error.response.data || error;
             console.log(err);
             setIsLoading(false);
             _logOutUser();

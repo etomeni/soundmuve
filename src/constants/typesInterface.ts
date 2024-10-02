@@ -151,6 +151,18 @@ export type releaseSongsInterface = {
 
 
 
+export type searchedArtistSearchInterface = {
+    name: string,
+    id: string,
+    profilePicture: string,
+    latestAlbum?: {
+        name?: string,
+        releaseDate?: string,
+        externalUrl?: string,
+    },
+}
+
+
 export interface cartItemInterface {
     id: string,
     email: string,

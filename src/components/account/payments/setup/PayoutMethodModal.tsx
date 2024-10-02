@@ -1,21 +1,19 @@
 import React, { useEffect } from 'react';
+import axios from 'axios';
 import Box from '@mui/material/Box';
-// import IconButton from '@mui/material/IconButton';
-// import Modal from '@mui/material/Modal';
-// import CloseIcon from '@mui/icons-material/Close';
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
 
 import AccountBalanceOutlinedIcon from '@mui/icons-material/AccountBalanceOutlined';
-// import { useSettingStore } from '@/state/settingStore';
 
 // import FlutterwaveLogo from "@/assets/images/FlutterwaveLogo.png";
 import PayPalLogo from "@/assets/images/PayPalLogo.png";
 import colors from '@/constants/colors';
 import PaymentModalWrapper from '../PaymentWrapper';
-import { getLocalStorage } from '@/util/storage';
+import { getLocalStorage, setLocalStorage } from '@/util/storage';
+import { apiEndpoint } from '@/util/resources';
+import { useUserStore } from '@/state/userStore';
 // import PayoneerLogo from "@/assets/images/PayoneerLogo.png";
-
 
 
 interface _Props {
@@ -32,6 +30,12 @@ const PayoutMethodModalComponent: React.FC<_Props> = ({
     openModal, closeModal, openKycModal, 
     openFlutterwavePayoutModal, openPayPalModal
 }) => {
+    const userData = useUserStore((state) => state.userData);
+    const accessToken = useUserStore((state) => state.accessToken);
+
+    useEffect(() => {
+        handleCheckKycStatus();
+    }, []);
 
     useEffect(() => {
         if (openModal) {
@@ -44,8 +48,29 @@ const PayoutMethodModalComponent: React.FC<_Props> = ({
 
         }
     }, [openModal]);
-    
 
+
+    const handleCheckKycStatus = async () => {
+        try {
+            const response = (await axios.get(`${apiEndpoint}/auth/check-kyc/${userData.email}`, 
+                {
+                    headers: {
+                        Authorization: `Bearer ${accessToken}`
+                    }
+                }
+            )).data;
+            // console.log(response);
+
+            if (response.kycStatus) {
+                setLocalStorage("isKYCsetupCompleted", true);
+            }
+
+        } catch (error: any) {
+            const errorResponse = error.response.data || error;
+            console.error(errorResponse);
+        }
+    }
+    
 
     const handleOpenFlutterwaveModal = () => {
         closeModal();
