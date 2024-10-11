@@ -13,37 +13,24 @@ import AlbumSongItem from '@/components/account/AlbumSongItem';
 import AccountWrapper from '@/components/AccountWrapper';
 // import { useSettingStore } from '@/state/settingStore';
 
-import albumSampleArtImg from '@/assets/images/albumSampleArt.png';
-import albumSampleArt from "@/assets/images/albumSampleArt.png";
 import AppleSportifyCheckmark from '@/components/AppleSportifyCheckmark';
 import colors from '@/constants/colors';
-
-
-const albumSongs = [
-    {
-        artworkImage: albumSampleArt,
-        songTitle: "Good God",
-        artistName: "Joseph solomon",
-        distributedDSP: ["Apple", "Spotify"]
-    },
-    {
-        artworkImage: albumSampleArt,
-        songTitle: "Good God",
-        artistName: "Joseph solomon",
-        distributedDSP: ["Apple", "Spotify"]
-    },
-    {
-        artworkImage: albumSampleArt,
-        songTitle: "Good God",
-        artistName: "Joseph solomon",
-        distributedDSP: ["Apple", "Spotify"]
-    }
-]
+import { useReleaseStore } from '@/state/releaseStore';
+import { useEffect } from 'react';
 
   
 function AlbumDetails() {
     const navigate = useNavigate();
     // const darkTheme = useSettingStore((state) => state.darkTheme);
+    const albumDetails = useReleaseStore((state) => state.albumDetails);
+    const _setSongDetails = useReleaseStore((state) => state._setSongDetails);
+
+    useEffect(() => {
+        if (!albumDetails._id || !albumDetails.album_title) {
+            navigate("/account");
+        }
+    }, []);
+    
 
 
     return (
@@ -129,7 +116,7 @@ function AlbumDetails() {
                                 fontSize: {xs: "21.78px", md: "60px"},
                                 lineHeight: {xs: "8.71px", md: "24px"},
                             }}
-                        > Good God </Typography>
+                        >{ albumDetails.album_title }</Typography>
 
                         <Typography
                             sx={{
@@ -152,7 +139,7 @@ function AlbumDetails() {
                                 }}
                             >
                                 <img
-                                    src={ albumSampleArtImg } alt='album image'
+                                    src={ albumDetails.song_cover_url } alt='album image'
                                     style={{
                                         width: "100%",
                                         height: "100%",
@@ -171,7 +158,7 @@ function AlbumDetails() {
                                             fontSize: "24px",
                                             lineHeight: "24px"
                                         }}
-                                    >Good God</Typography>
+                                    >{ albumDetails.album_title }</Typography>
 
                                     <Typography
                                         sx={{
@@ -179,7 +166,7 @@ function AlbumDetails() {
                                             fontSize: "17px",
                                             lineHeight: "24px",
                                         }}
-                                    >Joseph solomon</Typography>
+                                    >{ albumDetails.artist_name }</Typography>
                                 </Box>
 
                                 <Box sx={{ flex: "1 1 30%" }}>
@@ -209,7 +196,7 @@ function AlbumDetails() {
                                         // letterSpacing: "-1px",
                                         flex: "1 1 30%",
                                     }}
-                                >More Grace Music </Typography>
+                                >{ albumDetails.label_name }</Typography>
                             </Stack>
 
                             <Stack direction="row" spacing="10px" mt="20px">
@@ -231,7 +218,7 @@ function AlbumDetails() {
                                         // letterSpacing: "-1px",
                                         flex: "1 1 30%",
                                     }}
-                                >Dance  </Typography>
+                                >{ albumDetails.primary_genre }</Typography>
                             </Stack>
 
                             <Stack direction="row" spacing="10px" mt="20px">
@@ -253,7 +240,7 @@ function AlbumDetails() {
                                         // letterSpacing: "-1px",
                                         flex: "1 1 30%",
                                     }}
-                                >123456789</Typography>
+                                >{ albumDetails.upc_ean }</Typography>
                             </Stack>
                         </Box>
                     </Stack>
@@ -267,6 +254,7 @@ function AlbumDetails() {
                                     lineHeight: {xs: '8.71px', md: '24px'}
                                 }}
                             >$60,000.00</Typography>
+
                             <Typography
                                 sx={{
                                     fontWeight: "400",
@@ -284,6 +272,7 @@ function AlbumDetails() {
                                     lineHeight: {xs: '8.71px', md: '24px'}
                                 }}
                             >80,000,000</Typography>
+
                             <Typography
                                 sx={{
                                     fontWeight: "400",
@@ -301,6 +290,7 @@ function AlbumDetails() {
                                     lineHeight: {xs: '8.71px', md: '24px'}
                                 }}
                             >120hrs</Typography>
+
                             <Typography
                                 sx={{
                                     fontWeight: "400",
@@ -384,7 +374,7 @@ function AlbumDetails() {
                             lineHeight: "16.21px",
                             mt: 3
                         }}
-                    > Good God </Typography>
+                    >{ albumDetails.album_title }</Typography>
 
                     <Typography
                         sx={{
@@ -406,7 +396,7 @@ function AlbumDetails() {
                         }}
                     >
                         <img
-                            src={ albumSampleArtImg } alt='album image'
+                            src={ albumDetails.song_cover_url } alt='album image'
                             style={{
                                 width: "100%",
                                 height: "100%",
@@ -424,6 +414,7 @@ function AlbumDetails() {
                                     lineHeight: "17.8px"
                                 }}
                             >$60,000.00</Typography>
+
                             <Typography
                                 sx={{
                                     fontWeight: "400",
@@ -441,6 +432,7 @@ function AlbumDetails() {
                                     lineHeight: "17.8px"
                                 }}
                             >80,000,000</Typography>
+
                             <Typography
                                 sx={{
                                     fontWeight: "400",
@@ -458,6 +450,7 @@ function AlbumDetails() {
                                     lineHeight: "17.8px"
                                 }}
                             >120hrs</Typography>
+                            
                             <Typography
                                 sx={{
                                     fontWeight: "400",
@@ -486,7 +479,7 @@ function AlbumDetails() {
                                         fontSize: "15.43px",
                                         lineHeight: "15.43px",
                                     }}
-                                >Good God</Typography>
+                                >{ albumDetails.album_title }</Typography>
 
                                 <Typography
                                     sx={{
@@ -494,7 +487,7 @@ function AlbumDetails() {
                                         fontSize: "10.93px",
                                         lineHeight: "7.71px",
                                     }}
-                                >Joseph solomon </Typography>
+                                >{ albumDetails.artist_name }</Typography>
                             </Box>
 
                             <Box sx={{ flex: "1 1 45%" }} >
@@ -525,11 +518,10 @@ function AlbumDetails() {
                                     // letterSpacing: "-1px",
                                     flex: "1 1 45%",
                                 }}
-                            >More Grace Music </Typography>
+                            >{ albumDetails.label_name }</Typography>
                         </Stack>
 
                         <Stack direction="row" spacing="10px" mt="10px">
-
                             <Typography
                                 sx={{
                                     fontWeight: "900",
@@ -548,7 +540,7 @@ function AlbumDetails() {
                                     // letterSpacing: "-1px",
                                     flex: "1 1 45%",
                                 }}
-                            >Dance  </Typography>
+                            >{ albumDetails.primary_genre }</Typography>
                         </Stack>
 
                         <Stack direction="row" spacing="10px" mt="10px">
@@ -570,7 +562,7 @@ function AlbumDetails() {
                                     // letterSpacing: "-1px",
                                     flex: "1 1 45%",
                                 }}
-                            >123456789</Typography>
+                            >{ albumDetails.upc_ean }</Typography>
                         </Stack>
 
                     </Box>
@@ -589,13 +581,16 @@ function AlbumDetails() {
                         }}
                     >Songs on your album</Typography>
 
-                    {albumSongs.map((item, index) => (
-                        <Box key={index} onClick={() => navigate("/account/artist/song-details")}>
+                    {albumDetails.songs.map((item, index) => (
+                        <Box key={index} onClick={() => {
+                            _setSongDetails(item);
+                            navigate("/account/artist/song-details");
+                        }}>
                             <AlbumSongItem 
-                                artistName={item.artistName}
-                                artworkImage={item.artworkImage}
-                                songTitle={item.songTitle}
-                                distributedDSP={item.distributedDSP} 
+                                artistName={item.artist_name}
+                                artworkImage={item.cover_photo}
+                                songTitle={item.song_title}
+                                distributedDSP={["Apple", "Spotify"]} 
                                 displaySeeMore={true}
                             />
                         </Box>

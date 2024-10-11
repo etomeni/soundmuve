@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import Box from '@mui/material/Box';
@@ -14,37 +15,23 @@ import AccountWrapper from '@/components/AccountWrapper';
 // import { useSettingStore } from '@/state/settingStore';
 
 import albumSampleArtImg from '@/assets/images/albumSampleArt.png';
-import albumSampleArt from "@/assets/images/albumSampleArt.png";
 import AppleSportifyCheckmark from '@/components/AppleSportifyCheckmark';
 import colors from '@/constants/colors';
-
-
-const albumSongs = [
-    {
-        artworkImage: albumSampleArt,
-        songTitle: "Good God",
-        artistName: "Joseph solomon",
-        distributedDSP: ["Apple", "Spotify"]
-    },
-    {
-        artworkImage: albumSampleArt,
-        songTitle: "Good God",
-        artistName: "Joseph solomon",
-        distributedDSP: ["Apple", "Spotify"]
-    },
-    {
-        artworkImage: albumSampleArt,
-        songTitle: "Good God",
-        artistName: "Joseph solomon",
-        distributedDSP: ["Apple", "Spotify"]
-    }
-]
+import { useReleaseStore } from '@/state/releaseStore';
 
   
 function AlbumDetails_RL() {
     const navigate = useNavigate();
     // const darkTheme = useSettingStore((state) => state.darkTheme);
+    const albumDetails = useReleaseStore((state) => state.albumDetails);
+    const _setSongDetails = useReleaseStore((state) => state._setSongDetails);
 
+    useEffect(() => {
+        if (!albumDetails._id || !albumDetails.album_title) {
+            navigate("/account");
+        }
+    }, []);
+    
 
     return (
         <AccountWrapper>
@@ -589,13 +576,16 @@ function AlbumDetails_RL() {
                         }}
                     >Songs on your album</Typography>
 
-                    {albumSongs.map((item, index) => (
-                        <Box key={index} onClick={() => navigate("/account/record-label/song-details")}>
+                    {albumDetails.songs.map((item, index) => (
+                        <Box key={index} onClick={() => {
+                            _setSongDetails(item);
+                            navigate("/account/record-label/song-details");
+                        }}>
                             <AlbumSongItem 
-                                artistName={item.artistName}
-                                artworkImage={item.artworkImage}
-                                songTitle={item.songTitle}
-                                distributedDSP={item.distributedDSP} 
+                                artistName={item.artist_name}
+                                artworkImage={item.cover_photo}
+                                songTitle={item.song_title}
+                                distributedDSP={["Apple", "Spotify"]} 
                                 displaySeeMore={true}
                             />
                         </Box>

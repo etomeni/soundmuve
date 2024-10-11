@@ -50,6 +50,7 @@ import ArtistList_RL from "@/pages/account/recordLabel/ArtistList.tsx";
 import AccountFaq from "./pages/account/AccountFaq";
 import CartPage from "./pages/account/createReleases/cartCheckout/Cart";
 import CartCheckoutPage from "./pages/account/createReleases/cartCheckout/Checkout";
+import ArtistAnalytics_RL from "./pages/account/recordLabel/ArtistAnalytics_RL";
 
 
 export const router = createBrowserRouter([
@@ -269,6 +270,10 @@ export const router = createBrowserRouter([
                 {
                   path: "artist",
                   element: <ArtistList_RL />,
+                },
+                {
+                  path: "artist-analytics",
+                  element: <ArtistAnalytics_RL />,
                 },
 
                 {

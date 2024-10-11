@@ -5,9 +5,9 @@ import { Stack } from '@mui/material';
 import Grid from '@mui/material/Grid';
 
 import colors from '@/constants/colors';
-import { cartItemInterface } from '@/constants/typesInterface';
 import { numberOfLinesTypographyStyle } from '@/util/mui';
 import { currencyDisplay } from '@/util/resources';
+import { cartItemInterface } from '@/constants/cartInterface';
 
 
 interface _Props {
@@ -30,9 +30,9 @@ const CartItemComponent: React.FC<_Props> = ({
                         <Box>
                             <Typography variant='body1'
                                 sx={{
-                                    fontWeight: "400",
-                                    fontSize: "16px",
-                                    lineHeight: "40px",
+                                    fontWeight: "600",
+                                    fontSize: {xs: "16px", md: "20px"},
+                                    lineHeight: {xs: "20px", md: "40px"},
                                     letterSpacing: "-0.13px",
                                     color: colors.secondary,
                                 }}
@@ -44,9 +44,9 @@ const CartItemComponent: React.FC<_Props> = ({
                         <Box textAlign="center">
                             <Typography variant='body1'
                                 sx={{
-                                    fontWeight: "400",
-                                    fontSize: "16px",
-                                    lineHeight: "40px",
+                                    fontWeight: "600",
+                                    fontSize: {xs: "16px", md: "20px"},
+                                    lineHeight: {xs: "20px", md: "40px"},
                                     letterSpacing: "-0.13px",
                                     color: colors.secondary,
                                 }}
@@ -58,9 +58,9 @@ const CartItemComponent: React.FC<_Props> = ({
                         <Box textAlign="center">
                             <Typography variant='body1'
                                 sx={{
-                                    fontWeight: "400",
-                                    fontSize: "16px",
-                                    lineHeight: "40px",
+                                    fontWeight: "600",
+                                    fontSize: {xs: "16px", md: "20px"},
+                                    lineHeight: {xs: "20px", md: "40px"},
                                     letterSpacing: "-0.13px",
                                     color: colors.secondary,
                                 }}
@@ -172,9 +172,9 @@ const CartItemComponent: React.FC<_Props> = ({
                         <Box>
                             <Typography variant='body1'
                                 sx={{
-                                    fontWeight: "400",
-                                    fontSize: "14px",
-                                    lineHeight: "20px",
+                                    fontWeight: "600",
+                                    fontSize: {xs: "16px", md: "20px"},
+                                    lineHeight: {xs: "20px", md: "40px"},
                                     letterSpacing: "-0.06px",
                                     color: colors.secondary,
                                 }}
@@ -186,9 +186,9 @@ const CartItemComponent: React.FC<_Props> = ({
                         <Box textAlign="center">
                             <Typography variant='body1'
                                 sx={{
-                                    fontWeight: "400",
-                                    fontSize: "14px",
-                                    lineHeight: "20px",
+                                    fontWeight: "600",
+                                    fontSize: {xs: "16px", md: "20px"},
+                                    lineHeight: {xs: "20px", md: "40px"},
                                     letterSpacing: "-0.06px",
                                     color: colors.secondary,
                                 }}
@@ -236,7 +236,7 @@ const CartItemComponent: React.FC<_Props> = ({
                                             <Typography variant='subtitle2'
                                                 sx={{
                                                     fontWeight: "400",
-                                                    fontSize: "13px",
+                                                    fontSize: "15px",
                                                     lineHeight: "20px",
                                                     letterSpacing: "-0.06px",
                                                     color: colors.dark,
@@ -246,8 +246,8 @@ const CartItemComponent: React.FC<_Props> = ({
 
                                             <Typography variant='subtitle2'
                                                 sx={{
-                                                    fontWeight: "400",
-                                                    fontSize: "14px",
+                                                    fontWeight: "500",
+                                                    fontSize: "15px",
                                                     lineHeight: "20px",
                                                     letterSpacing: "-0.06px",
                                                     color: colors.secondary
@@ -257,8 +257,8 @@ const CartItemComponent: React.FC<_Props> = ({
                                             <Typography variant='subtitle2'
                                                 onClick={() => removeItemFn(item)}
                                                 sx={{
-                                                    fontWeight: "400",
-                                                    fontSize: "13px",
+                                                    fontWeight: "500",
+                                                    fontSize: "14px",
                                                     lineHeight: "20px",
                                                     letterSpacing: "-0.06px",
                                                     color: colors.dark,

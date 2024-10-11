@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import axios from 'axios';
 import * as yup from "yup";
 import { yupResolver } from '@hookform/resolvers/yup';
 
@@ -16,8 +15,6 @@ import { releaseTextFieldStyle, submitBtnStyle } from '@/util/mui';
 
 // import albumSampleArt from '@/assets/images/albumSampleArt.png';
 import CartItemComponent from '@/components/account/payments/carts/CartItem';
-import { apiEndpoint } from '@/util/resources';
-import { useUserStore } from '@/state/userStore';
 import DiscountApplicationModalComponent from '@/components/account/payments/carts/DiscountApplication';
 import CircularProgress from '@mui/material/CircularProgress';
 import { useCart } from '@/hooks/useCart';
@@ -28,40 +25,30 @@ const formSchema = yup.object({
 });
 
 function CartCheckoutPage() {
-    const accessToken = useUserStore((state) => state.accessToken);
     const [openDiscountFormModal, setOpenDiscountFormModal] = useState(false);
-    const { cartItems, totalAmount, handleRemoveCartItem } = useCart();
+    const { 
+        cartItems, totalAmount, handleRemoveCartItem,
+        handleApplyPromo, // applyPromoResponse
+    } = useCart();
 
     const { 
-        handleSubmit, register, formState: { errors, isValid, isSubmitting } 
+        handleSubmit, register, setError, formState: { errors, isValid, isSubmitting } 
     } = useForm({ 
         resolver: yupResolver(formSchema),
         mode: 'onBlur'
     });
             
     const onSubmit = async (formData: typeof formSchema.__outputType) => {
-        console.log(formData);
-        return;
+        // console.log(formData);
 
-        try {
-            const response = (await axios.post(
-                `${apiEndpoint}/xxxxxx`,
-                formData,  
-                {
-                    headers: {
-                        // 'Content-Type': 'multipart/form-data',
-                        Authorization: `Bearer ${accessToken}`
-                    },
-                }
-            )).data;
-            console.log(response);
+        const response = await handleApplyPromo(formData.promoCode);
 
-
-            // navigate("/account/create-album-release-select-stores");
-        } catch (error: any) {
-            const err = error.response.data || error;
-            console.log(err);
-
+        if (!response.status) {
+            setError(
+                "promoCode", 
+                { message: response.result.message || "error submitting code." },
+                { shouldFocus:true}
+            );
         }
     }
 

@@ -2,7 +2,7 @@ import { useCallback, useState } from "react";
 import axios from "axios";
 import { useUserStore } from "@/state/userStore";
 import { apiEndpoint } from "@/util/resources";
-import { locationAnalyticsInterface, salesReportAlbumAnalyticsInterface, salesReportMainDashInterface, salesReportSingleAnalyticsInterface } from "@/constants/analyticsTypesInterface";
+import { locationAnalyticsInterface, salesReportAlbumAnalyticsInterface, salesReportMainDashInterface, salesReportMonthAnalyticsInterface, salesReportSingleAnalyticsInterface } from "@/constants/analyticsTypesInterface";
 import { getDateRange, getFormattedDateRange } from "@/util/dateTime";
 
 
@@ -13,7 +13,7 @@ export function useGeneralAnalytics() {
     const [salesReportSingleAnalytics, setSalesReportSingleAnalytics] = useState<salesReportSingleAnalyticsInterface[]>();
     const [salesReportAlbumAnalytics, setSalesReportAlbumAnalytics] = useState<salesReportAlbumAnalyticsInterface[]>();
     const [locationsAnalytics, setLocationsAnalytics] = useState<locationAnalyticsInterface[]>();
-    const [reportMonthlyAnalytics, setReportMonthlyAnalytics] = useState<salesReportMainDashInterface[]>();
+    const [reportMonthlyAnalytics, setReportMonthlyAnalytics] = useState<salesReportMonthAnalyticsInterface[]>();
 
     const [reportMainDashData, setReportMainDashData] = useState<salesReportMainDashInterface>({
         album_sold: 0,

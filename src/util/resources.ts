@@ -353,3 +353,8 @@ export function isNumeric(str: string) {
   const regex = /^\d+$/;
   return regex.test(str);
 }
+
+
+export function convertToSubCurrency(amount: number, factor = 100) {
+  return Math.round(amount*factor);
+}

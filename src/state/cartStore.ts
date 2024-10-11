@@ -1,9 +1,19 @@
-import { cartItemInterface } from "@/constants/typesInterface";
-// import { removeLocalStorageItem, setLocalStorage } from "@/util/storage";
 import { create } from "zustand";
+import { 
+    add2cartResponseInterface, cartItemInterface,
+} from "@/constants/cartInterface";
 
+
+const add2cartResponse: add2cartResponseInterface = {
+    email: "",
+    items: [],
+    total: 0,
+    _id: "",
+    createdAt: ""
+};
 
 type _typeInterface_ = {
+    add2cartResponse: add2cartResponseInterface;
     cart: cartItemInterface[];
     
     _clearCartItems: () => void;
@@ -14,10 +24,23 @@ type _typeInterface_ = {
     _removeFromCart: (cartItem: cartItemInterface) => void;
     _editCart: (cartItem: cartItemInterface) => void;
     _overRideCart: (cartItem: cartItemInterface[]) => void;
+
+    _setAdd2cartResponse: (data: add2cartResponseInterface) => void;
 };
   
 export const cartItemStore = create<_typeInterface_>((set) => ({
-    cart: [],
+    cart: [
+        // {
+        //     artistName: "john",
+        //     artWorkImg: "",
+        //     email: "sundaywht@gmail.com",
+        //     id: "1234567cfghj",
+        //     price: 25,
+        //     releaseType: "Single",
+        //     songTitle: "God is Good"
+        // }
+    ],
+    add2cartResponse: add2cartResponse,
 
     _addToCart: (newCartItem) => {
         set((state) => {
@@ -77,6 +100,15 @@ export const cartItemStore = create<_typeInterface_>((set) => ({
 
             return {
                 cart: [],
+            };
+        });
+    },
+
+
+    _setAdd2cartResponse: (data) => {
+        set((_state) => {
+            return {
+                add2cartResponse: data,
             };
         });
     },

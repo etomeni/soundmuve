@@ -45,6 +45,8 @@ import MultipleSelectCheckmarks from '@/components/MultipleSelectCheckmarks';
 import colors from '@/constants/colors';
 import { releaseSelectStyle3, releaseTextFieldStyle } from '@/util/mui';
 import { cartItemStore } from '@/state/cartStore';
+import SearchArtistModalComponent from '@/components/account/SearchArtistModal';
+import { searchedArtistSearchInterface } from '@/constants/typesInterface';
 
 
 const formSchema = yup.object({
@@ -68,8 +70,10 @@ const formSchema = yup.object({
 interface creativeType {
     creativeName: string,
     creativeRole: string,
+    creativeId?: string,
 }
 
+let dspToSearch: "Apple" | "Spotify";
 
 function CreateSingleRelease2() {
     const navigate = useNavigate();
@@ -107,6 +111,7 @@ function CreateSingleRelease2() {
     const [selectCreativeRoleValue, setSelectCreativeRoleValue] = useState('Choose Roles');
     const [songUploadProgress, setSongUploadProgress] = useState(0);
 
+    const [openSearchArtistModal, setOpenSearchArtistModal] = useState(false);
 
     useEffect(() => {
         if (!singleRelease1.song_title) {
@@ -486,6 +491,52 @@ function CreateSingleRelease2() {
         }
 
     }
+
+    const handleSetArtistName = (details: searchedArtistSearchInterface, dspName: "Spotify" | "Apple") => {
+        // console.log(details);
+        if (dspName == "Spotify") {
+            // setSelectedSpotifyArtist(details)
+            setValue(
+                "artistCreativeName", 
+                details.name,
+                {shouldDirty: true, shouldTouch: true, shouldValidate: true} 
+            );
+            handleAddMoreCreatives(details)
+        } else if (dspName == "Apple") {
+            
+        }
+
+        return;
+    }
+
+    const handleAddMoreCreatives = (details?: searchedArtistSearchInterface) => {
+        const creativeName = getValues("artistCreativeName");
+        const creativeRole = selectCreativeRoleValue; // getValues("songArtistsCreativeRole");
+        if (!creativeName) return;
+            
+        if (!creativeRole || creativeRole == 'Choose Roles') {
+            _setToastNotification({
+                display: true,
+                status: "warning",
+                message: `Please select ${ creativeName } Role in creating this song.`
+            })
+
+            setError("songArtistsCreativeRole", {message: `Please select ${ creativeName } Role in creating this song.`});
+            return;
+        }
+
+        // const newCreatives = [ ...songArtists_Creatives, { creativeName, creativeRole } ];
+        const newCreatives:creativeType[] = [ 
+            ...songArtists_Creatives, 
+            { creativeName, creativeRole, creativeId: details?.id || '' } 
+        ];
+        setSongArtists_Creatives(newCreatives);
+        resetField("artistCreativeName");
+        resetField("songArtistsCreativeRole");
+        setSelectCreativeRoleValue('Choose Roles');
+        document.getElementById("songArtistsCreativeRole")?.focus();
+    }
+
 
     return (
         <AccountWrapper>
@@ -1174,34 +1225,6 @@ function CreateSingleRelease2() {
                                             }
                                         </Box>
 
-                                        <Box sx={{my: "20px"}}>
-                                            <Typography
-                                                sx={{
-                                                    fontWeight: "900",
-                                                    fontSize: {xs: "15px", md: "20px"},
-                                                    lineHeight: {xs: "25px", md: "40px"},
-                                                    letterSpacing: "-0.13px",
-                                                    mb: 0.5
-                                                }}
-                                            >Artist / Creative Name</Typography>
-
-                                            <TextField 
-                                                variant="outlined" 
-                                                fullWidth 
-                                                id='artistCreativeName'
-                                                type='text'
-                                                label=''
-                                                inputMode='text'
-                                                defaultValue=""
-                                                placeholder='E.g Joseph Solomon'
-                                         
-                                                sx={releaseTextFieldStyle}
-                                                error={ errors.artistCreativeName ? true : false }
-                                                { ...register('artistCreativeName') }
-                                            />
-
-                                            { errors.artistCreativeName && <Box sx={{fontSize: 13, color: "red", textAlign: "left"}}>{ errors.artistCreativeName?.message }</Box> }
-                                        </Box>
 
                                         <Box sx={{my: "20px"}}>
                                             <Typography component={"h3"} variant='h3'
@@ -1241,13 +1264,18 @@ function CreateSingleRelease2() {
                                                                 shouldValidate: true
                                                             }
                                                         );
+
+                                                        if (value == "Main artist" || value == "Featured") {
+                                                            dspToSearch = "Spotify";
+                                                            setOpenSearchArtistModal(true);
+                                                        }
                                                     }}
                                                 >
                                                     <MenuItem value="Choose Roles" disabled>
                                                         Choose Roles
                                                     </MenuItem>
 
-                                                    { songArtistsCreativesRoles.map((roleItem: any, index) => (
+                                                    { songArtistsCreativesRoles.map((roleItem, index) => (
                                                         <MenuItem key={index} value={roleItem}>
                                                             {roleItem}
                                                         </MenuItem>
@@ -1258,6 +1286,36 @@ function CreateSingleRelease2() {
                                             { errors.songArtistsCreativeRole && <Box sx={{fontSize: 13, color: "red", textAlign: "left"}}>{ errors.songArtistsCreativeRole?.message }</Box> }
                                         </Box>
 
+                                        <Box sx={{my: "20px"}}>
+                                            <Typography
+                                                sx={{
+                                                    fontWeight: "900",
+                                                    fontSize: {xs: "15px", md: "20px"},
+                                                    lineHeight: {xs: "25px", md: "40px"},
+                                                    letterSpacing: "-0.13px",
+                                                    mb: 0.5
+                                                }}
+                                            >Artist / Creative Name</Typography>
+
+                                            <TextField 
+                                                variant="outlined" 
+                                                fullWidth 
+                                                id='artistCreativeName'
+                                                type='text'
+                                                label=''
+                                                inputMode='text'
+                                                defaultValue=""
+                                                placeholder='E.g Joseph Solomon'
+                                         
+                                                sx={releaseTextFieldStyle}
+                                                error={ errors.artistCreativeName ? true : false }
+                                                { ...register('artistCreativeName') }
+                                            />
+
+                                            { errors.artistCreativeName && <Box sx={{fontSize: 13, color: "red", textAlign: "left"}}>{ errors.artistCreativeName?.message }</Box> }
+                                        </Box>
+
+
                                         <Box 
                                             sx={{
                                                 display: "flex",
@@ -1267,29 +1325,7 @@ function CreateSingleRelease2() {
                                                 width: "fit-content",
                                                 cursor: "pointer"
                                             }}
-                                            onClick={() => {
-                                                const creativeName = getValues("artistCreativeName");
-                                                const creativeRole = selectCreativeRoleValue; // getValues("songArtistsCreativeRole");
-                                                if (!creativeName) return;
-                                                    
-                                                if (!creativeRole || creativeRole == 'Choose Roles') {
-                                                    _setToastNotification({
-                                                        display: true,
-                                                        status: "warning",
-                                                        message: `Please select ${ creativeName } Role in creating this song.`
-                                                    })
-
-                                                    setError("songArtistsCreativeRole", {message: `Please select ${ creativeName } Role in creating this song.`});
-                                                    return;
-                                                }
-
-                                                const newCreatives = [ ...songArtists_Creatives, { creativeName, creativeRole } ];
-                                                setSongArtists_Creatives(newCreatives);
-                                                resetField("artistCreativeName");
-                                                resetField("songArtistsCreativeRole");
-                                                setSelectCreativeRoleValue('Choose Roles');
-                                                document.getElementById("artistCreativeName")?.focus();
-                                            }}
+                                            onClick={() => handleAddMoreCreatives()}
                                         >
                                             <AddIcon />
 
@@ -1899,6 +1935,17 @@ function CreateSingleRelease2() {
             <CopyrightOwnershipModalComponent
                 openModal={openCopyrightOwnershipModal}
                 closeModal={() => setOpenCopyrightOwnershipModal(false)}
+            />
+
+            <SearchArtistModalComponent 
+                openSearchArtistModal={openSearchArtistModal}
+                closeSearchArtistModal={() => {
+                    setOpenSearchArtistModal(false);
+                    resetField("songArtistsCreativeRole");
+                    setSelectCreativeRoleValue('Choose Roles');
+                }}
+                onSaveSelection={handleSetArtistName}
+                dspName={ dspToSearch }
             />
         </AccountWrapper>
     )

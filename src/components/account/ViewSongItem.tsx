@@ -20,6 +20,100 @@ interface _Props {
 const ViewSongItemComponent: React.FC<_Props> = ({ song, index, albumType }) => {
     const navigate = useNavigate();
     const _setSongDetails = useReleaseStore((state) => state._setSongDetails);
+    const _setAlbumDetails = useReleaseStore((state) => state._setAlbumDetails);
+
+    const handleNavigation = () => {
+        // Single" | "Album"
+        navigate(`/account/artist/${albumType == "Album" ? "album-details" : "song-details"}`);
+        let song_id = song.songs ? song?.songs[index]._id : song._id;
+
+
+        if (albumType == "Album") {
+            let songs_: any[] = [];
+            song.songs?.forEach((item) => {
+                const songs_Item = {
+                    _id: item._id,
+                    artist_name: song.artist_name,
+                    cover_photo: song.song_cover || song.song_cover_url || albumImage,
+                    email: item.email || song.email,
+                    label_name: song.label_name,
+                    primary_genre: song.primary_genre,
+                    secondary_genre: song.secondary_genre,
+                    song_title: item.song_title || '',
+                    stream_time: '',
+                    streams: "",
+                    total_revenue: "",
+                    upc_ean: item.upc_ean || item.isrc_number || ''
+                };
+
+                songs_.push(songs_Item);
+            });
+
+            _setAlbumDetails({
+                _id: song._id,
+                email: song.email,
+                appleMusicUrl: song.appleMusicUrl,
+                spotifyMusicUrl: song.spotifyMusicUrl,
+                album_title: song.album_title || '',
+                artist_name: song.artist_name,
+                language: song.language,
+                primary_genre: song.primary_genre,
+                secondary_genre: song.secondary_genre,
+                release_date: song.release_date,
+                release_time: song.release_time,
+                listenerTimeZone: song.listenerTimeZone,
+                otherTimeZone: song.otherTimeZone,
+                label_name: song.label_name,
+                soldWorldwide: song.soldWorldwide,
+                recording_location: song.recording_location,
+                upc_ean: song.upc_ean,
+                store: song.store,
+                social_platform: song.social_platform,
+                status: song.status,
+                song_cover_url: song.song_cover_url || song.song_cover || albumImage,
+
+                created_at: song.created_at,
+                songs: songs_,
+                numberOfSongs: song.numberOfSongs || 0,
+            
+                total_revenue: '', // $60,000.00
+                streams: '', // 80,000,000
+                stream_time: '', // 120hrs
+            })
+        } else if (albumType == "Single") {
+                
+            _setSongDetails({
+                _id: song_id,
+                artist_name: song.artist_name,
+                cover_photo: song.song_cover || song.song_cover_url || albumImage,
+                email: song.email,
+                label_name: song.label_name,
+                primary_genre: song.primary_genre,
+                secondary_genre: song.secondary_genre,
+                song_title: song.album_title || song.song_title || '',
+                stream_time: '',
+                streams: "",
+                total_revenue: "",
+                upc_ean: song.upc_ean
+            });
+        } else {
+            _setSongDetails({
+                _id: song_id,
+                artist_name: song.artist_name,
+                cover_photo: song.song_cover || song.song_cover_url || albumImage,
+                email: song.email,
+                label_name: song.label_name,
+                primary_genre: song.primary_genre,
+                secondary_genre: song.secondary_genre,
+                song_title: song.album_title || song.song_title || '',
+                stream_time: '',
+                streams: "",
+                total_revenue: "",
+                upc_ean: song.upc_ean
+            });
+        }
+    };
+
 
     return (
         <Box 
@@ -29,23 +123,27 @@ const ViewSongItemComponent: React.FC<_Props> = ({ song, index, albumType }) => 
                 mx: "auto"
             }}
             onClick={() => {
-                navigate(`/account/artist/${albumType == "Album" ? "album-details" : "song-details"}`);
-                let song_id = song.songs ? song?.songs[index]._id : song._id;
+                handleNavigation();
+                // return;
 
-                _setSongDetails({
-                    _id: song_id,
-                    artist_name: song.artist_name,
-                    cover_photo: song.song_cover || song.song_cover_url || albumImage,
-                    email: song.email,
-                    label_name: song.label_name,
-                    primary_genre: song.primary_genre,
-                    secondary_genre: song.secondary_genre,
-                    song_title: song.album_title || song.song_title || '',
-                    stream_time: '',
-                    streams: "",
-                    total_revenue: "",
-                    upc_ean: song.upc_ean
-                });
+                
+                // navigate(`/account/artist/${albumType == "Album" ? "album-details" : "song-details"}`);
+                // let song_id = song.songs ? song?.songs[index]._id : song._id;
+
+                // _setSongDetails({
+                //     _id: song_id,
+                //     artist_name: song.artist_name,
+                //     cover_photo: song.song_cover || song.song_cover_url || albumImage,
+                //     email: song.email,
+                //     label_name: song.label_name,
+                //     primary_genre: song.primary_genre,
+                //     secondary_genre: song.secondary_genre,
+                //     song_title: song.album_title || song.song_title || '',
+                //     stream_time: '',
+                //     streams: "",
+                //     total_revenue: "",
+                //     upc_ean: song.upc_ean
+                // });
             }}
         >
             <Box

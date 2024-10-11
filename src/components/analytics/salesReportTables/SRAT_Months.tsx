@@ -12,13 +12,13 @@ import SRAT_DownloadReportBtn from './SRAT_DownloadBtn';
 import { SxProps, Theme } from '@mui/material/styles';
 import SRAT_TableHead from './SRAT_TableHead';
 import { currencyDisplay, formatedNumber } from '@/util/resources';
-import { salesReportMainDashInterface } from '@/constants/analyticsTypesInterface';
+import { salesReportMonthAnalyticsInterface } from '@/constants/analyticsTypesInterface';
 import EmptyListComponent from '@/components/EmptyList';
 import LoadingDataComponent from '@/components/LoadingData';
 
 
 interface _Props {
-    tBodyContent: salesReportMainDashInterface[] | undefined,
+    tBodyContent: salesReportMonthAnalyticsInterface[] | undefined,
     displayDownloadReport?: boolean,
 };
 
@@ -70,7 +70,7 @@ const SRAT_MonthsComponent: React.FC<_Props> = ({
                                                         ...tableValueStyle,
                                                         color: colors.dark,
                                                     }}
-                                                > { row.sales_period } </TableCell>
+                                                > { row.month } </TableCell>
 
                                                 <TableCell align={"center"} 
                                                     sx={{ 

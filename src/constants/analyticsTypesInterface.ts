@@ -69,7 +69,18 @@ export type salesReportAlbumAnalyticsInterface = {
     total_revenue: number,
 }
 
-
+export type salesReportMonthAnalyticsInterface = {
+    // sales_period?: string,
+    month: string,
+    album_sold: number,
+    single_sold: number,
+    streams: {
+        apple: number,
+        spotify: number,
+        total_combined: number
+    },
+    total_revenue: number
+}
 
 export type salesReportMainDashInterface = {
     sales_period: string,

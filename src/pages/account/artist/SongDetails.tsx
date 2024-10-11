@@ -56,6 +56,11 @@ function SongDetails() {
         // getAnalyticsData();
         // console.log(songDetails);
 
+        if (!songDetails._id || !songDetails.artist_name) {
+            navigate("/account");
+            return;
+        }
+
         getGraphData(songDetails._id, songDetails.song_title, "single");
         
         getSportifiyAppleOverview(songDetails._id, "single");

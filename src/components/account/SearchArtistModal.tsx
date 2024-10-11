@@ -6,13 +6,8 @@ import Typography from '@mui/material/Typography';
 import CloseIcon from '@mui/icons-material/Close';
 import TextField from '@mui/material/TextField';
 import Stack from '@mui/material/Stack';
+import Button from '@mui/material/Button';
 import { numberOfLinesTypographyStyle, releaseTextFieldStyle } from '@/util/mui';
-
-// import { useSettingStore } from '@/state/settingStore';
-// import appleMusiclogo from '@/assets/images/apple.png';
-// import appleMusicLightlogo from '@/assets/images/appleLightTheme.png';
-// import spotifylogo from '@/assets/images/spotify.png';
-// import spotifyLghtThemelogo from '@/assets/images/spotifyLghtTheme.png';
 import AppleSportifyCheckmark from '../AppleSportifyCheckmark';
 import albumSampleArt from "@/assets/images/album.png";
 
@@ -42,6 +37,10 @@ const SearchArtistModalComponent: React.FC<_Props> = ({
     // const [selectedSpotifyArtist, setSelectedSpotifyArtist] = useState<searchedArtistSearchInterface>();
     // const [selectedAppleMusicArtist, setSelectedAppleMusicArtist] = useState<any>();
 
+    // useEffect(() => {
+    //     if (openSearchArtistModal) setSelectedArtist(undefined);
+    // }, [openSearchArtistModal]);
+    
 
     const handleSearchInput = (e: any) => {
         const value = e.target.value;
@@ -134,7 +133,7 @@ const SearchArtistModalComponent: React.FC<_Props> = ({
                                     letterSpacing: "-0.13px",
                                     color: colors.dark,
                                 }}
-                            >Main Artist name?</Typography>
+                            >Artist name?</Typography>
 
                             <Box>
                                 <IconButton onClick={() => closeSearchArtistModal() }>
@@ -392,27 +391,45 @@ const SearchArtistModalComponent: React.FC<_Props> = ({
                             > create one here.</Typography>
                         </Typography>
 
-                        <Box
-                            sx={{
-                                p: "15px 25px",
-                                borderRadius: "12px",
-                                bgcolor: colors.primary,
-                                color: colors.milk,
-                                width: "263px",
-                                textAlign: "center",
-                                mx: "auto",
-                                cursor: "pointer"
-                            }}
-                            onClick={() => handleContinue()}
-                        >
-                            <Typography
-                                sx={{
-                                    fontWeight: "900",
-                                    fontSize: "15px",
-                                    lineHeight: "13px",
-                                    letterSpacing: "-0.13px"
+
+                        <Box sx={{ mx: "auto", width: '265px' }}>
+                            <Button variant="contained" 
+                                fullWidth type="button" 
+                                onClick={() => handleContinue()}
+                                disabled={ !selectedArtist } 
+                                sx={{ 
+                                    bgcolor: colors.primary,
+                                    maxWidth: "263px",
+                                    "&.Mui-disabled": {
+                                        background: colors.secondary,
+                                        // color: "#797979"
+                                    },
+                                    "&:hover": {
+                                        bgcolor: colors.primary,
+                                    },
+                                    "&:active": {
+                                        bgcolor: colors.primary,
+                                    },
+                                    "&:focus": {
+                                        bgcolor: colors.primary,
+                                    },
+                                    color: colors.milk,
+                                    borderRadius: "12px",
+                                    // my: 3, 
+                                    p: "15px 25px",
+                                    textAlign: "center",
+                                    textTransform: "none"
                                 }}
-                            >Continue</Typography>
+                            >
+                                <Typography
+                                    sx={{
+                                        fontWeight: "900",
+                                        fontSize: "15px",
+                                        lineHeight: "13px",
+                                        letterSpacing: "-0.13px"
+                                    }}
+                                >Continue</Typography>
+                            </Button>
                         </Box>
                     </Box>
 

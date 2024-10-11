@@ -198,6 +198,13 @@ function CreateSingleRelease() {
                 details.name,
                 {shouldDirty: true, shouldTouch: true, shouldValidate: true} 
             );
+
+            setValue(
+                "artistName", 
+                details.name,
+                {shouldDirty: true, shouldTouch: true, shouldValidate: true} 
+            );
+
         } else if (dspName == "Apple") {
             
         }
@@ -459,7 +466,7 @@ function CreateSingleRelease() {
                             </Grid>
                         </Grid>
 
-                        <Grid container spacing="20px" sx={{my: "31px"}}>
+                        {/* <Grid container spacing="20px" sx={{my: "31px"}}>
                             <Grid item xs={12} md={4}>
                                 <Typography sx={{
                                     fontWeight: {xs: "900", md: "900"},
@@ -492,11 +499,8 @@ function CreateSingleRelease() {
                                     
                                     { errors.artistName && <Box sx={{fontSize: 13, color: "red", textAlign: "left"}}>{ errors.artistName?.message }</Box> }
                                 </Box> 
-
-                                {/* <SelectedArtistView /> */}
-
                             </Grid>
-                        </Grid>
+                        </Grid> */}
 
                         <Grid container spacing="20px" sx={{my: "31px"}}>
                             <Grid item xs={12} md={4}>
@@ -507,18 +511,16 @@ function CreateSingleRelease() {
                                             fontSize: {xs: "13.12px", md: "25px"},
                                             lineHeight: {xs: "21px", md: "40px"},
                                             letterSpacing: {xs: "-0.07px", md: "-0.13px"}
-                                        }}> Spotify Artist Profile </Typography>
+                                        }}>Main Artist Name</Typography>
 
-                                        {/* <Typography sx={{
+                                        <Typography sx={{
                                             fontWeight: "400",
                                             fontSize: {xs: "13.88px", md: "18px"},
                                             lineHeight: {xs: "9.25px", md: "12px"},
                                             letterSpacing: {xs: "-0.1px", md: "-0.13px"},
                                             // mt: "9px"
-                                        }}> Optional </Typography> */}
+                                        }}> Spotify profile </Typography>
                                     </Box>
-
-                                    {/* <ArtistProfileInfoComponent  /> */}
                                 </Stack>
                             </Grid>
 
@@ -569,15 +571,15 @@ function CreateSingleRelease() {
                                             fontSize: {xs: "13.12px", md: "25px"},
                                             lineHeight: {xs: "21px", md: "40px"},
                                             letterSpacing: {xs: "-0.07px", md: "-0.13px"}
-                                        }}> Artist Profile </Typography>
+                                        }}>Main Artist </Typography>
 
-                                        {/* <Typography sx={{
+                                        <Typography sx={{
                                             fontWeight: "400",
                                             fontSize: {xs: "13.88px", md: "18px"},
                                             lineHeight: {xs: "9.25px", md: "12px"},
                                             letterSpacing: {xs: "-0.1px", md: "-0.13px"},
                                             // mt: "9px"
-                                        }}> Optional </Typography> */}
+                                        }}> Apple music profile </Typography>
                                     </Box>
 
                                     <ArtistProfileInfoComponent  />

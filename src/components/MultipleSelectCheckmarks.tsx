@@ -163,7 +163,7 @@ const MultipleSelectCheckmarks: React.FC<MyProps> = ({
                             }}
                         />
                     </Box>
-                ) : <></>
+                ) : <Box></Box>
             }
 
             <Box>

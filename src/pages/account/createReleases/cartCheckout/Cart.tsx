@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 // import CircularProgress from '@mui/material/CircularProgress';
@@ -15,9 +14,11 @@ import { useCart } from '@/hooks/useCart';
 
 
 function CartPage() {
-    const navigate = useNavigate();
     const [openDiscountFormModal, setOpenDiscountFormModal] = useState(false);
-    const { cartItems, totalAmount, handleRemoveCartItem } = useCart();
+    const { 
+        cartItems, totalAmount, handleRemoveCartItem,
+        handleAddToCart,
+    } = useCart();
 
     return (
         <AccountWrapper bottomSpacing={0} topSpacing={false}>
@@ -52,10 +53,10 @@ function CartPage() {
                     <Typography variant='body1'
                         onClick={() => setOpenDiscountFormModal(true)}
                         sx={{
-                            fontWeight: "400",
-                            fontSize: {xs: "", md: "16px"},
-                            lineHeight: {xs: '', md: "40px"},
-                            letterSpacing: {xs: "", md: "-0.13px"},
+                            fontWeight: "500",
+                            fontSize: {xs: "16px", md: "20px"},
+                            lineHeight: {xs: '30px', md: "40px"},
+                            letterSpacing: {xs: "-0.13px", md: "-0.13px"},
                             color: colors.secondary,
                             cursor: "pointer"
                         }}
@@ -65,7 +66,7 @@ function CartPage() {
                         fullWidth type="button" 
                         // disabled={ !isValid || isSubmitting } 
                         disabled={!cartItems.length}
-                        onClick={() => { navigate("/account/checkout") }}
+                        onClick={() => { handleAddToCart() }}
                         sx={{
                             ...submitBtnStyle,
                             maxWidth: "320px"

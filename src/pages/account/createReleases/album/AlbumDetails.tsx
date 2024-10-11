@@ -45,6 +45,8 @@ import { primaryGenre, secondaryGenre, hours, minutes, minReleaseDate, apiEndpoi
 // import albumSampleArt from "@/assets/images/albumSampleArt.png"
 import ArtistProfileInfoComponent from '@/components/ArtistProfileInfo';
 import colors from '@/constants/colors';
+import SelectedArtistView from '@/components/release/SelectedArtistView';
+import { searchedArtistSearchInterface } from '@/constants/typesInterface';
 
 
 const formSchema = yup.object({
@@ -102,6 +104,9 @@ function AlbumDetails() {
     
     const [openSearchArtistModal, setOpenSearchArtistModal] = useState(false);
     const [selectArtistName, setSelectArtistName] = useState<any>();
+    const [selectedSpotifyArtist, setSelectedSpotifyArtist] = useState<searchedArtistSearchInterface>();
+
+
 
 
     const { 
@@ -169,20 +174,53 @@ function AlbumDetails() {
     }, []);
     
 
-    const handleSetArtistName = (details: any) => {
+    // const handleSetArtistName = (details: any) => {
+    //     // console.log(details);
+    //     setSelectArtistName(details);
+
+    //     let name = details.spotify ? details.spotify.name : details.apple ? details.apple.name : details.unknown.name;
+
+    //     setValue(
+    //         "artistName", 
+    //         name,
+    //         {shouldDirty: true, shouldTouch: true, shouldValidate: true} 
+    //     );
+    //     setOpenSearchArtistModal(false)
+    // }
+
+
+    const handleSetArtistName = (details: searchedArtistSearchInterface, dspName: "Spotify" | "Apple") => {
         // console.log(details);
-        setSelectArtistName(details);
+        if (dspName == "Spotify") {
+            setSelectedSpotifyArtist(details)
+            setValue(
+                "spotifyMusicUrl", 
+                details.name,
+                {shouldDirty: true, shouldTouch: true, shouldValidate: true} 
+            );
 
-        let name = details.spotify ? details.spotify.name : details.apple ? details.apple.name : details.unknown.name;
+            setValue(
+                "artistName", 
+                details.name,
+                {shouldDirty: true, shouldTouch: true, shouldValidate: true} 
+            );
 
-        setValue(
-            "artistName", 
-            name,
-            {shouldDirty: true, shouldTouch: true, shouldValidate: true} 
-        );
-        setOpenSearchArtistModal(false)
+        } else if (dspName == "Apple") {
+            
+        }
+
+
+        return;
+
+        // setSelectArtistName(details);
+        // let name = details.spotify ? details.spotify.name : details.apple ? details.apple.name : details.unknown.name;
+
+        // setValue(
+        //     "artistName", 
+        //     name,
+        //     {shouldDirty: true, shouldTouch: true, shouldValidate: true} 
+        // );
     }
-
             
     const onSubmit = async (formData: typeof formSchema.__outputType) => {
         // console.log(formData);
@@ -300,7 +338,7 @@ function AlbumDetails() {
             artist_name: formDetails.artist_name,
 
             appleMusicUrl: formDetails.appleMusicUrl,
-            spotifyMusicUrl: formDetails.spotifyMusicUrl,
+            spotifyMusicUrl: selectedSpotifyArtist?.id || formDetails.spotifyMusicUrl,
 
             language: formDetails.language,
             primary_genre: formDetails.primary_genre,
@@ -402,7 +440,6 @@ function AlbumDetails() {
                             <form noValidate onSubmit={ handleSubmit(onSubmit) } 
                                 style={{ width: "100%", maxWidth: "916px" }}
                             >
-                                
                                 <Grid container spacing="20px" sx={{my: "31px"}}>
                                     <Grid item xs={12} md={4}
                                         sx={{ alignSelf: "center"}}
@@ -440,14 +477,27 @@ function AlbumDetails() {
                                     </Grid>
                                 </Grid>
 
+
                                 <Grid container spacing="20px" sx={{my: "31px"}}>
                                     <Grid item xs={12} md={4}>
-                                        <Typography variant='h3' sx={{
-                                            fontWeight: {xs: "900", md: "900"},
-                                            fontSize: {xs: "13.12px", md: "20px"},
-                                            lineHeight: {xs: "21px", md: "32px"},
-                                            letterSpacing: {xs: "-0.07px", md: "-0.13px"}
-                                        }}> Main Artist Name </Typography>
+                                        <Stack direction="row">
+                                            <Box>
+                                                <Typography sx={{
+                                                    fontWeight: {xs: "700", md: "900"},
+                                                    fontSize: {xs: "13.12px", md: "25px"},
+                                                    lineHeight: {xs: "21px", md: "40px"},
+                                                    letterSpacing: {xs: "-0.07px", md: "-0.13px"}
+                                                }}>Main Artist Name</Typography>
+
+                                                <Typography sx={{
+                                                    fontWeight: "400",
+                                                    fontSize: {xs: "13.88px", md: "18px"},
+                                                    lineHeight: {xs: "9.25px", md: "12px"},
+                                                    letterSpacing: {xs: "-0.1px", md: "-0.13px"},
+                                                    // mt: "9px"
+                                                }}> Spotify profile </Typography>
+                                            </Box>
+                                        </Stack>
                                     </Grid>
 
                                     <Grid item xs={12} md={8}>
@@ -455,127 +505,36 @@ function AlbumDetails() {
                                             <TextField 
                                                 variant="outlined" 
                                                 fullWidth 
-                                                id='artistName'
-                                                type='text'
+                                                id='spotifyMusicUrl'
+                                                type='url'
+                                                inputMode='url'
                                                 label=''
-                                                inputMode='text'
+                                                placeholder='Select spotify profile'
                                                 defaultValue=""
-                                                InputProps={{
-                                                    sx: {
-                                                        borderRadius: "16px",
-                                                        maxWidth: {xs: "337px", md: "100%"}
-                                                    },
-                                                }}
+                                                InputProps={{ readOnly: true }}
                                                 sx={releaseTextFieldStyle}
-                                                error={ errors.artistName ? true : false }
-                                                { ...register('artistName') }
-                                            />
-                                            
-                                            { errors.artistName && <Box sx={{fontSize: 13, color: "red", textAlign: "left"}}>{ errors.artistName?.message }</Box> }
-                                        </Box> 
-
-
-                                        {/* <Box>
-                                            <Box 
-                                                sx={{
-                                                    p: {xs: "11.25px 21.75px 11.25px 21.75px", md: "15px 29px 15px 29px"},
-                                                    borderRadius: {xs: "9px", md: "12px"},
-                                                    background: darkTheme ? "#fff" : "#272727",
-                                                    color: "#000000",
-                                                    cursor: "pointer",
-                                                    display: "inline-block"
-                                                }}
                                                 onClick={() => {
                                                     dspToSearch = "Spotify";
                                                     setOpenSearchArtistModal(true);
                                                 }}
-                                            >
-                                                <Typography 
-                                                    sx={{
-                                                        fontWeight: '900',
-                                                        fontSize: {xs: "11.25px", md: "15px"},
-                                                        lineHeight: {xs: "9.75px", md: "13px"},
-                                                        letterSpacing: {xs: "-0.1px", md: "-0.13px"},
-                                                        textAlign: 'center',
-                                                        color: darkTheme ? "#000" : "#fff",
-                                                    }}
-                                                > Add&nbsp;Artist </Typography>
-                                            </Box>
-                                            { errors.artistName && <Box sx={{fontSize: 13, color: "red", textAlign: "left"}}>{ errors.artistName?.message }</Box> }
 
-                                            {
-                                                selectArtistName ? (
-                                                    <Box
-                                                        sx={{
-                                                            height: {xs: "82px", md: "82.92px"}, 
-                                                            borderRadius: "8.65px",
-                                                            // border: "0.07px solid #FFFFFF",
+                                                error={ errors.spotifyMusicUrl ? true : false }
+                                                { ...register('spotifyMusicUrl') }
+                                            />
+                                            
+                                            { errors.spotifyMusicUrl && <Box sx={{fontSize: 13, color: "red", textAlign: "left"}}>{ errors.spotifyMusicUrl?.message }</Box> }
+                                        </Box>
 
-                                                            bgcolor: "#6449868F",
-                                                            py: {xs: "6.02px",md: "6.5px"},
-                                                            px: "7.2px",
-                                                            maxWidth: {xs: "337px", md: "100%"},
 
-                                                            display: "flex",
-                                                            flexDirection: "row",
-                                                            alignItems: "center",
-                                                            gap: "8.65px",
-                                                            my: 2
-                                                        }}
-                                                    >
-                                                        <Box
-                                                            sx={{
-                                                                width: "70.67px",
-                                                                height: "69.94px",
-                                                                borderRadius: "5.77px",
-                                                                overflow: "hidden"
-                                                            }}
-                                                        >
-                                                            <img 
-                                                                src={albumSampleArt} alt="album Art"
-                                                                style={{ width: "100%", objectFit: "contain" }}
-                                                            />
-                                                        </Box>
+                                        {
+                                            selectedSpotifyArtist ? (
+                                                <SelectedArtistView 
+                                                    selectedArtist={selectedSpotifyArtist} 
+                                                    dspName='Spotify'
+                                                />
+                                            ) : <></>
+                                        }
 
-                                                        <Box>
-                                                            <Box 
-                                                                sx={{
-                                                                    display: "flex",
-                                                                    flexDirection: "row",
-                                                                    gap: "5px",
-                                                                    alignItems: "center"
-                                                                }}
-                                                            >
-                                                                <Typography
-                                                                    sx={{
-                                                                        fontWeight: "700",
-                                                                        fontSize: "25px",
-                                                                        lineHeight: "20px",
-                                                                        letterSpacing: "-0.13px",
-                                                                        color: "#fff"
-                                                                    }}
-                                                                > 
-                                                                    { getValues("artistName") }
-                                                                </Typography>
-                                                            </Box>
-
-                                                            <Box
-                                                                sx={{
-                                                                    display: "flex",
-                                                                    flexDirection: "row",
-                                                                    alignItems: "center",
-                                                                    gap: "10px",
-                                                                    mt:  "7.2px",
-                                                                }}
-                                                            >
-                                                                { selectArtistName.apple ? <AppleSportifyCheckmark dspName="Apple" bgColor='#D9D9D9' /> : <></> }
-                                                                { selectArtistName.spotify ? <AppleSportifyCheckmark dspName="Spotify" bgColor='#D9D9D9' /> : <></> }
-                                                            </Box>
-                                                        </Box>
-                                                    </Box>
-                                                ) : <></>
-                                            }
-                                        </Box> */}
                                     </Grid>
                                 </Grid>
 
@@ -583,20 +542,20 @@ function AlbumDetails() {
                                     <Grid item xs={12} md={4}>
                                         <Stack direction="row">
                                             <Box>
-                                                <Typography variant='h3' sx={{
+                                                <Typography sx={{
                                                     fontWeight: {xs: "700", md: "900"},
                                                     fontSize: {xs: "13.12px", md: "25px"},
                                                     lineHeight: {xs: "21px", md: "40px"},
                                                     letterSpacing: {xs: "-0.07px", md: "-0.13px"}
-                                                }}> Artist Profile </Typography>
+                                                }}>Main Artist </Typography>
 
-                                                {/* <Typography sx={{
+                                                <Typography sx={{
                                                     fontWeight: "400",
                                                     fontSize: {xs: "13.88px", md: "18px"},
                                                     lineHeight: {xs: "9.25px", md: "12px"},
                                                     letterSpacing: {xs: "-0.1px", md: "-0.13px"},
                                                     // mt: "9px"
-                                                }}> Optional </Typography> */}
+                                                }}> Apple music profile </Typography>
                                             </Box>
 
                                             <ArtistProfileInfoComponent  />
@@ -605,61 +564,27 @@ function AlbumDetails() {
 
                                     <Grid item xs={12} md={8}>
                                         <Box>
-                                            <Grid container spacing="20px">
-
-                                                <Grid item xs={12} md={6}>
-                                                    <TextField 
-                                                        variant="outlined" 
-                                                        fullWidth 
-                                                        id='spotifyMusicUrl'
-                                                        type='url'
-                                                        inputMode='url'
-                                                        label=''
-                                                        placeholder='Add your soptify profile link'
-                                                        defaultValue=""
-                                                        InputProps={{
-                                                            sx: {
-                                                                borderRadius: "16px",
-                                                                maxWidth: {xs: "337px", md: "100%"}
-                                                            },
-                                                        }}
-                                                        sx={releaseTextFieldStyle}
-                                                        error={ errors.spotifyMusicUrl ? true : false }
-                                                        { ...register('spotifyMusicUrl') }
-                                                    />
-                                                    
-                                                    { errors.spotifyMusicUrl && <Box sx={{fontSize: 13, color: "red", textAlign: "left"}}>{ errors.spotifyMusicUrl?.message }</Box> }
-
-                                                </Grid>
-
-                                                <Grid item xs={12} md={6}>
-                                                    <TextField 
-                                                        variant="outlined" 
-                                                        fullWidth 
-                                                        id='appleMusicUrl'
-                                                        inputMode='url'
-                                                        type='url'
-                                                        label=''
-                                                        placeholder='Add your apple music profile link'
-                                                        defaultValue=""
-                                                        InputProps={{
-                                                            sx: {
-                                                                borderRadius: "16px",
-                                                                maxWidth: {xs: "337px", md: "100%"}
-                                                            },
-                                                        }}
-                                                        sx={releaseTextFieldStyle}
-                                                        error={ errors.appleMusicUrl ? true : false }
-                                                        { ...register('appleMusicUrl') }
-                                                    />
-                                                    
-                                                    { errors.appleMusicUrl && <Box sx={{fontSize: 13, color: "red", textAlign: "left"}}>{ errors.appleMusicUrl?.message }</Box> }
-
-                                                </Grid>
-
-                                            </Grid>
-
+                                            <TextField 
+                                                variant="outlined" 
+                                                fullWidth 
+                                                id='appleMusicUrl'
+                                                inputMode='url'
+                                                type='url'
+                                                label=''
+                                                placeholder='Add your apple music profile link'
+                                                defaultValue=""
+                                                sx={releaseTextFieldStyle}
+                                                InputProps={{
+                                                    sx: {
+                                                        borderRadius: "16px",
+                                                        maxWidth: {xs: "337px", md: "100%"}
+                                                    },
+                                                }}
+                                                error={ errors.appleMusicUrl ? true : false }
+                                                { ...register('appleMusicUrl') }
+                                            />
                                             
+                                            { errors.appleMusicUrl && <Box sx={{fontSize: 13, color: "red", textAlign: "left"}}>{ errors.appleMusicUrl?.message }</Box> }
                                         </Box>
                                     </Grid>
                                 </Grid>

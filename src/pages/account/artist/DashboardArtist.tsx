@@ -8,7 +8,7 @@ import Typography from '@mui/material/Typography';
 
 import AddIcon from '@mui/icons-material/Add';
 
-import dashHappyGuyImage from '@/assets/images/dashHappyGuy.png';
+// import dashHappyGuyImage from '@/assets/images/dashHappyGuy.png';
 import setPayoutImg from '@/assets/branded/images/account/setPayoutImg.png';
 
 import AccountWrapper from '@/components/AccountWrapper';
@@ -30,6 +30,7 @@ import { homeSelectStyle } from '@/util/mui';
 import { usePayoutData } from '@/hooks/payments/usePayoutInfo';
 import { useGetReleases } from '@/hooks/release/useGetReleases';
 import ViewSongItemComponent from '@/components/account/ViewSongItem';
+import PromotionalAdsComponent from '@/components/PromotionalAds';
 
 
 function DashboardArtist() {
@@ -610,80 +611,9 @@ function DashboardArtist() {
 
                 </Box>
 
-                <Box
-                    sx={{
-                        display: "flex",
-                        flexDirection: "row",
-                        width: "100%",
-                        height: {xs: "157.13px", md: "416px"},
-                        borderRadius: {xs: "4.53px", md: "12px"},
 
-                        backgroundImage: `url(${dashHappyGuyImage})`, // Replace with your image URL
-                        backgroundPosition: 'center',
-                        backgroundSize: 'cover',
-
-                        position: 'relative',
-                        overflow: "hidden",
-                        my: 5,
-                        p: {xs: 1, md: 5}
-                    }}
-                >
-                    <Box
-                        sx={{
-                            position: 'absolute',
-                            top: 0,
-                            left: 0,
-                            width: '100%',
-                            height: '100%',
-                            // background: 'linear-gradient(90deg, rgba(0, 0, 0, 0) 0.08%, #000000 64.08%)',
-                            background: 'linear-gradient(180.1deg, rgba(0, 0, 0, 0) 0.08%, #000000 109.84%)',
-                        }}
-                    />
-
-                    <Box
-                        sx={{
-                            width: "100%",
-                            maxWidth: {xs: "110px", md: "280px"},
-                            // textAlign: "center",
-                            ml: "auto",
-                            zIndex: 1
-                        }}
-                    >
-                        <Typography variant='h2'
-                            sx={{
-                                fontFamily: "Nohemi",
-                                fontWeight: "900",
-                                fontSize: {xs: "13.22px", md: "35px"},
-                                lineHeight: {xs: "12.46px", md: "33px"},
-                                letterSpacing: {xs: "-0.51px", md: "-1.34px"},
-                                color: "#FFFFFF",
-                                mb: {xs: "35px", md: "45px"},
-                            }}
-                        > Ready to distribute your first release? </Typography>
-
-                        <Box 
-                            onClick={() => setOpenReleaseModal(true) }
-                            sx={{
-                                p: {xs: "7.55px 21.91px 7.55px 21.91px", md: "10px 29px 10px 29px"},
-                                borderRadius: {xs: "9.06px", md: "12px"},
-                                background: "#fff",
-                                color: "#000",
-                                cursor: "pointer"
-                            }}
-                        >
-                            <Typography variant='body1'
-                                sx={{
-                                    fontFamily: "Geist",
-                                    fontWeight: '800',
-                                    fontSize: {xs: "11.33px", md: "15px"},
-                                    lineHeight: {xs: "9.82px", md: "13px"},
-                                    letterSpacing: {xs: "-0.1px", md: "-0.13px"},
-                                    textAlign: 'center',
-                                    color: "#000",
-                                }}
-                            > Get Started </Typography>
-                        </Box>
-                    </Box>
+                <Box my={5}>
+                    <PromotionalAdsComponent />
                 </Box>
 
                 <Stack direction="row" justifyContent="space-between" alignItems="center"

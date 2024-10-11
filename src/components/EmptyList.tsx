@@ -1,5 +1,6 @@
 import Box from '@mui/material/Box';
-import emptyImg from '@/assets/images/empty.png';
+// import emptyImg from '@/assets/images/empty.png';
+import emptyStateImg from "@/assets/branded/images/emptyState2.png"
 
 interface MyComponentProps {
     notFoundText?: string,
@@ -19,7 +20,7 @@ const EmptyListComponent: React.FC<MyComponentProps> = ({notFoundText = 'not fou
             width: "100%",
             height: containerHeight
         }}>
-            <img src={emptyImg} alt='empty image' style={{ width: 200, height: 200 }} />
+            <img src={emptyStateImg} alt='empty image' style={{ width: 200, height: 200 }} />
             <h4 style={{
                 fontSize: 20,
                 textAlign: 'center',

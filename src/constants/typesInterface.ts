@@ -127,7 +127,7 @@ export type releaseInterface = {
 
     songs?: releaseSongsInterface[]
 
-    numberOfSongs?: 1
+    numberOfSongs?: number
 }
 
 
@@ -149,8 +149,6 @@ export type releaseSongsInterface = {
     ticktokClipStartTime: string,
 }
 
-
-
 export type searchedArtistSearchInterface = {
     name: string,
     id: string,
@@ -160,16 +158,4 @@ export type searchedArtistSearchInterface = {
         releaseDate?: string,
         externalUrl?: string,
     },
-}
-
-
-export interface cartItemInterface {
-    id: string,
-    email: string,
-    artistName: string,
-    releaseType: 'Single' | 'Album',
-    songTitle: string,
-    artWorkImg: any,
-    price: number,
-    // totalPrice: string
 }

@@ -1,35 +1,22 @@
 import { recordLabelArtistInterface } from '@/constants/typesInterface'
+import { useRecordLabelFn } from '@/hooks/recordLabel/useRecordLabelFn'
 import { stringAvatar } from '@/util/resources'
 import Avatar from '@mui/material/Avatar'
 import Grid from '@mui/material/Grid'
 import Stack from '@mui/material/Stack'
 import Typography from '@mui/material/Typography'
 import React from 'react'
-import { createSearchParams, useNavigate } from 'react-router-dom'
 
 
 interface _Props {
     recordLabelArtist: recordLabelArtistInterface[],
 }
 
-
 const ArtistListItemView: React.FC<_Props> = ({
     recordLabelArtist
 }) => {
-    const navigate = useNavigate();
+    const { handleNavigation } = useRecordLabelFn();
 
-    const handleNavigation = (artistData: recordLabelArtistInterface) => {
-        // console.log(artistData);
-        
-        const params = {
-            artistName: artistData.artistName,
-        };
-        navigate({
-            pathname: "/account/record-label/sales-report",
-            search: `?${createSearchParams(params)}`,
-        });
-        // navigate(options, { replace: true });
-    }
 
     return (
         <Grid container spacing={3}>
@@ -78,7 +65,7 @@ const ArtistListItemView: React.FC<_Props> = ({
                                     color: '#666666',
                                     mt: '13px'
                                 }}
-                            >{ item.songCount }</Typography>
+                            >{ item.songCount } Songs</Typography>
                         </Stack>
                     </Grid>
                 ))

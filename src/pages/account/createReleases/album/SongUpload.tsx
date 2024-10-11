@@ -37,6 +37,8 @@ import { apiEndpoint } from '@/util/resources';
 import CircularProgressWithLabel from '@/components/CircularProgressWithLabel';
 import ExplicitLyricsReadMoreInfoComponent from '@/components/ExplicitLyricsReadMoreInfo';
 import colors from '@/constants/colors';
+import SearchArtistModalComponent from '@/components/account/SearchArtistModal';
+import { searchedArtistSearchInterface } from '@/constants/typesInterface';
 
 
 const formSchema = yup.object({
@@ -59,11 +61,13 @@ const formSchema = yup.object({
     tikTokClipStartTime_Seconds: yup.string().trim().label("TikTok Clip Start Time"),
 });
 
-
 interface creativeType {
     creativeName: string,
     creativeRole: string,
+    creativeId?: string,
 }
+
+let dspToSearch: "Apple" | "Spotify";
 
 function CreateAlbumReleaseSongUpload() {
     const navigate = useNavigate();
@@ -100,6 +104,7 @@ function CreateAlbumReleaseSongUpload() {
 
     const [songEditId, setSongEditId] = useState('');
     const [songUploadProgress, setSongUploadProgress] = useState(0);
+    const [openSearchArtistModal, setOpenSearchArtistModal] = useState(false);
 
 
     const { 
@@ -443,7 +448,8 @@ function CreateAlbumReleaseSongUpload() {
         data2db.append('song_title', newSongData.song_title );
         data2db.append('song_writer', newSongData.song_writer.toString());
 
-        data2db.append('creative_name', newSongData.songArtistsCreativeRole.map(item => item.creativeName).join(', '));
+        // data2db.append('creative_name', newSongData.songArtistsCreativeRole.map(item => item.creativeName).join(', '));
+        data2db.append('creative_name', newSongData.songArtistsCreativeRole.map(item => item.creativeId || item.creativeName).join(', '));
         data2db.append('creative_role', newSongData.songArtistsCreativeRole.map(item => item.creativeRole).join(', '));
 
         data2db.append('explicit_lyrics', newSongData.explicitLyrics);
@@ -545,6 +551,52 @@ function CreateAlbumReleaseSongUpload() {
             });
         }
 
+    }
+
+
+    const handleSetArtistName = (details: searchedArtistSearchInterface, dspName: "Spotify" | "Apple") => {
+        // console.log(details);
+        if (dspName == "Spotify") {
+            // setSelectedSpotifyArtist(details)
+            setValue(
+                "artistCreativeName", 
+                details.name,
+                {shouldDirty: true, shouldTouch: true, shouldValidate: true} 
+            );
+            handleAddMoreCreatives(details)
+        } else if (dspName == "Apple") {
+            
+        }
+
+        return;
+    }
+
+    const handleAddMoreCreatives = (details?: searchedArtistSearchInterface) => {
+        const creativeName = getValues("artistCreativeName");
+        const creativeRole = selectRoleValue; // getValues("songArtistsCreativeRole");
+        if (!creativeName) return;
+            
+        if (!creativeRole || creativeRole == 'Choose Roles') {
+            _setToastNotification({
+                display: true,
+                status: "warning",
+                message: `Please select ${ creativeName } Role in creating this song.`
+            })
+
+            setError("songArtistsCreativeRole", {message: `Please select ${ creativeName } Role in creating this song.`});
+            return;
+        }
+
+        // const newCreatives = [ ...songArtists_Creatives, { creativeName, creativeRole } ];
+        const newCreatives:creativeType[] = [ 
+            ...songArtists_Creatives, 
+            { creativeName, creativeRole, creativeId: details?.id || '' } 
+        ];
+        setSongArtists_Creatives(newCreatives);
+        resetField("artistCreativeName");
+        resetField("songArtistsCreativeRole");
+        setSelectRoleValue('Choose Roles');
+        document.getElementById("songArtistsCreativeRole")?.focus();
     }
 
 
@@ -998,35 +1050,6 @@ function CreateAlbumReleaseSongUpload() {
                                                 </Box>
 
                                                 <Box sx={{my: "20px"}}>
-                                                    <Typography variant='h3'
-                                                        sx={{
-                                                            fontWeight: "900",
-                                                            fontSize: {xs: "13px", md: "16px"},
-                                                            lineHeight: {xs: "25px", md: "32px"},
-                                                            letterSpacing: "-0.13px",
-                                                            mb: 0.5
-                                                        }}
-                                                    >Artist / Creative Name</Typography>
-
-                                                    <TextField 
-                                                        variant="outlined" 
-                                                        fullWidth 
-                                                        id='artistCreativeName'
-                                                        type='text'
-                                                        label=''
-                                                        inputMode='text'
-                                                        defaultValue=""
-                                                        placeholder='E.g Joseph Solomon'
-                                                        sx={releaseTextFieldStyle2}
-
-                                                        error={ errors.artistCreativeName ? true : false }
-                                                        { ...register('artistCreativeName') }
-                                                    />
-
-                                                    { errors.artistCreativeName && <Box sx={{fontSize: 13, color: "red", textAlign: "left"}}>{ errors.artistCreativeName?.message }</Box> }
-                                                </Box>
-
-                                                <Box sx={{my: "20px"}}>
                                                     <Typography component={"h3"} variant='h3'
                                                         sx={{
                                                             fontWeight: "900",
@@ -1062,6 +1085,11 @@ function CreateAlbumReleaseSongUpload() {
                                                                         shouldValidate: true
                                                                     }
                                                                 );
+
+                                                                if (value == "Main artist" || value == "Featured") {
+                                                                    dspToSearch = "Spotify";
+                                                                    setOpenSearchArtistModal(true);
+                                                                }
                                                             }}
                                                             // { ...register('songArtistsCreativeRole') }
                                                         >
@@ -1080,6 +1108,35 @@ function CreateAlbumReleaseSongUpload() {
                                                     { errors.songArtistsCreativeRole && <Box sx={{fontSize: 13, color: "red", textAlign: "left"}}>{ errors.songArtistsCreativeRole?.message }</Box> }
                                                 </Box>
 
+                                                <Box sx={{my: "20px"}}>
+                                                    <Typography variant='h3'
+                                                        sx={{
+                                                            fontWeight: "900",
+                                                            fontSize: {xs: "13px", md: "16px"},
+                                                            lineHeight: {xs: "25px", md: "32px"},
+                                                            letterSpacing: "-0.13px",
+                                                            mb: 0.5
+                                                        }}
+                                                    >Artist / Creative Name</Typography>
+
+                                                    <TextField 
+                                                        variant="outlined" 
+                                                        fullWidth 
+                                                        id='artistCreativeName'
+                                                        type='text'
+                                                        label=''
+                                                        inputMode='text'
+                                                        defaultValue=""
+                                                        placeholder='E.g Joseph Solomon'
+                                                        sx={releaseTextFieldStyle2}
+
+                                                        error={ errors.artistCreativeName ? true : false }
+                                                        { ...register('artistCreativeName') }
+                                                    />
+
+                                                    { errors.artistCreativeName && <Box sx={{fontSize: 13, color: "red", textAlign: "left"}}>{ errors.artistCreativeName?.message }</Box> }
+                                                </Box>
+
                                                 <Box 
                                                     sx={{
                                                         display: "flex",
@@ -1089,27 +1146,7 @@ function CreateAlbumReleaseSongUpload() {
                                                         width: "fit-content",
                                                         cursor: "pointer"
                                                     }}
-                                                    onClick={() => {
-                                                        const creativeName = getValues("artistCreativeName");
-                                                        const creativeRole = getValues("songArtistsCreativeRole");
-                                                        if (!creativeName) return;
-                                                            
-                                                        if (!creativeRole || creativeRole == 'Choose Roles') {
-                                                            _setToastNotification({
-                                                                display: true,
-                                                                status: "warning",
-                                                                message: `Please select ${ creativeName } Role in creating this song.`
-                                                            })
-                                                            return;
-                                                        }
-
-                                                        const newCreatives = [ ...songArtists_Creatives, { creativeName, creativeRole } ];
-                                                        setSongArtists_Creatives(newCreatives);
-                                                        resetField("artistCreativeName");
-                                                        // resetField("songArtistsCreativeRole");
-                                                        setSelectRoleValue("Choose Roles");
-                                                        document.getElementById("artistCreativeName")?.focus();
-                                                    }}
+                                                    onClick={() => handleAddMoreCreatives()}
                                                 >
                                                     <AddIcon />
 
@@ -1120,9 +1157,7 @@ function CreateAlbumReleaseSongUpload() {
                                                             lineHeight: {xs: "25px", md: "32px"},
                                                             letterSpacing: "-0.13px"
                                                         }}
-                                                    >
-                                                        Add more Creatives
-                                                    </Typography>
+                                                    >Add more Creatives</Typography>
                                                 </Box>
                                             </Box>
 
@@ -1862,6 +1897,16 @@ function CreateAlbumReleaseSongUpload() {
                 closeModal={() => setOpenCopyrightOwnershipModal(false)}
             />
 
+            <SearchArtistModalComponent 
+                openSearchArtistModal={openSearchArtistModal}
+                closeSearchArtistModal={() => {
+                    setOpenSearchArtistModal(false);
+                    resetField("songArtistsCreativeRole");
+                    setSelectRoleValue('Choose Roles');
+                }}
+                onSaveSelection={handleSetArtistName}
+                dspName={ dspToSearch }
+            />
         </AccountWrapper>
     )
 }

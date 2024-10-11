@@ -13,7 +13,7 @@ import { stringAvatar } from '@/util/resources';
 import { recordLabelArtistInterface } from '@/constants/typesInterface';
 import colors from '@/constants/colors';
 import Stack from '@mui/material/Stack';
-import { createSearchParams, useNavigate } from 'react-router-dom';
+import { useRecordLabelFn } from '@/hooks/recordLabel/useRecordLabelFn';
 
 
 interface _Props {
@@ -22,20 +22,10 @@ interface _Props {
 }
 
 const ArtistListComponent: React.FC<_Props> = ({ artists }) => {
-    const navigate = useNavigate();
+    const {
+        handleNavigation,
+    } = useRecordLabelFn();
 
-    const handleNavigation = (artistData: recordLabelArtistInterface) => {
-        // console.log(artistData);
-        
-        const params = {
-            artistName: artistData.artistName,
-        };
-        navigate({
-            pathname: "/account/record-label/sales-report",
-            search: `?${createSearchParams(params)}`,
-        });
-        // navigate(options, { replace: true });
-    }
 
     return (
         <Box

@@ -1,6 +1,5 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
 
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
@@ -13,7 +12,6 @@ import albumCard4 from "@/assets/images/album/albumCard4.jpg";
 import albumCard5 from "@/assets/images/album/albumCard5.jpg";
 import albumCard6 from "@/assets/images/album/albumCard6.jpg";
 
-import { apiEndpoint } from '@/util/resources';
 import { useSettingStore } from '@/state/settingStore';
 import AccountWrapper from '@/components/AccountWrapper';
 import PromotionalAdsComponent from '@/components/PromotionalAds';
@@ -21,85 +19,36 @@ import RecordLabelSearchComponent from '@/components/account/recordLabel/RecordL
 
 // import { useSettingStore } from '@/state/settingStore';
 import { useUserStore } from '@/state/userStore';
-import { recordLabelArtistInterface } from '@/constants/typesInterface';
-import { getLocalStorage, setLocalStorage } from '@/util/storage';
 import RecordLabelWrapper from '@/components/account/recordLabel/RecordLabelWrapper';
 import ArtistListItemView from '@/components/account/recordLabel/ArtistListItemView';
+import { useRecordLabelFn } from '@/hooks/recordLabel/useRecordLabelFn';
 
 
 function DashboardRecordLabel() {
     const navigate = useNavigate();
     const darkTheme = useSettingStore((state) => state.darkTheme);
-    const userData = useUserStore((state) => state.userData); 
-    const accessToken = useUserStore((state) => state.accessToken);
+    const userData = useUserStore((state) => state.userData);
 
-    const [totalArtists, setTotalArtists] = useState('');
-    const [totalSongs, setTotalSongs] = useState('');
-    const [recordLabelArtist, setRecordLabelArtist] = useState<recordLabelArtistInterface[]>();
+    const {
+        getTotalNumberOfArtist,
+        getAllRecordLabelArtist,
+        getRecordLabelTotalSongs,
 
+        totalArtists,
+        totalSongs,
+        recordLabelArtist,
+    } = useRecordLabelFn();
 
     useEffect(() => {
-        const artistsList = getLocalStorage("artistsList");
-        if (artistsList) {
-            setRecordLabelArtist(artistsList);
-        }
+        // const artistsList = getLocalStorage("artistsList");
+        // if (artistsList) {
+        //     setRecordLabelArtist(artistsList);
+        // }
 
         getTotalNumberOfArtist();
         getAllRecordLabelArtist();
         getRecordLabelTotalSongs();
     }, []);
-
-    
-    const getTotalNumberOfArtist = async () => {
-        try {
-            const response = (await axios.get(`${apiEndpoint}/recordLabel/artistsList/count?recordLabelemail=${ userData.email }`, {
-                headers: {
-                    Authorization: `Bearer ${accessToken}`
-                }
-            })).data;
-            console.log(response);
-
-            setTotalArtists(response.count);
-
-        } catch (error: any) {
-            const errorResponse = error.response.data;
-            console.error(errorResponse);
-        }
-    }
-    
-    const getAllRecordLabelArtist = async () => {
-        try {
-            const response = (await axios.get(`${apiEndpoint}/recordLabel/artistsList?recordLabelemail=${ userData.email }`, {
-                headers: {
-                    Authorization: `Bearer ${accessToken}`
-                }
-            })).data;
-            console.log(response);
-
-            setRecordLabelArtist(response.artists);
-            setLocalStorage("artistsList", response.artists);
-        } catch (error: any) {
-            const errorResponse = error.response.data;
-            console.error(errorResponse);
-            setRecordLabelArtist([]);
-        }
-    }
-    
-    const getRecordLabelTotalSongs = async () => {
-        try {
-            const response = (await axios.get(`${apiEndpoint}/recordLabel/songs/count?email=${ userData.email }`, {
-                headers: {
-                    Authorization: `Bearer ${accessToken}`
-                }
-            })).data;
-            console.log(response);
-
-            setTotalSongs(response.count);
-        } catch (error: any) {
-            const errorResponse = error.response.data;
-            console.error(errorResponse);
-        }
-    }
 
 
     return (
