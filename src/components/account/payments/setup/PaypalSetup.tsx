@@ -17,7 +17,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import Stack from '@mui/material/Stack';
 import Alert from '@mui/material/Alert';
 import PaypalInfoTooltip from './PaypalInfoTooltip';
-import { apiEndpoint } from '@/util/resources';
+import { emekaApiEndpoint } from '@/util/resources';
 import { currencyLists, getSupportedCurrency } from '@/util/currencies';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
@@ -73,7 +73,7 @@ const PaypalSetupModalComponent: React.FC<_Props> = ({
 
     const getSupportedCurrencies = async () => {
         try {
-            const response = (await axios.get(`${apiEndpoint}/currency/currencies`, {
+            const response = (await axios.get(`${emekaApiEndpoint}/currency/currencies`, {
                 // headers: {
                 //     Authorization: `Bearer ${accessToken}`
                 // }
@@ -119,7 +119,7 @@ const PaypalSetupModalComponent: React.FC<_Props> = ({
 
 
         try {
-            const response = (await axios.post(`${apiEndpoint}/transactionInit/PaypalPayoutDetails`,
+            const response = (await axios.post(`${emekaApiEndpoint}/transactionInit/PaypalPayoutDetails`,
                 data2db, {
                 headers: {
                     Authorization: `Bearer ${accessToken}`

@@ -1,9 +1,12 @@
 import { useCallback, useState } from "react";
 import axios from "axios";
 import { useUserStore } from "@/state/userStore";
-import { apiEndpoint } from "@/util/resources";
-import { locationAnalyticsInterface, salesReportAlbumAnalyticsInterface, salesReportMainDashInterface, salesReportMonthAnalyticsInterface, salesReportSingleAnalyticsInterface } from "@/constants/analyticsTypesInterface";
-import { getDateRange, getFormattedDateRange } from "@/util/dateTime";
+import { emekaApiEndpoint } from "@/util/resources";
+import { locationAnalyticsInterface, salesReportAlbumAnalyticsInterface, 
+    salesReportMainDashInterface, salesReportMonthAnalyticsInterface, 
+    salesReportSingleAnalyticsInterface 
+} from "@/constants/analyticsTypesInterface";
+import { getMonthDateRange } from "@/util/dateTime";
 
 
 export function useGeneralAnalytics() {
@@ -16,107 +19,83 @@ export function useGeneralAnalytics() {
     const [reportMonthlyAnalytics, setReportMonthlyAnalytics] = useState<salesReportMonthAnalyticsInterface[]>();
 
     const [reportMainDashData, setReportMainDashData] = useState<salesReportMainDashInterface>({
-        album_sold: 0,
-        sales_period: getDateRange(30),
-        single_sold: 0,
-        streams: {
-            apple: 0,
-            spotify: 0,
-            total_combined: 0
-        },
-        total_revenue: 0
+        // sales_period: getSalesPeriod(),
+        totalAlbums: 0,
+        totalRevenue: 0,
+        totalSingles: 0,
+        totalStreams: 0
     });
 
  
 
-
-    // SALES REPORT
-
-
-    // const getAnalyticsData = async () => {
-    //     if (reportType == "this block of code is to be deleted ") {
-    //         console.log(reportAnalytics);
-    //         console.log(reportMainDashData);
-    //     };
-
-    //     try {
-    //         const response = (await axios.get(`${apiEndpoint}/analytics/analytics/data`, {
-    //             headers: {
-    //                 Authorization: `Bearer ${accessToken}`,
-    //             },
-    //             params: {
-    //                 // email: "latham01@yopmail.com",
-    //                 email: userData.email,
-    //             }
-    //         })).data;
-    //         console.log(response);
-
-    //         setReportAnalytics(response);
-    //         setLocalStorage("reportAnalytics", response);
-
-    //         if (response.length) {
-    //             setReportMainDashData(response[0]);
-    //         }
-            
-    //         if (!response.length) {
-    //             _setToastNotification({
-    //                 display: true,
-    //                 status: "error",
-    //                 message: response.message || "Ooops and error occurred!"
-    //             });
-    //         }
+    // Revised - Get Overview Statistics by Date (Artist)
+    const getSalesReportMainDashAnalytics = useCallback(async(startDate: string, endDate: string) => {
+        try {
+            const response = (await axios.get(`${emekaApiEndpoint}/revisedAnalytics/artist-analytics`, {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`,
+                },
+                params: {
+                    email: userData.email,
+                    startDate, endDate
+                }
+            })).data;
+            console.log(response);
     
-    //     } catch (error: any) {
-    //         const errorResponse = error.response.data || error;
-    //         console.error(errorResponse);
+            if (response.data) {
+                setReportMainDashData({ ...reportMainDashData, ...response.data });
+            }
     
-    //         _setToastNotification({
-    //             display: true,
-    //             status: "error",
-    //             message: errorResponse.message || "Ooops and error occurred!"
-    //         });
-    //     }
-    // }
+        } catch (error: any) {
+            const errorResponse = error.response.data || error;
+            console.error(errorResponse);
+        }
+    }, []);
+
 
     const getNewDataRangeData = (newValue: string) => {
         // console.log(newValue);
-        const dateRange = getDateRange(Number(newValue));
-        setReportMainDashData({ ...reportMainDashData, sales_period: dateRange });
-        console.log(dateRange);
-        const betweenDates = getFormattedDateRange(Number(newValue));
+        // const dateRange = getDateRange(Number(newValue));
+
+        // console.log(dateRange);
+        // const betweenDates = getFormattedDateRange(Number(newValue));
+        // console.log(betweenDates);
+
+        const betweenDates = getMonthDateRange(Number(newValue));
         console.log(betweenDates);
+
+        // setReportMainDashData({ 
+        //     ...reportMainDashData, 
+        //     sales_period: `${getShortDateFormate(betweenDates.startDate)} - ${getShortDateFormate(betweenDates.endDate)}` 
+        // });
         
-        // getBalanceBetweenDates(betweenDates.startDate, betweenDates.endDate);
-        
+        getSalesReportMainDashAnalytics(betweenDates.startDate, betweenDates.endDate);
     }
 
 
     // Sales Monthly Report
-    const handleGetSalesReportMonthlyAnalytics = async () => {
+    const getSalesReportMonthlyAnalytics = useCallback(async () => {
         try {
-            const response = (await axios.get(`${apiEndpoint}/analyticsManager/monthlyReport/${userData.email}`, {
+            const response = (await axios.get(`${emekaApiEndpoint}/analyticsManager/monthlyReport/${userData.email}`, {
                 headers: {
                     Authorization: `Bearer ${accessToken}`
                 }
             })).data;
             // console.log(response);
-
+    
             setReportMonthlyAnalytics(response);
         } catch (error: any) {
             const errorResponse = error.response.data || error;
             console.error(errorResponse);
             setReportMonthlyAnalytics([]);
         }
-    }
-    const getSalesReportMonthlyAnalytics = useCallback(() => {
-        handleGetSalesReportMonthlyAnalytics()
     }, []);
 
 
     // Report (Single or Album)
-    const handleGetSalesReportSingle_or_AlbumAnalytics = async (reportType: "album" | "single") => {
+    const getSalesReportSingle_or_AlbumAnalytics = useCallback(async (reportType: "album" | "single") => {
         try {
-            const response = (await axios.get(`${apiEndpoint}/analyticsManager/generate-report`, {
+            const response = (await axios.get(`${emekaApiEndpoint}/analyticsManager/generate-report`, {
                 headers: {
                     Authorization: `Bearer ${accessToken}`
                 },
@@ -126,7 +105,7 @@ export function useGeneralAnalytics() {
                 }
             })).data;
             console.log(response);
-
+    
             if (reportType == "album") {
                 setSalesReportAlbumAnalytics(response);
             } else if (reportType == "single") {
@@ -135,37 +114,36 @@ export function useGeneralAnalytics() {
         } catch (error: any) {
             const errorResponse = error.response.data || error;
             console.error(errorResponse);
-
+    
             if (reportType == "album") {
                 setSalesReportAlbumAnalytics([]);
             } else if (reportType == "single") {
                 setSalesReportSingleAnalytics([]);
             }
         }
-    }
-    const getSalesReportSingle_or_AlbumAnalytics = useCallback((type: "album" | "single") => {
-        handleGetSalesReportSingle_or_AlbumAnalytics(type)
     }, []);
 
     // Get All Locations By Email
-    const handleGetLocationsAnalytics = async () => {
+    const getLocationsAnalytics = useCallback(async () => {
         try {
-            const response = (await axios.get(`${apiEndpoint}/analyticsManager/locations/email/${userData.email}`, {
+            const response = (await axios.get(`${emekaApiEndpoint}/analyticsManager/locations/email/${userData.email}`, {
                 headers: {
                     Authorization: `Bearer ${accessToken}`
                 }
             })).data;
             console.log(response);
 
-            setLocationsAnalytics(response);
+            if (response.length) {
+                setLocationsAnalytics(response);
+            } else {
+                setLocationsAnalytics([]);
+            }
+    
         } catch (error: any) {
             const errorResponse = error.response.data || error;
             console.error(errorResponse);
             setLocationsAnalytics([]);
         }
-    }
-    const getLocationsAnalytics = useCallback(() => {
-        handleGetLocationsAnalytics()
     }, []);
 
     
@@ -181,8 +159,8 @@ export function useGeneralAnalytics() {
         reportMonthlyAnalytics,
         getSalesReportMonthlyAnalytics,
 
-        
         reportMainDashData,
+        getSalesReportMainDashAnalytics,
 
         getNewDataRangeData
 

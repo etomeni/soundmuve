@@ -24,11 +24,11 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import { useUserStore } from '@/state/userStore';
 import { useSettingStore } from '@/state/settingStore';
 import { createReleaseStore } from '@/state/createReleaseStore';
-// import { apiEndpoint } from '@/util/resources';
+// import { emekaApiEndpoint } from '@/util/resources';
 
 import AccountWrapper from '@/components/AccountWrapper';
 import { releaseTextFieldStyle } from '@/util/mui';
-import { apiEndpoint } from '@/util/resources';
+import { emekaApiEndpoint } from '@/util/resources';
 import FormControl from '@mui/material/FormControl';
 import LongSelectList from '@/components/LongSelectList';
 import { restCountries } from '@/util/countries';
@@ -131,8 +131,8 @@ function CreateAlbumReleaseAdvanceFeatures() {
 
         try {
             const response = (await axios.put(
-                // `${apiEndpoint}/Album/update-album/${ completeAlbumData._id }/page2`,
-                `${apiEndpoint}/songs/albums/${ completeAlbumData._id }/page2`,
+                // `${emekaApiEndpoint}/Album/update-album/${ completeAlbumData._id }/page2`,
+                `${emekaApiEndpoint}/songs/albums/${ completeAlbumData._id }/page2`,
                 data2db,  
                 {
                     headers: {

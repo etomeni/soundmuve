@@ -1,9 +1,13 @@
 import { useCallback, useState } from "react";
 import axios from "axios";
 import { useUserStore } from "@/state/userStore";
-import { apiEndpoint } from "@/util/resources";
-import { locationAnalyticsInterface, salesReportAlbumAnalyticsInterface, salesReportMainDashInterface, salesReportMonthAnalyticsInterface, salesReportSingleAnalyticsInterface } from "@/constants/analyticsTypesInterface";
-import { getDateRange, getFormattedDateRange } from "@/util/dateTime";
+import { emekaApiEndpoint } from "@/util/resources";
+import { 
+    locationAnalyticsInterface, salesReportAlbumAnalyticsInterface, 
+    salesReportMainDashInterface, salesReportMonthAnalyticsInterface, 
+    salesReportSingleAnalyticsInterface 
+} from "@/constants/analyticsTypesInterface";
+import { getMonthDateRange } from "@/util/dateTime";
 
 
 export function useRLartistAnalytics() {
@@ -16,36 +20,67 @@ export function useRLartistAnalytics() {
     const [reportMonthlyAnalytics, setReportMonthlyAnalytics] = useState<salesReportMonthAnalyticsInterface[]>();
 
     const [reportMainDashData, setReportMainDashData] = useState<salesReportMainDashInterface>({
-        album_sold: 0,
-        sales_period: getDateRange(30),
-        single_sold: 0,
-        streams: {
-            apple: 0,
-            spotify: 0,
-            total_combined: 0
-        },
-        total_revenue: 0
+        totalAlbums: 0,
+        totalRevenue: 0,
+        totalSingles: 0,
+        totalStreams: 0
     });
+    
 
+    // Revised - Get Overview Statistics by Date (Record Label)
+    const getSalesReportMainDashAnalytics = useCallback(async(artistName: string, startDate: string, endDate: string, ) => {
+        try {
+            const response = (await axios.get(`${emekaApiEndpoint}/revisedAnalytics/label-artist-analytics`, {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`,
+                },
+                params: {
+                    // email: userData.email,
+                    startDate, endDate,
+                    artistName,
+                    recordLabelEmail: userData.email,
+                }
+            })).data;
+            console.log(response);
+    
+            if (response.data) {
+                setReportMainDashData({ ...reportMainDashData, ...response.data });
+            }
+    
+        } catch (error: any) {
+            const errorResponse = error.response.data || error;
+            console.error(errorResponse);
+        }
+    }, []);
 
-    const getNewDataRangeData = (newValue: string) => {
+    const getNewDataRangeData = (newValue: string, artistName: string) => {
         // console.log(newValue);
-        const dateRange = getDateRange(Number(newValue));
-        setReportMainDashData({ ...reportMainDashData, sales_period: dateRange });
-        console.log(dateRange);
-        const betweenDates = getFormattedDateRange(Number(newValue));
+        // const dateRange = getDateRange(Number(newValue));
+        // setReportMainDashData({ ...reportMainDashData, sales_period: dateRange });
+        // console.log(dateRange);
+        // const betweenDates = getFormattedDateRange(Number(newValue));
+        // console.log(betweenDates);
+
+        
+
+        const betweenDates = getMonthDateRange(Number(newValue));
         console.log(betweenDates);
+
+        // setReportMainDashData({ 
+        //     ...reportMainDashData, 
+        //     sales_period: `${getShortDateFormate(betweenDates.startDate)} - ${getShortDateFormate(betweenDates.endDate)}` 
+        // });
         
-        // getBalanceBetweenDates(betweenDates.startDate, betweenDates.endDate);
-        
+        getSalesReportMainDashAnalytics(artistName, betweenDates.startDate, betweenDates.endDate);
     }
+
 
 
     // Sales Monthly Report
     const getSalesReportMonthlyAnalytics = useCallback(async (artistName: string) => {
         try {
             // https://soundmuve-backend-zrap.onrender.com/api/analyticsManager/artistmonthlyReport/James%20Hall
-            const response = (await axios.get(`${apiEndpoint}/analyticsManager/artistmonthlyReport/${artistName}`, {
+            const response = (await axios.get(`${emekaApiEndpoint}/analyticsManager/artistmonthlyReport/${artistName}`, {
                 headers: {
                     Authorization: `Bearer ${accessToken}`
                 }
@@ -64,7 +99,7 @@ export function useRLartistAnalytics() {
     const getSalesReportSingle_or_AlbumAnalytics = useCallback( 
         async (reportType: "album" | "single", artistName: string) => {
             try {
-                const response = (await axios.get(`${apiEndpoint}/analyticsManager/artist-generate-report`, {
+                const response = (await axios.get(`${emekaApiEndpoint}/analyticsManager/artist-generate-report`, {
                     headers: {
                         Authorization: `Bearer ${accessToken}`
                     },
@@ -97,7 +132,7 @@ export function useRLartistAnalytics() {
     // Get All Locations By Email
     const getLocationsAnalytics = useCallback(async (artistName: string) => {
         try {
-            const response = (await axios.get(`${apiEndpoint}/analyticsManager/locations/artistLocation/${artistName}`, {
+            const response = (await axios.get(`${emekaApiEndpoint}/analyticsManager/locations/artistLocation/${artistName}`, {
                 headers: {
                     Authorization: `Bearer ${accessToken}`
                 }
@@ -132,6 +167,7 @@ export function useRLartistAnalytics() {
 
         
         reportMainDashData,
+        // getSalesReportMainDashAnalytics,
 
         getNewDataRangeData
 

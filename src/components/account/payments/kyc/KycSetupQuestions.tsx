@@ -10,7 +10,7 @@ import { SxProps, Theme } from '@mui/material/styles';
 
 import colors from '@/constants/colors';
 import { useUserStore } from '@/state/userStore';
-import { apiEndpoint } from '@/util/resources';
+import { emekaApiEndpoint } from '@/util/resources';
 
 
 interface _Props {
@@ -92,7 +92,7 @@ const KycSetupQuestionsComponent: React.FC<_Props> = ({
             };
 
             try {
-                const response = (await axios.post(`${apiEndpoint}/kyc/kyc/select-questions`, data2db, {
+                const response = (await axios.post(`${emekaApiEndpoint}/kyc/kyc/select-questions`, data2db, {
                     headers: {
                         Authorization: `Bearer ${accessToken}`
                     }

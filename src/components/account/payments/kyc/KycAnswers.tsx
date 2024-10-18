@@ -16,7 +16,7 @@ import colors from '@/constants/colors';
 import { paymentTextFieldStyle } from '@/util/mui';
 import { setLocalStorage } from '@/util/storage';
 import { useUserStore } from '@/state/userStore';
-import { apiEndpoint } from '@/util/resources';
+import { emekaApiEndpoint } from '@/util/resources';
 
 
 const formSchema: any = yup.object({
@@ -77,7 +77,7 @@ const KycAnswersComponent: React.FC<_Props> = ({
         
 
         try {
-            const response = (await axios.post(`${apiEndpoint}/kyc/kyc/submit-answers`, data2db, {
+            const response = (await axios.post(`${emekaApiEndpoint}/kyc/kyc/submit-answers`, data2db, {
                 headers: {
                     Authorization: `Bearer ${accessToken}`
                 }

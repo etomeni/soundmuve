@@ -1,19 +1,68 @@
+// export type userInterface = {
+//     _id: string;
+//     ArtistName?: string;
+//     firstName: string;
+//     lastName: string;
+//     email: string;
+//     password: string;
+//     balance: number;
+//     country?: string;
+//     gender?: string;
+//     phoneNumber?: string;
+//     recordLabelName?: string;
+//     logoUrl?: string;
+//     userType: string;
+//     created_at: string;
+// }
+
+type securityQuestionsInterface = {
+    question: string,
+    answer: string
+};
+
+
+export type locationInterface = {
+    ip: string,
+    usedIps: string[],
+    city: string,
+    region: string,
+    country: string,
+    isp: string,
+    lat: number,
+    lon: number,
+};
+
 export type userInterface = {
     _id: string;
-    ArtistName?: string;
+    role: 'user' | 'admin',
+    userType: 'artist' | 'record label',
+    balance: number,
+    email: string;
     firstName: string;
     lastName: string;
-    email: string;
-    password: string;
-    balance: number;
-    country?: string;
+    phoneNumber: string;
+    country: string,
     gender?: string;
-    phoneNumber?: string;
+
+    artistName?: string;
     recordLabelName?: string;
-    logoUrl?: string;
-    teamType: string;
-    created_at: string;
-}
+    recordLabelLogo?: string;
+
+    kyc?: {
+        isKycSubmitted: boolean,
+        securityQuestions: securityQuestionsInterface[]
+    },
+
+    location: locationInterface,
+
+    password: string;
+    status: boolean;
+
+    createdAt: string;
+    updatedAt: string;
+};
+
+
 
 
 export type flutterwavePaymentDetailsInterface = {

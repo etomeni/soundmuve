@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import * as yup from "yup";
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -41,7 +41,7 @@ import { createReleaseStore } from '@/state/createReleaseStore';
 
 import { releaseSelectStyle, releaseSelectStyle2, releaseTextFieldStyle } from '@/util/mui';
 import { languages } from '@/util/languages';
-import { primaryGenre, secondaryGenre, hours, minutes, minReleaseDate, apiEndpoint } from '@/util/resources';
+import { primaryGenre, secondaryGenre, hours, minutes, minReleaseDate, emekaApiEndpoint } from '@/util/resources';
 // import albumSampleArt from "@/assets/images/albumSampleArt.png"
 import ArtistProfileInfoComponent from '@/components/ArtistProfileInfo';
 import colors from '@/constants/colors';
@@ -74,6 +74,10 @@ let dspToSearch: "Apple" | "Spotify";
 
 function AlbumDetails() {
     const navigate = useNavigate();
+    const location = useLocation();
+    const queryParams = new URLSearchParams(location.search);
+    const rl_artistName: string = queryParams.get('artistName') || '';
+
     const darkTheme = useSettingStore((state) => state.darkTheme);
     // const [explicitLyrics, setExplicitLyrics] = useState(""); // No
     const userData = useUserStore((state) => state.userData);
@@ -337,6 +341,8 @@ function AlbumDetails() {
             album_title: formDetails.album_title,
             artist_name: formDetails.artist_name,
 
+            record_label_artist: rl_artistName,
+
             appleMusicUrl: formDetails.appleMusicUrl,
             spotifyMusicUrl: selectedSpotifyArtist?.id || formDetails.spotifyMusicUrl,
 
@@ -351,8 +357,8 @@ function AlbumDetails() {
 
         try {
             const response = albumReleaseDetails._id ? (await axios.put(
-                // `${apiEndpoint}/Album/create-album`,
-                `${apiEndpoint}/songs/albums/${ albumReleaseDetails._id }`,
+                // `${emekaApiEndpoint}/Album/create-album`,
+                `${emekaApiEndpoint}/songs/albums/${ albumReleaseDetails._id }`,
                 data2db,
                 {
                     headers: {
@@ -361,8 +367,8 @@ function AlbumDetails() {
                     },
                 }
             )).data : (await axios.post(
-                // `${apiEndpoint}/Album/create-album`,
-                `${apiEndpoint}/songs/albums`,
+                // `${emekaApiEndpoint}/Album/create-album`,
+                `${emekaApiEndpoint}/songs/albums`,
                 data2db,
                 {
                     headers: {

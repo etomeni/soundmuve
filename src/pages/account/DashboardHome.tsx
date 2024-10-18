@@ -12,12 +12,12 @@ function DashboardHome() {
     const userData = useUserStore((state) => state.userData);
 
     const checkAccountType = () => {
-        if (userData.teamType == "Artist") {
+        if (userData.userType == "artist") {
             navigate("/account/artist", {replace: true});
             return;
         }
 
-        if (userData.teamType == "Record Label") {
+        if (userData.userType == "record label") {
             navigate("/account/record-label", {replace: true});
             return;
         }

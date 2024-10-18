@@ -1,7 +1,7 @@
 import { useCallback, useState } from "react";
 import axios from "axios";
 import { useUserStore } from "@/state/userStore";
-import { apiEndpoint } from "@/util/resources";
+import { emekaApiEndpoint } from "@/util/resources";
 import { searchedArtistSearchInterface } from '@/constants/typesInterface';
 
 
@@ -25,7 +25,7 @@ export function useSearchArtists() {
 
     const handleSpotifyArtistSearch = async (searchWord: string) => {
         try {
-            const response = (await axios.get(`${apiEndpoint}/search/search/spotify`, {
+            const response = (await axios.get(`${emekaApiEndpoint}/search/search/spotify`, {
                 headers: {
                     Authorization: `Bearer ${accessToken}`
                 },

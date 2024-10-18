@@ -76,11 +76,10 @@ function SignupArtistDetails() {
             setCountries(countryRes);
     
             getUserLocation().then((res) => {
-                setValue("country", res.country);
+                if (res) setValue("country", res.country);
 
                 setTimeout(() => {
-                    
-                    setUserCountry(res.country);
+                    if (res) setUserCountry(res.country);
                 }, 500);
             })
         });
@@ -93,11 +92,14 @@ function SignupArtistDetails() {
             status: true,
             message: ""
         });
+
+        console.log(userData);
+        
         
         const data2db = {
             email: userData.email,
-            teamType: "Artist",
-            ArtistName: formData.artistName,
+            userType: "artist",
+            artistName: formData.artistName,
             country: formData.country,
             phoneNumber: formData.phoneNumber,
             gender: formData.gender,
@@ -105,10 +107,10 @@ function SignupArtistDetails() {
         // console.log(data2db);
 
         try {
-            const response = (await axios.patch(`${apiEndpoint}/auth/updateTeam-details`, data2db )).data;
-            console.log(response);
+            const response = (await axios.patch(`${apiEndpoint}/auth/updateUser-details`, data2db )).data;
+            // console.log(response);
 
-            _signUpUser(response.singleUser);
+            _signUpUser(response.result);
             
             setApiResponse({
                 display: true,
@@ -123,13 +125,13 @@ function SignupArtistDetails() {
 
             navigate("/auth/login", {replace: true});
         } catch (error: any) {
-            const err = error.response.data;
-            console.log(err);
+            const err = error.response.data || error;
+            const fixedErrorMsg = "Oooops, failed to update details. please try again.";
 
             setApiResponse({
                 display: true,
                 status: false,
-                message: err.message || "Oooops, failed to update details. please try again."
+                message: err.errors && err.errors.length ? err.errors[0].msg : err.message || fixedErrorMsg
             });
         }
     }

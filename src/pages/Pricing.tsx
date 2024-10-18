@@ -14,7 +14,6 @@ import { useState } from "react";
 function Pricing() {
     const [planCategory, setPlanCategory] = useState<"Unlimited" | "Pay per release">("Pay per release");
 
-
     return (
         <Box bgcolor={colors.bg} >
             <Box height={{xs: 60, sm: 50, md: 40}}></Box>

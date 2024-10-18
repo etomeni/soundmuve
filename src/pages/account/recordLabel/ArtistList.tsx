@@ -7,7 +7,7 @@ import Box from '@mui/material/Box';
 // import Avatar from '@mui/material/Avatar';
 // import Grid from '@mui/material/Grid';
 
-import { apiEndpoint } from '@/util/resources';
+import { emekaApiEndpoint } from '@/util/resources';
 import { useSettingStore } from '@/state/settingStore';
 import AccountWrapper from '@/components/AccountWrapper';
 import PromotionalAdsComponent from '@/components/PromotionalAds';
@@ -40,7 +40,7 @@ const ArtistList_RL = () => {
     
     const getAllRecordLabelArtist = async () => {
         try {
-            const response = (await axios.get(`${apiEndpoint}/recordLabel/artistsList?recordLabelemail=${ userData.email }`, {
+            const response = (await axios.get(`${emekaApiEndpoint}/recordLabel/artistsList?recordLabelemail=${ userData.email }`, {
                 headers: {
                     Authorization: `Bearer ${accessToken}`
                 }

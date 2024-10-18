@@ -32,7 +32,7 @@ import ArtistAnalyticsNavComponent from '@/components/account/ArtistAnalyticsNav
 
 import { useUserStore } from '@/state/userStore';
 import { balTransactionsInterface } from '@/constants/typesInterface';
-import { apiEndpoint, formatedNumber } from '@/util/resources';
+import { emekaApiEndpoint, formatedNumber } from '@/util/resources';
 import { formatTransactionDate, getDateRange, getFormattedDateRange } from '@/util/dateTime';
 import colors from '@/constants/colors';
 
@@ -60,8 +60,8 @@ function BalanceHistory() {
     
     const getAllBalanceHistory = async () => {
         try {
-            const response = (await axios.get(`${apiEndpoint}/wallet/get-transactionby-email/${ userData.email }`, {
-            // const response = (await axios.get(`${apiEndpoint}/wallet/get-transactionby-email/latham01@yopmail.com`, {
+            const response = (await axios.get(`${emekaApiEndpoint}/wallet/get-transactionby-email/${ userData.email }`, {
+            // const response = (await axios.get(`${emekaApiEndpoint}/wallet/get-transactionby-email/latham01@yopmail.com`, {
                 headers: {
                     Authorization: `Bearer ${accessToken}`
                 }
@@ -79,7 +79,7 @@ function BalanceHistory() {
     
     const getBalanceBetweenDates = async (startDate: string, endDate: string) => {
         try {
-            const response = (await axios.get(`${apiEndpoint}/wallet/check-transactions?startDate=${startDate}&endDate=${endDate}&email=${ userData.email }`, {
+            const response = (await axios.get(`${emekaApiEndpoint}/wallet/check-transactions?startDate=${startDate}&endDate=${endDate}&email=${ userData.email }`, {
                 headers: {
                     Authorization: `Bearer ${accessToken}`
                 }

@@ -7,7 +7,8 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 
 // import FacebookIcon from '@mui/icons-material/Facebook';
-import TwitterIcon from '@mui/icons-material/Twitter';
+// import TwitterIcon from '@mui/icons-material/Twitter';
+import XIcon from '@mui/icons-material/X';
 import InstagramIcon from '@mui/icons-material/Instagram';
 // import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
@@ -17,11 +18,11 @@ import style from "./footer.module.css";
 import logo from "@/assets/branded/logo.png";
 import mobileBrandImage from "@/assets/branded/images/footer/mobileBrandImage.png";
 import desktopBrandImage from "@/assets/branded/images/footer/desktopBrandImage.png";
-import SnackbarToast, { SnackbarToastInterface } from './ToastNotification';
 import { apiEndpoint } from '../util/resources';
 
 import { contentWidth } from '@/util/mui';
 import colors from '@/constants/colors';
+import { useSettingStore } from '@/state/settingStore';
 
 
 const currentYear = new Date().getFullYear();
@@ -29,12 +30,7 @@ const currentYear = new Date().getFullYear();
 export default function FooterComponent() {
     // const navigate = useNavigate();
     const [email, setEmail] = useState('');
-
-    const [toastNotification, setToastNotification] = useState<SnackbarToastInterface>({
-        display: false,
-        status: "success",
-        message: ""
-    });
+    const _setToastNotification = useSettingStore((state) => state._setToastNotification);
 
     const handleBack2Top = () => {
         window.scrollTo({
@@ -42,12 +38,10 @@ export default function FooterComponent() {
             behavior: "smooth"
         });
     }
-
             
     const onSubmit = async () => {
         if (!email.match(/^([a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+(?:\.[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+)*|\"([^\\]\\\"]|\\.)*\")@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\.)+[a-zA-Z]{2,}$/)) {
-            
-            setToastNotification({
+            _setToastNotification({
                 display: true,
                 status: "error",
                 message: "Please enter a valid email address."
@@ -56,36 +50,26 @@ export default function FooterComponent() {
         }
 
         try {
-            const response = (await axios.post(`${apiEndpoint}/newsLetter/subscribe-newsletter`, { email })).data;
-            
-            // if (response && response.savedUser) {
-                
-            //     return;
-            // }
-            setToastNotification({
+            const response = (await axios.post(`${apiEndpoint}/contact/subscribe-newsletter`, { email })).data;
+   
+            _setToastNotification({
                 display: true,
                 status: "success",
                 message: response.message
             });
 
-            // setToastNotification({
-            //     display: true,
-            //     status: "error",
-            //     message: response.message || "Oooops, registration failed. please try again."
-            // });
-
             setEmail("");
         } catch (error: any) {
             // console.log(error);
             const err = error.response.data || error;
+            const fixedErrorMsg = "Oooops, news letter subscription failed. please try again.";
 
-            setToastNotification({
+            _setToastNotification({
                 display: true,
                 status: "error",
-                message: err.message || "Oooops, news letter subscription failed. please try again."
+                message: err.errors && err.errors.length ? err.errors[0].msg : err.message || fixedErrorMsg
             });
         }
-
     }
 
     const mobileView = (
@@ -247,7 +231,7 @@ export default function FooterComponent() {
                                 {/* <FacebookIcon className={style.icons} /> */}
 
                                 <Link to="https://x.com/soundmuve/" target='_blank' >
-                                    <TwitterIcon className={style.icons} />
+                                    <XIcon className={style.icons} />
                                 </Link>
 
                                 {/* <LinkedInIcon className={style.icons} /> */}
@@ -466,7 +450,7 @@ export default function FooterComponent() {
                             {/* <FacebookIcon className={style.icons} sx={{ fontSize: 12 }} /> */}
 
                             <Link to="https://x.com/soundmuve/" target='_blank'>
-                                <TwitterIcon className={style.icons} sx={{ fontSize: 12 }} />
+                                <XIcon className={style.icons} sx={{ fontSize: 12 }} />
                             </Link>
 
                             {/* <LinkedInIcon className={style.icons} sx={{ fontSize: 12}} /> */}
@@ -516,14 +500,6 @@ export default function FooterComponent() {
                     />
                 </Box>
             </Box>
-
-
-            <SnackbarToast 
-                status={toastNotification.status} 
-                display={toastNotification.display} 
-                message={toastNotification.message} 
-                closeSnackbar={() => setToastNotification({ ...toastNotification, display: false})}
-            />
         </Box>
     )
 }

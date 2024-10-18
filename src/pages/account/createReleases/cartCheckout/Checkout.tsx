@@ -18,6 +18,7 @@ import CartItemComponent from '@/components/account/payments/carts/CartItem';
 import DiscountApplicationModalComponent from '@/components/account/payments/carts/DiscountApplication';
 import CircularProgress from '@mui/material/CircularProgress';
 import { useCart } from '@/hooks/useCart';
+import Alert from '@mui/material/Alert';
 
 
 const formSchema = yup.object({
@@ -29,6 +30,7 @@ function CartCheckoutPage() {
     const { 
         cartItems, totalAmount, handleRemoveCartItem,
         handleApplyPromo, // applyPromoResponse
+        apiResponse
     } = useCart();
 
     const { 
@@ -157,6 +159,14 @@ function CartCheckoutPage() {
                     />
                 </Box>
 
+
+                {
+                    apiResponse.display && (
+                        <Stack sx={{ width: '100%', mt: 5, mb: 2 }}>
+                            <Alert severity={apiResponse.status ? "success" : "error"}>{apiResponse.message}</Alert>
+                        </Stack>
+                    )
+                }
 
                 <Box 
                     sx={{ 

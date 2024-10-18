@@ -35,7 +35,7 @@ import { useUserStore } from '@/state/userStore';
 import { createReleaseStore } from '@/state/createReleaseStore';
 
 import { 
-    apiEndpoint, artWorkAllowedTypes, convertToBase64, minutes, musicStores, seconds, 
+    emekaApiEndpoint, artWorkAllowedTypes, convertToBase64, minutes, musicStores, seconds, 
     socialPlatformStores, songArtistsCreativesRoles, validateImageArtWork 
 } from '@/util/resources';
 import { languages } from '@/util/languages';
@@ -431,7 +431,7 @@ function CreateSingleRelease2() {
 
         try {
             const response = (await axios.patch(
-                `${apiEndpoint}/Release/update-release`,
+                `${emekaApiEndpoint}/Release/update-release`,
                 data2db,  
                 {
                     headers: {

@@ -13,10 +13,13 @@ import AlbumSongItem from '@/components/account/AlbumSongItem';
 import AccountWrapper from '@/components/AccountWrapper';
 // import { useSettingStore } from '@/state/settingStore';
 
-import AppleSportifyCheckmark from '@/components/AppleSportifyCheckmark';
+// import AppleSportifyCheckmark from '@/components/AppleSportifyCheckmark';
 import colors from '@/constants/colors';
 import { useReleaseStore } from '@/state/releaseStore';
 import { useEffect } from 'react';
+import { allMonths } from '@/util/months';
+import { getCurrentMonthValue } from '@/util/dateTime';
+import CopyShareLink from '@/components/release/CopyShareLink';
 
   
 function AlbumDetails() {
@@ -31,7 +34,6 @@ function AlbumDetails() {
         }
     }, []);
     
-
 
     return (
         <AccountWrapper>
@@ -61,9 +63,7 @@ function AlbumDetails() {
                                     labelId="sortByDays"
                                     id="sortByDays-select"
                                     label=""
-                                    defaultValue="Last 30 Days"
-                                    placeholder='Last 30 Days'
-
+                                    defaultValue={getCurrentMonthValue}
                                     sx={{
                                         color: "#fff",
                                         borderRadius: "8px",
@@ -94,16 +94,17 @@ function AlbumDetails() {
                                             fill: "#797979",
                                         }
                                     }}
+                                    onChange={(_e) => {
+                                        // handleDataRangeData(`${e.target.value}`);
+                                    }}
                                 >
-                                    <MenuItem value="Last 30 Days">
-                                        Last 7 Days
-                                    </MenuItem>
-                                    <MenuItem value="Last 30 Days">
-                                        Last 14 Days
-                                    </MenuItem>
-                                    <MenuItem value="Last 30 Days">
-                                        Last 30 Days
-                                    </MenuItem>
+                                    {
+                                        allMonths.map((month, index) => (
+                                            <MenuItem key={index} value={index}>
+                                                { month }
+                                            </MenuItem>
+                                        ))
+                                    }
                                 </Select>
                             </FormControl>
                         </Box>
@@ -170,10 +171,9 @@ function AlbumDetails() {
                                 </Box>
 
                                 <Box sx={{ flex: "1 1 30%" }}>
-                                    <Stack direction="row" spacing="10px" alignItems="center">
-                                        <AppleSportifyCheckmark dspName="Apple" />
-                                        <AppleSportifyCheckmark dspName="Spotify" />
-                                    </Stack>
+                                    <Box>
+                                        <CopyShareLink linkUrl='www.soundmuve.com' />
+                                    </Box>
                                 </Box>
                             </Stack>
 
@@ -319,9 +319,7 @@ function AlbumDetails() {
                                     labelId="sortByDays"
                                     id="sortByDays-select"
                                     label=""
-                                    defaultValue="Last 30 Days"
-                                    placeholder='Last 30 Days'
-
+                                    defaultValue={getCurrentMonthValue}
                                     sx={{
                                         color: "#fff",
                                         borderRadius: "8px",
@@ -352,16 +350,17 @@ function AlbumDetails() {
                                             fill: "#797979",
                                         }
                                     }}
+                                    onChange={(_e) => {
+                                        // handleDataRangeData(`${e.target.value}`);
+                                    }}
                                 >
-                                    <MenuItem value="Last 30 Days">
-                                        Last 7 Days
-                                    </MenuItem>
-                                    <MenuItem value="Last 30 Days">
-                                        Last 14 Days
-                                    </MenuItem>
-                                    <MenuItem value="Last 30 Days">
-                                        Last 30 Days
-                                    </MenuItem>
+                                    {
+                                        allMonths.map((month, index) => (
+                                            <MenuItem key={index} value={index}>
+                                                { month }
+                                            </MenuItem>
+                                        ))
+                                    }
                                 </Select>
                             </FormControl>
                         </Box>
@@ -472,7 +471,7 @@ function AlbumDetails() {
                     >
 
                         <Stack direction="row" spacing="10px">
-                            <Box sx={{ flex: "1 1 45%" }}>
+                            <Box sx={{ flex: "1 1 50%" }}>
                                 <Typography
                                     sx={{
                                         fontWeight: "900",
@@ -490,11 +489,8 @@ function AlbumDetails() {
                                 >{ albumDetails.artist_name }</Typography>
                             </Box>
 
-                            <Box sx={{ flex: "1 1 45%" }} >
-                                <Stack direction="row" spacing="10px">
-                                    <AppleSportifyCheckmark dspName="Apple" />
-                                    <AppleSportifyCheckmark dspName="Spotify" />
-                                </Stack>
+                            <Box sx={{ flex: "1 1 40%", maxWidth: "50%" }} >
+                                <CopyShareLink linkUrl='www.soundmuve.com' />
                             </Box>
                         </Stack>
 

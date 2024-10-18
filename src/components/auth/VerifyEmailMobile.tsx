@@ -18,7 +18,7 @@ import { useVerifyEmailAuth } from '@/hooks/auth/useVerifyEmail';
 function VerifyEmailMobileComponent() {
 
     const { 
-        apiResponse, isSubmitting, code, userData,
+        apiResponse, isSubmitting, code, email, // userData,
         onSubmit,
         handleResendOtp, handleDelete, handlePaste, handleChange,
     } = useVerifyEmailAuth();
@@ -76,7 +76,7 @@ function VerifyEmailMobileComponent() {
                             }}>
                                 Please enter the 4 digit code sent to <br />
                                 <span style={{fontWeight: "700"}}>
-                                    { userData.email }
+                                    { email }
                                 </span>
                             </Typography>
 

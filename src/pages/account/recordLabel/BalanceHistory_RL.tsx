@@ -26,7 +26,7 @@ import ArtistAnalyticsNavComponent from '@/components/account/ArtistAnalyticsNav
 import PaymentzComponent from '@/components/account/payments/PaymentzComponent';
 import { useSettingStore } from '@/state/settingStore';
 import axios from 'axios';
-import { apiEndpoint, formatedNumber } from '@/util/resources';
+import { emekaApiEndpoint, formatedNumber } from '@/util/resources';
 import { useUserStore } from '@/state/userStore';
 import { balTransactionsInterface } from '@/constants/typesInterface';
 import { formatTransactionDate, getDateRange, getFormattedDateRange } from '@/util/dateTime';
@@ -141,8 +141,8 @@ function BalanceHistory_RL() {
     
     const getAllBalanceHistory = async () => {
         try {
-            const response = (await axios.get(`${apiEndpoint}/wallet/get-transactionby-email/${ userData.email }`, {
-            // const response = (await axios.get(`${apiEndpoint}/wallet/get-transactionby-email/latham01@yopmail.com`, {
+            const response = (await axios.get(`${emekaApiEndpoint}/wallet/get-transactionby-email/${ userData.email }`, {
+            // const response = (await axios.get(`${emekaApiEndpoint}/wallet/get-transactionby-email/latham01@yopmail.com`, {
                 headers: {
                     Authorization: `Bearer ${accessToken}`
                 }
@@ -176,7 +176,7 @@ function BalanceHistory_RL() {
     const getBalanceBetweenDates = async (startDate: string, endDate: string) => {
         try {
             // https://soundmuve-backend-zrap.onrender.com/api/wallet/check-transactions?startDate=2024-06-01&endDate=2024-12-31&email=latham01@yopmail.com
-            const response = (await axios.get(`${apiEndpoint}/wallet/check-transactions?startDate=${startDate}&endDate=${endDate}&email=${ userData.email }`, {
+            const response = (await axios.get(`${emekaApiEndpoint}/wallet/check-transactions?startDate=${startDate}&endDate=${endDate}&email=${ userData.email }`, {
                 headers: {
                     Authorization: `Bearer ${accessToken}`
                 }

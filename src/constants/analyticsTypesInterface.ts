@@ -83,13 +83,10 @@ export type salesReportMonthAnalyticsInterface = {
 }
 
 export type salesReportMainDashInterface = {
-    sales_period: string,
-    album_sold: number,
-    single_sold: number,
-    streams: {
-        apple: number,
-        spotify: number,
-        total_combined: number
-    },
-    total_revenue: number
+    // sales_period: string,
+
+    totalAlbums: number,
+    totalSingles: number,
+    totalStreams: number,
+    totalRevenue: number,
 }

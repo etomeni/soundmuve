@@ -175,7 +175,7 @@ export default function AccountHeaderComponent({headerSpacing = false} : _Props)
 
                 <List onClick={handleDrawerToggle}>
                     {
-                        userData.teamType == "Artist" ? (
+                        userData.userType == "artist" ? (
                             menuItems.map((item) => (
                                 <Link key={item.title} to={item.link} style={{ color: "inherit" }}>
                                     <ListItem disablePadding 

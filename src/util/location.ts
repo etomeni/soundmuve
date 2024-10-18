@@ -1,6 +1,5 @@
+import { locationInterface } from "@/constants/typesInterface";
 import axios from "axios";
-
-// import { countryInterface, IpApiResponse } from "../constants/modelTypes";
 
 
 export async function getUserLocation() {
@@ -8,7 +7,18 @@ export async function getUserLocation() {
         const response = (await axios.get("http://ip-api.com/json")).data;
         // const response: IpApiResponse = (await axios.get("http://ip-api.com/json")).data;
     
-        return response;
+        const location: locationInterface = {
+            ip: response.query,
+            city: response.city,
+            region: response.regionName,
+            country: response.country,
+            isp: response.isp || response.org,
+            lat: response.lat,
+            lon: response.lon,
+            usedIps: [response.query]
+        };
+
+        return location;
     } catch (error) {
         console.log(error);
     }

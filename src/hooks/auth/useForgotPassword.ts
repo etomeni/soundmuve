@@ -5,10 +5,10 @@ import { useForm } from 'react-hook-form';
 import * as yup from "yup";
 import { yupResolver } from '@hookform/resolvers/yup';
 
-import { useUserStore } from "@/state/userStore";
-import { apiEndpoint } from "@/util/resources";
-import { useNavigate } from "react-router-dom";
-import { SnackbarToastInterface } from "@/components/ToastNotification";
+// import { useUserStore } from "@/state/userStore";
+import { localApiEndpoint } from "@/util/resources";
+import { createSearchParams, useNavigate } from "react-router-dom";
+import { useSettingStore } from "@/state/settingStore";
 
 
 const formSchema = yup.object({
@@ -22,21 +22,13 @@ const formSchema = yup.object({
 
 export function useForgotPasswordAuth() {
     const navigate = useNavigate();
-    const _updateUser = useUserStore((state) => state._updateUser);
-    const userData = useUserStore((state) => state.userData);
-  
+    const _setToastNotification = useSettingStore((state) => state._setToastNotification);
     const [apiResponse, setApiResponse] = useState({
         display: false,
         status: true,
         message: ""
     });
-
-    const [toastNotification, setToastNotification] = useState<SnackbarToastInterface>({
-        display: false,
-        status: "success",
-        message: ""
-    });
-
+    
     const { 
         handleSubmit, register, formState: { errors, isValid, isSubmitting } 
     } = useForm({ resolver: yupResolver(formSchema), mode: 'onBlur', reValidateMode: 'onBlur' });
@@ -49,32 +41,38 @@ export function useForgotPasswordAuth() {
         });
 
         try {
-            const response = (await axios.post(`${apiEndpoint}/auth/sendotp-email`, formData )).data;
+            const response = (await axios.post(`${localApiEndpoint}/auth/sendPasswordResetEmail`, formData )).data;
             // console.log(response);
-
-            _updateUser({ ...userData, email: formData.email });
             
             setApiResponse({
                 display: true,
                 status: true,
                 message: response.message
             });
-            setToastNotification({
+            _setToastNotification({
                 display: true,
                 status: "success",
                 message: response.message
             });
 
-            navigate("/auth/verify-email");
+            const resData = {
+                email: formData.email,
+                token: response.token
+            }
+
+            navigate({
+                pathname: "/auth/verify-email",
+                search: `?${createSearchParams(resData)}`,
+            });
 
         } catch (error: any) {
-            // console.log(error);
-            const err = error.response.data;
+            const err = error.response.data || error;
+            const fixedErrorMsg = "Oooops, failed to send email otp. please try again.";
 
             setApiResponse({
                 display: true,
                 status: false,
-                message: err.message || "Oooops, failed to send email otp. please try again."
+                message: err.errors && err.errors.length ? err.errors[0].msg : err.message || fixedErrorMsg
             });
         }
     }
@@ -93,7 +91,7 @@ export function useForgotPasswordAuth() {
         onSubmit: handleSubmit(onSubmit),
         register,
 
-        toastNotification, setToastNotification,
+        // toastNotification, setToastNotification,
 
         apiResponse,
     }

@@ -1,7 +1,10 @@
+export const emekaBackendUrl = "https://soundmuve-backend-zrap.onrender.com"; // Emeka
+export const emekaApiEndpoint = `${emekaBackendUrl}/api`;
 
-// export const backendUrl = "https://soundmuve-backend-hqax.onrender.com";
-export const backendUrl = "https://soundmuve-backend-zrap.onrender.com";
-export const apiEndpoint = `${backendUrl}/api`;
+export const Etom_Sunday_backendUrl = "https://soundmuve-backend-t4v0.onrender.com"; // Etom_Sunday
+export const apiEndpoint = `${Etom_Sunday_backendUrl}/api/v1`;
+export const localApiEndpoint = "http://localhost:3000/api/v1";
+
 
 
 export function validateEmail(email: string) {
@@ -229,7 +232,7 @@ export const getQueryParams = (query: string) => {
   const params = new URLSearchParams(search);
   const result = params.get(query);
 
-  return result;
+  return result || '';
 }
 
 

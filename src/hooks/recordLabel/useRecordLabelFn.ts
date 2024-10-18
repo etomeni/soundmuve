@@ -2,7 +2,7 @@ import { useCallback, useState } from "react";
 import { createSearchParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useUserStore } from "@/state/userStore";
-import { apiEndpoint } from "@/util/resources";
+import { emekaApiEndpoint } from "@/util/resources";
 import { getLocalStorage, setLocalStorage } from "@/util/storage";
 import { recordLabelArtistInterface } from "@/constants/typesInterface";
 
@@ -24,7 +24,7 @@ export function useRecordLabelFn() {
 
     const _getTotalNumberOfArtist = async () => {
         try {
-            const response = (await axios.get(`${apiEndpoint}/recordLabel/artistsList/count?recordLabelemail=${ userData.email }`, {
+            const response = (await axios.get(`${emekaApiEndpoint}/recordLabel/artistsList/count?recordLabelemail=${ userData.email }`, {
                 headers: {
                     Authorization: `Bearer ${accessToken}`
                 }
@@ -44,7 +44,7 @@ export function useRecordLabelFn() {
 
     const _getAllRecordLabelArtist = async () => {
         try {
-            const response = (await axios.get(`${apiEndpoint}/recordLabel/artistsList?recordLabelemail=${ userData.email }`, {
+            const response = (await axios.get(`${emekaApiEndpoint}/recordLabel/artistsList?recordLabelemail=${ userData.email }`, {
                 headers: {
                     Authorization: `Bearer ${accessToken}`
                 }
@@ -65,7 +65,7 @@ export function useRecordLabelFn() {
     
     const _getRecordLabelTotalSongs = async () => {
         try {
-            const response = (await axios.get(`${apiEndpoint}/recordLabel/songs/count?email=${ userData.email }`, {
+            const response = (await axios.get(`${emekaApiEndpoint}/recordLabel/songs/count?email=${ userData.email }`, {
                 headers: {
                     Authorization: `Bearer ${accessToken}`
                 }

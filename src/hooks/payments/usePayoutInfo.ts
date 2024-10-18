@@ -1,7 +1,7 @@
 import { useCallback, useState } from "react";
 import axios from "axios";
 import { useUserStore } from "@/state/userStore";
-import { apiEndpoint } from "@/util/resources";
+import { emekaApiEndpoint } from "@/util/resources";
 import { getLocalStorage, setLocalStorage } from "@/util/storage";
 
 
@@ -40,8 +40,8 @@ export function usePayoutData() {
 
     const _getPayoutInfo = async () => {
         try {
-            // const response = (await axios.get(`${apiEndpoint}/payoutDetails/payouts/latham01@yopmail.com`, {
-            const response = (await axios.get(`${apiEndpoint}/payoutDetails/payouts/${userData.email}`, {
+            // const response = (await axios.get(`${emekaApiEndpoint}/payoutDetails/payouts/latham01@yopmail.com`, {
+            const response = (await axios.get(`${emekaApiEndpoint}/payoutDetails/payouts/${userData.email}`, {
                 headers: {
                     Authorization: `Bearer ${accessToken}`
                 }

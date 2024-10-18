@@ -8,7 +8,8 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { useUserStore } from "@/state/userStore";
 import { apiEndpoint } from "@/util/resources";
 import { useNavigate } from "react-router-dom";
-import { getUserIP } from "@/util/location";
+import { getUserLocation } from "@/util/location";
+import { locationInterface } from "@/constants/typesInterface";
 
 
 const formSchema = yup.object({
@@ -48,14 +49,14 @@ export function useSignupAuth() {
     });
     
     const _signUpUser = useUserStore((state) => state._signUpUser);
-    const [userIP, setUserIP] = useState("");
+    const [userLocation, setUserLocation] = useState<locationInterface>();
+
   
     useEffect(() => {
-        getUserIP().then((res: string) => {
-            if (res) {
-                setUserIP(res);
-            }
+        getUserLocation().then((res) => {
+            if (res) setUserLocation(res);
         });
+        
     }, []);
     
     const [showPassword, setShowPassword] = useState(false);
@@ -73,17 +74,29 @@ export function useSignupAuth() {
         }
 
         try {
-            const response = (await axios.post(`${apiEndpoint}/auth/sign-up`, { ...formData, ip: userIP })).data;
+            const data2db = {
+                firstName: formData.firstName,
+                lastName: formData.lastName,
+                email: formData.email,
+                password: formData.password,
+                location: userLocation,
+                tnc: tnc,
+            };
+
+            const response = (await axios.post(
+                `${apiEndpoint}/auth/signup`,
+                data2db
+            )).data;
             // console.log(response);
             
-            if (response && response.savedUser) {
+            if (response.status) {
                 setApiResponse({
                     display: true,
                     status: true,
                     message: response.message
                 });
 
-                _signUpUser(response.savedUser);
+                _signUpUser(response.result);
 
                 navigate("/auth/signup-type");
                 return;
@@ -96,21 +109,18 @@ export function useSignupAuth() {
             });
         } catch (error: any) {
             // console.log(error);
-            const err = error.response.data;
+            const err = error.response.data || error;
+            const fixedErrorMsg = "Oooops, registration failed. please try again.";
 
             setApiResponse({
                 display: true,
                 status: false,
-                message: err.message || "Oooops, registration failed. please try again."
+                message: err.errors && err.errors.length ? err.errors[0].msg : err.message || fixedErrorMsg
             });
         }
 
     }
     
-
-    // const onSubmit = useCallback(() => {
-    //     handleSubmit(_onSubmit)
-    // }, []);
 
 
     return {

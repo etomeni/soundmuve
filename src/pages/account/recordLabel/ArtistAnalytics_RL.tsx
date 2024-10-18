@@ -48,6 +48,7 @@ function ArtistAnalytics_RL() {
     useEffect(() => {
         // getSalesReportMainData();
         // getAnalyticsData();
+        handleDateChange("30");
     }, []);
 
 
@@ -64,6 +65,10 @@ function ArtistAnalytics_RL() {
             getSalesReportSingle_or_AlbumAnalytics("single", artistName);
         }
     }, [reportType]);
+
+    const handleDateChange = (newValue: string) => {
+        getNewDataRangeData(newValue, artistName);
+    }
     
 
     return (
@@ -89,16 +94,17 @@ function ArtistAnalytics_RL() {
                 <Box sx={{ mt: 7 }}>
 
                     <ReportMainDashComponent 
-                        dateRange={reportMainDashData.sales_period}
-                        setDateRange={getNewDataRangeData}
+                        // dateRange={reportMainDashData.sales_period}
+                        // setDateRange={getNewDataRangeData}
+                        setDateRange={handleDateChange}
                         // not too sure about the intended data for play, 
                         // since backend didn't account for it, then its same as Streams
-                        plays={ reportMainDashData.streams.total_combined }
-                        albums={reportMainDashData.album_sold}
+                        plays={ reportMainDashData.totalStreams }
+                        albums={reportMainDashData.totalAlbums}
                         // sold={reportMainDashData.single_sold}
-                        singles={reportMainDashData.single_sold}
-                        streams={reportMainDashData.streams.total_combined}
-                        totalEarnedBalance={reportMainDashData.total_revenue}
+                        singles={reportMainDashData.totalSingles}
+                        streams={reportMainDashData.totalStreams}
+                        totalEarnedBalance={reportMainDashData.totalRevenue}
                     />
 
                     <ReportTabsComponent reportType={reportType} setReportType={setReportType} />

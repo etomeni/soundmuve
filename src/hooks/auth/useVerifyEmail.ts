@@ -2,28 +2,28 @@ import { useState } from "react";
 
 import axios from "axios";
 
-import { useUserStore } from "@/state/userStore";
-import { apiEndpoint } from "@/util/resources";
-import { useNavigate } from "react-router-dom";
+// import { useUserStore } from "@/state/userStore";
+import { localApiEndpoint, getQueryParams } from "@/util/resources";
+import { createSearchParams, useNavigate } from "react-router-dom";
 import { useSettingStore } from "@/state/settingStore";
 
 
 export function useVerifyEmailAuth() {
     const navigate = useNavigate();
-
-    const userData = useUserStore((state) => state.userData);
+    const _setToastNotification = useSettingStore((state) => state._setToastNotification);
 
     const [code, setCode] = useState(new Array(4).fill(""));
     const [isSubmitting, setIsSubmitting] = useState(false);
-      
+    // const userData = useUserStore((state) => state.userData);
     const [apiResponse, setApiResponse] = useState({
         display: false,
         status: true,
         message: ""
     });
-    const _setToastNotification = useSettingStore((state) => state._setToastNotification);
-    
 
+    const [jwtToken, setJwtToken] = useState(getQueryParams("token"));
+    
+    
     const handleChange = (e: any, index: any) => {
         if (isNaN(e.target.value)) return false;
         setCode([ ...code.map((data, i) => (i === index ? e.target.value : data)) ])
@@ -100,13 +100,20 @@ export function useVerifyEmailAuth() {
         });
 
         const data2db = {
-            email: userData.email,
-            otp: code.join('')
+            // email: getQueryParams('email'),
+            code: code.join('')
         };
         
         try {
-            const response = (await axios.post(`${apiEndpoint}/auth/verifyotp-email`, data2db )).data;
-            // console.log(response);
+            const response = (await axios.post(
+                `${localApiEndpoint}/auth/verifyEmailToken`, 
+                data2db,
+                {
+                    headers: {
+                        Authorization: `reset-password-token ${jwtToken}`,
+                    },
+                }
+            )).data;
             
             setApiResponse({
                 display: true,
@@ -119,13 +126,17 @@ export function useVerifyEmailAuth() {
                 message: response.message
             });
 
-            navigate("/auth/create-new-password", {replace: true});
+            navigate({
+                pathname: "/auth/create-new-password",
+                search: `?${createSearchParams({ 
+                    email: getQueryParams('email'),
+                    token: jwtToken
+                })}`,
+            }, {replace: true});
+
             setIsSubmitting(false);
         } catch (error: any) {
-            // console.log(error);
-            const err = error.response.data;
-            console.log(err);
-            
+            const err = error.response.data || error;
 
             setApiResponse({
                 display: true,
@@ -138,8 +149,13 @@ export function useVerifyEmailAuth() {
            
     const handleResendOtp = async () => {
         try {
-            const response = (await axios.post(`${apiEndpoint}/auth/sendotp-email`, { email: userData.email } )).data;
+            const response = (await axios.post(
+                `${localApiEndpoint}/auth/sendPasswordResetEmail`, 
+                { email: getQueryParams('email') } 
+            )).data;
             // console.log(response);
+
+            setJwtToken(response.token);
   
             _setToastNotification({
                 display: true,
@@ -148,13 +164,13 @@ export function useVerifyEmailAuth() {
             });
 
         } catch (error: any) {
-            // console.log(error);
-            const err = error.response.data;
+            const err = error.response.data || error;
+            const fixedErrorMsg = "Oooops, failed to send email otp. please try again.";
 
             setApiResponse({
                 display: true,
                 status: false,
-                message: err.message || "Oooops, failed to send email otp. please try again."
+                message: err.errors && err.errors.length ? err.errors[0].msg : err.message || fixedErrorMsg
             });
         }
     }
@@ -168,7 +184,8 @@ export function useVerifyEmailAuth() {
     return {
         isSubmitting,
         code, setCode,
-        userData,
+        // userData,
+        email: getQueryParams('email'),
         
         onSubmit,
         handleResendOtp,

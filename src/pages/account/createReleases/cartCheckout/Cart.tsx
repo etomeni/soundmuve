@@ -11,13 +11,15 @@ import { submitBtnStyle } from '@/util/mui';
 import CartItemComponent from '@/components/account/payments/carts/CartItem';
 import DiscountApplicationModalComponent from '@/components/account/payments/carts/DiscountApplication';
 import { useCart } from '@/hooks/useCart';
+import Stack from '@mui/material/Stack';
+import Alert from '@mui/material/Alert';
 
 
 function CartPage() {
     const [openDiscountFormModal, setOpenDiscountFormModal] = useState(false);
     const { 
         cartItems, totalAmount, handleRemoveCartItem,
-        handleAddToCart,
+        handleAddToCart, apiResponse
     } = useCart();
 
     return (
@@ -40,6 +42,15 @@ function CartPage() {
                         totalPrice={totalAmount}
                     />
                 </Box>
+
+
+                {
+                    apiResponse.display && (
+                        <Stack sx={{ width: '100%', mt: 5, mb: 2 }}>
+                            <Alert severity={apiResponse.status ? "success" : "error"}>{apiResponse.message}</Alert>
+                        </Stack>
+                    )
+                }
                 
                 <Box 
                     sx={{ 

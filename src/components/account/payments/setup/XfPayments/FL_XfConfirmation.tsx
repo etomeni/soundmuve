@@ -21,7 +21,7 @@ import TextField from '@mui/material/TextField';
 import { useUserStore } from '@/state/userStore';
 // import { useSettingStore } from '@/state/settingStore';
 
-import { apiEndpoint, getQueryParams } from '@/util/resources';
+import { emekaApiEndpoint, getQueryParams } from '@/util/resources';
 import { paymentTextFieldStyle } from '@/util/mui';
 import { xfPaymentFormSchema, xfPaymentsInterface } from './FL_XfPayments';
 import colors from '@/constants/colors';
@@ -81,7 +81,7 @@ const FL_XfConfirmationModalComponent: React.FC<_Props> = ({
         }
 
         try {
-            const response = (await axios.post(`${apiEndpoint}/payoutDetails/payout-details`, data2db, {
+            const response = (await axios.post(`${emekaApiEndpoint}/payoutDetails/payout-details`, data2db, {
                 headers: {
                     Authorization: `Bearer ${accessToken}`
                 }

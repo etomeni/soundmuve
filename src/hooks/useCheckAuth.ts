@@ -16,10 +16,10 @@ export function useCheckAuth() {
     
     const checkUserAuthState = async () => {
         const access_token = getLocalStorage("access_token")
-        const refresh_token = getLocalStorage("refreshToken");
+        // const refresh_token = getLocalStorage("refreshToken");
         const user_data = getLocalStorage("user");
     
-        if (!access_token || !refresh_token || !user_data ) {
+        if (!access_token || !user_data ) {
             setIsLoading(false);
             return;
         }
@@ -28,17 +28,21 @@ export function useCheckAuth() {
         //     setIsLoading(false);
         // }
     
+        console.log(access_token);
+        
         try {
-            const response = (await axios.get(`${apiEndpoint}/auth/maintainPersistence`, {
+            // const response = (await axios.get(`${emekaApiEndpoint}/auth/maintainPersistence`, {
+            const response = (await axios.get(`${apiEndpoint}/auth/reValidateUserAuth`, {
                 headers: {
                     Authorization: `Bearer ${access_token}`,
-                    refresh: `Bearer ${refresh_token}`
+                    // refresh: `Bearer ${refresh_token}`
                 }
             })).data;
             // console.log(response);
 
             if (response.accessToken && response.refreshToken) {
-                _handleRefreshToken(response.accessToken, response.refreshToken)
+                // _handleRefreshToken(response.accessToken, response.refreshToken)
+                _handleRefreshToken(response.accessToken)
             }
 
     

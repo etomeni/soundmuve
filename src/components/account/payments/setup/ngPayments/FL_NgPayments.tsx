@@ -25,7 +25,7 @@ import { paymentTextFieldStyle, releaseSelectStyle2 } from '@/util/mui';
 // import FlutterwaveLogo2 from "@/assets/images/FlutterwaveLogo2.png";
 import { allNgBanks } from '@/util/banks';
 import { useUserStore } from '@/state/userStore';
-import { apiEndpoint } from '@/util/resources';
+import { emekaApiEndpoint } from '@/util/resources';
 import colors from '@/constants/colors';
 import PaymentModalWrapper from '../../PaymentWrapper';
 
@@ -73,7 +73,7 @@ const FL_NgPaymentsModalComponent: React.FC<_Props> = ({
 
     const getBanks = async () => {
         try {
-            const response = (await axios.get(`${apiEndpoint}/payouts/banks/NG`, {
+            const response = (await axios.get(`${emekaApiEndpoint}/payouts/banks/NG`, {
                 headers: {
                     Authorization: `Bearer ${accessToken}`
                 }
@@ -103,7 +103,7 @@ const FL_NgPaymentsModalComponent: React.FC<_Props> = ({
         // }
 
         // try {
-        //     const response = (await axios.post(`${apiEndpoint}/payouts/resolve-account`,
+        //     const response = (await axios.post(`${emekaApiEndpoint}/payouts/resolve-account`,
         //         userAcctData, {
         //             headers: {
         //                 Authorization: `Bearer ${accessToken}`

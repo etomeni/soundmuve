@@ -12,7 +12,7 @@ import illustrationMailImage from "@/assets/branded/images/contact/illustrationM
 import useMediaQuery from '@mui/material/useMediaQuery';
 
 // import FacebookIcon from '@mui/icons-material/Facebook';
-import TwitterIcon from '@mui/icons-material/Twitter';
+import XIcon from '@mui/icons-material/X';
 import InstagramIcon from '@mui/icons-material/Instagram';
 import ContactUsComponent from '@/components/ContactUsComponent';
 // import LinkedInIcon from '@mui/icons-material/LinkedIn';
@@ -97,7 +97,7 @@ function Contact() {
                                                         {/* <FacebookIcon sx={{maxWidth: "20px", fontSize: 20, color: "#6C6050"}} /> */}
 
                                                         <a href="https://x.com/soundmuve/" target='_blank' >
-                                                            <TwitterIcon sx={{maxWidth: "20px", fontSize: 20, color: "#6C6050"}} />
+                                                            <XIcon sx={{maxWidth: "20px", fontSize: 20, color: "#6C6050"}} />
                                                         </a>
 
                                                         {/* <LinkedInIcon sx={{maxWidth: "20px", fontSize: 20, color: "#6C6050"}} /> */}

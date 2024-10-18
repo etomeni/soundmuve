@@ -11,7 +11,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import WestIcon from '@mui/icons-material/West';
 
 import resetPasswordImg from "@/assets/branded/images/auth/newPassword.png";
-import SnackbarToast from '@/components/ToastNotification';
+// import SnackbarToast from '@/components/ToastNotification';
 import colors from '@/constants/colors';
 import { authMuiTextFieldStyle } from '@/util/mui';
 import { useForgotPasswordAuth } from '@/hooks/auth/useForgotPassword';
@@ -21,14 +21,13 @@ function ForgotPasswordDesktopComponent() {
     const navigate = useNavigate();
 
     const { 
-        apiResponse, toastNotification, setToastNotification,
+        apiResponse, // toastNotification, setToastNotification,
         isSubmitting, isValid, onSubmit, register, errors, // formSchema,
     } = useForgotPasswordAuth();
     
 
     return (
         <Box bgcolor="#FFFFFF" minHeight="100vh">
-
             <Container>
                 <Box sx={{
                     py: {xs: 5, sm: 10, md: 10},
@@ -168,14 +167,6 @@ function ForgotPasswordDesktopComponent() {
                     </form>
                 </Box>
             </Container>
-
-
-            <SnackbarToast 
-                status={toastNotification.status} 
-                display={toastNotification.display} 
-                message={toastNotification.message} 
-                closeSnackbar={() => setToastNotification({ ...toastNotification, display: false})}
-            />
         </Box>
     )
 }

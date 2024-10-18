@@ -3,12 +3,12 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 
 
-interface MyComponentProps {
+interface _Props {
     status: "Live" | "Pending" | "Incomplete" | "Complete" | "Failed" | string
 };
 // type status = "Live" | "Pending" | "Incomplete" | "Complete" | "Failed";
 
-const ReleaseStatusComponent: React.FC<MyComponentProps> = ({status = "Pending"}) => {
+const ReleaseStatusComponent: React.FC<_Props> = ({status = "Pending"}) => {
 
     const complete = (
         <Box
@@ -26,7 +26,7 @@ const ReleaseStatusComponent: React.FC<MyComponentProps> = ({status = "Pending"}
                     lineHeight: {xs: "13.7px", md: "24px"},
                     letterSpacing: {xs: "0.06px", md: "0.1px"}
                 }}
-            > { status } </Typography>
+            > { status.toUpperCase() } </Typography>
         </Box>
     );
 
@@ -110,13 +110,13 @@ const ReleaseStatusComponent: React.FC<MyComponentProps> = ({status = "Pending"}
         </Box>
     );
 
-    if (status == 'Complete') {
+    if (status.toLowerCase() == 'complete') {
         return complete;
-    } else if (status == 'Failed') {
+    } else if (status.toLowerCase() == 'failed') {
         return failed;
-    } else if (status == 'Incomplete') {
+    } else if (status.toLowerCase() == 'incomplete') {
         return incomplete;
-    } else if (status == 'Live') {
+    } else if (status.toLowerCase() == 'live') {
         return live;
     } else {
         return pending;

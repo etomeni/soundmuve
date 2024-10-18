@@ -1,11 +1,15 @@
 import React from 'react';
+import { createSearchParams, useNavigate } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
 import Modal from '@mui/material/Modal';
 import Typography from '@mui/material/Typography';
 import CloseIcon from '@mui/icons-material/Close';
-import { Link } from 'react-router-dom';
+import { useRecordLabelFn } from '@/hooks/recordLabel/useRecordLabelFn';
+import { useUserStore } from '@/state/userStore';
+import NewReleaseRLartist from './NewReleaseRLartist';
 import colors from '@/constants/colors';
+import { recordLabelArtistInterface } from '@/constants/typesInterface';
 
 
 interface _Props {
@@ -16,6 +20,147 @@ interface _Props {
 const NewReleaseModalComponent: React.FC<_Props> = ({
     openReleaseModal, closeReleaseModal
 }) => {
+    const navigate = useNavigate();
+    const userData = useUserStore((state) => state.userData);
+    // const [selectedRlArtist, setselectedRlArtist] = React.useState<recordLabelArtistInterface>();
+    const [selectedReleaseType, setSelectedReleaseType] = React.useState<"single" | "album">();
+    const [showArtistSearch, setshowArtistSearch] = React.useState(false);
+
+    const {
+        getAllRecordLabelArtist,
+        recordLabelArtist,
+    } = useRecordLabelFn();
+
+    React.useEffect(() => {
+        // const artistsList = getLocalStorage("artistsList");
+        // console.log(userData);
+
+        // "Record Label"
+        if (userData.userType.toLowerCase() == "record label") {
+            getAllRecordLabelArtist();
+        }
+    }, [userData.userType]);
+
+    React.useEffect(() => {
+        if (openReleaseModal) {
+            setSelectedReleaseType(undefined);
+            // setselectedRlArtist(undefined);
+            setshowArtistSearch(false);
+        }
+    }, [openReleaseModal])
+
+    const handleSelectedArtist = (artist: recordLabelArtistInterface) => {
+        // console.log(artist);
+        // setselectedRlArtist(artist);
+
+        const params = {
+            artistName: artist?.artistName || "",
+        };
+
+        if (selectedReleaseType == "single") {
+            // /account/create-single-release
+            navigate({
+                pathname: "/account/create-single-release",
+                search: `?${createSearchParams(params)}`,
+            });
+        } else if (selectedReleaseType == "album") {
+            // /account/create-album-release-details
+            navigate({
+                pathname: "/account/create-album-release-details",
+                search: `?${createSearchParams(params)}`,
+            });
+        }
+    }
+
+    const handleReleaseTypeClicked = (releaseType: typeof selectedReleaseType) => {
+        setSelectedReleaseType(releaseType);
+
+        if (userData.userType.toLowerCase() == "record label") {
+            setshowArtistSearch(true);
+            return;
+        } 
+
+        if (releaseType == "album") {
+            navigate("/account/create-album-release-details");
+        } else if (releaseType == "single") {
+            navigate("/account/create-single-release")
+        }
+    }
+
+    
+
+    const releaseTypeView = (
+        <Box>
+            <Typography id="release-modal-title" variant="h4" component="h4"
+                sx={{
+                    fontWeight: "900",
+                    fontSize: {xs: "30px", md: "50px"},
+                    lineHeight: {xs: "40px", md: "63.8px"},
+                    letterSpacing: {xs: "-0.34px", md: "-1.34px"},
+                    textAlign: "center"
+                }}
+            > What would you like to release? </Typography>
+
+            <Box id="release-modal-description" 
+                sx={{ 
+                    my: 5,
+                    display: "flex",
+                    flexDirection: "row",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    gap: "20px",
+                }}
+            >
+                <Box onClick={() => handleReleaseTypeClicked("single")} sx={{
+                    // p: "10px 29px 10px 29px",
+                    px: "15px",
+                    // py: "5px",
+                    border: `1px solid ${colors.primary}`,
+                    borderRadius: "8px",
+                    // background: "#9F9F9F",
+                    color: colors.dark,
+                    cursor: "pointer",
+                    ":hover": {
+                        boxShadow: `1px 3px 18px 0px ${colors.primary}`,
+                        background: "linear-gradient(180deg, #D68100 0%, #FFB01F 49%, #D68100 100%)",
+                        color: colors.milk,
+                    }
+                }}>
+                    <Typography variant='body1' sx={{
+                        fontWeight: '900',
+                        fontSize: "25px",
+                        lineHeight: "40px",
+                        letterSpacing: "-0.13px",
+                        textAlign: 'center',
+                    }}> Single </Typography>
+                </Box>
+
+                <Box onClick={() => handleReleaseTypeClicked("album")} sx={{
+                    // p: "10px 29px 10px 29px",
+                    px: "15px",
+                    borderRadius: "8px",
+                    border: `1px solid ${colors.primary}`,
+                    color: colors.dark,
+                    cursor: "pointer",
+                    ":hover": {
+                        boxShadow: `1px 3px 18px 0px ${colors.primary}`,
+                        background: "linear-gradient(180deg, #D68100 0%, #FFB01F 49%, #D68100 100%)",
+                        color: colors.milk,
+                    }
+
+                }}>
+                    <Typography variant='body1' sx={{
+                        fontWeight: '900',
+                        fontSize: "25px",
+                        lineHeight: "40px",
+                        letterSpacing: "-0.13px",
+                        textAlign: 'center',
+                    }}> Album </Typography>
+                </Box>
+            </Box>
+        </Box>
+    )
+
 
     return (
         <Modal
@@ -50,88 +195,17 @@ const NewReleaseModalComponent: React.FC<_Props> = ({
                             />
                         </IconButton>
                     </Box>
-                    
-                    <Typography id="release-modal-title" variant="h4" component="h4"
-                        sx={{
-                            fontWeight: "900",
-                            fontSize: {xs: "30px", md: "50px"},
-                            lineHeight: {xs: "40px", md: "63.8px"},
-                            letterSpacing: {xs: "-0.34px", md: "-1.34px"},
-                            textAlign: "center"
-                        }}
-                    > What would you like to release? </Typography>
 
-                    <Box id="release-modal-description" 
-                        sx={{ 
-                            my: 5,
-                            display: "flex",
-                            flexDirection: "row",
-                            justifyContent: "center",
-                            alignItems: "center",
-                            gap: "20px",
-                        }}
-                    >
+                    { 
+                        showArtistSearch ? 
+                            <NewReleaseRLartist 
+                                options={recordLabelArtist}
+                                handleSelected={handleSelectedArtist}
+                                selectedValue={undefined} // {selectedRlArtist}
+                            />
+                        : releaseTypeView 
+                    }
 
-                        <Link to="/account/create-single-release" style={{
-                            textDecoration: "none",
-                            color: "#000000",
-                            border: "none",
-                            outline: "none",
-                        }}>
-                            <Box sx={{
-                                // p: "10px 29px 10px 29px",
-                                px: "15px",
-                                // py: "5px",
-                                border: `1px solid ${colors.primary}`,
-                                borderRadius: "8px",
-                                // background: "#9F9F9F",
-                                color: colors.dark,
-                                ":hover": {
-                                    boxShadow: `1px 3px 18px 0px ${colors.primary}`,
-                                    background: "linear-gradient(180deg, #D68100 0%, #FFB01F 49%, #D68100 100%)",
-                                    color: colors.milk,
-                                }
-                            }}>
-                                <Typography variant='body1' sx={{
-                                    fontWeight: '900',
-                                    fontSize: "25px",
-                                    lineHeight: "40px",
-                                    letterSpacing: "-0.13px",
-                                    textAlign: 'center',
-                                }}> Single </Typography>
-                            </Box>
-                        </Link>
-
-                        <Link to="/account/create-album-release-details" style={{
-                            textDecoration: "none",
-                            color: "#000000",
-                            border: "none",
-                            outline: "none",
-                        }}>
-                            <Box sx={{
-                                // p: "10px 29px 10px 29px",
-                                px: "15px",
-                                borderRadius: "8px",
-                                border: `1px solid ${colors.primary}`,
-                                color: colors.dark,
-                                ":hover": {
-                                    boxShadow: `1px 3px 18px 0px ${colors.primary}`,
-                                    background: "linear-gradient(180deg, #D68100 0%, #FFB01F 49%, #D68100 100%)",
-                                    color: colors.milk,
-                                }
-
-                            }}>
-                                <Typography variant='body1' sx={{
-                                    fontWeight: '900',
-                                    fontSize: "25px",
-                                    lineHeight: "40px",
-                                    letterSpacing: "-0.13px",
-                                    textAlign: 'center',
-                                }}> Album </Typography>
-                            </Box>
-                        </Link>
-
-                    </Box>
                 </Box>
             </Box>
         </Modal>

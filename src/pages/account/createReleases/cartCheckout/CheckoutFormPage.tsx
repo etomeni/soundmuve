@@ -4,7 +4,7 @@ import axios from 'axios';
 import Stack from '@mui/material/Stack';
 import Alert from '@mui/material/Alert';
 import Box from '@mui/material/Box';
-import { apiEndpoint } from '@/util/resources';
+import { emekaApiEndpoint } from '@/util/resources';
 import { useUserStore } from '@/state/userStore';
 import LoadingDataComponent from '@/components/LoadingData';
 
@@ -28,7 +28,7 @@ function CheckoutFormPage({ amount }: { amount: number }) {
 
     const handleGetClientSecret = async () => {
         try {
-            const response = (await axios.post(`${apiEndpoint}/checkout/create-payment-intent`,
+            const response = (await axios.post(`${emekaApiEndpoint}/checkout/create-payment-intent`,
                 {amount}, {
                     headers: {
                         Authorization: `Bearer ${accessToken}`

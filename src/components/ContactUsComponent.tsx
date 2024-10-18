@@ -13,10 +13,10 @@ import Alert from '@mui/material/Alert';
 import Button from '@mui/material/Button';
 import CircularProgress from '@mui/material/CircularProgress';
 
-import SnackbarToast, { SnackbarToastInterface } from '../components/ToastNotification';
 import { apiEndpoint } from '../util/resources';
 import colors from '@/constants/colors';
 import { contactMuiTextFieldStyle } from '@/util/mui';
+import { useSettingStore } from '@/state/settingStore';
 
 
 const formSchema = yup.object({
@@ -33,13 +33,11 @@ const formSchema = yup.object({
 });
 
 
-
 interface myProps {
     btnColor?: string;
     placeholderDisplay?: boolean;
     isModalView?: boolean;
 };
-
 
 const ContactUsComponent: React.FC<myProps> = ({
     placeholderDisplay = false, btnColor, isModalView = false
@@ -50,11 +48,7 @@ const ContactUsComponent: React.FC<myProps> = ({
         status: true,
         message: ""
     });
-    const [toastNotification, setToastNotification] = useState<SnackbarToastInterface>({
-        display: false,
-        status: "success",
-        message: ""
-    });
+    const _setToastNotification = useSettingStore((state) => state._setToastNotification);
 
     const { 
         handleSubmit, register, reset, formState: { errors, isValid, isSubmitting } 
@@ -67,23 +61,17 @@ const ContactUsComponent: React.FC<myProps> = ({
             status: true,
             message: ''
         });
-        const data2db = {
-            subject: " ",
-            name: formData.name,
-            email: formData.email,
-            msg: formData.message
-        };
 
         try {
-            const response = (await axios.post(`${apiEndpoint}/newsLetter/contact-us`, data2db )).data;
+            const response = (await axios.post(`${apiEndpoint}/contact/contact-us`, formData )).data;
             // console.log(response);
-            
-            setApiResponse({
-                display: true,
-                status: true,
-                message: response.message
-            });
-            setToastNotification({
+
+            // setApiResponse({
+            //     display: true,
+            //     status: true,
+            //     message: response.message
+            // });
+            _setToastNotification({
                 display: true,
                 status: "success",
                 message: response.message
@@ -92,19 +80,20 @@ const ContactUsComponent: React.FC<myProps> = ({
             reset();
             
         } catch (error: any) {
-            const err = error.response.data;
+            const err = error.response.data || error;
             // console.log(err);
+            const fixedErrorMsg = "Oooops, failed to send message. please try again.";
 
-            setApiResponse({
-                display: true,
-                status: false,
-                message: err.message || "Oooops, failed to send message. please try again."
-            });
+            // setApiResponse({
+            //     display: true,
+            //     status: false,
+            //     message: err.errors && err.errors.length ? err.errors[0].msg : err.message || fixedErrorMsg
+            // });
 
-            setToastNotification({
+            _setToastNotification({
                 display: true,
                 status: "error",
-                message: err.message || "Oooops, failed to send message. please try again."
+                message: err.errors && err.errors.length ? err.errors[0].msg : err.message || fixedErrorMsg
             });
         }
     }
@@ -324,13 +313,6 @@ const ContactUsComponent: React.FC<myProps> = ({
                     </form>
                 </Box>
             </Box>
-
-            <SnackbarToast 
-                status={toastNotification.status} 
-                display={toastNotification.display} 
-                message={toastNotification.message} 
-                closeSnackbar={() => setToastNotification({ ...toastNotification, display: false})}
-            />
         </Box>
     )
 }

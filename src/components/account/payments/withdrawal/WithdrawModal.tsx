@@ -22,7 +22,7 @@ import MenuItem from '@mui/material/MenuItem';
 
 // import { getSupportedCurrency } from '@/util/currencies';
 import axios from 'axios';
-import { apiEndpoint, currencyDisplay, isNumeric } from '@/util/resources';
+import { emekaApiEndpoint, currencyDisplay, isNumeric } from '@/util/resources';
 import colors from '@/constants/colors';
 import { useUserStore } from '@/state/userStore';
 import PaymentModalWrapper from '../PaymentWrapper';
@@ -115,7 +115,7 @@ const WithdrawModalComponent: React.FC<_Props> = ({
 
     const getExchangeRate = async (amount: string, currency: string) => {
         try {
-            const response = (await axios.get(`${apiEndpoint}/transactionInit/exchange-rate`, {
+            const response = (await axios.get(`${emekaApiEndpoint}/transactionInit/exchange-rate`, {
                 headers: {
                     Authorization: `Bearer ${accessToken}`
                 },

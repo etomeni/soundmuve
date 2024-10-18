@@ -24,7 +24,7 @@ import MenuItem from '@mui/material/MenuItem';
 import { useUserStore } from '@/state/userStore';
 // import { useSettingStore } from '@/state/settingStore';
 
-import { apiEndpoint, getQueryParams } from '@/util/resources';
+import { emekaApiEndpoint, getQueryParams } from '@/util/resources';
 import { paymentTextFieldStyle, releaseSelectStyle2 } from '@/util/mui';
 import { euroPaymentFormSchema, euroPaymentsInterface } from './FL_Europayments';
 import { restCountries } from '@/util/countries';
@@ -90,7 +90,7 @@ const FL_EuroConfirmationModalComponent: React.FC<_Props> = ({
         }
 
         try {
-            const response = (await axios.post(`${apiEndpoint}/payoutDetails/payout-details`, data2db, {
+            const response = (await axios.post(`${emekaApiEndpoint}/payoutDetails/payout-details`, data2db, {
                 headers: {
                     Authorization: `Bearer ${accessToken}`
                 }

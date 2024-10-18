@@ -19,7 +19,7 @@ import { createReleaseStore } from '@/state/createReleaseStore';
 import AccountWrapper from '@/components/AccountWrapper';
 import SongPreviewComponent from '@/components/account/SongPreview';
 import SuccessModalComponent from '@/components/account/SuccessModal';
-import { apiEndpoint } from '@/util/resources';
+import { emekaApiEndpoint } from '@/util/resources';
 import { albumInterface } from '@/constants/typesInterface';
 import colors from '@/constants/colors';
 import { cartItemStore } from '@/state/cartStore';
@@ -57,8 +57,8 @@ function CreateAlbumReleaseOverview() {
     const getAlbumRelease = async () => {
         try {
             const response = (await axios.get(
-                // `${apiEndpoint}/Album/albums?email=${ userData.email }`,
-                `${apiEndpoint}/songs/albums-songs-by-email/${ userData.email }?album_id=${completeAlbumData._id}`,
+                // `${emekaApiEndpoint}/Album/albums?email=${ userData.email }`,
+                `${emekaApiEndpoint}/songs/albums-songs-by-email/${ userData.email }?album_id=${completeAlbumData._id}`,
                 {
                     headers: {
                         Authorization: `Bearer ${accessToken}`
@@ -81,7 +81,7 @@ function CreateAlbumReleaseOverview() {
 
         try {
             const response = (await axios.delete(
-                `${apiEndpoint}/songs/songs/${song._id}`,
+                `${emekaApiEndpoint}/songs/songs/${song._id}`,
                 {
                     headers: {
                         Authorization: `Bearer ${accessToken}`

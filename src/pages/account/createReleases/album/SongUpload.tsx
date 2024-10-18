@@ -33,7 +33,7 @@ import { releaseSelectStyle, releaseTextFieldStyle, releaseTextFieldStyle2 } fro
 import { languages } from '@/util/languages';
 import { minutes, seconds, songArtistsCreativesRoles, pauseExecution } from '@/util/resources';
 import CopyrightOwnershipModalComponent from '@/components/account/CopyrightOwnershipModal';
-import { apiEndpoint } from '@/util/resources';
+import { emekaApiEndpoint } from '@/util/resources';
 import CircularProgressWithLabel from '@/components/CircularProgressWithLabel';
 import ExplicitLyricsReadMoreInfoComponent from '@/components/ExplicitLyricsReadMoreInfo';
 import colors from '@/constants/colors';
@@ -211,9 +211,9 @@ function CreateAlbumReleaseSongUpload() {
             //     setIsNextBtnSubmitting(true);
 
             //     const response = (await axios.put(
-            //         // `${apiEndpoint}/Album/update-album/${ completeAlbumData._id }/page4`,
-            //         // `${apiEndpoint}/songs/albums/${ completeAlbumData._id }/page4`,
-            //         `${apiEndpoint}/songs/albums/66977731566946bc43b539c0/page4`,
+            //         // `${emekaApiEndpoint}/Album/update-album/${ completeAlbumData._id }/page4`,
+            //         // `${emekaApiEndpoint}/songs/albums/${ completeAlbumData._id }/page4`,
+            //         `${emekaApiEndpoint}/songs/albums/66977731566946bc43b539c0/page4`,
             //         data2db,  
             //         {
             //             headers: {
@@ -464,7 +464,7 @@ function CreateAlbumReleaseSongUpload() {
         try {
             const response = songEditId ? 
                 (await axios.put(
-                    `${apiEndpoint}/songs/editSong/${songEditId}`,
+                    `${emekaApiEndpoint}/songs/editSong/${songEditId}`,
                     data2db,
                     {
                         headers: {
@@ -483,7 +483,7 @@ function CreateAlbumReleaseSongUpload() {
                     }
                 )).data 
             : (await axios.post(
-                `${apiEndpoint}/songs/page4`,
+                `${emekaApiEndpoint}/songs/page4`,
                 data2db,
                 {
                     headers: {

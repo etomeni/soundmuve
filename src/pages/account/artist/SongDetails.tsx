@@ -12,31 +12,34 @@ import IconButton from '@mui/material/IconButton';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 
 import AccountWrapper from '@/components/AccountWrapper';
-import { useSettingStore } from '@/state/settingStore';
+// import { useSettingStore } from '@/state/settingStore';
 
 // import appleMusiclogo from '@/assets/images/apple.png';
-import appleMusicLightlogo from '@/assets/images/appleLightTheme.png';
+// import appleMusicLightlogo from '@/assets/images/appleLightTheme.png';
 // import spotifylogo from '@/assets/images/spotify.png';
-import spotifyLghtThemelogo from '@/assets/images/spotifyLghtTheme.png';
-import AppleSportifyCheckmark from '@/components/AppleSportifyCheckmark';
+// import spotifyLghtThemelogo from '@/assets/images/spotifyLghtTheme.png';
+// import AppleSportifyCheckmark from '@/components/AppleSportifyCheckmark';
 import { useReleaseStore } from '@/state/releaseStore';
 // import TopGenderComponent from '@/components/analytics/TopGender';
 // import TopLocationsComponent from '@/components/analytics/TopLocations';
-import BarChartGraphComponent from '@/components/analytics/BarChartGraph';
-import SingleSongDspOverviewComponent from '@/components/analytics/SingleSongDspOverview';
+// import BarChartGraphComponent from '@/components/analytics/BarChartGraph';
+// import SingleSongDspOverviewComponent from '@/components/analytics/SingleSongDspOverview';
 import colors from '@/constants/colors';
 import { currencyDisplay, formatedNumber } from '@/util/resources';
 // import { getDateRange, getFormattedDateRange } from '@/util/dateTime';
 // import { useEffect } from 'react';
 import { useSongAnalytics } from '@/hooks/analytics/useSongAnalytics';
 import { useEffect } from 'react';
+import { allMonths } from '@/util/months';
+import { getCurrentMonthValue } from '@/util/dateTime';
+import CopyShareLink from '@/components/release/CopyShareLink';
 
 
 
 
 function SongDetails() {
     const navigate = useNavigate();
-    const darkTheme = useSettingStore((state) => state.darkTheme);
+    // const darkTheme = useSettingStore((state) => state.darkTheme);
     const songDetails = useReleaseStore((state) => state.songDetails);
     // const userData = useUserStore((state) => state.userData); 
     // const accessToken = useUserStore((state) => state.accessToken);
@@ -44,9 +47,10 @@ function SongDetails() {
 
 
     const { 
-        spotifyAndAppleOverview, getSportifiyAppleOverview,
+        // spotifyAndAppleOverview, 
+        getSportifiyAppleOverview,
 
-        spotifyDataset, appleMusicDataset, // graphApiData, 
+        // spotifyDataset, appleMusicDataset, // graphApiData, 
         getGraphData,
 
         handleDataRangeData,
@@ -97,8 +101,8 @@ function SongDetails() {
                                     labelId="sortByDays"
                                     id="sortByDays-select"
                                     label=""
-                                    defaultValue="30"
-                                    placeholder='Last 30 Days'
+                                    defaultValue={getCurrentMonthValue}
+                                    // placeholder='Last 30 Days'
 
                                     sx={{
                                         color: "#fff",
@@ -131,18 +135,16 @@ function SongDetails() {
                                         }
                                     }}
                                     onChange={(e) => {
-                                        handleDataRangeData(e.target.value);
+                                        handleDataRangeData(`${e.target.value}`);
                                     }}
                                 >
-                                    <MenuItem value="7">
-                                        Last 7 Days
-                                    </MenuItem>
-                                    <MenuItem value="14">
-                                        Last 14 Days
-                                    </MenuItem>
-                                    <MenuItem value="30">
-                                        Last 30 Days
-                                    </MenuItem>
+                                    {
+                                        allMonths.map((month, index) => (
+                                            <MenuItem key={index} value={index}>
+                                                { month }
+                                            </MenuItem>
+                                        ))
+                                    }
                                 </Select>
                             </FormControl>
                         </Box>
@@ -263,62 +265,73 @@ function SongDetails() {
                         </Box>
                     </Stack>
 
+                    
+                    <Box>
+                        <Stack mt="50px" direction={"row"} justifyContent={"space-between"} spacing={"20px"} alignItems={"center"}>
+                            <Box flexGrow={1} maxWidth="60%">
+                                <Stack direction={"row"} justifyContent={"space-between"} spacing={"20px"} alignItems={"center"}>
+                                    <Box>
+                                        <Typography
+                                            sx={{
+                                                fontWeight: "900",
+                                                fontSize: {xs: '12px', md: '24px'},
+                                                lineHeight: {xs: '8.71px', md: '24px'}
+                                            }}
+                                        >{ currencyDisplay(Number(songDetails.total_revenue)) }</Typography>
 
-                    <Stack mt="50px" width={"60%"} direction={"row"} justifyContent={"space-between"} spacing={"20px"} alignItems={"center"}>
-                        <Box>
-                            <Typography
-                                sx={{
-                                    fontWeight: "900",
-                                    fontSize: {xs: '12px', md: '24px'},
-                                    lineHeight: {xs: '8.71px', md: '24px'}
-                                }}
-                            >{ currencyDisplay(Number(songDetails.total_revenue)) }</Typography>
+                                        <Typography
+                                            sx={{
+                                                fontWeight: "400",
+                                                fontSize: {xs: '10px', md: '17px'},
+                                                color: "#797979"
+                                            }}
+                                        >Total Revenue</Typography>
+                                    </Box>
 
-                            <Typography
-                                sx={{
-                                    fontWeight: "400",
-                                    fontSize: {xs: '10px', md: '17px'},
-                                    color: "#797979"
-                                }}
-                            >Total Revenue</Typography>
-                        </Box>
+                                    <Box>
+                                        <Typography
+                                            sx={{
+                                                fontWeight: "900",
+                                                fontSize: {xs: '12px', md: '24px'},
+                                                lineHeight: {xs: '8.71px', md: '24px'}
+                                            }}
+                                        >{ formatedNumber(Number(songDetails.streams)) } </Typography>
 
-                        <Box>
-                            <Typography
-                                sx={{
-                                    fontWeight: "900",
-                                    fontSize: {xs: '12px', md: '24px'},
-                                    lineHeight: {xs: '8.71px', md: '24px'}
-                                }}
-                            >{ formatedNumber(Number(songDetails.streams)) } </Typography>
+                                        <Typography
+                                            sx={{
+                                                fontWeight: "400",
+                                                fontSize: {xs: '10px', md: '17px'},
+                                                color: "#797979"
+                                            }}
+                                        >Streams</Typography>
+                                    </Box>
 
-                            <Typography
-                                sx={{
-                                    fontWeight: "400",
-                                    fontSize: {xs: '10px', md: '17px'},
-                                    color: "#797979"
-                                }}
-                            >Streams</Typography>
-                        </Box>
+                                    <Box>
+                                        <Typography
+                                            sx={{
+                                                fontWeight: "900",
+                                                fontSize: {xs: '12px', md: '24px'},
+                                                lineHeight: {xs: '8.71px', md: '24px'}
+                                            }}
+                                        >{formatedNumber(Number(songDetails.stream_time))}</Typography>
 
-                        <Box>
-                            <Typography
-                                sx={{
-                                    fontWeight: "900",
-                                    fontSize: {xs: '12px', md: '24px'},
-                                    lineHeight: {xs: '8.71px', md: '24px'}
-                                }}
-                            >{formatedNumber(Number(songDetails.stream_time))}hrs</Typography>
+                                        <Typography
+                                            sx={{
+                                                fontWeight: "400",
+                                                fontSize: {xs: '10px', md: '17px'},
+                                                color: "#797979"
+                                            }}
+                                        >Songs sold</Typography>
+                                    </Box>
+                                </Stack>
+                            </Box>
 
-                            <Typography
-                                sx={{
-                                    fontWeight: "400",
-                                    fontSize: {xs: '10px', md: '17px'},
-                                    color: "#797979"
-                                }}
-                            >Stream time</Typography>
-                        </Box>
-                    </Stack>
+                            <Box maxWidth="35%">
+                                <CopyShareLink linkUrl='www.soundmuve.com' />
+                            </Box>
+                        </Stack>
+                    </Box>
+
                 </Box>
 
                 {/* mobile view  */}
@@ -338,9 +351,12 @@ function SongDetails() {
                                     labelId="sortByDays"
                                     id="sortByDays-select"
                                     label=""
-                                    defaultValue="30"
-                                    placeholder='Last 30 Days'
+                                    defaultValue={getCurrentMonthValue}
+                                    // placeholder='Last 30 Days'
 
+                                    onChange={(e) => {
+                                        handleDataRangeData(`${e.target.value}`);
+                                    }}
                                     sx={{
                                         color: "#fff",
                                         borderRadius: "8px",
@@ -372,15 +388,13 @@ function SongDetails() {
                                         }
                                     }}
                                 >
-                                    <MenuItem value="7">
-                                        Last 7 Days
-                                    </MenuItem>
-                                    <MenuItem value="14">
-                                        Last 14 Days
-                                    </MenuItem>
-                                    <MenuItem value="30">
-                                        Last 30 Days
-                                    </MenuItem>
+                                    {
+                                        allMonths.map((month, index) => (
+                                            <MenuItem key={index} value={index}>
+                                                { month }
+                                            </MenuItem>
+                                        ))
+                                    }
                                 </Select>
                             </FormControl>
                         </Box>
@@ -393,9 +407,9 @@ function SongDetails() {
                             lineHeight: "16.21px",
                             mt: 3
                         }}
-                    > Sensami </Typography>
+                    >{ songDetails.song_title }</Typography>
 
-                    <Typography
+                    {/* <Typography
                         sx={{
                             fontWeight: "400",
                             fontSize: "16.88px",
@@ -403,7 +417,7 @@ function SongDetails() {
                             color: "#797979",
                             mt: 2
                         }}
-                    > Album </Typography>
+                    > Album </Typography> */}
 
                     <Box
                         sx={{
@@ -468,7 +482,7 @@ function SongDetails() {
                                     fontSize: "17.8px",
                                     lineHeight: "17.8px"
                                 }}
-                            >{ formatedNumber(Number(songDetails.streams)) }hrs</Typography>
+                            >{ formatedNumber(Number(songDetails.streams)) }</Typography>
 
                             <Typography
                                 sx={{
@@ -476,7 +490,7 @@ function SongDetails() {
                                     fontSize: {xs: '10px', md: '17px'},
                                     color: "#797979"
                                 }}
-                            >Stream time</Typography>
+                            >Songs sold</Typography>
                         </Box>
                     </Stack>
 
@@ -490,15 +504,15 @@ function SongDetails() {
                         }}
                     >
 
-                        <Stack direction="row" spacing="10px">
-                            <Box sx={{ flex: "1 1 45%" }}>
+                        <Stack direction="row" spacing="10px" justifyContent="space-between">
+                            <Box sx={{ flex: "1 1 50%" }}>
                                 <Typography
                                     sx={{
                                         fontWeight: "900",
                                         fontSize: "15.43px",
                                         lineHeight: "15.43px",
                                     }}
-                                >Sensami</Typography>
+                                >{ songDetails.song_title }</Typography>
 
                                 <Typography
                                     sx={{
@@ -506,14 +520,11 @@ function SongDetails() {
                                         fontSize: "10.93px",
                                         lineHeight: "7.71px",
                                     }}
-                                >Joseph solomon </Typography>
+                                >{ songDetails.artist_name }</Typography>
                             </Box>
 
-                            <Box sx={{ flex: "1 1 45%" }} >
-                                <Stack direction="row" spacing="10px">
-                                    <AppleSportifyCheckmark dspName="Apple" />
-                                    <AppleSportifyCheckmark dspName="Spotify" />
-                                </Stack>
+                            <Box sx={{ flex: "1 1 40%", maxWidth: "50%" }} >
+                                <CopyShareLink linkUrl='www.soundmuve.com' />
                             </Box>
                         </Stack>
 
@@ -537,11 +548,10 @@ function SongDetails() {
                                     // letterSpacing: "-1px",
                                     flex: "1 1 45%",
                                 }}
-                            >More Grace Music </Typography>
+                            >{ songDetails.label_name }</Typography>
                         </Stack>
 
                         <Stack direction="row" spacing="10px" mt="10px">
-
                             <Typography
                                 sx={{
                                     fontWeight: "900",
@@ -560,7 +570,7 @@ function SongDetails() {
                                     // letterSpacing: "-1px",
                                     flex: "1 1 45%",
                                 }}
-                            >Dance  </Typography>
+                            >{ songDetails.primary_genre }</Typography>
                         </Stack>
 
                         <Stack direction="row" spacing="10px" mt="10px">
@@ -582,7 +592,7 @@ function SongDetails() {
                                     // letterSpacing: "-1px",
                                     flex: "1 1 45%",
                                 }}
-                            >123456789</Typography>
+                            >{ songDetails.upc_ean }</Typography>
                         </Stack>
 
                     </Box>
@@ -590,8 +600,9 @@ function SongDetails() {
 
 
                 {/* Apple Music analytics for the song */}
-                <Box mt={10}>
-                    <Box 
+                {/* <Box mt={10}> */}
+                <Box>
+                    {/* <Box 
                         sx={{
                             // width: {xs: "124.48px", md: "218.06px"},
                             height: {xs: "35px", md: "40px"}
@@ -613,13 +624,12 @@ function SongDetails() {
                         totalRevenue={Number(spotifyAndAppleOverview?.apple.revenue)}
                     />
 
-
                     <Box mt={5}>
                         <BarChartGraphComponent 
                             darkTheme={darkTheme}
                             dataset={appleMusicDataset}
                         />
-                    </Box>
+                    </Box> */}
 
                     {/* <Grid container my={5} spacing="20px">
                         <Grid item xs={12} sm={6} md={4}>
@@ -650,8 +660,9 @@ function SongDetails() {
 
 
                 {/* Spotify analytics for the song */}
-                <Box mt={20}>
-                    <Box sx={{ height: "35px" }}>
+                {/* <Box mt={20}> */}
+                <Box>
+                    {/* <Box sx={{ height: "35px" }}>
                         <img
                             src={ spotifyLghtThemelogo } alt='album image'
                             style={{
@@ -673,7 +684,7 @@ function SongDetails() {
                             darkTheme={darkTheme}
                             dataset={spotifyDataset}
                         />
-                    </Box>
+                    </Box> */}
 
                     {/* <Grid container my={5} spacing="20px">
                         <Grid item xs={12} sm={6} md={4}>

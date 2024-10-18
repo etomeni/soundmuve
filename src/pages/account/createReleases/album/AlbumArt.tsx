@@ -16,7 +16,7 @@ import { createReleaseStore } from '@/state/createReleaseStore';
 import SideNav from './SideNav';
 import AccountWrapper from '@/components/AccountWrapper';
 import cloudUploadIconImg from "@/assets/images/cloudUploadIcon.png";
-import { apiEndpoint, artWorkAllowedTypes, convertToBase64, validateImageArtWork } from '@/util/resources';
+import { emekaApiEndpoint, artWorkAllowedTypes, convertToBase64, validateImageArtWork } from '@/util/resources';
 import CircularProgress from '@mui/material/CircularProgress';
 import ArtWorkFileInfoComponent from '@/components/ArtWorkFileInfo';
 import colors from '@/constants/colors';
@@ -112,7 +112,7 @@ function CreateAlbumReleaseAlbumArt() {
         try {
             setIsBtnSubmitting(true);
             const response = (await axios.put(
-                `${apiEndpoint}/songs/albums/${ completeAlbumData._id }/page5`,
+                `${emekaApiEndpoint}/songs/albums/${ completeAlbumData._id }/page5`,
                 data2db,  
                 {
                     headers: {

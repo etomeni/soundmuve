@@ -3,7 +3,7 @@ import axios from "axios";
 import { useNavigate } from 'react-router-dom';
 
 import { cartItemStore } from "@/state/cartStore";
-import { apiEndpoint } from "@/util/resources";
+import { emekaApiEndpoint } from "@/util/resources";
 import { useUserStore } from "@/state/userStore";
 import { 
     applyPromoResponseInterface, cartItemInterface 
@@ -56,11 +56,8 @@ export function useCart() {
             // id: cartItems[0].id,
         };
 
-        console.log(data2db);
-        
-
         try {
-            const response = (await axios.post(`${apiEndpoint}/checkout/add-to-cart`,
+            const response = (await axios.post(`${emekaApiEndpoint}/checkout/add-to-cart`,
                 data2db, {
                     headers: {
                         Authorization: `Bearer ${accessToken}`
@@ -77,6 +74,11 @@ export function useCart() {
         } catch (error: any) {
             const err = error.response.data || error;
             console.log(err);
+            setApiResponse({
+                display: true,
+                status: false,
+                message: err.message || "server error"
+            })
         }
     }, []);
 
@@ -89,7 +91,7 @@ export function useCart() {
         };
 
         try {
-            const response = (await axios.post(`${apiEndpoint}/checkout/apply-promo`,
+            const response = (await axios.post(`${emekaApiEndpoint}/checkout/apply-promo`,
                 data2db, {
                     headers: {
                         Authorization: `Bearer ${accessToken}`
@@ -124,7 +126,7 @@ export function useCart() {
         };
 
         try {
-            const response = (await axios.post(`${apiEndpoint}/checkout/checkout`,
+            const response = (await axios.post(`${emekaApiEndpoint}/checkout/checkout`,
                 data2db, {
                     headers: {
                         Authorization: `Bearer ${accessToken}`
@@ -140,6 +142,12 @@ export function useCart() {
         } catch (error: any) {
             const err = error.response.data || error;
             console.log(err);
+
+            setApiResponse({
+                display: true,
+                status: false,
+                message: err.message || "server error"
+            })
         }
     }, []);
     

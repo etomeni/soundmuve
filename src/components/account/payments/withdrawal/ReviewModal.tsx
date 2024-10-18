@@ -12,7 +12,7 @@ import Alert from '@mui/material/Alert';
 import { useUserStore } from '@/state/userStore';
 // import { useSettingStore } from '@/state/settingStore';
 
-import { apiEndpoint, formatedNumber } from '@/util/resources';
+import { emekaApiEndpoint, formatedNumber } from '@/util/resources';
 import { withdrawInterface } from './WithdrawModal';
 import { getCurrencySymbol } from '@/util/currencies';
 import colors from '@/constants/colors';
@@ -91,7 +91,7 @@ const FL_ReviewModalComponent: React.FC<_Props> = ({
         // return;
         
         try {
-            const response = (await axios.post(`${apiEndpoint}/transactionInit/initiate`, data2db, {
+            const response = (await axios.post(`${emekaApiEndpoint}/transactionInit/initiate`, data2db, {
                 headers: {
                     Authorization: `Bearer ${accessToken}`
                 }

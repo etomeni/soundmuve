@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import * as yup from "yup";
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -35,7 +35,7 @@ import { useSettingStore } from '@/state/settingStore';
 import { createReleaseStore } from '@/state/createReleaseStore';
 
 import { languages } from '@/util/languages';
-import { apiEndpoint, hours, minReleaseDate, minutes, primaryGenre, secondaryGenre } from '@/util/resources';
+import { emekaApiEndpoint, hours, minReleaseDate, minutes, primaryGenre, secondaryGenre } from '@/util/resources';
 
 import AccountWrapper from '@/components/AccountWrapper';
 import SearchArtistModalComponent from '@/components/account/SearchArtistModal';
@@ -84,6 +84,10 @@ let dspToSearch: "Apple" | "Spotify";
 
 function CreateSingleRelease() {
     const navigate = useNavigate();
+    const location = useLocation();
+    const queryParams = new URLSearchParams(location.search);
+    const rl_artistName: string = queryParams.get('artistName') || '';
+    
     // const darkTheme = useSettingStore((state) => state.darkTheme);
     const [explicitLyrics, setExplicitLyrics] = useState(""); // No
     const [soldWorldwide, setSoldWorldwide] = useState(""); // Yes
@@ -168,7 +172,6 @@ function CreateSingleRelease() {
             
             setValue("UPC_EANcode", singleRelease1.upc_ean, {shouldDirty: true, shouldTouch: true, shouldValidate: true});
         }
-
     }, [singleRelease1]);
     
 
@@ -320,6 +323,8 @@ function CreateSingleRelease() {
         const data2db = {
             email: userData.email,
             release_type: "Single",
+
+            record_label_artist: rl_artistName,
         
             song_title: formData.songTitle, // missing
             artist_name: formData.artistName,
@@ -354,7 +359,7 @@ function CreateSingleRelease() {
 
         try {
             const response = singleRelease1._id ? (await axios.put(
-                `${apiEndpoint}/Release/checkAndUpdateRelease`,
+                `${emekaApiEndpoint}/Release/checkAndUpdateRelease`,
                 data2db,  
                 {
                     headers: {
@@ -362,7 +367,7 @@ function CreateSingleRelease() {
                     },
                 }
             )).data : (await axios.post(
-                `${apiEndpoint}/Release/create-release`,
+                `${emekaApiEndpoint}/Release/create-release`,
                 data2db,  
                 {
                     headers: {

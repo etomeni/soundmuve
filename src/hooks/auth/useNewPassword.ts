@@ -1,14 +1,13 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 import axios from "axios";
-import { useForm } from 'react-hook-form';
 import * as yup from "yup";
+import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 
-import { useUserStore } from "@/state/userStore";
-import { apiEndpoint } from "@/util/resources";
-import { useNavigate } from "react-router-dom";
 import { useSettingStore } from "@/state/settingStore";
+import { getQueryParams, localApiEndpoint } from "@/util/resources";
 
 
 const formSchema = yup.object({
@@ -31,8 +30,7 @@ const formSchema = yup.object({
 
 export function useNewPasswordAuth() {
     const navigate = useNavigate();
-    const userData = useUserStore((state) => state.userData);
-
+    const _setToastNotification = useSettingStore((state) => state._setToastNotification);
     const [showPassword, setShowPassword] = useState(false);
     const handleClickShowPassword = () => setShowPassword((show) => !show);
          
@@ -41,7 +39,7 @@ export function useNewPasswordAuth() {
         status: true,
         message: ""
     });
-    const _setToastNotification = useSettingStore((state) => state._setToastNotification);
+
 
     const { 
         handleSubmit, register, setError, formState: { errors, isValid, isSubmitting } 
@@ -62,12 +60,21 @@ export function useNewPasswordAuth() {
         }
 
         const data2db = {
-            email: userData.email,
-            password: formData.password
+            email: getQueryParams('email'),
+            password: formData.password,
+            confirmPassword: formData.confirmPassword
         };
 
         try {
-            const response = (await axios.post(`${apiEndpoint}/auth/forgot-password`, data2db )).data;
+            const response = (await axios.post(
+                `${localApiEndpoint}/auth/setNewPassword`, 
+                data2db,
+                {
+                    headers: {
+                        Authorization: `Bearer ${getQueryParams("token")}`,
+                    },
+                }
+            )).data;
             // console.log(response);
             
             setApiResponse({
@@ -83,7 +90,7 @@ export function useNewPasswordAuth() {
 
             navigate("/auth/login", {replace: true});
         } catch (error: any) {
-            const err = error.response.data;
+            const err = error.response.data || error;
             console.log(err);
 
             setApiResponse({

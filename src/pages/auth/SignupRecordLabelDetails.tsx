@@ -79,9 +79,9 @@ function SignupRecordLabelDetails() {
             setCountries(countryRes);
     
             getUserLocation().then((res) => {
-                setUserCountry(res.country);
+                if (res) setUserCountry(res.country);
 
-                setValue("country", res.country);
+                if (res) setValue("country", res.country);
             })
         });
 
@@ -92,6 +92,8 @@ function SignupRecordLabelDetails() {
         setImage(file);
 
         const base64: any = await convertToBase64(file);
+        // console.log(base64);
+        
         setImagePreview(base64);
     
         e.target.value = "";
@@ -136,29 +138,18 @@ function SignupRecordLabelDetails() {
             return;
         }
 
-        // const data2db = {
-        //     email: userData.email,
-        //     teamType: "Record Label",
-        //     ArtistName: formData.recordLabelName,
-        //     recordLabelName: formData.recordLabelName,
-        //     country: formData.country,
-        //     phoneNumber: formData.phoneNumber,
-        //     logo: image,
-        // };
-        // console.log(data2db);
-
         const data2db = new FormData();
         data2db.append('email', userData.email);
-        data2db.append('teamType', "Record Label");
-        data2db.append('ArtistName', formData.recordLabelName);
-        data2db.append('recordLabelName', formData.recordLabelName);
+        data2db.append('userType', "record label");
+        // data2db.append('artistName', formData.recordLabelName);
         data2db.append('country', formData.country);
         data2db.append('phoneNumber', formData.phoneNumber);
-        data2db.append('logo', image);
+        data2db.append('recordLabelName', formData.recordLabelName);
+        data2db.append('recordLabelLogo', image);
 
         try {
             const response = (await axios.patch(
-                `${apiEndpoint}/auth/updateTeam-details`,
+                `${apiEndpoint}/auth/updateUser-details`,
                 data2db,  
                 {
                     headers: {
@@ -168,7 +159,7 @@ function SignupRecordLabelDetails() {
             )).data;
             // console.log(response);
 
-            _signUpUser(response.user);
+            _signUpUser(response.result);
             
             setApiResponse({
                 display: true,
@@ -183,13 +174,13 @@ function SignupRecordLabelDetails() {
 
             navigate("/auth/login", {replace: true});
         } catch (error: any) {
-            const err = error.response.data;
-            console.log(err);
+            const err = error.response.data || error;
+            const fixedErrorMsg = "Oooops, failed to update details. please try again.";
 
             setApiResponse({
                 display: true,
                 status: false,
-                message: err.message || "Oooops, failed to update details. please try again."
+                message: err.errors && err.errors.length ? err.errors[0].msg : err.message || fixedErrorMsg
             });
         }
 

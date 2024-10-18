@@ -14,7 +14,7 @@ import Button from '@mui/material/Button';
 import colors from '@/constants/colors';
 import { paymentTextFieldStyle } from '@/util/mui';
 import CircularProgress from '@mui/material/CircularProgress';
-import { apiEndpoint } from '@/util/resources';
+import { emekaApiEndpoint } from '@/util/resources';
 import { useUserStore } from '@/state/userStore';
 
 
@@ -57,7 +57,7 @@ const KycPhoneNumber: React.FC<_Props> = ({
         };
            
         try {
-            const response = (await axios.post(`${apiEndpoint}/kyc/kyc/submit-phone`, data2db, {
+            const response = (await axios.post(`${emekaApiEndpoint}/kyc/kyc/submit-phone`, data2db, {
                 headers: {
                     Authorization: `Bearer ${accessToken}`
                 }

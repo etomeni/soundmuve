@@ -12,7 +12,7 @@ import albumCard4 from "@/assets/images/album/albumCard4.jpg";
 import albumCard5 from "@/assets/images/album/albumCard5.jpg";
 import albumCard6 from "@/assets/images/album/albumCard6.jpg";
 
-import { useSettingStore } from '@/state/settingStore';
+// import { useSettingStore } from '@/state/settingStore';
 import AccountWrapper from '@/components/AccountWrapper';
 import PromotionalAdsComponent from '@/components/PromotionalAds';
 import RecordLabelSearchComponent from '@/components/account/recordLabel/RecordLabelSearch';
@@ -26,7 +26,6 @@ import { useRecordLabelFn } from '@/hooks/recordLabel/useRecordLabelFn';
 
 function DashboardRecordLabel() {
     const navigate = useNavigate();
-    const darkTheme = useSettingStore((state) => state.darkTheme);
     const userData = useUserStore((state) => state.userData);
 
     const {
@@ -63,7 +62,7 @@ function DashboardRecordLabel() {
                         pb: 5,
                     }}
                 >
-                    <RecordLabelSearchComponent darkTheme={darkTheme} artists={recordLabelArtist || []} />
+                    <RecordLabelSearchComponent artists={recordLabelArtist || []} />
 
                     <Stack alignItems="center" justifyContent="center" 
                         sx={{

@@ -49,7 +49,7 @@ const SnackbarToast: React.FC<SnackbarToastInterface> = ({
         >
             <Alert 
                 severity={openMsgResponse.status} 
-                sx={{ width: '100%' }}
+                sx={{ width: '100%', zIndex: 999999999 }}
                 onClose={() => closeSnackbar()}
             >
                 { openMsgResponse.message }

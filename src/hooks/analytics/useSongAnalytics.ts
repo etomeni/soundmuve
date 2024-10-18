@@ -1,13 +1,13 @@
 import { useCallback, useState } from "react";
 import axios from "axios";
 import { useUserStore } from "@/state/userStore";
-import { apiEndpoint } from "@/util/resources";
+import { emekaApiEndpoint } from "@/util/resources";
 import { getLocalStorage, setLocalStorage } from "@/util/storage";
 import { 
     appleSpotifyRecordInterface, graphApiRespondInterface, 
     spotifyAndAppleOverviewInterface, // totalStreamsAndRevenueRecordInterface 
 } from "@/constants/analyticsTypesInterface";
-import { getDateRange, getFormattedDateRange } from "@/util/dateTime";
+import { getMonthDateRange } from "@/util/dateTime";
 // import { useReleaseStore } from "@/state/releaseStore";
 
 
@@ -104,7 +104,7 @@ export function useSongAnalytics() {
     const getAppleSpotifyRecord = useCallback(async (songId: string) => {
         // _getAppleSpotifyRecord(songId)
         try {
-            const response = (await axios.get(`${apiEndpoint}/analyticsManager/album-analytics/${songId}`, {
+            const response = (await axios.get(`${emekaApiEndpoint}/analyticsManager/album-analytics/${songId}`, {
                 headers: {
                     Authorization: `Bearer ${accessToken}`
                 }
@@ -127,7 +127,7 @@ export function useSongAnalytics() {
 
     // const getTotalStreamsAndRevenueRecord = useCallback(async (reqType: string = "album") => {
     //     try {
-    //         const response = (await axios.get(`${apiEndpoint}/analyticsManager/analytics/revenue-monthly`, {
+    //         const response = (await axios.get(`${emekaApiEndpoint}/analyticsManager/analytics/revenue-monthly`, {
     //             headers: {
     //                 Authorization: `Bearer ${accessToken}`
     //             },
@@ -161,7 +161,7 @@ export function useSongAnalytics() {
             const d = new Date();
             const year = d.getFullYear();
 
-            const response: graphApiRespondInterface[] = (await axios.get(`${apiEndpoint}/analyticsManager/analytics/revenue-monthly`, {
+            const response: graphApiRespondInterface[] = (await axios.get(`${emekaApiEndpoint}/analyticsManager/analytics/revenue-monthly`, {
                 headers: {
                     Authorization: `Bearer ${accessToken}`
                 },
@@ -211,7 +211,7 @@ export function useSongAnalytics() {
 
     const handleGetSportifiyAppleOverview = async (songId: string, songType: string) => {
         try {
-            const response = (await axios.get(`${apiEndpoint}/analyticsManager/analytics/revenue-yearly`, {
+            const response = (await axios.get(`${emekaApiEndpoint}/analyticsManager/analytics/revenue-yearly`, {
                 headers: {
                     Authorization: `Bearer ${accessToken}`
                 },
@@ -238,10 +238,13 @@ export function useSongAnalytics() {
 
     const handleDataRangeData = useCallback((newValue: string) => {
         // console.log(newValue);
-        const dateRange = getDateRange(Number(newValue));
+        // const dateRange = getDateRange(Number(newValue));
         // setTempData({ ...tempData, dateRange });
-        console.log(dateRange);
-        const betweenDates = getFormattedDateRange(Number(newValue));
+        // console.log(dateRange);
+        // const betweenDates = getFormattedDateRange(Number(newValue));
+        // console.log(betweenDates);
+
+        const betweenDates = getMonthDateRange(Number(newValue));
         console.log(betweenDates);
         
         // getBalanceBetweenDates(betweenDates.startDate, betweenDates.endDate);

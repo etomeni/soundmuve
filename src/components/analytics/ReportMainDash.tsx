@@ -1,18 +1,20 @@
-import colors from '@/constants/colors'
-import { currencyDisplay, formatedNumber } from '@/util/resources'
-import Box from '@mui/material/Box'
-import FormControl from '@mui/material/FormControl'
-import MenuItem from '@mui/material/MenuItem'
-import Select from '@mui/material/Select'
-import Stack from '@mui/material/Stack'
-import Typography from '@mui/material/Typography'
 import React from 'react'
+import Box from '@mui/material/Box'
+import Stack from '@mui/material/Stack'
+import Select from '@mui/material/Select'
+import MenuItem from '@mui/material/MenuItem'
+import Typography from '@mui/material/Typography'
+import FormControl from '@mui/material/FormControl'
+import colors from '@/constants/colors'
+import { getSalesPeriod, getCurrentMonthValue } from '@/util/dateTime'
+import { allMonths } from '@/util/months'
+import { currencyDisplay, formatedNumber } from '@/util/resources'
 
 
 interface _Props {
     // children: React.ReactNode,
 
-    dateRange: string,
+    dateRange?: string,
     setDateRange: (newValue: string) => void,
 
     totalEarnedBalance: string | number, // $13,715.98
@@ -28,8 +30,10 @@ interface _Props {
 
 const ReportMainDashComponent:React.FC<_Props> = ({
     totalEarnedBalance, albums, singles, streams, plays, // sold,
-    dateRange, setDateRange
+    setDateRange, // dateRange
 }) => {
+    const [salesPeriod, setSalesPeriod] = React.useState(getSalesPeriod);
+
 
     return (
         <Box
@@ -47,9 +51,7 @@ const ReportMainDashComponent:React.FC<_Props> = ({
                         labelId="sortByDays"
                         id="sortByDays-select"
                         label=""
-                        defaultValue="30"
-                        placeholder='Last 30 Days'
-
+                        defaultValue={getCurrentMonthValue}
                         sx={{
                             color: "#fff",
                             borderRadius: "8px",
@@ -83,18 +85,19 @@ const ReportMainDashComponent:React.FC<_Props> = ({
 
                         onChange={(e) => {
                             // console.log(e.target.value);
-                            setDateRange(e.target.value);
+                            setDateRange(`${e.target.value}`);
+
+                            const sPeriod = getSalesPeriod(Number(e.target.value));
+                            setSalesPeriod(sPeriod);
                         }}
                     >
-                        <MenuItem value="7">
-                            Last 7 Days
-                        </MenuItem>
-                        <MenuItem value="14">
-                            Last 14 Days
-                        </MenuItem>
-                        <MenuItem value="30">
-                            Last 30 Days
-                        </MenuItem>
+                        {
+                            allMonths.map((month, index) => (
+                                <MenuItem key={index} value={index}>
+                                    { month }
+                                </MenuItem>
+                            ))
+                        }
                     </Select>
                 </FormControl>
 
@@ -106,7 +109,7 @@ const ReportMainDashComponent:React.FC<_Props> = ({
                         letterSpacing: {xs: "-0.67px", md: "-1.34px"},
                         // color: colors.dark,
                     }}
-                >{ dateRange }</Typography>
+                >{ salesPeriod }</Typography>
             </Stack>
 
             {/* Mobile View Only */}
@@ -307,7 +310,7 @@ const ReportMainDashComponent:React.FC<_Props> = ({
                             color: "#666666",
                             mt: 1
                         }}
-                    >{ dateRange }</Typography>
+                    >{ salesPeriod }</Typography>
                 </Box>
             </Stack>
         </Box>

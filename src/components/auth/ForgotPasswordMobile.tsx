@@ -8,7 +8,7 @@ import Alert from '@mui/material/Alert';
 import CircularProgress from '@mui/material/CircularProgress';
 
 import resetPasswordImg from "@/assets/branded/images/auth/newPassword.png";
-import SnackbarToast from '@/components/ToastNotification';
+// import SnackbarToast from '@/components/ToastNotification';
 import colors from '@/constants/colors';
 import { authMuiTextFieldStyle, contentWidth } from '@/util/mui';
 import HeaderComponent from '@/components/Header';
@@ -19,7 +19,7 @@ import { useForgotPasswordAuth } from '@/hooks/auth/useForgotPassword';
 function ForgotPasswordMobileComponent() {
 
     const { 
-        apiResponse, toastNotification, setToastNotification,
+        apiResponse, // toastNotification, setToastNotification,
         isSubmitting, isValid, onSubmit, register, errors, // formSchema,
     } = useForgotPasswordAuth();
 
@@ -160,14 +160,6 @@ function ForgotPasswordMobileComponent() {
                         </form>
                     </Box>
                 </Container>
-
-                <SnackbarToast 
-                    status={toastNotification.status} 
-                    display={toastNotification.display} 
-                    message={toastNotification.message} 
-                    closeSnackbar={() => setToastNotification({ ...toastNotification, display: false})}
-                />
-
             </Box>
 
             <FooterComponent />

@@ -20,7 +20,7 @@ import RecordLabelWrapper from '@/components/account/recordLabel/RecordLabelWrap
 import CircularProgressWithLabel from '@/components/CircularProgressWithLabel';
 
 import { getCountries, getUserLocation } from '@/util/location';
-import { apiEndpoint } from '@/util/resources';
+import { emekaApiEndpoint } from '@/util/resources';
 import { useUserStore } from '@/state/userStore';
 import { restCountries } from '@/util/countries';
 import { releaseSelectStyle2, releaseTextFieldStyle } from '@/util/mui';
@@ -80,11 +80,10 @@ function AddArtistRecordLabel() {
             setCountries(countryRes);
     
             getUserLocation().then((res) => {
-                setValue("country", res.country);
+                if (res) setValue("country", res.country);
 
                 setTimeout(() => {
-                    
-                    setUserCountry(res.country);
+                    if (res) setUserCountry(res.country);
                 }, 500);
             })
         });
@@ -160,7 +159,7 @@ function AddArtistRecordLabel() {
         data_2db.append('artistAvatar', image);
 
         try {
-            const response = (await axios.post(`${apiEndpoint}/recordLabel/artists`, data_2db,
+            const response = (await axios.post(`${emekaApiEndpoint}/recordLabel/artists`, data_2db,
                 {
                     headers: {
                         'Content-Type': 'multipart/form-data',

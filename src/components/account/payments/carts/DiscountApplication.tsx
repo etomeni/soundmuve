@@ -1,25 +1,22 @@
 import React, { useState } from 'react';
 
-import { useForm } from 'react-hook-form';
-import * as yup from "yup";
-import { yupResolver } from '@hookform/resolvers/yup';
 import axios from 'axios';
+import * as yup from "yup";
+import { useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
 
 import Box from '@mui/material/Box';
-// import IconButton from '@mui/material/IconButton';
-// import Modal from '@mui/material/Modal';
-// import CloseIcon from '@mui/icons-material/Close';
-import Typography from '@mui/material/Typography';
+import Stack from '@mui/material/Stack';
+import Alert from '@mui/material/Alert';
 import Button from '@mui/material/Button';
-import CircularProgress from '@mui/material/CircularProgress';
 import TextField from '@mui/material/TextField';
-
-// import { useSettingStore } from '@/state/settingStore';
+import Typography from '@mui/material/Typography';
+import CircularProgress from '@mui/material/CircularProgress';
 
 import { paymentTextFieldStyle, submitBtnStyle } from '@/util/mui';
 
 import { useUserStore } from '@/state/userStore';
-import { apiEndpoint } from '@/util/resources';
+import { emekaApiEndpoint } from '@/util/resources';
 import colors from '@/constants/colors';
 import ModalWrapper from '@/components/account/ModalWrapper';
 import SuccessModalComponent from './SuccessModal';
@@ -37,28 +34,36 @@ interface _Props {
     // confirmBtn: (data: any) => void;
 }
 
-
 const DiscountApplicationModalComponent: React.FC<_Props> = ({
     openModal, closeModal, // confirmBtn
 }) => {
-    // const [useEmail_n_PhoneNo, setUseEmail_n_PhoneNo] = useState(false);
-    // const outerTheme = useTheme();
-    // const darkTheme = useSettingStore((state) => state.darkTheme);
+    const userData = useUserStore((state) => state.userData);
     const accessToken = useUserStore((state) => state.accessToken);
     const [successModalState, setSuccessModalState] = useState(false)
+
+    const [apiResponse, setApiResponse] = useState({
+        display: false,
+        status: true,
+        message: ""
+    });
 
     const {
         handleSubmit, register, formState: { errors, isSubmitting, isValid } 
     } = useForm({ resolver: yupResolver(formSchema), mode: 'onBlur', reValidateMode: 'onChange' });
 
 
-
     const onSubmit = async (formData: typeof formSchema.__outputType) => {
         // console.log(formData);
+        const data2db = {
+            youtubeLink: formData.youtubeLink,
+            facebookInstaLink: formData.instagramFacebookLink,
+            xLink: formData.xLink,
+            email: userData.email
+        }
 
         try {
-            const response = (await axios.post(`${apiEndpoint}/xxxx/xxxxxx`,
-                formData, {
+            const response = (await axios.post(`${emekaApiEndpoint}/musicDist/input-profile`,
+                data2db, {
                     headers: {
                         Authorization: `Bearer ${accessToken}`
                     }
@@ -70,10 +75,15 @@ const DiscountApplicationModalComponent: React.FC<_Props> = ({
             setSuccessModalState(true);
 
             // confirmBtn(response)
-            
         } catch (error: any) {
             const errorResponse = error.response.data || error;
             console.error(errorResponse);
+
+            setApiResponse({
+                display: true,
+                status: false,
+                message: errorResponse.message || "server error occurred, please try later."
+            })
         }
 
     }
@@ -190,7 +200,14 @@ const DiscountApplicationModalComponent: React.FC<_Props> = ({
                             { errors.xLink && <Box sx={{fontSize: 13, color: "red", textAlign: "left"}}>{ errors.xLink?.message }</Box> }
                         </Box>
 
-
+                        {
+                            apiResponse.display && (
+                                <Stack sx={{ width: '100%', my: 2 }}>
+                                    <Alert severity={apiResponse.status ? "success" : "error"}>{apiResponse.message}</Alert>
+                                </Stack>
+                            )
+                        }
+                        
                         <Box 
                             sx={{ 
                                 my: 5,
@@ -217,13 +234,15 @@ const DiscountApplicationModalComponent: React.FC<_Props> = ({
                                 />
                             </Button>
                         </Box>
-
                     </form>
                 </Box>
             </ModalWrapper>
 
             <SuccessModalComponent 
-                closeModal={() => setSuccessModalState(false)}
+                closeModal={() => {
+                    closeModal();
+                    setSuccessModalState(false);
+                }}
                 openModal={successModalState}
             />
         </>

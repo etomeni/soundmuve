@@ -14,6 +14,19 @@ export function getDateRange(days: number) {
     return `${startDateStr} - ${todayDateStr}`;
 }
 
+
+export function getShortDateFormate(dateString: string) {
+    // Create a Date object from the input string
+    const date = new Date(dateString);
+
+    // Get the month and day from the Date object
+    const month = date.toLocaleString('en-US', { month: 'short' });
+    const day = date.getDate().toString().padStart(2, '0');
+
+    // Combine the month and day into the desired format
+    return `${month} ${day}`;
+}
+
 export function getFormattedDateRange(days: number) {
     const today = new Date();
     const endDate = new Date(today);
@@ -172,3 +185,42 @@ export function timeCounter(targetDate: any) {
     // return () => clearInterval(intervalId);
 }
   
+
+
+export function getMonthDateRange(monthNumber: number, year = new Date().getFullYear()) {
+    // Ensure the monthNumber is valid (between 0 and 11)
+    if (monthNumber < 0 || monthNumber > 11) {
+        // If invalid, use the current month
+        const currentDate = new Date();
+        const currentMonth = currentDate.getMonth(); // Get current month (0-11)
+        year = currentDate.getFullYear(); // Get current year
+        monthNumber = currentMonth; // Set monthNumber to the current month
+    }
+  
+    // Get the start date for the given month
+    const startDate = new Date(year, monthNumber, 1); // monthNumber is 0-indexed
+  
+    // Get the end date by creating a new date for the start of the next month, then subtracting one day
+    const endDate = new Date(year, monthNumber + 1, 1); // next month
+    endDate.setDate(endDate.getDate() - 1); // subtract 1 day to get the last day of the current month
+  
+    // Format the dates as YYYY-MM-DD strings
+    const formattedStartDate = startDate.toISOString().split('T')[0];
+    const formattedEndDate = endDate.toISOString().split('T')[0];
+  
+    return { startDate: formattedStartDate, endDate: formattedEndDate };
+}
+
+export const getCurrentMonthValue = () => {
+    const today = new Date();
+    const monthNumber = today.getMonth(); 
+    return monthNumber;
+}
+
+
+export function getSalesPeriod(month = getCurrentMonthValue()) {
+    // const month = getCurrentMonthValue();
+    const dateRange = getMonthDateRange(month);
+
+    return `${getShortDateFormate(dateRange.startDate)} - ${getShortDateFormate(dateRange.endDate)}`;
+}

@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import axios from "axios";
 import { useUserStore } from "@/state/userStore";
-import { apiEndpoint } from "@/util/resources";
+import { emekaApiEndpoint } from "@/util/resources";
 import { getLocalStorage, setLocalStorage } from "@/util/storage";
 import { releaseInterface } from '@/constants/typesInterface';
 
@@ -39,7 +39,7 @@ export function useGetReleases() {
         if (localResponds && localResponds.length) setReleases(localResponds);
 
         try {
-            const response = (await axios.get(`${apiEndpoint}/Release/getReleaseByEmail/${ userData.email }`, {
+            const response = (await axios.get(`${emekaApiEndpoint}/Release/getReleaseByEmail/${ userData.email }`, {
                 headers: {
                     Authorization: `Bearer ${accessToken}`
                 }
@@ -88,8 +88,8 @@ export function useGetReleases() {
         if (localResponds && localResponds.length) setReleases(localResponds);
 
         try {
-            // const response = (await axios.get(`${apiEndpoint}/songs/GetMyAlbumsByEmail?email=latham01@yopmail.com`, {
-            const response = (await axios.get(`${apiEndpoint}/songs/GetMyAlbumsByEmail?email=${ userData.email }`, {
+            // const response = (await axios.get(`${emekaApiEndpoint}/songs/GetMyAlbumsByEmail?email=latham01@yopmail.com`, {
+            const response = (await axios.get(`${emekaApiEndpoint}/songs/GetMyAlbumsByEmail?email=${ userData.email }`, {
                 headers: {
                     Authorization: `Bearer ${accessToken}`
                 }

@@ -11,7 +11,7 @@ import PayPalLogo from "@/assets/images/PayPalLogo.png";
 import colors from '@/constants/colors';
 import PaymentModalWrapper from '../PaymentWrapper';
 import { getLocalStorage, setLocalStorage } from '@/util/storage';
-import { apiEndpoint } from '@/util/resources';
+import { emekaApiEndpoint } from '@/util/resources';
 import { useUserStore } from '@/state/userStore';
 // import PayoneerLogo from "@/assets/images/PayoneerLogo.png";
 
@@ -52,7 +52,7 @@ const PayoutMethodModalComponent: React.FC<_Props> = ({
 
     const handleCheckKycStatus = async () => {
         try {
-            const response = (await axios.get(`${apiEndpoint}/auth/check-kyc/${userData.email}`, 
+            const response = (await axios.get(`${emekaApiEndpoint}/auth/check-kyc/${userData.email}`, 
                 {
                     headers: {
                         Authorization: `Bearer ${accessToken}`

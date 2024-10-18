@@ -10,6 +10,8 @@ import { useUserStore } from "@/state/userStore";
 import { apiEndpoint } from "@/util/resources";
 import { getDecryptedLocalStorage, setEncryptedLocalStorage } from "@/util/storage";
 import { useSettingStore } from "@/state/settingStore";
+import { getUserLocation } from "@/util/location";
+import { locationInterface } from "@/constants/typesInterface";
 
 
 const formSchema = yup.object({
@@ -41,6 +43,7 @@ export function useLoginAuth() {
     
     const [showPassword, setShowPassword] = useState(false);
     const [rememberMe, setRememberMe] = useState(false);
+    const [userLocation, setUserLocation] = useState<locationInterface>();
     const handleClickShowPassword = () => setShowPassword((show) => !show);
 
     useEffect(() => {
@@ -49,6 +52,11 @@ export function useLoginAuth() {
             setValue("email", result.email || '', {shouldDirty: true, shouldTouch: true, shouldValidate: true});
             setValue("password", result.password || '', {shouldDirty: true, shouldTouch: true, shouldValidate: true});
         }
+
+        getUserLocation().then((res) => {
+            // console.log(res);
+            if (res) setUserLocation(res);
+        });
     }, []);
     
     const { 
@@ -64,9 +72,14 @@ export function useLoginAuth() {
         });
 
         try {
-            const response = (await axios.post(`${apiEndpoint}/auth/sign-in`, formData )).data;
+            const loginData = {
+                location: userLocation,
+                email: formData.email,
+                password: formData.password
+            };
+            const response = (await axios.post(`${apiEndpoint}/auth/login`, loginData )).data;
 
-            if (response && (response.user || response.token)) {
+            if (response.status) {
                 setApiResponse({
                     display: true,
                     status: true,
@@ -78,20 +91,17 @@ export function useLoginAuth() {
                     message: response.message
                 });
 
-                if (rememberMe) {
-                    // uad - user auth data;
-                    setEncryptedLocalStorage('uad', formData);
-                }
+                // uad - user auth data;
+                if (rememberMe) setEncryptedLocalStorage('uad', formData);
 
-
-                if (!response.user.teamType) {
-                    _signUpUser(response.user);
+                if (!response.result.userType) {
+                    _signUpUser(response.result);
                     
                     navigate("/auth/signup-type");
                     return;
                 }
 
-                _loginUser(response.user, response.token, response.refreshToken);
+                _loginUser(response.result, response.token);
 
                 navigate("/account/", {replace: true});
                 return;
@@ -103,22 +113,21 @@ export function useLoginAuth() {
                 message: response.message || "Oooops, login failed. please try again."
             });
         } catch (error: any) {
-            const err = error.response ? error.response.data : error || '';
-            console.log(err);
+            const err = error.response.data || error;
+            const fixedErrorMsg = "Oooops, login failed. please try again.";
 
             setApiResponse({
                 display: true,
                 status: false,
-                message: err.message || "Oooops, login failed. please try again."
+                message: err.errors && err.errors.length ? err.errors[0].msg : err.message || fixedErrorMsg
             });
 
             _setToastNotification({
                 display: true,
                 status: "error",
-                message: err.message || "Oooops, login failed. please try again."
+                message: err.errors && err.errors.length ? err.errors[0].msg : err.message || fixedErrorMsg
             });
         }
-        
     }
 
 

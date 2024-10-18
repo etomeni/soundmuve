@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { apiEndpoint } from '@/util/resources';
+import { emekaApiEndpoint } from '@/util/resources';
 import Box from '@mui/material/Box';
 // import IconButton from '@mui/material/IconButton';
 // import Modal from '@mui/material/Modal';
@@ -50,7 +50,7 @@ const FL_CurrencyModalComponent: React.FC<_Props> = ({
 
     const getSupportedCurrencies = async () => {
         try {
-            const response = (await axios.get(`${apiEndpoint}/currency/currencies`, {
+            const response = (await axios.get(`${emekaApiEndpoint}/currency/currencies`, {
                 // headers: {
                 //     Authorization: `Bearer ${accessToken}`
                 // }

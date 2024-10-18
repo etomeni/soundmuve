@@ -19,7 +19,7 @@ import { useSettingStore } from '@/state/settingStore';
 import { createReleaseStore } from '@/state/createReleaseStore';
 
 import AccountWrapper from '@/components/AccountWrapper';
-import { apiEndpoint, musicStores, socialPlatformStores } from '@/util/resources';
+import { emekaApiEndpoint, musicStores, socialPlatformStores } from '@/util/resources';
 import axios from 'axios';
 import MultipleSelectCheckmarks from '@/components/MultipleSelectCheckmarks';
 import colors from '@/constants/colors';
@@ -126,8 +126,8 @@ function CreateAlbumReleaseSelectStores() {
 
         try {
             const response = (await axios.put(
-                // `${apiEndpoint}/Album/update-album/${ completeAlbumData._id }/page3?Authorization=Bearer ${accessToken}`,
-                `${apiEndpoint}/songs/albums/${ completeAlbumData._id }/page3`,
+                // `${emekaApiEndpoint}/Album/update-album/${ completeAlbumData._id }/page3?Authorization=Bearer ${accessToken}`,
+                `${emekaApiEndpoint}/songs/albums/${ completeAlbumData._id }/page3`,
                 data2db,  
                 {
                     headers: {
