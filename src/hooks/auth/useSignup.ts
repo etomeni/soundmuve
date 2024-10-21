@@ -8,8 +8,8 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { useUserStore } from "@/state/userStore";
 import { apiEndpoint } from "@/util/resources";
 import { useNavigate } from "react-router-dom";
-import { getUserLocation } from "@/util/location";
-import { locationInterface } from "@/constants/typesInterface";
+import { defaultUserLocation, getUserLocation } from "@/util/location";
+import { locationInterface } from "@/typeInterfaces/users.interface";
 
 
 const formSchema = yup.object({
@@ -49,14 +49,13 @@ export function useSignupAuth() {
     });
     
     const _signUpUser = useUserStore((state) => state._signUpUser);
-    const [userLocation, setUserLocation] = useState<locationInterface>();
+    const [userLocation, setUserLocation] = useState<locationInterface>(defaultUserLocation);
 
   
     useEffect(() => {
         getUserLocation().then((res) => {
             if (res) setUserLocation(res);
         });
-        
     }, []);
     
     const [showPassword, setShowPassword] = useState(false);

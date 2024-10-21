@@ -23,7 +23,7 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 
 import { useUserStore } from '@/state/userStore';
 import { useSettingStore } from '@/state/settingStore';
-import { createReleaseStore } from '@/state/createReleaseStore';
+import { useCreateReleaseStore } from '@/state/createReleaseStore';
 // import { emekaApiEndpoint } from '@/util/resources';
 
 import AccountWrapper from '@/components/AccountWrapper';
@@ -52,10 +52,10 @@ function CreateAlbumReleaseAdvanceFeatures() {
     const userData = useUserStore((state) => state.userData);
     const accessToken = useUserStore((state) => state.accessToken);
 
-    const albumReleaseAdvanceFeatures = createReleaseStore((state) => state.albumReleaseAdvanceFeatures);
-    const _setAlbumReleaseAdvanceFeatures = createReleaseStore((state) => state._setAlbumReleaseAdvanceFeatures);
-    const completeAlbumData = createReleaseStore((state) => state.completeAlbumData);
-    const _setCompleteAlbumData = createReleaseStore((state) => state._setCompleteAlbumData);
+    const albumReleaseAdvanceFeatures = useCreateReleaseStore((state) => state.albumReleaseAdvanceFeatures);
+    const _setAlbumReleaseAdvanceFeatures = useCreateReleaseStore((state) => state._setAlbumReleaseAdvanceFeatures);
+    const completeAlbumData = useCreateReleaseStore((state) => state.completeAlbumData);
+    const _setCompleteAlbumData = useCreateReleaseStore((state) => state._setCompleteAlbumData);
     const _setToastNotification = useSettingStore((state) => state._setToastNotification);
     const [selectSoldCountries, setSelectSoldCountries] = useState<string[]>(contriesss);
 

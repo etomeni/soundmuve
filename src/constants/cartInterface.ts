@@ -1,12 +1,13 @@
 export interface cartItemInterface {
-    id: string,
-    email: string,
+    _id?: string,
+    release_id: string,
+    user_email: string,
+    user_id: string,
     artistName: string,
-    releaseType: 'Single' | 'Album',
-    songTitle: string,
-    artWorkImg: any,
+    coverArt: string,
     price: number,
-    // totalPrice: string
+    releaseType: 'Single' | 'Album',
+    title: string
 }
 
 

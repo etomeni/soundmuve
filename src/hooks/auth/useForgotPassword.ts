@@ -6,7 +6,7 @@ import * as yup from "yup";
 import { yupResolver } from '@hookform/resolvers/yup';
 
 // import { useUserStore } from "@/state/userStore";
-import { localApiEndpoint } from "@/util/resources";
+import { apiEndpoint } from "@/util/resources";
 import { createSearchParams, useNavigate } from "react-router-dom";
 import { useSettingStore } from "@/state/settingStore";
 
@@ -41,7 +41,7 @@ export function useForgotPasswordAuth() {
         });
 
         try {
-            const response = (await axios.post(`${localApiEndpoint}/auth/sendPasswordResetEmail`, formData )).data;
+            const response = (await axios.post(`${apiEndpoint}/auth/sendPasswordResetEmail`, formData )).data;
             // console.log(response);
             
             setApiResponse({

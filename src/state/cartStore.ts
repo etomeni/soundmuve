@@ -28,7 +28,7 @@ type _typeInterface_ = {
     _setAdd2cartResponse: (data: add2cartResponseInterface) => void;
 };
   
-export const cartItemStore = create<_typeInterface_>((set) => ({
+export const useCartItemStore = create<_typeInterface_>((set) => ({
     cart: [
         // {
         //     artistName: "john",
@@ -45,7 +45,7 @@ export const cartItemStore = create<_typeInterface_>((set) => ({
     _addToCart: (newCartItem) => {
         set((state) => {
             const remove_result = state.cart.filter(
-                (item) => item.id !== newCartItem.id
+                (item) => item.release_id !== newCartItem.release_id
             );
             const result = [...remove_result, newCartItem];
 
@@ -60,7 +60,7 @@ export const cartItemStore = create<_typeInterface_>((set) => ({
 
     _removeFromCart: (cartItem) => {
         set((state) => {
-            const result = state.cart.filter((item) => item.id !== cartItem.id);
+            const result = state.cart.filter((item) => item.release_id !== cartItem.release_id);
             // setLocalStorage("cart", result);
 
             return {
@@ -72,7 +72,7 @@ export const cartItemStore = create<_typeInterface_>((set) => ({
     _editCart: (cartItem) => {
         set((state) => {
             const result = state.cart.map((obj) => {
-                if (obj.id === cartItem.id) {
+                if (obj.release_id === cartItem.release_id) {
                 return cartItem;
                 }
                 // If the ID doesn't match, return the original object

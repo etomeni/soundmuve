@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from 'react-router-dom';
 
-import { cartItemStore } from "@/state/cartStore";
+import { useCartItemStore } from "@/state/cartStore";
 import { emekaApiEndpoint } from "@/util/resources";
 import { useUserStore } from "@/state/userStore";
 import { 
@@ -12,10 +12,10 @@ import {
 
 export function useCart() {
     const navigate = useNavigate();
-    const cartItems = cartItemStore((state) => state.cart);
-    const _removeFromCart = cartItemStore((state) => state._removeFromCart);
-    const _setAdd2cartResponse = cartItemStore((state) => state._setAdd2cartResponse);
-    const add2cartResponse = cartItemStore((state) => state.add2cartResponse);
+    const cartItems = useCartItemStore((state) => state.cart);
+    const _removeFromCart = useCartItemStore((state) => state._removeFromCart);
+    const _setAdd2cartResponse = useCartItemStore((state) => state._setAdd2cartResponse);
+    const add2cartResponse = useCartItemStore((state) => state.add2cartResponse);
     const [totalAmount, setTotalAmount] = useState<number>(0);
     const userData = useUserStore((state) => state.userData); 
     const accessToken = useUserStore((state) => state.accessToken);
@@ -44,7 +44,7 @@ export function useCart() {
 
     const handleAddToCart = useCallback(async() => {
         const newItems = cartItems.map(item => ({
-            _id: item.id,
+            _id: item.release_id,
             type: item.releaseType.toLowerCase(),
         }));
 

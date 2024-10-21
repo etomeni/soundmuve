@@ -37,7 +37,7 @@ import SearchArtistModalComponent from '@/components/account/SearchArtistModal';
 
 import { useUserStore } from '@/state/userStore';
 import { useSettingStore } from '@/state/settingStore';
-import { createReleaseStore } from '@/state/createReleaseStore';
+import { useCreateReleaseStore } from '@/state/createReleaseStore';
 
 import { releaseSelectStyle, releaseSelectStyle2, releaseTextFieldStyle } from '@/util/mui';
 import { languages } from '@/util/languages';
@@ -82,9 +82,9 @@ function AlbumDetails() {
     // const [explicitLyrics, setExplicitLyrics] = useState(""); // No
     const userData = useUserStore((state) => state.userData);
     const accessToken = useUserStore((state) => state.accessToken);
-    const albumReleaseDetails = createReleaseStore((state) => state.albumReleaseDetails);
-    const _setAlbumReleaseDetails = createReleaseStore((state) => state._setAlbumReleaseDetails);
-    const _setCompleteAlbumData = createReleaseStore((state) => state._setCompleteAlbumData);
+    const albumReleaseDetails = useCreateReleaseStore((state) => state.albumReleaseDetails);
+    const _setAlbumReleaseDetails = useCreateReleaseStore((state) => state._setAlbumReleaseDetails);
+    const _setCompleteAlbumData = useCreateReleaseStore((state) => state._setCompleteAlbumData);
     const _setToastNotification = useSettingStore((state) => state._setToastNotification);
 
     const [apiResponse, setApiResponse] = useState({

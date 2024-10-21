@@ -11,7 +11,7 @@ import Button from '@mui/material/Button';
 
 import { useUserStore } from '@/state/userStore';
 import { useSettingStore } from '@/state/settingStore';
-import { createReleaseStore } from '@/state/createReleaseStore';
+import { useCreateReleaseStore } from '@/state/createReleaseStore';
 
 import SideNav from './SideNav';
 import AccountWrapper from '@/components/AccountWrapper';
@@ -27,10 +27,10 @@ function CreateAlbumReleaseAlbumArt() {
     const darkTheme = useSettingStore((state) => state.darkTheme);
     // const userData = useUserStore((state) => state.userData);
     const accessToken = useUserStore((state) => state.accessToken);
-    const albumReleaseAlbumArt = createReleaseStore((state) => state.albumReleaseAlbumArt);
-    const _setAlbumReleaseAlbumArt = createReleaseStore((state) => state._setAlbumReleaseAlbumArt);
-    const completeAlbumData = createReleaseStore((state) => state.completeAlbumData);
-    const _setCompleteAlbumData = createReleaseStore((state) => state._setCompleteAlbumData);
+    const albumReleaseAlbumArt = useCreateReleaseStore((state) => state.albumReleaseAlbumArt);
+    const _setAlbumReleaseAlbumArt = useCreateReleaseStore((state) => state._setAlbumReleaseAlbumArt);
+    const completeAlbumData = useCreateReleaseStore((state) => state.completeAlbumData);
+    const _setCompleteAlbumData = useCreateReleaseStore((state) => state._setCompleteAlbumData);
 
     const _setToastNotification = useSettingStore((state) => state._setToastNotification);
     const [apiResponse, setApiResponse] = useState({

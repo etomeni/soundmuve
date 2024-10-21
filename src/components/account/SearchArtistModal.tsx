@@ -12,7 +12,7 @@ import AppleSportifyCheckmark from '../AppleSportifyCheckmark';
 import albumSampleArt from "@/assets/images/album.png";
 
 import colors from '@/constants/colors';
-import { searchedArtistSearchInterface } from '@/constants/typesInterface';
+import { artistInterface } from '@/typeInterfaces/release.interface';
 import { useSearchArtists } from '@/hooks/release/useSearchArtists';
 
 
@@ -20,7 +20,7 @@ interface _Props {
     openSearchArtistModal: boolean,
     dspName: "Spotify" | "Apple",
     closeSearchArtistModal: () => void;
-    onSaveSelection: (data: searchedArtistSearchInterface, dspName: "Spotify" | "Apple") => void;
+    onSaveSelection: (data: artistInterface, dspName: "Spotify" | "Apple") => void;
 }
 
 const SearchArtistModalComponent: React.FC<_Props> = ({
@@ -32,7 +32,7 @@ const SearchArtistModalComponent: React.FC<_Props> = ({
 
     const { spotifyArtistResults, searchSpotifyArtist } = useSearchArtists();
 
-    const [selectedArtist, setSelectedArtist] = useState<searchedArtistSearchInterface>();
+    const [selectedArtist, setSelectedArtist] = useState<artistInterface>();
 
     // const [selectedSpotifyArtist, setSelectedSpotifyArtist] = useState<searchedArtistSearchInterface>();
     // const [selectedAppleMusicArtist, setSelectedAppleMusicArtist] = useState<any>();

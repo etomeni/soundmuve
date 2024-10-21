@@ -24,7 +24,7 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 
 import { useUserStore } from '@/state/userStore';
 import { useSettingStore } from '@/state/settingStore';
-import { createReleaseStore } from '@/state/createReleaseStore';
+import { useCreateReleaseStore } from '@/state/createReleaseStore';
 
 import AccountWrapper from '@/components/AccountWrapper';
 import SongPreviewComponent from '@/components/account/SongPreview';
@@ -74,11 +74,11 @@ function CreateAlbumReleaseSongUpload() {
     // const darkTheme = useSettingStore((state) => state.darkTheme);
     const userData = useUserStore((state) => state.userData);
     const accessToken = useUserStore((state) => state.accessToken);
-    const albumReleaseSongUpload = createReleaseStore((state) => state.albumReleaseSongUpload);
-    const _setAlbumReleaseSongUpload = createReleaseStore((state) => state._setAlbumReleaseSongUpload);
-    const albumReleaseDetails = createReleaseStore((state) => state.albumReleaseDetails);
-    const _removeAlbumReleaseSongUpload = createReleaseStore((state) => state._removeAlbumReleaseSongUpload);
-    const completeAlbumData = createReleaseStore((state) => state.completeAlbumData);
+    const albumReleaseSongUpload = useCreateReleaseStore((state) => state.albumReleaseSongUpload);
+    const _setAlbumReleaseSongUpload = useCreateReleaseStore((state) => state._setAlbumReleaseSongUpload);
+    const albumReleaseDetails = useCreateReleaseStore((state) => state.albumReleaseDetails);
+    const _removeAlbumReleaseSongUpload = useCreateReleaseStore((state) => state._removeAlbumReleaseSongUpload);
+    const completeAlbumData = useCreateReleaseStore((state) => state.completeAlbumData);
 
     const [openCopyrightOwnershipModal, setOpenCopyrightOwnershipModal] = useState(false);
 

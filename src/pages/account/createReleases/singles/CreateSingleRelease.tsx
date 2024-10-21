@@ -1,10 +1,3 @@
-import { useEffect, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
-import { useForm } from 'react-hook-form';
-import * as yup from "yup";
-import { yupResolver } from '@hookform/resolvers/yup';
-import axios from 'axios';
-
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
@@ -27,15 +20,9 @@ import dayjs from 'dayjs';
 
 import IconButton from '@mui/material/IconButton';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-// import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-
-import { useUserStore } from '@/state/userStore';
-import { useSettingStore } from '@/state/settingStore';
-import { createReleaseStore } from '@/state/createReleaseStore';
 
 import { languages } from '@/util/languages';
-import { emekaApiEndpoint, hours, minReleaseDate, minutes, primaryGenre, secondaryGenre } from '@/util/resources';
+import { hours, minReleaseDate, minutes, primaryGenre, secondaryGenre } from '@/util/resources';
 
 import AccountWrapper from '@/components/AccountWrapper';
 import SearchArtistModalComponent from '@/components/account/SearchArtistModal';
@@ -44,38 +31,13 @@ import SearchArtistModalComponent from '@/components/account/SearchArtistModal';
 import { restCountries } from '@/util/countries';
 import LongSelectList from '@/components/LongSelectList';
 import ArtistProfileInfoComponent from '@/components/ArtistProfileInfo';
-import ExplicitLyricsReadMoreInfoComponent from '@/components/ExplicitLyricsReadMoreInfo';
 import colors from '@/constants/colors';
 import { releaseSelectStyle, releaseSelectStyle2, releaseTextFieldStyle } from '@/util/mui';
-import { searchedArtistSearchInterface } from '@/constants/typesInterface';
 // import AppleSportifyCheckmark from '@/components/AppleSportifyCheckmark';
 import SelectedArtistView from '@/components/release/SelectedArtistView';
+import YesNoOptionsComponent from '@/components/release/YesNoOptions';
+import { useCreateSingleRelease } from '@/hooks/release/useCreateSingleRelease';
 
-
-const formSchema = yup.object({
-    songTitle: yup.string().required().trim().label("Song Title"),
-    artistName: yup.string().trim().label("Artist Name"),
-    appleMusicUrl: yup.string().required().trim().label("Apple Music Profile Link"),
-    spotifyMusicUrl: yup.string().required().trim().label("Spotify Profile"),
-
-    explicitSongLyrics: yup.string().trim(),
-    language: yup.string().required().trim().label("Language"),
-    primaryGenre: yup.string().required().trim().label("Primary Genre"),
-    secondaryGenre: yup.string().required().trim().label("Secondary Genre"),
-    releaseDate: yup.string().trim().label("Release Date"),
-    
-    releaseTimeHours: yup.string().trim().label("Hours"),
-    releaseTimeMinutes: yup.string().trim().label("Minutes"),
-    releaseTimeHourFormat: yup.string().trim().label("Time Format"),
-    
-    listenerTimezone: yup.boolean().label("Listener's Timezone"),
-    generalTimezone: yup.boolean().label("General Timezone"),
-
-    labelName: yup.string().trim().label("Label Name"),
-    recordingLocation: yup.string().trim().label("Recording Location"),
-    soldWorldwide: yup.string().trim(),
-    UPC_EANcode: yup.string().trim().label("UPC/EAN Code"),
-});
 
 const contriesss = restCountries.map(item => item.name.common);
 contriesss.unshift("All");
@@ -83,328 +45,29 @@ contriesss.unshift("All");
 let dspToSearch: "Apple" | "Spotify";
 
 function CreateSingleRelease() {
-    const navigate = useNavigate();
-    const location = useLocation();
-    const queryParams = new URLSearchParams(location.search);
-    const rl_artistName: string = queryParams.get('artistName') || '';
-    
-    // const darkTheme = useSettingStore((state) => state.darkTheme);
-    const [explicitLyrics, setExplicitLyrics] = useState(""); // No
-    const [soldWorldwide, setSoldWorldwide] = useState(""); // Yes
-    const userData = useUserStore((state) => state.userData);
-    const accessToken = useUserStore((state) => state.accessToken);
-    const singleRelease1 = createReleaseStore((state) => state.singleRelease1);
-    const _setSingleRelease1 = createReleaseStore((state) => state._setSingleRelease1);
-    const _setToastNotification = useSettingStore((state) => state._setToastNotification);
+    const {
+        // singleRelease, 
+        apiResponse, // setApiResponse,
+        navigate,
 
-    const [apiResponse, setApiResponse] = useState({
-        display: false,
-        status: true,
-        message: ""
-    });
+        selectReleaseDateValue, setSelectReleaseDateValue,
 
-    const [selectLanguageValue, setSelectLanguageValue] = useState('Select Language');
-    const [selectSecondaryGenreValue, setSelectSecondaryGenreValue] = useState('Select Secondary Genre');
-    const [selectPrimaryGenreValue, setSelectPrimaryGenreValue] = useState('Select Primary Genre');
-    
-    const [selectReleaseDateValue, setSelectReleaseDateValue] = useState<any>('');
+        spotifyReleaseTimezone, setSpotifyReleaseTimezone,
 
-    const [selectReleaseTimeHoursValue, setSelectReleaseTimeHoursValue] = useState('12');
-    const [selectReleaseTimeMinutesValue, setSelectReleaseTimeMinutesValue] = useState('00');
-    const [selectReleaseTimeFormatValue, setSelectReleaseTimeFormatValue] = useState('AM');
+        soldWorldwide, setSoldWorldwide,
+        selectSoldCountries,
 
-    const [selectListenerTimezoneValue, setSelectListenerTimezoneValue] = useState(false);
-    const [selectGeneralTimezoneValue, setSelectGeneralTimezoneValue] = useState(false);
-
-    const [openSearchArtistModal, setOpenSearchArtistModal] = useState(false);
-    const [selectArtistName, setSelectArtistName] = useState<any>();
-    const [selectedSpotifyArtist, setSelectedSpotifyArtist] = useState<searchedArtistSearchInterface>();
-    const [selectSoldCountries, setSelectSoldCountries] = useState<string[]>(contriesss);
-
-
-    useEffect(() => {
-        if (singleRelease1.song_title) {
-            setValue("songTitle", singleRelease1.song_title, {shouldDirty: true, shouldTouch: true, shouldValidate: true});
-            setValue("artistName", singleRelease1.artist_name, {shouldDirty: true, shouldTouch: true, shouldValidate: true});
-
-            setValue("appleMusicUrl", singleRelease1.appleMusicUrl, {shouldDirty: true, shouldTouch: true, shouldValidate: true});
-            setValue("spotifyMusicUrl", singleRelease1.spotifyMusicUrl, {shouldDirty: true, shouldTouch: true, shouldValidate: true});
-            // TODO::: work on displaying the artist name and details
-            setSelectArtistName(singleRelease1.selectedArtistName);
-    
-            setValue("explicitSongLyrics", singleRelease1.explicitLyrics, {shouldDirty: true, shouldTouch: true, shouldValidate: true});
-            setExplicitLyrics(singleRelease1.explicitLyrics);
-            
-            setValue("language", singleRelease1.language, {shouldDirty: true, shouldTouch: true, shouldValidate: true});
-            setSelectLanguageValue(singleRelease1.language);
-    
-            setValue("primaryGenre", singleRelease1.primary_genre, {shouldDirty: true, shouldTouch: true, shouldValidate: true});
-            setSelectPrimaryGenreValue(singleRelease1.primary_genre);
-    
-            setValue("secondaryGenre", singleRelease1.secondary_genre, {shouldDirty: true, shouldTouch: true, shouldValidate: true});
-            setSelectSecondaryGenreValue(singleRelease1.secondary_genre);
-    
-            // TODO::: release date
-            setValue("releaseDate", singleRelease1.releaseDate, {shouldDirty: true, shouldTouch: true, shouldValidate: true});
-            setSelectReleaseDateValue(singleRelease1.releaseDate);
-    
-            setValue("releaseTimeHours", singleRelease1.releaseTimeHours, {shouldDirty: true, shouldTouch: true, shouldValidate: true});
-            setSelectReleaseTimeHoursValue(singleRelease1.releaseTimeHours);
-    
-            setValue("releaseTimeMinutes", singleRelease1.releaseTimeMinutes, {shouldDirty: true, shouldTouch: true, shouldValidate: true});
-            setSelectReleaseTimeMinutesValue(singleRelease1.releaseTimeMinutes);
-    
-            setValue("releaseTimeHourFormat", singleRelease1.releaseTimeFormat, {shouldDirty: true, shouldTouch: true, shouldValidate: true});
-            setSelectReleaseTimeFormatValue(singleRelease1.releaseTimeFormat);
-    
-            setValue("listenerTimezone", singleRelease1.listenerTimeZone, {shouldDirty: true, shouldTouch: true, shouldValidate: true});
-            setSelectListenerTimezoneValue(singleRelease1.listenerTimeZone);
-    
-            setValue("generalTimezone", singleRelease1.generalTimeZone, {shouldDirty: true, shouldTouch: true, shouldValidate: true});
-            setSelectGeneralTimezoneValue(singleRelease1.generalTimeZone);
-            
-            
-            setValue("labelName", singleRelease1.label_name, {shouldDirty: true, shouldTouch: true, shouldValidate: true});
-            setValue("recordingLocation", singleRelease1.recording_location, {shouldDirty: true, shouldTouch: true, shouldValidate: true});
-            
-            setValue("soldWorldwide", singleRelease1.soldWorldwide, {shouldDirty: true, shouldTouch: true, shouldValidate: true});
-            setSoldWorldwide(singleRelease1.soldWorldwide);
-            
-            setValue("UPC_EANcode", singleRelease1.upc_ean, {shouldDirty: true, shouldTouch: true, shouldValidate: true});
-        }
-    }, [singleRelease1]);
-    
-
-    const { 
-        handleSubmit, register, setValue, getValues, setError, formState: { errors, isValid, isSubmitting } 
-    } = useForm({ 
-        resolver: yupResolver(formSchema),
-        mode: 'onBlur',
-        defaultValues: { 
-            soldWorldwide: soldWorldwide,
-            explicitSongLyrics: explicitLyrics,
-            // releaseTimeHours: "00",
-            releaseTimeMinutes: "00",
-            releaseTimeHourFormat: "AM",
-            // language: "English",
-            listenerTimezone: true,
-            generalTimezone: true,
-        } 
-    });
-
-    const handleSetArtistName = (details: searchedArtistSearchInterface, dspName: "Spotify" | "Apple") => {
-        // console.log(details);
-        if (dspName == "Spotify") {
-            setSelectedSpotifyArtist(details)
-            setValue(
-                "spotifyMusicUrl", 
-                details.name,
-                {shouldDirty: true, shouldTouch: true, shouldValidate: true} 
-            );
-
-            setValue(
-                "artistName", 
-                details.name,
-                {shouldDirty: true, shouldTouch: true, shouldValidate: true} 
-            );
-
-        } else if (dspName == "Apple") {
-            
-        }
-
-
-        return;
-
-        // setSelectArtistName(details);
-        // let name = details.spotify ? details.spotify.name : details.apple ? details.apple.name : details.unknown.name;
-
-        // setValue(
-        //     "artistName", 
-        //     name,
-        //     {shouldDirty: true, shouldTouch: true, shouldValidate: true} 
-        // );
-    }
-
-    const handleSoldCountriesSelect = (selected: string[]) => {
-        setSelectSoldCountries(selected);
-        setValue("soldWorldwide", selected.toString(), {shouldDirty: true, shouldTouch: true, shouldValidate: true});
-    }
-
-
-    const onSubmit = async (formData: typeof formSchema.__outputType) => {
-        // console.log(formData);
-
-        setApiResponse({
-            display: false,
-            status: true,
-            message: ""
-        });
-
-
-        if (!formData.artistName) {
-            _setToastNotification({
-                display: true,
-                status: "error",
-                message: "Please Enter the artist name" // "Please add an artist."
-            })
-
-            setError("artistName", {message: "Please Enter the artist name."}, {shouldFocus: true})
-            return;
-        }
-
-        if (!explicitLyrics) {
-            _setToastNotification({
-                display: true,
-                status: "error",
-                message: "Please choose if this song has explicit lyrics."
-            })
-
-            setError("explicitSongLyrics", {message: "Please choose if this song has explicit lyrics."})
-            return;
-        }
-
-        if (formData.language == "Select Language") {
-            _setToastNotification({
-                display: true,
-                status: "error",
-                message: "Please select a language."
-            })
-
-            setError("language", {message: "Please select a language."}, {shouldFocus: true});
-            return;
-        }
-
-        if (formData.primaryGenre == "Select Primary Genre") {
-            _setToastNotification({
-                display: true,
-                status: "error",
-                message: "Please select primary genre."
-            })
-
-            setError("primaryGenre", {message: "Please select primary genre."}, {shouldFocus: true});
-            return;
-        }
-
-        if (formData.secondaryGenre == "Select Secondary Genre") {
-            _setToastNotification({
-                display: true,
-                status: "error",
-                message: "Please select secondary genre."
-            })
-
-            setError("secondaryGenre", {message: "Please select secondary genre."}, {shouldFocus: true});
-            return;
-        }
-
-        if (!formData.releaseDate) {
-            _setToastNotification({
-                display: true,
-                status: "error",
-                message: "Please select a release date."
-            })
-
-            setError("releaseDate", { message: "Please select a release date." }, {shouldFocus: true});
-
-            // document.getElementById("releaseDate")?.focus();
-            return;
-        }
-
-        if (!soldWorldwide) {
-            _setToastNotification({
-                display: true,
-                status: "error",
-                message: "Please select if this release can be sold worldwide?"
-            });
-
-            setError("soldWorldwide", {message: "Please select if this release can be sold worldwide?"})
-            return;
-        }
-
-        const data2db = {
-            email: userData.email,
-            release_type: "Single",
-
-            record_label_artist: rl_artistName,
+        selectedSpotifyArtist,
         
-            song_title: formData.songTitle, // missing
-            artist_name: formData.artistName,
-            appleMusicUrl: formData.appleMusicUrl || '',
-            spotifyMusicUrl: selectedSpotifyArtist?.id || formData.spotifyMusicUrl || '',
+        singleRelease1Form, 
+        handleSetArtistName, handleSoldCountriesSelect,
+        onSubmitCreateSingleRelease1, 
 
-            selectedArtistName: selectArtistName,
-        
-            explicitLyrics: explicitLyrics, // missing
-        
-            language: formData.language,
-            primary_genre: formData.primaryGenre,
-            secondary_genre: formData.secondaryGenre,
-        
-            releaseDate: formData.releaseDate, // missing
-            release_time: `${ formData.releaseTimeHours } : ${ formData.releaseTimeMinutes } ${ formData.releaseTimeHourFormat }`,
+        openSearchArtistModal, setOpenSearchArtistModal,
+    } = useCreateSingleRelease();
 
-            releaseTimeHours: formData.releaseTimeHours || '12',
-            releaseTimeMinutes: formData.releaseTimeMinutes || '00',
-            releaseTimeFormat: formData.releaseTimeHourFormat || 'AM',
-
-            listenerTimeZone: formData.listenerTimezone || true,
-            generalTimeZone: formData.generalTimezone || true,
-        
-            label_name: formData.labelName || '',
-            recording_location: formData.recordingLocation || '',
-            soldWorldwide: formData.soldWorldwide || soldWorldwide,
-            upc_ean: formData.UPC_EANcode || '',
-        };
-        // console.log(data2db);
-        _setSingleRelease1({ ...data2db, _id: '' });
-
-        try {
-            const response = singleRelease1._id ? (await axios.put(
-                `${emekaApiEndpoint}/Release/checkAndUpdateRelease`,
-                data2db,  
-                {
-                    headers: {
-                        Authorization: `Bearer ${accessToken}`
-                    },
-                }
-            )).data : (await axios.post(
-                `${emekaApiEndpoint}/Release/create-release`,
-                data2db,  
-                {
-                    headers: {
-                        Authorization: `Bearer ${accessToken}`
-                    },
-                }
-            )).data;
-            // console.log(response);
-
-            _setSingleRelease1({ ...data2db, _id: response.new_release._id });
-
-            // setApiResponse({
-            //     display: true,
-            //     status: true,
-            //     message: response.message
-            // });
-
-            _setToastNotification({
-                display: true,
-                status: "success",
-                message: response.message
-            });
-
-            navigate("/account/create-single-release-continue");
-        } catch (error: any) {
-            const err = error.response.data;
-            console.log(err);
-
-            setApiResponse({
-                display: true,
-                status: false,
-                message: err.message || "Oooops, failed to update details. please try again."
-            });
-        }
-
-    }
-
+    const { setValue, register, formState } = singleRelease1Form;
+    const { errors, isSubmitting, isValid } = formState;
 
     return (
         <AccountWrapper>
@@ -430,7 +93,7 @@ function CreateSingleRelease() {
                 > Create a Single </Typography>
 
                 <Box sx={{my: 3}}>
-                    <form noValidate onSubmit={ handleSubmit(onSubmit) } 
+                    <form noValidate onSubmit={ onSubmitCreateSingleRelease1 } 
                         style={{ width: "100%", maxWidth: "916px" }}
                     >
                         
@@ -471,42 +134,6 @@ function CreateSingleRelease() {
                             </Grid>
                         </Grid>
 
-                        {/* <Grid container spacing="20px" sx={{my: "31px"}}>
-                            <Grid item xs={12} md={4}>
-                                <Typography sx={{
-                                    fontWeight: {xs: "900", md: "900"},
-                                    fontSize: {xs: "13.12px", md: "25px"},
-                                    lineHeight: {xs: "21px", md: "40px"},
-                                    letterSpacing: {xs: "-0.07px", md: "-0.13px"}
-                                }}> Main Artist Name </Typography>
-                            </Grid>
-
-                            <Grid item xs={12} md={8}>
-                                <Box>
-                                    <TextField 
-                                        variant="outlined" 
-                                        fullWidth 
-                                        id='artistName'
-                                        type='text'
-                                        label=''
-                                        inputMode='text'
-                                        defaultValue=""
-                                        sx={releaseTextFieldStyle}
-                                        InputProps={{
-                                            sx: {
-                                                borderRadius: "16px",
-                                                maxWidth: {xs: "337px", md: "100%"}
-                                            },
-                                        }}
-                                        error={ errors.artistName ? true : false }
-                                        { ...register('artistName') }
-                                    />
-                                    
-                                    { errors.artistName && <Box sx={{fontSize: 13, color: "red", textAlign: "left"}}>{ errors.artistName?.message }</Box> }
-                                </Box> 
-                            </Grid>
-                        </Grid> */}
-
                         <Grid container spacing="20px" sx={{my: "31px"}}>
                             <Grid item xs={12} md={4}>
                                 <Stack direction="row">
@@ -534,10 +161,9 @@ function CreateSingleRelease() {
                                     <TextField 
                                         variant="outlined" 
                                         fullWidth 
-                                        id='spotifyMusicUrl'
-                                        type='url'
-                                        inputMode='url'
-                                        label=''
+                                        id='spotifyArtistProfile'
+                                        type='text'
+                                        inputMode='text'
                                         placeholder='Select spotify profile'
                                         defaultValue=""
                                         InputProps={{ readOnly: true }}
@@ -547,11 +173,11 @@ function CreateSingleRelease() {
                                             setOpenSearchArtistModal(true);
                                         }}
 
-                                        error={ errors.spotifyMusicUrl ? true : false }
-                                        { ...register('spotifyMusicUrl') }
+                                        error={ errors.spotifyArtistProfile ? true : false }
+                                        { ...register('spotifyArtistProfile') }
                                     />
                                     
-                                    { errors.spotifyMusicUrl && <Box sx={{fontSize: 13, color: "red", textAlign: "left"}}>{ errors.spotifyMusicUrl?.message }</Box> }
+                                    { errors.spotifyArtistProfile && <Box sx={{fontSize: 13, color: "red", textAlign: "left"}}>{ errors.spotifyArtistProfile?.message }</Box> }
                                 </Box>
 
 
@@ -618,204 +244,6 @@ function CreateSingleRelease() {
                             </Grid>
                         </Grid>
 
-                        {/* <Grid container spacing="20px" sx={{my: "31px"}}>
-                            <Grid item xs={12} md={4}>
-                                <Stack direction="row">
-                                    <Box>
-                                        <Typography sx={{
-                                            fontWeight: {xs: "700", md: "900"},
-                                            fontSize: {xs: "13.12px", md: "25px"},
-                                            lineHeight: {xs: "21px", md: "40px"},
-                                            letterSpacing: {xs: "-0.07px", md: "-0.13px"}
-                                        }}> Artist Profile </Typography>
-
-                                        <Typography sx={{
-                                            fontWeight: "400",
-                                            fontSize: {xs: "13.88px", md: "18px"},
-                                            lineHeight: {xs: "9.25px", md: "12px"},
-                                            letterSpacing: {xs: "-0.1px", md: "-0.13px"},
-                                            // mt: "9px"
-                                        }}> Optional </Typography>
-                                    </Box>
-
-                                    <ArtistProfileInfoComponent  />
-                                </Stack>
-                            </Grid>
-
-                            <Grid item xs={12} md={8}>
-                                <Box>
-                                    <Grid container spacing="20px">
-
-                                        <Grid item xs={12} md={6}>
-                                            <TextField 
-                                                variant="outlined" 
-                                                fullWidth 
-                                                id='spotifyMusicUrl'
-                                                type='url'
-                                                inputMode='url'
-                                                label=''
-                                                placeholder='Add your Spotify profile link'
-                                                defaultValue=""
-                                                sx={releaseTextFieldStyle}
-                                                InputProps={{
-                                                    sx: {
-                                                        borderRadius: "16px",
-                                                        maxWidth: {xs: "337px", md: "100%"}
-                                                    },
-                                                }}
-                                                error={ errors.spotifyMusicUrl ? true : false }
-                                                { ...register('spotifyMusicUrl') }
-                                            />
-                                            
-                                            { errors.spotifyMusicUrl && <Box sx={{fontSize: 13, color: "red", textAlign: "left"}}>{ errors.spotifyMusicUrl?.message }</Box> }
-
-                                        </Grid>
-
-                                        <Grid item xs={12} md={6}>
-                                            <TextField 
-                                                variant="outlined" 
-                                                fullWidth 
-                                                id='appleMusicUrl'
-                                                inputMode='url'
-                                                type='url'
-                                                label=''
-                                                placeholder='Add your apple music profile link'
-                                                defaultValue=""
-                                                sx={releaseTextFieldStyle}
-                                                InputProps={{
-                                                    sx: {
-                                                        borderRadius: "16px",
-                                                        maxWidth: {xs: "337px", md: "100%"}
-                                                    },
-                                                }}
-                                                error={ errors.appleMusicUrl ? true : false }
-                                                { ...register('appleMusicUrl') }
-                                            />
-                                            
-                                            { errors.appleMusicUrl && <Box sx={{fontSize: 13, color: "red", textAlign: "left"}}>{ errors.appleMusicUrl?.message }</Box> }
-
-                                        </Grid>
-
-                                    </Grid>
-
-                                    
-                                </Box>
-                            </Grid>
-                        </Grid> */}
-
-                        <Grid container spacing="20px" sx={{my: "31px"}}>
-                            <Grid item xs={12} md={4}> </Grid>
-
-                            <Grid item xs={12} md={8}>
-                                <Stack direction="row" alignItems="center" spacing="8px">
-                                    <Typography variant='body2' component="div"
-                                        sx={{
-                                            fontWeight: "400",
-                                            fontSize: {xs: "16.96px", md: "25px"},
-                                            lineHeight: {xs: "27.14px", md: "40px"},
-                                            letterSpacing: {xs: "-0.09px", md: "-0.13px"},
-                                            // mt: "21px"
-                                        }}
-                                    >
-                                        Does this song have explicit lyrics? 
-                                    </Typography>
-
-                                    <ExplicitLyricsReadMoreInfoComponent />
-                                </Stack>
-
-                                <Box
-                                    sx={{
-                                        display: "flex",
-                                        flexDirection: "row",
-                                        alignItems: "center",
-                                        gap: explicitLyrics == "Yes" ? "5px" : "15px",
-                                        // mb: "21px",
-                                        mt: "5px"
-                                    }}
-                                >
-
-                                    <Box>
-                                        <Box 
-                                            sx={{
-                                                p: {xs: "10.18px 19.68px", md: "15px 29px"},
-                                                borderRadius: {xs: "8.14px", md: "12px"},
-                                                background: getValues("explicitSongLyrics") == "Yes" ? colors.primary : colors.bg,
-                                                color: getValues("explicitSongLyrics") == "Yes" ? colors.milk : colors.dark,
-                                                border: `1px solid ${ getValues("explicitSongLyrics") == "Yes" ? colors.primary : "#212121" }`,
-                                                cursor: "pointer",
-                                                display: "inline-block"
-                                            }}
-                                            onClick={() => {
-                                                setValue("explicitSongLyrics", "Yes");
-                                                setExplicitLyrics("Yes");
-                                            }}
-                                        >
-                                            <Typography 
-                                                sx={{
-                                                    fontWeight: '900',
-                                                    fontSize: {xs: "10.18px", md: "15px"},
-                                                    lineHeight: {xs: "8.82px", md: "13px"},
-                                                    letterSpacing: {xs: "-0.09px", md: "-0.13px"},
-                                                    textAlign: 'center',
-                                                }}
-                                            > Yes </Typography>
-                                        </Box>
-
-                                        { explicitLyrics == "Yes" ? 
-                                            <CheckCircleIcon 
-                                                sx={{ 
-                                                    color: "green", // colors.tertiary,
-                                                    position: "relative", 
-                                                    left: -15,
-                                                    top: -8,
-                                                }} 
-                                            /> : <></>
-                                        }
-                                    </Box>
-
-                                    <Box>
-                                        <Box 
-                                            sx={{
-                                                p: {xs: "10.18px 19.68px 10.18px 19.68px", md: "15px 29px 15px 29px"},
-                                                borderRadius: {xs: "8.14px", md: "12px"},
-                                                background: getValues("explicitSongLyrics") == "No" ? colors.primary : colors.bg,
-                                                color: getValues("explicitSongLyrics") == "No" ? colors.milk : colors.dark,
-                                                border: `1px solid ${ getValues("explicitSongLyrics") == "No" ? colors.primary : "#212121" }`,
-                                                cursor: "pointer",
-                                                display: "inline-block"
-                                            }}
-                                            onClick={() => {
-                                                setValue("explicitSongLyrics", "No");
-                                                setExplicitLyrics("No");
-                                            }}
-                                        >
-                                            <Typography 
-                                                sx={{
-                                                    fontWeight: '900',
-                                                    fontSize: {xs: "10.18px", md: "15px"},
-                                                    lineHeight: {xs: "8.82px", md: "13px"},
-                                                    letterSpacing: {xs: "-0.09px", md: "-0.13px"},
-                                                    textAlign: 'center',
-                                                }}
-                                            > No </Typography>
-                                        </Box>
-
-                                        { explicitLyrics == "No" ? 
-                                            <CheckCircleIcon 
-                                                sx={{ 
-                                                    color: "green",
-                                                    position: "relative", 
-                                                    left: -15,
-                                                    top: -8,
-                                                }} 
-                                            /> : <></>
-                                        }
-                                    </Box>
-
-                                </Box>
-                            </Grid>
-                        </Grid>
-
                         <Grid container spacing="20px" sx={{my: "31px"}}>
                             <Grid item xs={12} md={4}>
                                 <Typography variant='h3' sx={{
@@ -832,12 +260,10 @@ function CreateSingleRelease() {
                                 <Box>
                                     <FormControl fullWidth>
                                         <Select
-                                            labelId="language"
-                                            id="language-select"
-                                            label=""
-                                            // defaultValue="Select Language"
-                                            placeholder='Select Language'
-                                            value={selectLanguageValue}
+                                            id="language"
+                                            defaultValue="Select Language"
+                                            // placeholder='Select Language'
+                                            // value={selectLanguageValue}
 
                                             sx={releaseSelectStyle}
                                             
@@ -846,7 +272,7 @@ function CreateSingleRelease() {
 
                                             onChange={(event) => {
                                                 const value: any = event.target.value;
-                                                setSelectLanguageValue(value);
+                                                // setSelectLanguageValue(value);
 
                                                 setValue(
                                                     "language", 
@@ -893,9 +319,9 @@ function CreateSingleRelease() {
                                         <Select
                                             labelId="primaryGenre"
                                             id="primaryGenre-select"
-                                            label=""
-                                            placeholder='Select Primary Genre'
-                                            value={selectPrimaryGenreValue}
+                                            // placeholder='Select Primary Genre'
+                                            // value={selectPrimaryGenreValue}
+                                            defaultValue="Select Primary Genre"
                                             sx={releaseSelectStyle}
                                             
                                             error={ errors.primaryGenre ? true : false }
@@ -903,7 +329,7 @@ function CreateSingleRelease() {
 
                                             onChange={(event) => {
                                                 const value: any = event.target.value;
-                                                setSelectPrimaryGenreValue(value);
+                                                // setSelectPrimaryGenreValue(value);
 
                                                 setValue(
                                                     "primaryGenre", 
@@ -951,8 +377,8 @@ function CreateSingleRelease() {
                                             labelId="secondaryGenre"
                                             id="secondaryGenre-select"
                                             label=""
-                                            placeholder='Select Secondary Genre'
-                                            value={selectSecondaryGenreValue}
+                                            defaultValue='Select Secondary Genre'
+                                            // value={selectSecondaryGenreValue}
                                             sx={releaseSelectStyle}
                                             
                                             error={ errors.secondaryGenre ? true : false }
@@ -960,7 +386,7 @@ function CreateSingleRelease() {
 
                                             onChange={(event) => {
                                                 const value: any = event.target.value;
-                                                setSelectSecondaryGenreValue(value);
+                                                // setSelectSecondaryGenreValue(value);
 
                                                 setValue(
                                                     "secondaryGenre", 
@@ -1132,9 +558,9 @@ function CreateSingleRelease() {
                                             <Select
                                                 labelId="releaseTimeHours"
                                                 id="releaseTimeHours-select"
-                                                label=""
-                                                placeholder='12'
-                                                value={selectReleaseTimeHoursValue}
+                                                // placeholder='12'
+                                                // value={selectReleaseTimeHoursValue}
+                                                defaultValue={"12"}
 
                                                 sx={releaseSelectStyle2}
 
@@ -1143,7 +569,7 @@ function CreateSingleRelease() {
 
                                                 onChange={(event) => {
                                                     const value: any = event.target.value;
-                                                    setSelectReleaseTimeHoursValue(value);
+                                                    // setSelectReleaseTimeHoursValue(value);
 
                                                     setValue(
                                                         "releaseTimeHours", 
@@ -1168,9 +594,10 @@ function CreateSingleRelease() {
                                             <Select
                                                 labelId="releaseTimeMinutes"
                                                 id="releaseTimeMinutes-select"
-                                                label=""
-                                                placeholder='00'
-                                                value={selectReleaseTimeMinutesValue}
+                                                // placeholder='00'
+                                                // value={selectReleaseTimeMinutesValue}
+
+                                                defaultValue={"00"}
 
                                                 sx={releaseSelectStyle2}
                                                 
@@ -1179,7 +606,7 @@ function CreateSingleRelease() {
 
                                                 onChange={(event) => {
                                                     const value: any = event.target.value;
-                                                    setSelectReleaseTimeMinutesValue(value);
+                                                    // setSelectReleaseTimeMinutesValue(value);
 
                                                     setValue(
                                                         "releaseTimeMinutes", 
@@ -1204,10 +631,9 @@ function CreateSingleRelease() {
                                             <Select
                                                 labelId="releaseTimeHourFormat"
                                                 id="releaseTimeHourFormat-select"
-                                                label=""
-                                                placeholder='AM'
-                                                value={selectReleaseTimeFormatValue}
-
+                                                // placeholder='AM'
+                                                // value={selectReleaseTimeFormatValue}
+                                                defaultValue={"AM"}
                                                 sx={releaseSelectStyle2}
                                                 
                                                 error={ errors.releaseTimeHourFormat ? true : false }
@@ -1215,7 +641,7 @@ function CreateSingleRelease() {
 
                                                 onChange={(event) => {
                                                     const value: any = event.target.value;
-                                                    setSelectReleaseTimeFormatValue(value);
+                                                    // setSelectReleaseTimeFormatValue(value);
 
                                                     setValue(
                                                         "releaseTimeHourFormat", 
@@ -1228,13 +654,8 @@ function CreateSingleRelease() {
                                                     );
                                                 }}
                                             >
-                                                <MenuItem value="AM">
-                                                    AM
-                                                </MenuItem>
-
-                                                <MenuItem value="PM">
-                                                    PM
-                                                </MenuItem>
+                                                <MenuItem value="AM">AM</MenuItem>
+                                                <MenuItem value="PM">PM</MenuItem>
                                             </Select>
                                         </FormControl>
                                     </Box>
@@ -1255,7 +676,7 @@ function CreateSingleRelease() {
                                         <FormControlLabel 
                                             control={<Checkbox 
                                                 // defaultChecked 
-                                                checked={selectListenerTimezoneValue}
+                                                checked={spotifyReleaseTimezone == "listener's timezone" ? true : false}
                                                 sx={{
                                                     color: "#797979",
                                                     '&.Mui-checked': {
@@ -1283,26 +704,14 @@ function CreateSingleRelease() {
                                             onChange={(event) => {
                                                 const eValue: any = event.target;
 
-                                                setValue("listenerTimezone", eValue.checked, {shouldDirty: true, shouldTouch: true, shouldValidate: true});
-                                                setSelectListenerTimezoneValue(eValue.checked);
-
-                                                setValue("generalTimezone", !eValue.checked, {shouldDirty: true, shouldTouch: true, shouldValidate: true} );
-                                                setSelectGeneralTimezoneValue(!eValue.checked);
-
-                                                // if (eValue.checked == true) {
-                                                //     setValue("listenerTimezone", eValue.checked, {shouldDirty: true, shouldTouch: true, shouldValidate: true});
-                                                //     setSelectListenerTimezoneValue(eValue.checked);
-
-                                                //     setValue("generalTimezone", !eValue.checked, {shouldDirty: true, shouldTouch: true, shouldValidate: true} );
-                                                //     setSelectGeneralTimezoneValue(!eValue.checked);
-                                                // }
+                                                if (eValue.checked == true) setSpotifyReleaseTimezone("listener's timezone");
                                             }}
                                         />
 
                                         <FormControlLabel 
                                             control={<Checkbox 
                                                 // defaultChecked 
-                                                checked={selectGeneralTimezoneValue}
+                                                checked={spotifyReleaseTimezone == "EST/NYC timezone" ? true : false}
                                                 sx={{
                                                     color: "#797979",
                                                     '&.Mui-checked': {
@@ -1325,19 +734,7 @@ function CreateSingleRelease() {
                                             onChange={(event) => {
                                                 const eValue: any = event.target;
                                                 // console.log(eValue.checked);
-                                                setValue("generalTimezone", eValue.checked, {shouldDirty: true, shouldTouch: true, shouldValidate: true} );
-                                                setSelectGeneralTimezoneValue(eValue.checked);
-                                                
-                                                setValue("listenerTimezone", !eValue.checked, {shouldDirty: true, shouldTouch: true, shouldValidate: true} );
-                                                setSelectListenerTimezoneValue(!eValue.checked);
-
-                                                // if (eValue.checked == true) {
-                                                //     setValue("generalTimezone", eValue.checked, {shouldDirty: true, shouldTouch: true, shouldValidate: true} );
-                                                //     setSelectGeneralTimezoneValue(eValue.checked);
-                                                    
-                                                //     setValue("listenerTimezone", false, {shouldDirty: true, shouldTouch: true, shouldValidate: true} );
-                                                //     setSelectListenerTimezoneValue(false);
-                                                // }
+                                                if (eValue.checked == true) setSpotifyReleaseTimezone("EST/NYC timezone");
                                             }}
                                         />
                                     </FormGroup>
@@ -1476,98 +873,25 @@ function CreateSingleRelease() {
                                             Can this release be sold worldwide?
                                         </Typography>
 
-                                        <Box
-                                            sx={{
-                                                display: "flex",
-                                                flexDirection: "row",
-                                                alignItems: "center",
-                                                gap: soldWorldwide == "Yes" ? "5px" : "15px",
-                                                mt: "21px",
+
+                                        <YesNoOptionsComponent 
+                                            currentValue={soldWorldwide}
+                                            onSelect={(e) => {
+                                                setValue("soldWorldwide", e, {shouldDirty: true, shouldTouch: true, shouldValidate: true});
+                                                setSoldWorldwide(e);
                                             }}
-                                        >
-                                            <Box>
-                                                <Box 
-                                                    onClick={() => {
-                                                        setValue("soldWorldwide", "Yes", {shouldDirty: true, shouldTouch: true, shouldValidate: true});
-                                                        setSoldWorldwide("Yes");
-                                                    }}
-                                                    sx={{
-                                                        p: {xs: "10.18px 19.68px 10.18px 19.68px", md: "15px 29px 15px 29px"},
-                                                        borderRadius: {xs: "8.14px", md: "12px"},
 
-                                                        border: `1px solid ${ soldWorldwide == "Yes" ? colors.primary : colors.dark }`,
-                                                        background: soldWorldwide == "Yes" ? colors.primary : colors.bg,
-                                                        color: soldWorldwide == "Yes" ? colors.milk : colors.dark,
+                                            CheckMarkIconColor="green"
 
-                                                        cursor: "pointer",
-                                                        display: "inline-block"
-                                                    }}
-                                                >
-                                                    <Typography 
-                                                        sx={{
-                                                            fontWeight: '900',
-                                                            fontSize: {xs: "10.18px", md: "15px"},
-                                                            lineHeight: {xs: "8.82px", md: "13px"},
-                                                            letterSpacing: {xs: "-0.09px", md: "-0.13px"},
-                                                            textAlign: 'center',
-                                                        }}
-                                                    > Yes </Typography>
-                                                </Box>
+                                            bgColorActive={colors.primary}
+                                            bgColorInactive={colors.bg}
 
-                                                { soldWorldwide == "Yes" ? 
-                                                    <CheckCircleIcon 
-                                                        sx={{ 
-                                                            color: 'green',
-                                                            position: "relative", 
-                                                            left: -15,
-                                                            top: -8,
-                                                        }} 
-                                                    /> : <></>
-                                                }
-                                            </Box>
-
-                                            <Box>
-                                                <Box 
-                                                    onClick={() => {
-                                                        setValue("soldWorldwide", "No", {shouldDirty: true, shouldTouch: true, shouldValidate: true});
-                                                        setSoldWorldwide("No");
-                                                    }}
-                                                    sx={{
-                                                        p: {xs: "10.18px 19.68px 10.18px 19.68px", md: "15px 29px 15px 29px"},
-                                                        borderRadius: {xs: "8.14px", md: "12px"},
-
-                                                        border: `1px solid ${ soldWorldwide == "No" ? colors.primary : colors.dark }`,
-                                                        background: soldWorldwide == "No" ? colors.primary : colors.bg,
-                                                        color: soldWorldwide == "No" ? colors.milk : colors.dark,
-
-                                                        cursor: "pointer",
-                                                        display: "inline-block"
-                                                    }}
-                                                >
-                                                    <Typography 
-                                                        sx={{
-                                                            fontWeight: '900',
-                                                            fontSize: {xs: "10.18px", md: "15px"},
-                                                            lineHeight: {xs: "8.82px", md: "13px"},
-                                                            letterSpacing: {xs: "-0.09px", md: "-0.13px"},
-                                                            textAlign: 'center',
-                                                        }}
-                                                    > No </Typography>
-                                                </Box>
-
-                                                { soldWorldwide == "No" ? 
-                                                    <CheckCircleIcon 
-                                                        sx={{ 
-                                                            color: 'green',
-                                                            position: "relative", 
-                                                            left: -15,
-                                                            top: -8,
-                                                        }} 
-                                                    /> : <></>
-                                                }
-                                            </Box>
-                                        </Box>
-
+                                            textColorActive={colors.milk}
+                                            textColorInactive={colors.dark}
+                                            
+                                            borderColorActive={colors.primary}
+                                            borderColorInactive="#212121"
+                                        />
 
                                         { soldWorldwide == "No" ? 
                                             <FormControl fullWidth sx={{mt: 2}}>
@@ -1701,14 +1025,12 @@ function CreateSingleRelease() {
                 </Box>
             </Box>
 
-
             <SearchArtistModalComponent 
                 openSearchArtistModal={openSearchArtistModal}
                 closeSearchArtistModal={() => setOpenSearchArtistModal(false) }
                 onSaveSelection={handleSetArtistName}
                 dspName={ dspToSearch }
             />
-
         </AccountWrapper>
     )
 }

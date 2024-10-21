@@ -16,7 +16,7 @@ import FormControl from '@mui/material/FormControl';
 
 import { useUserStore } from '@/state/userStore';
 import { useSettingStore } from '@/state/settingStore';
-import { createReleaseStore } from '@/state/createReleaseStore';
+import { useCreateReleaseStore } from '@/state/createReleaseStore';
 
 import AccountWrapper from '@/components/AccountWrapper';
 import { emekaApiEndpoint, musicStores, socialPlatformStores } from '@/util/resources';
@@ -36,10 +36,10 @@ function CreateAlbumReleaseSelectStores() {
     const userData = useUserStore((state) => state.userData);
     const accessToken = useUserStore((state) => state.accessToken);
     const _setToastNotification = useSettingStore((state) => state._setToastNotification);
-    const albumReleaseStores = createReleaseStore((state) => state.albumReleaseStores);
-    const _setAlbumReleaseStores = createReleaseStore((state) => state._setAlbumReleaseStores);
-    const completeAlbumData = createReleaseStore((state) => state.completeAlbumData);
-    const _setCompleteAlbumData = createReleaseStore((state) => state._setCompleteAlbumData);
+    const albumReleaseStores = useCreateReleaseStore((state) => state.albumReleaseStores);
+    const _setAlbumReleaseStores = useCreateReleaseStore((state) => state._setAlbumReleaseStores);
+    const completeAlbumData = useCreateReleaseStore((state) => state.completeAlbumData);
+    const _setCompleteAlbumData = useCreateReleaseStore((state) => state._setCompleteAlbumData);
 
     const [selectStores, setSelectStores] = useState<string[]>(musicStores);
     const [selectSocialStores, setSelectSocialStores] = useState<string[]>(socialPlatformStores);

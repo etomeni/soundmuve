@@ -7,7 +7,7 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 
 import { useSettingStore } from "@/state/settingStore";
-import { getQueryParams, localApiEndpoint } from "@/util/resources";
+import { getQueryParams, apiEndpoint } from "@/util/resources";
 
 
 const formSchema = yup.object({
@@ -67,7 +67,7 @@ export function useNewPasswordAuth() {
 
         try {
             const response = (await axios.post(
-                `${localApiEndpoint}/auth/setNewPassword`, 
+                `${apiEndpoint}/auth/setNewPassword`, 
                 data2db,
                 {
                     headers: {

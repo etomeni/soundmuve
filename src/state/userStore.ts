@@ -1,6 +1,6 @@
 import { create } from "zustand";
-import { userInterface } from "../constants/typesInterface";
 import { getLocalStorage, removeLocalStorageItem, setLocalStorage } from "../util/storage";
+import { userInterface } from "@/typeInterfaces/users.interface";
 
 
 const userEmptyData: userInterface = {

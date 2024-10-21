@@ -2,6 +2,7 @@ import { useCallback, useState } from "react";
 import axios from "axios";
 import { useUserStore } from "@/state/userStore";
 import { apiEndpoint } from "@/util/resources";
+// import { localApiEndpoint } from "@/util/resources";
 import { getLocalStorage } from "@/util/storage";
 
 export function useCheckAuth() {
@@ -27,12 +28,10 @@ export function useCheckAuth() {
         // if (!pathname.includes("/account") || !pathname.includes("/auth")) {
         //     setIsLoading(false);
         // }
-    
-        console.log(access_token);
         
         try {
-            // const response = (await axios.get(`${emekaApiEndpoint}/auth/maintainPersistence`, {
             const response = (await axios.get(`${apiEndpoint}/auth/reValidateUserAuth`, {
+            // const response = (await axios.get(`${localApiEndpoint}/auth/reValidateUserAuth`, {
                 headers: {
                     Authorization: `Bearer ${access_token}`,
                     // refresh: `Bearer ${refresh_token}`

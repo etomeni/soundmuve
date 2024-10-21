@@ -14,7 +14,7 @@ import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 
 import { useUserStore } from '@/state/userStore';
 import { useSettingStore } from '@/state/settingStore';
-import { createReleaseStore } from '@/state/createReleaseStore';
+import { useCreateReleaseStore } from '@/state/createReleaseStore';
 
 import AccountWrapper from '@/components/AccountWrapper';
 import SongPreviewComponent from '@/components/account/SongPreview';
@@ -22,7 +22,7 @@ import SuccessModalComponent from '@/components/account/SuccessModal';
 import { emekaApiEndpoint } from '@/util/resources';
 import { albumInterface } from '@/constants/typesInterface';
 import colors from '@/constants/colors';
-import { cartItemStore } from '@/state/cartStore';
+// import { useCartItemStore } from '@/state/cartStore';
 
 
 function CreateAlbumReleaseOverview() {
@@ -30,15 +30,15 @@ function CreateAlbumReleaseOverview() {
     const darkTheme = useSettingStore((state) => state.darkTheme);
     const userData = useUserStore((state) => state.userData);
     const accessToken = useUserStore((state) => state.accessToken);
-    const albumReleaseDetails = createReleaseStore((state) => state.albumReleaseDetails);
-    const albumReleaseAdvanceFeatures = createReleaseStore((state) => state.albumReleaseAdvanceFeatures);
-    const albumReleaseStores = createReleaseStore((state) => state.albumReleaseStores);
-    const albumReleaseSongUpload = createReleaseStore((state) => state.albumReleaseSongUpload);
-    const _removeAlbumReleaseSongUpload = createReleaseStore((state) => state._removeAlbumReleaseSongUpload);
-    const _clearAlbumRelease = createReleaseStore((state) => state._clearAlbumRelease);
-    const albumReleaseAlbumArt = createReleaseStore((state) => state.albumReleaseAlbumArt);
-    const completeAlbumData = createReleaseStore((state) => state.completeAlbumData);
-    const _addToCart = cartItemStore((state) => state._addToCart);
+    const albumReleaseDetails = useCreateReleaseStore((state) => state.albumReleaseDetails);
+    const albumReleaseAdvanceFeatures = useCreateReleaseStore((state) => state.albumReleaseAdvanceFeatures);
+    const albumReleaseStores = useCreateReleaseStore((state) => state.albumReleaseStores);
+    const albumReleaseSongUpload = useCreateReleaseStore((state) => state.albumReleaseSongUpload);
+    const _removeAlbumReleaseSongUpload = useCreateReleaseStore((state) => state._removeAlbumReleaseSongUpload);
+    const _clearAlbumRelease = useCreateReleaseStore((state) => state._clearAlbumRelease);
+    const albumReleaseAlbumArt = useCreateReleaseStore((state) => state.albumReleaseAlbumArt);
+    const completeAlbumData = useCreateReleaseStore((state) => state.completeAlbumData);
+    // const _addToCart = useCartItemStore((state) => state._addToCart);
 
     const [openSuccessModal, setOpenSuccessModal] = useState(false);
     const _setToastNotification = useSettingStore((state) => state._setToastNotification);
@@ -120,15 +120,15 @@ function CreateAlbumReleaseOverview() {
         _clearAlbumRelease();
 
 
-        _addToCart({
-            id: albumReleaseDetails._id,
-            email: albumReleaseDetails.email,
-            artistName: albumReleaseDetails.artist_name,
-            artWorkImg: albumReleaseAlbumArt.imagePreview,
-            price: 45,
-            releaseType: "Album",
-            songTitle: albumReleaseDetails.album_title
-        });
+        // _addToCart({
+        //     id: albumReleaseDetails._id,
+        //     email: albumReleaseDetails.email,
+        //     artistName: albumReleaseDetails.artist_name,
+        //     artWorkImg: albumReleaseAlbumArt.imagePreview,
+        //     price: 45,
+        //     releaseType: "Album",
+        //     songTitle: albumReleaseDetails.album_title
+        // });
 
         setTimeout(() => {
             setOpenSuccessModal(false);

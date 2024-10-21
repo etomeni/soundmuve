@@ -85,7 +85,7 @@ const CartItemComponent: React.FC<_Props> = ({
                                                 overflow: "hidden"
                                             }}
                                         >
-                                            <img src={item.artWorkImg} alt='song art work image'
+                                            <img src={item.coverArt} alt='song art work image'
                                                 style={{
                                                     width: "100%",
                                                     height: "100%",
@@ -103,7 +103,7 @@ const CartItemComponent: React.FC<_Props> = ({
                                                     letterSpacing: "-0.13px",
                                                     color: colors.dark
                                                 }}
-                                            >{ item.songTitle }</Typography>
+                                            >{ item.title }</Typography>
 
                                             <Typography variant='subtitle2'
                                                 sx={{
@@ -212,7 +212,7 @@ const CartItemComponent: React.FC<_Props> = ({
                                                 overflow: "hidden"
                                             }}
                                         >
-                                            <img src={item.artWorkImg} alt='song art work image'
+                                            <img src={item.coverArt} alt='song art work image'
                                                 style={{
                                                     width: "100%",
                                                     height: "100%",
@@ -231,7 +231,7 @@ const CartItemComponent: React.FC<_Props> = ({
                                                     letterSpacing: "-0.06px",
                                                     color: colors.dark,
                                                 }}
-                                            >{ item.songTitle }</Typography>
+                                            >{ item.title }</Typography>
 
                                             <Typography variant='subtitle2'
                                                 sx={{

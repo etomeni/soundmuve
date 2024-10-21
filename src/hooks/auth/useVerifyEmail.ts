@@ -3,7 +3,7 @@ import { useState } from "react";
 import axios from "axios";
 
 // import { useUserStore } from "@/state/userStore";
-import { localApiEndpoint, getQueryParams } from "@/util/resources";
+import { apiEndpoint, getQueryParams } from "@/util/resources";
 import { createSearchParams, useNavigate } from "react-router-dom";
 import { useSettingStore } from "@/state/settingStore";
 
@@ -106,7 +106,7 @@ export function useVerifyEmailAuth() {
         
         try {
             const response = (await axios.post(
-                `${localApiEndpoint}/auth/verifyEmailToken`, 
+                `${apiEndpoint}/auth/verifyEmailToken`, 
                 data2db,
                 {
                     headers: {
@@ -150,7 +150,7 @@ export function useVerifyEmailAuth() {
     const handleResendOtp = async () => {
         try {
             const response = (await axios.post(
-                `${localApiEndpoint}/auth/sendPasswordResetEmail`, 
+                `${apiEndpoint}/auth/sendPasswordResetEmail`, 
                 { email: getQueryParams('email') } 
             )).data;
             // console.log(response);

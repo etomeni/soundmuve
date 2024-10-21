@@ -10,8 +10,8 @@ import { useUserStore } from "@/state/userStore";
 import { apiEndpoint } from "@/util/resources";
 import { getDecryptedLocalStorage, setEncryptedLocalStorage } from "@/util/storage";
 import { useSettingStore } from "@/state/settingStore";
-import { getUserLocation } from "@/util/location";
-import { locationInterface } from "@/constants/typesInterface";
+import { defaultUserLocation, getUserLocation } from "@/util/location";
+import { locationInterface } from "@/typeInterfaces/users.interface";
 
 
 const formSchema = yup.object({
@@ -43,7 +43,7 @@ export function useLoginAuth() {
     
     const [showPassword, setShowPassword] = useState(false);
     const [rememberMe, setRememberMe] = useState(false);
-    const [userLocation, setUserLocation] = useState<locationInterface>();
+    const [userLocation, setUserLocation] = useState<locationInterface>(defaultUserLocation);
     const handleClickShowPassword = () => setShowPassword((show) => !show);
 
     useEffect(() => {

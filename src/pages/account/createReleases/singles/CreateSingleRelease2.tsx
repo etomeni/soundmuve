@@ -1,10 +1,3 @@
-import { ChangeEvent, useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useForm } from 'react-hook-form';
-import * as yup from "yup";
-import { yupResolver } from '@hookform/resolvers/yup';
-import axios from 'axios';
-
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
@@ -21,7 +14,6 @@ import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import CloudUploadOutlinedIcon from '@mui/icons-material/CloudUploadOutlined';
 import AddIcon from '@mui/icons-material/Add';
 import CancelIcon from '@mui/icons-material/Cancel';
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 
 import AccountWrapper from '@/components/AccountWrapper';
 import SongPreviewComponent from '@/components/account/SongPreview';
@@ -30,13 +22,9 @@ import ArtWorkFileInfoComponent from '@/components/ArtWorkFileInfo';
 import CircularProgressWithLabel from '@/components/CircularProgressWithLabel';
 import CopyrightOwnershipModalComponent from '@/components/account/CopyrightOwnershipModal';
 
-import { useSettingStore } from '@/state/settingStore';
-import { useUserStore } from '@/state/userStore';
-import { createReleaseStore } from '@/state/createReleaseStore';
-
 import { 
-    emekaApiEndpoint, artWorkAllowedTypes, convertToBase64, minutes, musicStores, seconds, 
-    socialPlatformStores, songArtistsCreativesRoles, validateImageArtWork 
+    artWorkAllowedTypes, minutes, musicStores, seconds, 
+    socialPlatformStores, songArtistsCreativesRoles 
 } from '@/util/resources';
 import { languages } from '@/util/languages';
 
@@ -44,498 +32,52 @@ import cloudUploadIconImg from "@/assets/images/cloudUploadIcon.png";
 import MultipleSelectCheckmarks from '@/components/MultipleSelectCheckmarks';
 import colors from '@/constants/colors';
 import { releaseSelectStyle3, releaseTextFieldStyle } from '@/util/mui';
-import { cartItemStore } from '@/state/cartStore';
 import SearchArtistModalComponent from '@/components/account/SearchArtistModal';
-import { searchedArtistSearchInterface } from '@/constants/typesInterface';
+import ExplicitLyricsReadMoreInfoComponent from '@/components/ExplicitLyricsReadMoreInfo';
+import YesNoOptionsComponent from '@/components/release/YesNoOptions';
+import { useCreateSingleRelease } from '@/hooks/release/useCreateSingleRelease';
+import { createSearchParams } from 'react-router-dom';
 
-
-const formSchema = yup.object({
-    artistCreativeName: yup.string().trim().label("Artist/Creative Name"),
-    songArtistsCreativeRole: yup.string().trim().label("Artist/Creative Role"),
-    ISRC_Number: yup.string().trim().label("ISRC Number"),
-    songWriter: yup.string().trim().label("Song Writer"),
-    store: yup.string().trim().label("Store"),
-    socialPlatform: yup.string().trim().label("Social Platform"),
-
-    copyrightOwnership: yup.string().trim().label("Copyright Ownership"),
-    copyrightOwnershipPermission: yup.string().trim().label("Copyright Ownership Permission"),
-
-    songLyrics: yup.string().trim(),
-    lyricsLanguage: yup.string().trim().label("Lyrics Language"),
-    tikTokClipStartTime_Minutes: yup.string().trim().label("TikTok Clip Start Time"),
-    tikTokClipStartTime_Seconds: yup.string().trim().label("TikTok Clip Start Time"),
-});
-
-
-interface creativeType {
-    creativeName: string,
-    creativeRole: string,
-    creativeId?: string,
-}
 
 let dspToSearch: "Apple" | "Spotify";
 
 function CreateSingleRelease2() {
-    const navigate = useNavigate();
-    // const darkTheme = useSettingStore((state) => state.darkTheme);
-    const userData = useUserStore((state) => state.userData);
-    const accessToken = useUserStore((state) => state.accessToken);
-    const singleRelease1 = createReleaseStore((state) => state.singleRelease1);
-    const singleRelease2 = createReleaseStore((state) => state.singleRelease2);
-    const _setSingleRelease2 = createReleaseStore((state) => state._setSingleRelease2);
-    const _clearSingleRelease = createReleaseStore((state) => state._clearSingleRelease);
-    const _restoreAllRelease = createReleaseStore((state) => state._restoreAllRelease);
-    const _addToCart = cartItemStore((state) => state._addToCart);
-    const [openCopyrightOwnershipModal, setOpenCopyrightOwnershipModal] = useState(false);
+    const {
+        singleRelease, 
+        apiResponse, // setApiResponse,
+        navigate,
 
-    const [openSuccessModal, setOpenSuccessModal] = useState(false);
+        songWriters, setSongWriters, 
+        songArtists_Creatives, setSongArtists_Creatives,
+        songAudioPreview, setSongAudioPreview, setSongAudio,
+        imagePreview, // setImagePreview,
 
-    const _setToastNotification = useSettingStore((state) => state._setToastNotification);
-    const [apiResponse, setApiResponse] = useState({
-        display: false,
-        status: true,
-        message: ""
-    });
-    
-    const [copyrightOwnership, setCopyrightOwnership] = useState('');
-    const [copyrightOwnershipPermission, setCopyrightOwnershipPermission] = useState('');
-    const [songWriters, setSongWriters] = useState<string[]>([]);
-    const [songArtists_Creatives, setSongArtists_Creatives] = useState<creativeType[]>([]);
-    const [image, setImage] = useState<Blob | null>(null);
-    const [imagePreview, setImagePreview] = useState();
-    const [songAudio, setSongAudio] = useState<Blob | null>(null);
-    const [songAudioPreview, setSongAudioPreview] = useState<any>();
-    const [selectStores, setSelectStores] = useState<string[]>(musicStores);
-    const [selectSocialStores, setSelectSocialStores] = useState<string[]>(socialPlatformStores);
-    
-    const [selectCreativeRoleValue, setSelectCreativeRoleValue] = useState('Choose Roles');
-    const [songUploadProgress, setSongUploadProgress] = useState(0);
+        openSuccessModal, setOpenSuccessModal,
+        openCopyrightOwnershipModal, setOpenCopyrightOwnershipModal,
 
-    const [openSearchArtistModal, setOpenSearchArtistModal] = useState(false);
+        copyrightOwnership, setCopyrightOwnership,
+        copyrightOwnershipPermission, setCopyrightOwnershipPermission,
+        selectStores, // setSelectStores,
+        selectSocialStores, // setSelectSocialStores,
+        explicitLyrics, setExplicitLyrics,
+        selectCreativeRoleValue, setSelectCreativeRoleValue,
 
-    useEffect(() => {
-        if (!singleRelease1.song_title) {
-            _restoreAllRelease();
-        }
-    }, [singleRelease1]);
+        songUploadProgress,
+        singleRelease2Form,
 
-    useEffect(() => {
-        if (singleRelease2.mp3_file) {
-            setCopyrightOwnership(singleRelease2.copyright_ownership);
-            setValue("copyrightOwnership", singleRelease2.copyright_ownership, {shouldDirty: true, shouldTouch: true, shouldValidate: true});
-            
-            setCopyrightOwnershipPermission(singleRelease2.copyright_ownership_permissions);
-            setValue("copyrightOwnershipPermission", singleRelease2.copyright_ownership_permissions, {shouldDirty: true, shouldTouch: true, shouldValidate: true});
-    
-            setSongWriters(singleRelease2.song_writer);
-            setSongArtists_Creatives(singleRelease2.songArtistsCreativeRole);
-            setImage(singleRelease2.cover_photo);
-            // setImagePreview(singleRelease2.imagePreview);
-            setSongAudio(singleRelease2.mp3_file);
-            // setSongAudioPreview(singleRelease2.songAudioPreview);
-    
-            setSelectStores(singleRelease2.store.split(','));
-            setSelectSocialStores(singleRelease2.social_platform.split(','));
-    
-            setValue("ISRC_Number", singleRelease2.isrc_number, {shouldDirty: true, shouldTouch: true, shouldValidate: true});
-            setValue("lyricsLanguage", singleRelease2.language_lyrics, {shouldDirty: true, shouldTouch: true, shouldValidate: true});
-            setValue("songLyrics", singleRelease2.lyrics, {shouldDirty: true, shouldTouch: true, shouldValidate: true});
-        }
-    }, [singleRelease2]);
+        handleAudioFileUpload, handleImageFileUpload,
+        handleStoreSelect, handleSocialStoreSelect,
 
-    const { 
-        handleSubmit, register, getValues, setError, setValue, resetField, formState: { errors, isValid, isSubmitting } 
-    } = useForm({ 
-        resolver: yupResolver(formSchema),
-        mode: 'onBlur', reValidateMode: 'onChange', 
-        defaultValues: { 
-            // store: "All",
-            // socialPlatform: "All",
-            lyricsLanguage: "English",
-            tikTokClipStartTime_Minutes: "00",
-            tikTokClipStartTime_Seconds: "00",
-        } 
-    });
+        onSubmitCreateSingleRelease2,
 
-        
-    const handleAudioFileUpload = async (e: ChangeEvent<HTMLInputElement>) => {
-        // const file = e.target.files[0]; 
-        const file = e.target.files?.[0];
-        if (!file) return;
-        setSongAudio(file);
+        handleSetArtistName2,
+        handleAddMoreCreatives,
 
-        const fileReader = new FileReader();
-        fileReader.readAsDataURL(file);
-        fileReader.onload = () => {
-            setSongAudioPreview(fileReader.result);
-        }
-        
-        e.target.value = "";
-    }
-        
-    const handleImageFileUpload = async (e: ChangeEvent<HTMLInputElement>) => {
-        setApiResponse({
-            display: false,
-            status: false,
-            message: ""
-        });
+        openSearchArtistModal, setOpenSearchArtistModal,
+    } = useCreateSingleRelease();
 
-        // const file = e.target.files[0]; 
-        const file = e.target.files?.[0];
-        if (!file) return;
-        
-        const validateResult = await validateImageArtWork(file);
-        setApiResponse(validateResult);
-        if (!validateResult.status) return;
-    
-        const base64 = await convertToBase64(file);
-        if (base64.status && base64.result) {
-            setImage(file);
-            setImagePreview(base64.result);
-        } else {
-            setImage(null);
-            setImagePreview(undefined);
-            setApiResponse(base64);
-        }
-    
-        e.target.value = "";
-    }
-
-    const handleStoreSelect = (selected: string[]) => {
-        setSelectStores(selected);
-        setValue("store", selected.toString(), {shouldDirty: true, shouldTouch: true, shouldValidate: true});
-    }
-
-    const handleSocialStoreSelect = (selected: string[]) => {
-        setSelectSocialStores(selected);
-        setValue("socialPlatform", selected.toString(), {shouldDirty: true, shouldTouch: true, shouldValidate: true});
-    }
-
-    const onSubmit = async (formData: typeof formSchema.__outputType) => {
-        setApiResponse({
-            display: false,
-            status: true,
-            message: ""
-        });
-
-
-        if (formData.store && formData.store == "Select" ) {
-            _setToastNotification({
-                display: true,
-                status: "error",
-                message: "Select stores to distribute your music to."
-            })
-
-            setError(
-                "store", 
-                {message: "Select stores to distribute your music to."},
-                { shouldFocus: true }
-            );
-            return;
-        }
-
-        if (formData.socialPlatform && formData.socialPlatform == "Select" ) {
-            _setToastNotification({
-                display: true,
-                status: "error",
-                message: "Select social platforms to distribute your music to."
-            })
-
-            setError(
-                "socialPlatform", 
-                { message: "Select social platforms to distribute your music to." },
-                { shouldFocus: true }
-            );
-            return;
-        }
-
-        if (formData.songWriter) {
-            const newWritter = [ ...songWriters, formData.songWriter ];
-            setSongWriters(newWritter);
-            resetField("songWriter");
-        } else {
-            if (!songWriters.length) {
-                _setToastNotification({
-                    display: true,
-                    status: "error",
-                    message: "Please add a song writer."
-                })
-    
-                setError(
-                    "songWriter", 
-                    { message: "Please add a song writer." },
-                    { shouldFocus: true }
-                )
-                return;
-            }
-        }
-
-
-        if (formData.artistCreativeName) {
-            if (formData.songArtistsCreativeRole && formData.songArtistsCreativeRole != 'Choose Roles') {
-                const newData = {
-                    creativeName: formData.artistCreativeName,
-                    creativeRole: formData.songArtistsCreativeRole,
-                };
-    
-                const newCreatives = [ ...songArtists_Creatives, newData ];
-                setSongArtists_Creatives(newCreatives);
-    
-                setTimeout(() => {
-                    resetField("artistCreativeName");
-                    resetField("songArtistsCreativeRole");
-                    setSelectCreativeRoleValue("Choose Roles");
-                }, 500);
-            } else {
-                _setToastNotification({
-                    display: true,
-                    status: "error",
-                    message: `Please choose ${formData.artistCreativeName} role for this song.`,
-                })
-    
-                setError(
-                    "songArtistsCreativeRole", 
-                    { message: `Please choose ${formData.artistCreativeName} role for this song.` },
-                    // "Please add artists & creatives that worked on this song."
-                    { shouldFocus: true }
-                )
-                return;
-            }
-        } else {
-            if (!songArtists_Creatives.length) {
-                _setToastNotification({
-                    display: true,
-                    status: "error",
-                    message: "Please add artists & creatives that worked on this song."
-                })
-    
-                setError(
-                    "artistCreativeName", 
-                    { message: "Please add artists & creatives that worked on this song." },
-                    { shouldFocus: true }
-                )
-                return;
-            }
-        }
-
-
-        if (!copyrightOwnership) {
-            _setToastNotification({
-                display: true,
-                status: "error",
-                message: "Copyright Ownership::: Select if this song is a cover version of another song?"
-            });
-
-            setError(
-                "copyrightOwnership", 
-                { message: "Select if this song is a cover version of another song?"},
-                { shouldFocus: true }
-            );
-            return;
-        }
-
-        if (copyrightOwnership == "Yes" && copyrightOwnershipPermission != "Yes") {
-            _setToastNotification({
-                display: true,
-                status: "error",
-                // message: "Copyright Ownership Permission::: Select if this song is a cover version of another song?"
-                message: "Copyright Ownership Permission is required."
-            })
-
-            setOpenCopyrightOwnershipModal(true);
-
-            setError(
-                "copyrightOwnershipPermission", 
-                { message: "Copyright Ownership Permission is required." },
-                { shouldFocus: true }
-            );
-            return;
-        }
-
-        if (!songAudio) {
-            setApiResponse({
-                display: true,
-                status: false,
-                message: "Please upload the song."
-            });
-
-            _setToastNotification({
-                display: true,
-                status: "error",
-                message: "Please upload the song."
-            })
-
-            return;
-        }
-
-        // if (!image) {
-        //     setApiResponse({
-        //         display: true,
-        //         status: false,
-        //         message: "Please upload song cover."
-        //     });
-
-        //     _setToastNotification({
-        //         display: true,
-        //         status: "error",
-        //         message: "Please upload song cover."
-        //     })
-
-        //     return;
-        // }
-
-        const release2data = {
-            email: userData.email,
-            release_type: 'Single',
-            store: formData.store || '',
-            social_platform: formData.socialPlatform || '',
-
-            mp3_file: songAudio,
-            song_writer: songWriters,
-        
-            songArtistsCreativeRole: songArtists_Creatives,
-        
-            copyright_ownership: copyrightOwnership,
-            copyright_ownership_permissions: copyrightOwnershipPermission,
-        
-            isrc_number: formData.ISRC_Number || '',
-            language_lyrics: formData.lyricsLanguage || '',
-            lyrics: formData.songLyrics || '',
-            tikTokClipStartTime: `${ formData.tikTokClipStartTime_Minutes }:${ formData.tikTokClipStartTime_Seconds }`,
-            cover_photo: image,
-
-            imagePreview: imagePreview,
-            songAudioPreview: songAudioPreview,
-        }
-
-        _setSingleRelease2(release2data);
-
-        const data2db = new FormData();
-        data2db.append('email', userData.email);
-        data2db.append('release_type', "Single");
-        data2db.append('store', formData.store || 'All');
-        data2db.append('social_platform', formData.socialPlatform || 'All');
-        data2db.append('song', singleRelease1.song_title);
-        data2db.append('mp3_file', songAudio);
-        data2db.append('song_writer', songWriters.toString());
-        data2db.append('songArtistsCreativeRole', songArtists_Creatives.toString());
-        data2db.append('copyright_ownership', copyrightOwnership);
-        data2db.append('copyright_ownership_permissions', copyrightOwnershipPermission);
-        data2db.append('isrc_number', formData.ISRC_Number || '');
-        data2db.append('language_lyrics', formData.lyricsLanguage || '');
-        data2db.append('lyrics', formData.songLyrics || '');
-        data2db.append('tikTokClipStartTime', `${ formData.tikTokClipStartTime_Minutes }:${ formData.tikTokClipStartTime_Seconds }`);
-        data2db.append('cover_photo', image || '');
-
-        // console.log(data2db);
-
-        try {
-            const response = (await axios.patch(
-                `${emekaApiEndpoint}/Release/update-release`,
-                data2db,  
-                {
-                    headers: {
-                        'Content-Type': 'multipart/form-data',
-                        Authorization: `Bearer ${accessToken}`
-                    },
-                    onUploadProgress: (progressEvent) => {
-                        const loaded = progressEvent.loaded;
-                        const total = progressEvent.total || 0;
-                        const percentage = Math.floor((loaded * 100) / total );
-
-                        if (percentage < 100) {
-                            setSongUploadProgress(percentage);
-                        }
-                    },
-                }
-            )).data;
-            // console.log(response);
-            
-            setApiResponse({
-                display: true,
-                status: true,
-                message: response.message
-            });
-            _setToastNotification({
-                display: true,
-                status: "success",
-                message: response.message
-            });
-
-            setOpenSuccessModal(true);
-
-            _addToCart({
-                id: singleRelease1._id,
-                email: singleRelease1.email,
-                artistName: singleRelease1.artist_name,
-                artWorkImg: imagePreview,
-                price: 25,
-                releaseType: "Single",
-                songTitle: singleRelease1.song_title
-            });
-
-            setTimeout(() => {
-                navigate("/account/cart");
-                setOpenSuccessModal(false);
-                _clearSingleRelease();
-            }, 1000);
-        } catch (error: any) {
-            const err = error.response ? error.response.data : error || '';
-            console.log(err);
-
-            setApiResponse({
-                display: true,
-                status: false,
-                message: err.message || "Oooops, failed to update details. please try again."
-            });
-        }
-
-    }
-
-    const handleSetArtistName = (details: searchedArtistSearchInterface, dspName: "Spotify" | "Apple") => {
-        // console.log(details);
-        if (dspName == "Spotify") {
-            // setSelectedSpotifyArtist(details)
-            setValue(
-                "artistCreativeName", 
-                details.name,
-                {shouldDirty: true, shouldTouch: true, shouldValidate: true} 
-            );
-            handleAddMoreCreatives(details)
-        } else if (dspName == "Apple") {
-            
-        }
-
-        return;
-    }
-
-    const handleAddMoreCreatives = (details?: searchedArtistSearchInterface) => {
-        const creativeName = getValues("artistCreativeName");
-        const creativeRole = selectCreativeRoleValue; // getValues("songArtistsCreativeRole");
-        if (!creativeName) return;
-            
-        if (!creativeRole || creativeRole == 'Choose Roles') {
-            _setToastNotification({
-                display: true,
-                status: "warning",
-                message: `Please select ${ creativeName } Role in creating this song.`
-            })
-
-            setError("songArtistsCreativeRole", {message: `Please select ${ creativeName } Role in creating this song.`});
-            return;
-        }
-
-        // const newCreatives = [ ...songArtists_Creatives, { creativeName, creativeRole } ];
-        const newCreatives:creativeType[] = [ 
-            ...songArtists_Creatives, 
-            { creativeName, creativeRole, creativeId: details?.id || '' } 
-        ];
-        setSongArtists_Creatives(newCreatives);
-        resetField("artistCreativeName");
-        resetField("songArtistsCreativeRole");
-        setSelectCreativeRoleValue('Choose Roles');
-        document.getElementById("songArtistsCreativeRole")?.focus();
-    }
+    const { setValue, register, resetField, getValues, formState } = singleRelease2Form;
+    const { errors, isSubmitting, isValid } = formState;
 
 
     return (
@@ -563,7 +105,7 @@ function CreateSingleRelease2() {
                     > Create a Single </Typography>
                 </Box>
 
-                <form noValidate onSubmit={ handleSubmit(onSubmit) } >   
+                <form noValidate onSubmit={ onSubmitCreateSingleRelease2 } >   
                     <Stack sx={{mt: "35px", color: colors.dark }} spacing={"35px"} alignItems={"center"}>
                         <Box
                             sx={{
@@ -598,7 +140,14 @@ function CreateSingleRelease2() {
                                 >Details</Typography>
 
                                 <Typography variant='body1'
-                                    onClick={() => navigate("/account/create-single-release")}
+                                    onClick={() => {
+                                        navigate({
+                                            pathname: "/account/create-single-release",
+                                            search: `?${createSearchParams({release_id: singleRelease._id || '' })}`,
+                                        });
+
+                                        // navigate("/account/create-single-release")
+                                    }}
                                     sx={{
                                         fontWeight: "400",
                                         fontSize: {xs: "15px", md: "20px"},
@@ -623,7 +172,7 @@ function CreateSingleRelease2() {
                                         lineHeight: {xs: "10.84px", md: "24px"},
                                         letterSpacing: {xs: "-0.61px", md: "-1.34px"},
                                     }}
-                                > { singleRelease1.song_title } : { singleRelease1.artist_name } </Typography>
+                                > { singleRelease.title } : { singleRelease.mainArtist.spotifyProfile.name } </Typography>
 
                                 <Box sx={{ mt: {xs: "15px", md: "30px"} }}>
                                     <Stack direction="row" spacing={"auto"} justifyContent="space-between" alignItems="center">
@@ -643,7 +192,7 @@ function CreateSingleRelease2() {
                                                 lineHeight: {xs: "25px", md: "40px"},
                                                 letterSpacing: "-0.13px"
                                             }}
-                                        > { singleRelease1.releaseDate } </Typography>
+                                        > { singleRelease.releaseDate } </Typography>
                                     </Stack>
                                     
                                     <Stack direction="row" spacing={"auto"} justifyContent="space-between" alignItems="center">
@@ -663,7 +212,7 @@ function CreateSingleRelease2() {
                                                 lineHeight: {xs: "25px", md: "40px"},
                                                 letterSpacing: "-0.13px"
                                             }}
-                                        > { singleRelease1.label_name } </Typography>
+                                        > { singleRelease.labelName } </Typography>
                                     </Stack>
 
                                     {/* <Stack direction="row" spacing={"auto"} justifyContent="space-between" alignItems="center">
@@ -703,7 +252,7 @@ function CreateSingleRelease2() {
                                                 lineHeight: {xs: "25px", md: "40px"},
                                                 letterSpacing: "-0.13px"
                                             }}
-                                        > { singleRelease1.upc_ean } </Typography>
+                                        > { singleRelease.upc_ean } </Typography>
                                     </Stack>
 
                                     <Stack direction="row" spacing={"auto"} justifyContent="space-between" alignItems="center">
@@ -723,7 +272,7 @@ function CreateSingleRelease2() {
                                                 lineHeight: {xs: "25px", md: "40px"},
                                                 letterSpacing: "-0.13px"
                                             }}
-                                        > { singleRelease1.primary_genre } </Typography>
+                                        > { singleRelease.primaryGenre } </Typography>
                                     </Stack>
 
                                     <Stack direction="row" spacing={"auto"} justifyContent="space-between" alignItems="center">
@@ -743,7 +292,7 @@ function CreateSingleRelease2() {
                                                 lineHeight: {xs: "25px", md: "40px"},
                                                 letterSpacing: "-0.13px"
                                             }}
-                                        > { singleRelease1.secondary_genre } </Typography>
+                                        > { singleRelease.secondaryGenre } </Typography>
                                     </Stack>
 
                                     <Stack direction="row" spacing={"auto"} justifyContent="space-between" alignItems="center">
@@ -763,7 +312,7 @@ function CreateSingleRelease2() {
                                                 lineHeight: {xs: "25px", md: "40px"},
                                                 letterSpacing: "-0.13px"
                                             }}
-                                        > { singleRelease1.language } </Typography>
+                                        > { singleRelease.language } </Typography>
                                     </Stack>
                                 </Box>
                             </Box>
@@ -1210,7 +759,7 @@ function CreateSingleRelease2() {
                                                                     fontSize: {xs: "13px", md: "15px"},
                                                                     color: colors.primary
                                                                 }}
-                                                            > { creative.creativeRole } </Typography>
+                                                            > { creative.role } </Typography>
 
                                                             <Typography variant='body2'
                                                                 sx={{
@@ -1218,7 +767,7 @@ function CreateSingleRelease2() {
                                                                     fontSize: {xs: "13px", md: "15px"},
                                                                     color: colors.tertiary
                                                                 }}
-                                                            > { creative.creativeName } </Typography>
+                                                            > { creative.name } </Typography>
                                                         </Box>
                                                     </Stack>
                                                 ))
@@ -1243,7 +792,6 @@ function CreateSingleRelease2() {
                                                     id="songArtistsCreativeRole"
                                                     label=""
                                                     // defaultValue="Choose Roles"
-                                                    placeholder='Choose Roles'
                                                     value={selectCreativeRoleValue}
 
                                                     sx={releaseSelectStyle3}
@@ -1347,10 +895,47 @@ function CreateSingleRelease2() {
                                             borderRadius: "12px"
                                         }}
                                     >
+                                        <Box mb={4}>
+                                            <Stack direction="row" alignItems="center" spacing="8px">
+                                                <Typography component={"h3"} variant='h3'
+                                                    sx={{
+                                                        fontWeight: "900",
+                                                        fontSize: {xs: "15px", md: "20px"},
+                                                        lineHeight: {xs: "25px", md: "40px"},
+                                                        letterSpacing: "-0.13px"
+                                                    }}
+                                                >Does this song have explicit lyrics? </Typography>
+
+                                                <ExplicitLyricsReadMoreInfoComponent />
+                                            </Stack>
+
+                                            <YesNoOptionsComponent 
+                                                currentValue={explicitLyrics}
+                                                // option='Yes'
+                                                onSelect={(e) => {
+                                                    setValue("explicitSongLyrics", e, 
+                                                        {shouldValidate: true, shouldDirty: true, shouldTouch: true}
+                                                    ) 
+                                                    setExplicitLyrics(e); 
+                                                }}
+
+                                                CheckMarkIconColor={colors.tertiary}
+
+                                                bgColorActive={colors.primary}
+                                                bgColorInactive={colors.bg}
+
+                                                textColorActive={colors.milk}
+                                                textColorInactive={colors.dark}
+                                                
+                                                borderColorActive={colors.primary}
+                                                borderColorInactive={colors.bg}
+                                            />
+                                        </Box>
+                                        
                                         <Box>
                                             <Typography component={"h3"} variant='h3'
                                                 sx={{
-                                                    fontWeight: "900",
+                                                    fontWeight: "700",
                                                     fontSize: {xs: "15px", md: "20px"},
                                                     lineHeight: {xs: "25px", md: "40px"},
                                                     letterSpacing: "-0.13px"
@@ -1366,84 +951,24 @@ function CreateSingleRelease2() {
                                                 }}
                                             > Is this a cover version of another song? </Typography>
 
-                                            <Stack direction={'row'} spacing={ copyrightOwnership == "Yes" ? "5px" : "15px" } sx={{my: "15px"}}>
-                                                <Box>
-                                                    <Box 
-                                                        sx={{
-                                                            p: {xs: "10.18px 19.68px 10.18px 19.68px", md: "15px 29px 15px 29px"},
-                                                            borderRadius: {xs: "8.14px", md: "12px"},
-                                                            background: copyrightOwnership == "Yes" ? colors.primary : colors.milk,
-                                                            color: copyrightOwnership == "Yes" ? colors.milk : colors.dark,
-                                                            cursor: "pointer",
-                                                            display: "inline-block"
-                                                        }}
-                                                        onClick={() => { 
-                                                            setCopyrightOwnership("Yes"); 
-                                                            setValue("copyrightOwnership", "Yes", {shouldValidate: true, shouldDirty: true, shouldTouch: true}) 
-                                                        }}
-                                                    >
-                                                        <Typography 
-                                                            sx={{
-                                                                fontWeight: '900',
-                                                                fontSize: {xs: "10.18px", md: "15px"},
-                                                                lineHeight: {xs: "8.82px", md: "13px"},
-                                                                letterSpacing: {xs: "-0.09px", md: "-0.13px"},
-                                                                textAlign: 'center',
-                                                            }}
-                                                        > Yes </Typography>
-                                                    </Box>
+                                            <YesNoOptionsComponent 
+                                                currentValue={copyrightOwnership}
+                                                onSelect={(e) => {
+                                                    setCopyrightOwnership(e); 
+                                                    setValue("copyrightOwnership", e, {shouldValidate: true, shouldDirty: true, shouldTouch: true}) 
+                                                }}
 
-                                                    { copyrightOwnership == "Yes" ? 
-                                                        <CheckCircleIcon 
-                                                            sx={{ 
-                                                                color: colors.tertiary,
-                                                                position: "relative", 
-                                                                left: -15,
-                                                                top: -8,
-                                                            }} 
-                                                        /> : <></>
-                                                    }
-                                                </Box>
+                                                CheckMarkIconColor={colors.tertiary}
 
-                                                <Box>
-                                                    <Box 
-                                                        sx={{
-                                                            p: {xs: "10.18px 19.68px 10.18px 19.68px", md: "15px 29px 15px 29px"},
-                                                            borderRadius: {xs: "8.14px", md: "12px"},
-                                                            background: copyrightOwnership == "No" ? colors.primary : colors.milk,
-                                                            color: copyrightOwnership == "No" ? colors.milk : colors.dark,
-                                                            cursor: "pointer",
-                                                            display: "inline-block"
-                                                        }}
-                                                        onClick={() => { 
-                                                            setCopyrightOwnership("No"); 
-                                                            setValue("copyrightOwnership", "No", {shouldValidate: true, shouldDirty: true, shouldTouch: true}) 
+                                                bgColorActive={colors.primary}
+                                                bgColorInactive={colors.bg}
 
-                                                        }}
-                                                    >
-                                                        <Typography 
-                                                            sx={{
-                                                                fontWeight: '900',
-                                                                fontSize: {xs: "10.18px", md: "15px"},
-                                                                lineHeight: {xs: "8.82px", md: "13px"},
-                                                                letterSpacing: {xs: "-0.09px", md: "-0.13px"},
-                                                                textAlign: 'center',
-                                                            }}
-                                                        > No </Typography>
-                                                    </Box>
-
-                                                    { copyrightOwnership == "No" ? 
-                                                        <CheckCircleIcon 
-                                                            sx={{ 
-                                                                color: colors.tertiary,
-                                                                position: "relative", 
-                                                                left: -15,
-                                                                top: -8,
-                                                            }} 
-                                                        /> : <></>
-                                                    }
-                                                </Box>
-                                            </Stack>
+                                                textColorActive={colors.milk}
+                                                textColorInactive={colors.dark}
+                                                
+                                                borderColorActive={colors.primary}
+                                                borderColorInactive={colors.bg}
+                                            />
 
                                             { errors.copyrightOwnership && <Box sx={{fontSize: 13, color: "red", textAlign: "left"}}>{ errors.copyrightOwnership?.message }</Box> }
                                         </Box>
@@ -1463,83 +988,25 @@ function CreateSingleRelease2() {
                                                         Please confirm:
                                                     </Typography>
 
-                                                    <Stack direction={'row'} spacing={ copyrightOwnershipPermission == "Yes" ? "5px" : "15px"} sx={{mt: "15px"}}>
-                                                        <Box>
-                                                            <Box 
-                                                                sx={{
-                                                                    p: {xs: "10.18px 19.68px 10.18px 19.68px", md: "15px 29px 15px 29px"},
-                                                                    borderRadius: {xs: "8.14px", md: "12px"},
-                                                                    background: copyrightOwnershipPermission == "Yes" ? colors.primary : colors.milk ,
-                                                                    color: copyrightOwnershipPermission == "Yes" ? colors.milk : colors.dark,
-                                                                    cursor: "pointer",
-                                                                    display: "inline-block"
-                                                                }}
-                                                                onClick={() => { 
-                                                                    setCopyrightOwnershipPermission("Yes"); 
-                                                                    setValue("copyrightOwnershipPermission", "Yes", {shouldValidate: true, shouldDirty: true, shouldTouch: true}) 
-                                                                }}
-                                                            >
-                                                                <Typography 
-                                                                    sx={{
-                                                                        fontWeight: '900',
-                                                                        fontSize: {xs: "10.18px", md: "15px"},
-                                                                        lineHeight: {xs: "8.82px", md: "13px"},
-                                                                        letterSpacing: {xs: "-0.09px", md: "-0.13px"},
-                                                                        textAlign: 'center',
-                                                                    }}
-                                                                > Yes </Typography>
-                                                            </Box>
 
-                                                            { copyrightOwnershipPermission == "Yes" ? 
-                                                                <CheckCircleIcon 
-                                                                    sx={{ 
-                                                                        color: colors.tertiary,
-                                                                        position: "relative", 
-                                                                        left: -15,
-                                                                        top: -8,
-                                                                    }} 
-                                                                /> : <></>
-                                                            }
-                                                        </Box>
+                                                    <YesNoOptionsComponent 
+                                                        currentValue={copyrightOwnershipPermission}
+                                                        onSelect={(e) => {
+                                                            setCopyrightOwnershipPermission(e); 
+                                                            setValue("copyrightOwnershipPermission", e, {shouldValidate: true, shouldDirty: true, shouldTouch: true}) 
+                                                        }}
 
-                                                        <Box>
-                                                            <Box 
-                                                                sx={{
-                                                                    p: {xs: "10.18px 19.68px 10.18px 19.68px", md: "15px 29px 15px 29px"},
-                                                                    borderRadius: {xs: "8.14px", md: "12px"},
-                                                                    background: copyrightOwnershipPermission == "No" ? colors.primary : colors.milk,
-                                                                    color: copyrightOwnershipPermission == "No" ? colors.milk : colors.dark,
-                                                                    cursor: "pointer",
-                                                                    display: "inline-block"
-                                                                }}
-                                                                onClick={() => {
-                                                                    setCopyrightOwnershipPermission("No");
-                                                                    setValue("copyrightOwnershipPermission", "No", {shouldValidate: true, shouldDirty: true, shouldTouch: true}) 
-                                                                }}
-                                                            >
-                                                                <Typography 
-                                                                    sx={{
-                                                                        fontWeight: '900',
-                                                                        fontSize: {xs: "10.18px", md: "15px"},
-                                                                        lineHeight: {xs: "8.82px", md: "13px"},
-                                                                        letterSpacing: {xs: "-0.09px", md: "-0.13px"},
-                                                                        textAlign: 'center',
-                                                                    }}
-                                                                > No </Typography>
-                                                            </Box>
+                                                        CheckMarkIconColor={colors.tertiary}
 
-                                                            { copyrightOwnershipPermission == "No" ? 
-                                                                <CheckCircleIcon 
-                                                                    sx={{ 
-                                                                        color: colors.tertiary,
-                                                                        position: "relative", 
-                                                                        left: -15,
-                                                                        top: -8,
-                                                                    }} 
-                                                                /> : <></>
-                                                            }
-                                                        </Box>
-                                                    </Stack>
+                                                        bgColorActive={colors.primary}
+                                                        bgColorInactive={colors.bg}
+
+                                                        textColorActive={colors.milk}
+                                                        textColorInactive={colors.dark}
+                                                        
+                                                        borderColorActive={colors.primary}
+                                                        borderColorInactive={colors.bg}
+                                                    />
 
                                                     { errors.copyrightOwnershipPermission && <Box sx={{fontSize: 13, color: "red", textAlign: "left"}}>{ errors.copyrightOwnershipPermission?.message }</Box> }
                                                 </Box>
@@ -1944,7 +1411,7 @@ function CreateSingleRelease2() {
                     resetField("songArtistsCreativeRole");
                     setSelectCreativeRoleValue('Choose Roles');
                 }}
-                onSaveSelection={handleSetArtistName}
+                onSaveSelection={handleSetArtistName2}
                 dspName={ dspToSearch }
             />
         </AccountWrapper>

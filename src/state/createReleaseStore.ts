@@ -1,3 +1,4 @@
+import { releaseInterface, singleRelease1Interface, singleRelease2Interface } from "@/typeInterfaces/release.interface";
 import { getLocalStorage, removeLocalStorageItem, setLocalStorage } from "@/util/storage";
 import { create } from "zustand";
 
@@ -6,6 +7,45 @@ interface creativeType {
     creativeName: string,
     creativeRole: string,
 }
+
+// const singleRelease: releaseInterface = {
+const defaultReleaseData: releaseInterface = {
+    user_id: "",
+    email: "",
+    releaseType: "single",
+    title: "",
+    mainArtist: {
+        spotifyProfile: {
+            name: "",
+            id: "",
+            profilePicture: "",
+            latestAlbum: undefined
+        },
+        appleMusicProfile: undefined
+    },
+    language: "",
+    primaryGenre: "",
+    secondaryGenre: "",
+    releaseDate: "",
+    spotifyReleaseTime: {
+        hours: "",
+        minutes: "",
+        am_pm: "AM"
+    },
+    spotifyReleaseTimezone: "",
+    labelName: "",
+    recordingLocation: "",
+    soldCountries: {
+        worldwide: "Yes",
+        countries: []
+    },
+    upc_ean: "",
+    stores: [],
+    socialPlatforms: [],
+    coverArt: "",
+    status: "Incomplete"
+};
+
 
 const singleRelease1 = {
     _id: '',
@@ -19,7 +59,7 @@ const singleRelease1 = {
 
     selectedArtistName: <any> {},
 
-    explicitLyrics: "",
+    // explicitLyrics: "",
 
     language: 'Select Language',
     primary_genre: 'Select Primary Genre',
@@ -163,6 +203,9 @@ const albumReleaseAlbumArt = {
 }
 
 type _typeInterface_ = {
+    singleRelease: releaseInterface;
+
+
     singleRelease1: typeof singleRelease1;
     singleRelease2: typeof singleRelease2;
 
@@ -173,6 +216,13 @@ type _typeInterface_ = {
     albumReleaseStores: typeof albumReleaseStores;
     albumReleaseSongUpload: typeof albumReleaseSongUpload[];
     albumReleaseAlbumArt: typeof albumReleaseAlbumArt;
+
+    
+    _handleSetSingleRelease1: (details: singleRelease1Interface | releaseInterface) => void;
+    _handleSetSingleRelease2: (details: singleRelease2Interface | releaseInterface) => void;
+    _handleClearSingleRelease: () => void;
+
+
 
     _setCompleteAlbumData: (details: typeof completeAlbumData) => void;
     
@@ -197,18 +247,55 @@ type _typeInterface_ = {
   
 
 
-export const createReleaseStore = create<_typeInterface_>((set) => ({
+export const useCreateReleaseStore = create<_typeInterface_>((set) => ({
+    singleRelease: defaultReleaseData,
+
     singleRelease1: singleRelease1,
     singleRelease2: singleRelease2,
-
     completeAlbumData,
-
     albumReleaseDetails,
     albumReleaseAdvanceFeatures,
     albumReleaseStores,
     albumReleaseSongUpload: [],
     albumReleaseAlbumArt,
   
+    _handleSetSingleRelease1: (release: singleRelease1Interface | releaseInterface) => {
+        // setLocalStorage("user", user);
+        
+        set((state) => {
+            const updateRelease: any = { ...state.singleRelease, ...release };
+            setLocalStorage("singleRelease", updateRelease);
+
+            return {
+                singleRelease: updateRelease,
+            };
+        });
+    },
+  
+    _handleSetSingleRelease2: (release: singleRelease2Interface | releaseInterface) => {
+        set((state) => {
+            const updateRelease: any = { ...state.singleRelease, ...release };
+            setLocalStorage("singleRelease", updateRelease);
+
+            return {
+                singleRelease: updateRelease,
+            };
+        });
+    },
+
+    _handleClearSingleRelease: () => {
+        removeLocalStorageItem("singleRelease");
+
+        set((_state) => {
+            return {
+                singleRelease: defaultReleaseData,
+            };
+        });
+    },
+  
+
+
+
     _setSingleRelease1: (release) => {
         // setLocalStorage("user", user);
         setLocalStorage("singleRelease1", release);

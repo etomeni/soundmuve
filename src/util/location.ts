@@ -1,6 +1,18 @@
-import { locationInterface } from "@/constants/typesInterface";
 import axios from "axios";
+import { locationInterface } from "@/typeInterfaces/users.interface";
 
+
+
+export const defaultUserLocation: locationInterface = {
+    ip: "0.0.0.0",
+    city: "unknown",
+    region: "unknown",
+    country: "unknown",
+    isp: "unknown",
+    lat: 0,
+    lon: 0,
+    usedIps: ["0.0.0.0"]
+};
 
 export async function getUserLocation() {
     try {
