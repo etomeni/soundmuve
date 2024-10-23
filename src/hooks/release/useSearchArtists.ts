@@ -1,14 +1,13 @@
-import { useCallback, useState } from "react";
 import axios from "axios";
+import { useCallback, useState } from "react";
 import { useUserStore } from "@/state/userStore";
-import { emekaApiEndpoint } from "@/util/resources";
+import { apiEndpoint } from "@/util/resources";
 import { searchedArtistSearchInterface } from '@/constants/typesInterface';
 
 
 export function useSearchArtists() {
     // const userData = useUserStore((state) => state.userData);
     const accessToken = useUserStore((state) => state.accessToken);
-
     const [spotifyArtistResults, setSpotifyArtistResults] = useState<searchedArtistSearchInterface[]>([]);
 
     const [apiResponse, setApiResponse] = useState({
@@ -18,40 +17,34 @@ export function useSearchArtists() {
     });
 
 
-    const searchSpotifyArtist = useCallback((searchWord: string) => {
-        handleSpotifyArtistSearch(searchWord)
-    }, []);
-
-
-    const handleSpotifyArtistSearch = async (searchWord: string) => {
+    const searchSpotifyArtist = useCallback(async (searchWord: string) => {
         try {
-            const response = (await axios.get(`${emekaApiEndpoint}/search/search/spotify`, {
+            const response = (await axios.get(`${apiEndpoint}/releases/search/spotify-artist`, {
                 headers: {
                     Authorization: `Bearer ${accessToken}`
                 },
                 params: {
-                    artist: searchWord
+                    artistName: searchWord
                 }
             })).data;
-            console.log(response);
-
-            if (response.length) {
-                setSpotifyArtistResults(response);
-            } else {
-                setSpotifyArtistResults([]);
+            // console.log(response);
+    
+            if (response.status) {
+                const result = response.result.length ? response.result : []
+                setSpotifyArtistResults(result);
             }
-
         } catch (error: any) {
-            const errorResponse = error.response.data || error;
-            console.error(errorResponse);
+            const err = error.response.data || error;
+            const fixedErrorMsg = "Ooops and error occurred!";
+            console.log(err);
 
             setApiResponse({
                 display: true,
                 status: false,
-                message: errorResponse.message || "Ooops and error occurred!"
+                message: err.errors && err.errors.length ? err.errors[0].msg : err.message || fixedErrorMsg
             });
         }
-    }
+    }, []);
 
 
     return {
@@ -62,6 +55,3 @@ export function useSearchArtists() {
         searchSpotifyArtist,
     }
 }
-
-
-

@@ -1,5 +1,5 @@
-import { useCallback, useEffect, useState } from "react";
 import axios from "axios";
+import { useCallback, useEffect, useState } from "react";
 import { useUserStore } from "@/state/userStore";
 import { emekaApiEndpoint } from "@/util/resources";
 import { getLocalStorage, setLocalStorage } from "@/util/storage";
@@ -131,6 +131,3 @@ export function useGetReleases() {
         getAlbumRelease,
     }
 }
-
-
-

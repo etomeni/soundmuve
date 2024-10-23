@@ -1,10 +1,3 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useForm } from 'react-hook-form';
-import * as yup from "yup";
-import { yupResolver } from '@hookform/resolvers/yup';
-import axios from 'axios';
-
 import SideNav from './SideNav';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
@@ -22,8 +15,6 @@ import AddIcon from '@mui/icons-material/Add';
 import CancelIcon from '@mui/icons-material/Cancel';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 
-import { useUserStore } from '@/state/userStore';
-import { useSettingStore } from '@/state/settingStore';
 import { useCreateReleaseStore } from '@/state/createReleaseStore';
 
 import AccountWrapper from '@/components/AccountWrapper';
@@ -31,573 +22,58 @@ import SongPreviewComponent from '@/components/account/SongPreview';
 
 import { releaseSelectStyle, releaseTextFieldStyle, releaseTextFieldStyle2 } from '@/util/mui';
 import { languages } from '@/util/languages';
-import { minutes, seconds, songArtistsCreativesRoles, pauseExecution } from '@/util/resources';
+import { minutes, seconds, songArtistsCreativesRoles } from '@/util/resources';
 import CopyrightOwnershipModalComponent from '@/components/account/CopyrightOwnershipModal';
-import { emekaApiEndpoint } from '@/util/resources';
 import CircularProgressWithLabel from '@/components/CircularProgressWithLabel';
 import ExplicitLyricsReadMoreInfoComponent from '@/components/ExplicitLyricsReadMoreInfo';
 import colors from '@/constants/colors';
 import SearchArtistModalComponent from '@/components/account/SearchArtistModal';
-import { searchedArtistSearchInterface } from '@/constants/typesInterface';
+// import { artistInterface, songArtists_CreativesInterface } from '@/typeInterfaces/release.interface';
+import { useCreateAlbum4 } from '@/hooks/release/createAlbumRelease/useCreateAlbum4';
+import CircularProgress from '@mui/material/CircularProgress';
 
-
-const formSchema = yup.object({
-    songTitle: yup.string().required().trim().label("Song Title"),
-
-    songWriter: yup.string().trim().label("Song Writer"),
-    artistCreativeName: yup.string().trim().label("Artist/Creative Name"),
-    songArtistsCreativeRole: yup.string().trim().label("Artist/Creative Role"),
-
-    explicitSongLyrics: yup.string().trim(),
-    
-    copyrightOwnership: yup.string().trim().label("Copyright Ownership"),
-    copyrightOwnershipPermission: yup.string().trim().label("Copyright Ownership Permission"),
-    
-    ISRC_Number: yup.string().trim().label("ISRC Number"),
-
-    songLyrics: yup.string().trim(),
-    lyricsLanguage: yup.string().trim().label("Lyrics Language"),
-    tikTokClipStartTime_Minutes: yup.string().trim().label("TikTok Clip Start Time"),
-    tikTokClipStartTime_Seconds: yup.string().trim().label("TikTok Clip Start Time"),
-});
-
-interface creativeType {
-    creativeName: string,
-    creativeRole: string,
-    creativeId?: string,
-}
 
 let dspToSearch: "Apple" | "Spotify";
 
 function CreateAlbumReleaseSongUpload() {
-    const navigate = useNavigate();
-    // const darkTheme = useSettingStore((state) => state.darkTheme);
-    const userData = useUserStore((state) => state.userData);
-    const accessToken = useUserStore((state) => state.accessToken);
-    const albumReleaseSongUpload = useCreateReleaseStore((state) => state.albumReleaseSongUpload);
-    const _setAlbumReleaseSongUpload = useCreateReleaseStore((state) => state._setAlbumReleaseSongUpload);
-    const albumReleaseDetails = useCreateReleaseStore((state) => state.albumReleaseDetails);
-    const _removeAlbumReleaseSongUpload = useCreateReleaseStore((state) => state._removeAlbumReleaseSongUpload);
-    const completeAlbumData = useCreateReleaseStore((state) => state.completeAlbumData);
+    // const albumReleaseDetails = useCreateReleaseStore((state) => state.albumReleaseDetails);
+    const albumRelease = useCreateReleaseStore((state) => state.albumRelease);
 
-    const [openCopyrightOwnershipModal, setOpenCopyrightOwnershipModal] = useState(false);
-
-    const _setToastNotification = useSettingStore((state) => state._setToastNotification);
-    const [apiResponse, setApiResponse] = useState({
-        display: false,
-        status: true,
-        message: ""
-    });
-    // const [submitBtnType, setSubmitBtnType] = useState<'next' | "add">();
-    
-    const [explicitLyrics, setExplicitLyrics] = useState(""); // No
-    const [copyrightOwnership, setCopyrightOwnership] = useState('');
-    const [copyrightOwnershipPermission, setCopyrightOwnershipPermission] = useState('');
-    const [songWriters, setSongWriters] = useState<string[]>([]);
-    const [songArtists_Creatives, setSongArtists_Creatives] = useState<creativeType[]>([]);
-    const [songAudio, setSongAudio] = useState<any>();
-    const [songAudioPreview, setSongAudioPreview] = useState<any>();
-    const [selectRoleValue, setSelectRoleValue] = useState('Choose Roles');
-    const [selectLyricsLanguageValue, setSelectLyricsLanguageValue] = useState('English');
-    const [selectTiktokMinValue, setSelectTiktokMinValue] = useState('00');
-    const [selectTiktokSecValue, setSelectTiktokSecValue] = useState('00');
-
-    const [songEditId, setSongEditId] = useState('');
-    const [songUploadProgress, setSongUploadProgress] = useState(0);
-    const [openSearchArtistModal, setOpenSearchArtistModal] = useState(false);
-
-
-    const { 
-        handleSubmit, register, getValues, setError, setValue, resetField, setFocus, reset, 
-        formState: { errors, isSubmitting, isValid } 
-    } = useForm({ 
-        resolver: yupResolver(formSchema),
-        mode: 'onBlur', reValidateMode: 'onChange', 
-        defaultValues: { 
-            lyricsLanguage: "English",
-            tikTokClipStartTime_Minutes: "00",
-            tikTokClipStartTime_Seconds: "00",
-        } 
-    });
-            
+    const {
+        navigate,
+        apiResponse, // setApiResponse,
         
+        register, getValues, // setError, 
+        setValue, resetField, // setFocus, reset, 
+        errors, isValid, isSubmitting,
 
-    const handleEdit = (i: number) => {
-        const songData = albumReleaseSongUpload[i];
+        selectLyricsLanguageValue, setSelectLyricsLanguageValue,
+        openCopyrightOwnershipModal, setOpenCopyrightOwnershipModal,
+        explicitLyrics, setExplicitLyrics,
+        copyrightOwnership, setCopyrightOwnership,
+        copyrightOwnershipPermission, setCopyrightOwnershipPermission,
+        songWriters, setSongWriters,
+        songArtists_Creatives, setSongArtists_Creatives,
+        songAudioPreview, setSongAudioPreview,
+        selectRoleValue, setSelectRoleValue,
+        selectTiktokMinValue, setSelectTiktokMinValue,
+        // songEditId, setSongEditId,
+        songUploadProgress, // setSongUploadProgress,
+        openSearchArtistModal, setOpenSearchArtistModal,
 
-        setValue("songTitle", songData.song_title, {shouldDirty: true, shouldTouch: true, shouldValidate: true});
-        setValue("ISRC_Number", songData.isrc_number, {shouldDirty: true, shouldTouch: true, shouldValidate: true});
-        setValue("songLyrics", songData.lyrics, {shouldDirty: true, shouldTouch: true, shouldValidate: true});
-
-        setSongAudio(songData.mp3_file);
-        setSongAudioPreview(songData.songAudioPreview);
-
-        setSongWriters(songData.song_writer);
-        setSongArtists_Creatives(songData.songArtistsCreativeRole);
-
-        setExplicitLyrics(songData.explicitLyrics);
-        setValue("explicitSongLyrics", songData.explicitLyrics, {shouldDirty: true, shouldTouch: true, shouldValidate: true})
-
-        setSelectLyricsLanguageValue(songData.language_lyrics);
-        setValue("lyricsLanguage", songData.language_lyrics, {shouldDirty: true, shouldTouch: true, shouldValidate: true});
-
-        setCopyrightOwnership(songData.copyright_ownership);
-        setValue("copyrightOwnership", songData.copyright_ownership);
-        setCopyrightOwnershipPermission(songData.copyright_ownership_permissions);
-        setValue("copyrightOwnershipPermission", songData.copyright_ownership_permissions);
-
-        const tiktokTimer = songData.tikTokClipStartTime.split(':');
-
-        setValue("tikTokClipStartTime_Minutes", tiktokTimer[0], {shouldDirty: true, shouldTouch: true, shouldValidate: true});
-        setValue("tikTokClipStartTime_Seconds", tiktokTimer[1], {shouldDirty: true, shouldTouch: true, shouldValidate: true});
-        setSelectTiktokMinValue(tiktokTimer[0]);
-        setSelectTiktokSecValue(tiktokTimer[1]);
-
-        setSongEditId(songData._id);
-
-        _removeAlbumReleaseSongUpload(i);
-    }
-
-    const handleAudioFileUpload = async (e: any) => {
-        setSongAudio(undefined);
-        setSongAudioPreview(undefined);
-        await pauseExecution(200);
-
-        const file = e.target.files[0]; 
-        setSongAudio(file);
-
-        const fileReader = new FileReader();
-        fileReader.readAsDataURL(file);
-        fileReader.onload = () => {
-            setSongAudioPreview(fileReader.result);
-        }
+        selectTiktokSecValue, setSelectTiktokSecValue,
         
-        e.target.value = "";
-    }
+        // songAudio, 
+        setSongAudio,
 
+        handleEdit,
+        handleAudioFileUpload,
+        handleNextBTN,
+        handleSetArtistName,
+        handleAddMoreCreatives,
 
-    const handleNextBTN = async () => {
-
-        if (albumReleaseSongUpload.length) {
-            navigate("/account/create-album-release-album-art");
-            // console.log(newSongData);
-            
-            // const data2db: any = new FormData();
-            // // data2db.append('email', newSongData.email);
-            // data2db.append('email', userData.email);
-
-            // albumReleaseSongUpload.forEach(newSongData => {
-            //     data2db.append('song_mp3', newSongData.mp3_file);
-            //     data2db.append('song_title', newSongData.song_title );
-            //     // data2db.append('song_writer', newSongData.song_writer );
-            //     data2db.append('song_writer', `"${newSongData.song_writer.toString()}"` );
-    
-            //     data2db.append('song_artists', `"${newSongData.songArtistsCreativeRole.map(item => item.creativeName).toString()}"` );
-            //     data2db.append('creative_role', `"${newSongData.songArtistsCreativeRole.map(item => item.creativeRole).toString()}"` );
-            //     // data2db.append('song_artists', newSongData.songArtistsCreativeRole.map(item => item.creativeName).join(', ') );
-            //     // data2db.append('creative_role', newSongData.songArtistsCreativeRole.map(item => item.creativeRole).join(', ') );
-    
-            //     // data2db.append('songArtistsCreativeRole', newSongData.songArtistsCreativeRole.toString());
-            //     data2db.append('explicitLyrics', newSongData.explicitLyrics);
-            //     data2db.append('copyright_ownership', newSongData.copyright_ownership);
-            //     data2db.append('copyright_ownership_permissions', newSongData.copyright_ownership_permissions);
-            //     data2db.append('isrc_number', newSongData.isrc_number);
-            //     data2db.append('language_of_lyrics', newSongData.language_lyrics);
-            //     data2db.append('lyrics', newSongData.lyrics);
-            //     data2db.append('ticktokClipStartTime', newSongData.tikTokClipStartTime);
-            // });
-
-            // try {
-            //     setIsNextBtnSubmitting(true);
-
-            //     const response = (await axios.put(
-            //         // `${emekaApiEndpoint}/Album/update-album/${ completeAlbumData._id }/page4`,
-            //         // `${emekaApiEndpoint}/songs/albums/${ completeAlbumData._id }/page4`,
-            //         `${emekaApiEndpoint}/songs/albums/66977731566946bc43b539c0/page4`,
-            //         data2db,  
-            //         {
-            //             headers: {
-            //                 'Content-Type': 'multipart/form-data',
-            //                 Authorization: `Bearer ${accessToken}`
-            //             },
-            //         }
-            //     )).data;
-            //     console.log(response);
-
-            //     setIsNextBtnSubmitting(false);
-            //     // _setAlbumReleaseSongUpload(newSongData);
-            //     navigate("/account/create-album-release-album-art");
-
-
-
-            //     // setApiResponse({
-            //     //     display: true,
-            //     //     status: true,
-            //     //     message: response.message
-            //     // });
-            //     _setToastNotification({
-            //         display: true,
-            //         status: "success",
-            //         message: response.message
-            //     });
-            //     // navigate("/auth/login", {replace: true});
-
-            //     // setFocus("songTitle", {shouldSelect: true});
-            //     // reset();
-            //     // setSongAudio(undefined);
-            //     // setSongAudioPreview(undefined);
-            //     // setCopyrightOwnership('');
-            //     // setCopyrightOwnershipPermission('');
-            //     // setSongWriters([]);
-            //     // setSongArtists_Creatives([]);
-            //     // setSelectRoleValue("Choose Roles");
-            //     // setValue("explicitSongLyrics", "");
-            //     // setExplicitLyrics("");
-            //     // setValue("songArtistsCreativeRole", "Choose Roles");
-            //     // setValue("tikTokClipStartTime_Minutes", "00");
-            //     // setValue("tikTokClipStartTime_Seconds", "00");
-            //     // setSelectTiktokMinValue("00");
-            //     // setSelectTiktokSecValue("00");
-
-            // } catch (error: any) {
-            //     const err = error.response.data;
-            //     console.log(err);
-            //     setIsNextBtnSubmitting(false);
-
-            //     setApiResponse({
-            //         display: true,
-            //         status: false,
-            //         message: err.message || "Oooops, failed to update details. please try again."
-            //     });
-            // }
-
-        } else {
-            _setToastNotification({
-                display: true,
-                status: "warning",
-                message: "Please add a songs to proceed."
-            });
-        }
-        
-    }
-
-    const onSubmit = async (formData: typeof formSchema.__outputType) => {  
-        // console.log(formData);
-
-        setApiResponse({
-            display: false,
-            status: true,
-            message: ""
-        });
-
-
-        if (formData.songWriter) {
-            const newWritter = [ ...songWriters, formData.songWriter ];
-            setSongWriters(newWritter);
-
-            setTimeout(() => {
-                resetField("songWriter");
-            }, 500);
-        } else {
-            if (!songWriters.length) {
-                _setToastNotification({
-                    display: true,
-                    status: "error",
-                    message: "Please add a song writer."
-                })
-    
-                setError(
-                    "songWriter", 
-                    { message: "Please add a song writer." },
-                    { shouldFocus: true }
-                )
-                return;
-            }
-        }
-
-        if (formData.artistCreativeName) {
-            if (formData.songArtistsCreativeRole && formData.songArtistsCreativeRole != 'Choose Roles') {
-                const newData = {
-                    creativeName: formData.artistCreativeName,
-                    creativeRole: formData.songArtistsCreativeRole,
-                };
-    
-                const newCreatives = [ ...songArtists_Creatives, newData ];
-                setSongArtists_Creatives(newCreatives);
-    
-                setTimeout(() => {
-                    resetField("artistCreativeName");
-                    resetField("songArtistsCreativeRole");
-                    setSelectRoleValue("Choose Roles");
-                }, 500);
-            } else {
-                _setToastNotification({
-                    display: true,
-                    status: "error",
-                    message: `Please choose ${formData.artistCreativeName} role for this song.`,
-                })
-    
-                setError(
-                    "songArtistsCreativeRole", 
-                    { message: `Please choose ${formData.artistCreativeName} role for this song.` },
-                    // "Please add artists & creatives that worked on this song."
-                    { shouldFocus: true }
-                )
-                return;
-            }
-        } else {
-            if (!songArtists_Creatives.length) {
-                _setToastNotification({
-                    display: true,
-                    status: "error",
-                    message: "Please add artists & creatives that worked on this song."
-                })
-    
-                setError(
-                    "artistCreativeName", 
-                    { message: "Please add artists & creatives that worked on this song." },
-                    { shouldFocus: true }
-                )
-                return;
-            }
-        }
-
-        if (!explicitLyrics) {
-            _setToastNotification({
-                display: true,
-                status: "error",
-                message: "Please choose if this song has explicit lyrics."
-            })
-
-            setError("explicitSongLyrics", {message: "Please choose if this song has explicit lyrics."})
-            return;
-        }
-
-        if (!copyrightOwnership) {
-            _setToastNotification({
-                display: true,
-                status: "error",
-                message: "Copyright Ownership::: Select if this song is a cover version of another song?"
-            })
-
-            setError("copyrightOwnership", {message: "Select if this song is a cover version of another song?"})
-            return;
-        }
-
-        if (copyrightOwnership == "Yes" && copyrightOwnershipPermission != "Yes") {
-            _setToastNotification({
-                display: true,
-                status: "error",
-                // message: "Copyright Ownership Permission::: Select if this song is a cover version of another song?"
-                message: "Copyright Ownership Permission is required."
-            });
-            setOpenCopyrightOwnershipModal(true);
-
-            setError(
-                "copyrightOwnershipPermission", 
-                { message: "Copyright Ownership Permission is required." },
-                { shouldFocus: true }
-            );
-
-            return;
-        }
-
-        if (!songAudio) {
-            setApiResponse({
-                display: true,
-                status: false,
-                message: "Please upload the song."
-            });
-
-            _setToastNotification({
-                display: true,
-                status: "error",
-                message: "Please upload the song."
-            })
-
-            return;
-        }
-
-        await pauseExecution(500);
-        // Pause for 500 milliseconds so that setSongWriters && setSongArtists_Creatives will complete.
-
-        const newSongData = {
-            email: userData.email,
-            mp3_file: songAudio,
-            songAudioPreview,
-            song_title: formData.songTitle,
-            song_writer: songWriters,
-            songArtistsCreativeRole: songArtists_Creatives,
-
-            explicitLyrics: explicitLyrics,
-
-            copyright_ownership: copyrightOwnership,
-            copyright_ownership_permissions: copyrightOwnershipPermission,
-            isrc_number: formData.ISRC_Number || '',
-            language_lyrics: formData.lyricsLanguage || '',
-            lyrics: formData.songLyrics || '',
-            tikTokClipStartTime: `${ formData.tikTokClipStartTime_Minutes }:${ formData.tikTokClipStartTime_Seconds }`,
-        };
-
-        _setAlbumReleaseSongUpload({...newSongData, _id: ''});
-
-        const data2db = new FormData();
-        data2db.append('album_id', completeAlbumData._id );
-        data2db.append('email', newSongData.email);
-        data2db.append('song_mp3', newSongData.mp3_file);
-        data2db.append('song_title', newSongData.song_title );
-        data2db.append('song_writer', newSongData.song_writer.toString());
-
-        // data2db.append('creative_name', newSongData.songArtistsCreativeRole.map(item => item.creativeName).join(', '));
-        data2db.append('creative_name', newSongData.songArtistsCreativeRole.map(item => item.creativeId || item.creativeName).join(', '));
-        data2db.append('creative_role', newSongData.songArtistsCreativeRole.map(item => item.creativeRole).join(', '));
-
-        data2db.append('explicit_lyrics', newSongData.explicitLyrics);
-        data2db.append('copyright_ownership', newSongData.copyright_ownership);
-        data2db.append('copyright_ownership_permissions', newSongData.copyright_ownership_permissions);
-        data2db.append('isrc_number', newSongData.isrc_number);
-        data2db.append('language_of_lyrics', newSongData.language_lyrics);
-        data2db.append('lyrics', newSongData.lyrics);
-        data2db.append('ticktokClipStartTime', newSongData.tikTokClipStartTime);
-
-
-        try {
-            const response = songEditId ? 
-                (await axios.put(
-                    `${emekaApiEndpoint}/songs/editSong/${songEditId}`,
-                    data2db,
-                    {
-                        headers: {
-                            'Content-Type': 'multipart/form-data',
-                            Authorization: `Bearer ${accessToken}`
-                        },
-                        onUploadProgress: (progressEvent) => {
-                            const loaded = progressEvent.loaded;
-                            const total = progressEvent.total || 0;
-                            const percentage = Math.floor((loaded * 100) / total );
-
-                            if (percentage < 100) {
-                                setSongUploadProgress(percentage);
-                            }
-                        },
-                    }
-                )).data 
-            : (await axios.post(
-                `${emekaApiEndpoint}/songs/page4`,
-                data2db,
-                {
-                    headers: {
-                        'Content-Type': 'multipart/form-data',
-                        Authorization: `Bearer ${accessToken}`
-                    },
-                    onUploadProgress: (progressEvent) => {
-                        const loaded = progressEvent.loaded;
-                        const total = progressEvent.total || 0;
-                        const percentage = Math.floor((loaded * 100) / total );
-
-                        if (percentage < 100) {
-                            setSongUploadProgress(percentage);
-                        }
-                    },
-                }
-            )).data;
-            console.log(response);
-
-
-            await pauseExecution(500);
-
-
-            _setAlbumReleaseSongUpload({...newSongData, _id: response.song._id});
-
-            // setApiResponse({
-            //     display: true,
-            //     status: true,
-            //     message: response.message
-            // });
-            _setToastNotification({
-                display: true,
-                status: "success",
-                message: response.message
-            });
-            // navigate("/auth/login", {replace: true});
-            setSongEditId('');
-
-
-            setFocus("songTitle", {shouldSelect: true});
-            reset();
-            setSongAudio(undefined);
-            setSongAudioPreview(undefined);
-            setCopyrightOwnership('');
-            setCopyrightOwnershipPermission('');
-            setSongWriters([]);
-            setSongArtists_Creatives([]);
-            setSelectRoleValue("Choose Roles");
-            setValue("explicitSongLyrics", "");
-            setExplicitLyrics("");
-            setValue("songArtistsCreativeRole", "Choose Roles");
-            setValue("tikTokClipStartTime_Minutes", "00");
-            setValue("tikTokClipStartTime_Seconds", "00");
-            setSelectTiktokMinValue("00");
-            setSelectTiktokSecValue("00");
-
-        } catch (error: any) {
-            const err = error.response.data;
-            console.log(err);
-
-            setApiResponse({
-                display: true,
-                status: false,
-                message: err.message || "Oooops, failed to update details. please try again."
-            });
-        }
-
-    }
-
-
-    const handleSetArtistName = (details: searchedArtistSearchInterface, dspName: "Spotify" | "Apple") => {
-        // console.log(details);
-        if (dspName == "Spotify") {
-            // setSelectedSpotifyArtist(details)
-            setValue(
-                "artistCreativeName", 
-                details.name,
-                {shouldDirty: true, shouldTouch: true, shouldValidate: true} 
-            );
-            handleAddMoreCreatives(details)
-        } else if (dspName == "Apple") {
-            
-        }
-
-        return;
-    }
-
-    const handleAddMoreCreatives = (details?: searchedArtistSearchInterface) => {
-        const creativeName = getValues("artistCreativeName");
-        const creativeRole = selectRoleValue; // getValues("songArtistsCreativeRole");
-        if (!creativeName) return;
-            
-        if (!creativeRole || creativeRole == 'Choose Roles') {
-            _setToastNotification({
-                display: true,
-                status: "warning",
-                message: `Please select ${ creativeName } Role in creating this song.`
-            })
-
-            setError("songArtistsCreativeRole", {message: `Please select ${ creativeName } Role in creating this song.`});
-            return;
-        }
-
-        // const newCreatives = [ ...songArtists_Creatives, { creativeName, creativeRole } ];
-        const newCreatives:creativeType[] = [ 
-            ...songArtists_Creatives, 
-            { creativeName, creativeRole, creativeId: details?.id || '' } 
-        ];
-        setSongArtists_Creatives(newCreatives);
-        resetField("artistCreativeName");
-        resetField("songArtistsCreativeRole");
-        setSelectRoleValue('Choose Roles');
-        document.getElementById("songArtistsCreativeRole")?.focus();
-    }
+        submitForm
+    } = useCreateAlbum4();
 
 
     return (
@@ -614,11 +90,11 @@ function CreateAlbumReleaseSongUpload() {
 
 
                         <Box sx={{my: 3}}>
-                            <form noValidate onSubmit={ handleSubmit(onSubmit) } 
+                            <form noValidate onSubmit={ submitForm } 
                                 style={{ width: "100%", maxWidth: "916px" }}
                             >
 
-                                { albumReleaseSongUpload.length ? (
+                                { albumRelease.albumSongs && albumRelease.albumSongs.length ? (
                                         <Box
                                             sx={{
                                                 maxWidth: {xs: "330px", md: "892px"},
@@ -670,11 +146,11 @@ function CreateAlbumReleaseSongUpload() {
                                                 }}
                                             >
                                                 {
-                                                    albumReleaseSongUpload.map((item, i) => (
+                                                    albumRelease.albumSongs.map((item, i) => (
                                                         <SongPreviewComponent key={i}
-                                                            songTitle={`${item.song_title} - ${albumReleaseDetails.artist_name}`}
-                                                            subTitle={item.isrc_number}
-                                                            songAudio={item.songAudioPreview}
+                                                            songTitle={`${item.songTitle} - ${albumRelease.mainArtist.spotifyProfile.name}`}
+                                                            subTitle={item.isrcNumber}
+                                                            songAudio={item.songAudio}
                                                             editSong={() => { 
                                                                 // console.log("hello");
                                                                 handleEdit(i);
@@ -1034,7 +510,7 @@ function CreateAlbumReleaseSongUpload() {
                                                                             fontSize: {xs: "13px", md: "15px"},
                                                                             color: colors.tertiary
                                                                         }}
-                                                                    > { creative.creativeRole } </Typography>
+                                                                    > { creative.role } </Typography>
 
                                                                     <Typography
                                                                         sx={{
@@ -1042,7 +518,7 @@ function CreateAlbumReleaseSongUpload() {
                                                                             fontSize: {xs: "13px", md: "15px"},
                                                                             color: colors.dark
                                                                         }}
-                                                                    > { creative.creativeName } </Typography>
+                                                                    > { creative.name } </Typography>
                                                                 </Box>
                                                             </Stack>
                                                         ))
@@ -1776,11 +1252,16 @@ function CreateAlbumReleaseSongUpload() {
                                                 {
                                                     isSubmitting ? (
                                                         <Box mx="auto">
-                                                            {/* <CircularProgress size={25} sx={{ color: "#8638E5", fontWeight: "bold", mx: 'auto' }} /> */}
-                                                            <CircularProgressWithLabel 
-                                                                value={songUploadProgress} size={30} 
-                                                                sx={{ color: colors.primary, fontWeight: "bold", mx: 'auto' }} 
-                                                            />
+                                                            {
+                                                                songUploadProgress <= 2 ? (
+                                                                    <CircularProgress size={30} sx={{ color: colors.milk }} />
+                                                                ) : (
+                                                                    <CircularProgressWithLabel 
+                                                                        value={songUploadProgress} size={30} 
+                                                                        sx={{ color: colors.milk, fontWeight: "bold", mx: 'auto' }} 
+                                                                    />
+                                                                )
+                                                            }
                                                         </Box>
                                                     ) : (
                                                         <>
@@ -1844,7 +1325,7 @@ function CreateAlbumReleaseSongUpload() {
                                         <Button variant="contained" 
                                             fullWidth // type="submit" 
                                             // disabled={ (!albumReleaseSongUpload.length && !isValid) || isSubmitting } 
-                                            disabled={ !albumReleaseSongUpload.length } 
+                                            disabled={ !albumRelease.albumSongs?.length } 
                                             sx={{ 
                                                 bgcolor: colors.primary,
                                                 color: colors.milk,

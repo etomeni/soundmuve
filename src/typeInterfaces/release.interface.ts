@@ -97,6 +97,7 @@ export type releaseInterface = {
 export type singleRelease1Interface = {
     release_id?: string,
     title: string,
+    recordLabelArtist_id?: string,
 
     mainArtist: {
         spotifyProfile: artistInterface,
@@ -135,3 +136,51 @@ export type singleRelease2Interface = {
     coverArt: any,
 }
 
+
+
+
+export type albumRelease1Interface = {
+    release_id?: string,
+    recordLabelArtist_id?: string,
+
+    title: string,
+
+    mainArtist: {
+        spotifyProfile: artistInterface,
+        appleMusicProfile: string
+    },
+
+    language: string,
+    primaryGenre: string,
+    secondaryGenre: string,
+
+    releaseDate: string,
+    spotifyReleaseTime: {
+        hours: string,
+        minutes: string,
+        am_pm: string  // "AM" | "PM"
+    },
+    spotifyReleaseTimezone: string
+}
+
+
+export type albumRelease2Interface = {
+    release_id: string,
+
+    labelName?: string, // optional
+    recordingLocation?: string, // optional 
+
+    soldCountries: {
+        worldwide: string, // "Yes" | "No",
+        countries?: string[], // optional if worldwide is Yes
+    },
+
+    upc_ean?: string // optional
+
+}
+
+export type albumRelease3Interface = {
+    release_id: string,
+    stores: string[],
+    socialPlatforms: string[],
+}

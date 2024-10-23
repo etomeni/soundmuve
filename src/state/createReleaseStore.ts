@@ -1,12 +1,7 @@
-import { releaseInterface, singleRelease1Interface, singleRelease2Interface } from "@/typeInterfaces/release.interface";
+import { albumRelease1Interface, albumRelease2Interface, albumRelease3Interface, releaseInterface, singleRelease1Interface, singleRelease2Interface, songInterface } from "@/typeInterfaces/release.interface";
 import { getLocalStorage, removeLocalStorageItem, setLocalStorage } from "@/util/storage";
 import { create } from "zustand";
 
-
-interface creativeType {
-    creativeName: string,
-    creativeRole: string,
-}
 
 // const singleRelease: releaseInterface = {
 const defaultReleaseData: releaseInterface = {
@@ -47,200 +42,44 @@ const defaultReleaseData: releaseInterface = {
 };
 
 
-const singleRelease1 = {
-    _id: '',
-    email: "",
-    release_type: "",
-    song_title: "",
-    artist_name: "",
 
-    appleMusicUrl: '',
-    spotifyMusicUrl: '',
+// const albumReleaseSongUpload = {
+//     _id: '',
+//     email: '',
+//     mp3_file: <any> '',
+//     songAudioPreview: <any> '',
+//     song_title: '',
+//     song_writer: <string[]> [],
+//     songArtistsCreativeRole: <creativeType[]> [],
+//     explicitLyrics: '',
+//     copyright_ownership: '',
+//     copyright_ownership_permissions: '',
+//     isrc_number: '',
+//     language_lyrics: '',
+//     lyrics: '',
+//     tikTokClipStartTime: '',
+// }
 
-    selectedArtistName: <any> {},
-
-    // explicitLyrics: "",
-
-    language: 'Select Language',
-    primary_genre: 'Select Primary Genre',
-    secondary_genre: 'Select Secondary Genre',
-
-    releaseDate: "",
-    listenerTimeZone: true,
-    generalTimeZone: true,
-    release_time: "",
-
-    releaseTimeHours: "12",
-    releaseTimeMinutes: "00",
-    releaseTimeFormat: "AM",
-
-    soldWorldwide: "",
-    label_name: "",
-    recording_location: "",
-    upc_ean: "",
-};
-
-const singleRelease2 = {
-    email: '',
-    release_type: '',
-    store: '',
-    social_platform: "",
-
-    mp3_file: <any> '',
-    song_writer:<string[]> [],
-
-    songArtistsCreativeRole:<creativeType[]> [],
-
-    copyright_ownership: '',
-    copyright_ownership_permissions: '',
-
-    isrc_number: '',
-    language_lyrics: '',
-    lyrics: '',
-    tikTokClipStartTime: '',
-    cover_photo: <any> ''
-}
-
-const albumReleaseDetails = {
-    _id: '',
-    email: '',
-    release_type: '',
-    album_title: '',
-    artist_name: '',
-
-    appleMusicUrl: '',
-    spotifyMusicUrl: '',
-    
-    selectedArtistName: <any> {},
-    // explicitLyrics: '',
-    language: 'Select Language',
-    primary_genre: 'Select Primary Genre',
-    secondary_genre: 'Select Secondary Genre',
-    releaseDate: '',
-    release_time: '',
-
-    releaseTimeHours: "12",
-    releaseTimeMinutes: "00",
-    releaseTimeFormat: "AM",
-
-    listenerTimeZone: true,
-    generalTimeZone: true
-}
-
-const albumReleaseAdvanceFeatures = {
-    email: '',
-    release_type: '',
-    label_name: '',
-    recording_location: '',
-    soldWorldwide: '',
-    upc_ean: '',
-}
-
-const albumReleaseStores = {
-    email: '',
-    release_type: '',
-    stores: '',
-    socialPlatforms: '',
-}
-
-
-const completeAlbumData = {
-    email: "latham01@yopmail.com",
-    album_title: "New Dawn",
-    artist_name: "John Doe",
-    language: "English",
-    primary_genre: "Rock",
-    secondary_genre: "Alternative",
-    release_date: "2024-07-15",
-    release_time: "14:00",
-    listenerTimeZone: "CST +3",
-    otherTimeZone: "GMT +1",
-    label_name: '',
-    soldWorldwide: '',
-    recording_location: '',
-    upc_ean: '',
-    store: <any> '',
-    social_platform: <any> '',
-    song_mp3: <any> '',
-    song_title: '',
-    song_writer: <any> '',
-    song_artists: <any> '',
-    creattive_name: <any> '',
-    roles: <any> '',
-    copyright_ownership: '',
-    copyright_ownership_permissions: '',
-    isrc_number: '',
-    language_of_lyrics: '',
-    language_of_lyrics_optional: '',
-    ticktokClipStartTime: '',
-    song_url: '',
-    song_cover_url: '',
-    _id: "668ae15ba93d3ea6345ba9e4",
-    created_at: "2024-07-07T18:41:31.326Z",
-    // "__v": 0
-}
-
-const albumReleaseSongUpload = {
-    _id: '',
-    email: '',
-    mp3_file: <any> '',
-    songAudioPreview: <any> '',
-    song_title: '',
-    song_writer: <string[]> [],
-    songArtistsCreativeRole: <creativeType[]> [],
-    explicitLyrics: '',
-    copyright_ownership: '',
-    copyright_ownership_permissions: '',
-    isrc_number: '',
-    language_lyrics: '',
-    lyrics: '',
-    tikTokClipStartTime: '',
-}
-
-const albumReleaseAlbumArt = {
-    image: <any> '',
-    imagePreview: <any> '',
-}
 
 type _typeInterface_ = {
     singleRelease: releaseInterface;
-
-
-    singleRelease1: typeof singleRelease1;
-    singleRelease2: typeof singleRelease2;
-
-    completeAlbumData: typeof completeAlbumData;
-
-    albumReleaseDetails: typeof albumReleaseDetails;
-    albumReleaseAdvanceFeatures: typeof albumReleaseAdvanceFeatures;
-    albumReleaseStores: typeof albumReleaseStores;
-    albumReleaseSongUpload: typeof albumReleaseSongUpload[];
-    albumReleaseAlbumArt: typeof albumReleaseAlbumArt;
-
+    albumRelease: releaseInterface;
     
     _handleSetSingleRelease1: (details: singleRelease1Interface | releaseInterface) => void;
     _handleSetSingleRelease2: (details: singleRelease2Interface | releaseInterface) => void;
     _handleClearSingleRelease: () => void;
-
-
-
-    _setCompleteAlbumData: (details: typeof completeAlbumData) => void;
     
-    _setAlbumReleaseDetails : (details: typeof albumReleaseDetails) => void;
-    _setAlbumReleaseAdvanceFeatures: (details: typeof albumReleaseAdvanceFeatures) => void;
-    _setAlbumReleaseStores: (details: typeof albumReleaseStores) => void;
-    _setAlbumReleaseSongUpload: (details: typeof albumReleaseSongUpload) => void;
+    _handleSetAlbumRelease1: (details: albumRelease1Interface | releaseInterface) => void;
+    _handleSetAlbumRelease2: (details: albumRelease2Interface | releaseInterface) => void;
+    _handleSetAlbumRelease3: (details: albumRelease3Interface | releaseInterface) => void;
+    _handleSetAlbumRelease4: (details: songInterface | releaseInterface) => void;
+    _handleSetAlbumRelease: (details: releaseInterface) => void;
+
     _removeAlbumReleaseSongUpload: (index: number) => void;
-    _setAlbumReleaseAlbumArt: (details: typeof albumReleaseAlbumArt) => void;
 
-    _setSingleRelease1: (release: typeof singleRelease1) => void;
-    _setSingleRelease2: (release: typeof singleRelease2) => void;
+    _handleClearAlbumRelease: () => void;
 
-    _clearAlbumRelease: () => void;
-    _clearSingleRelease: () => void;
     _restoreAllRelease: () => void;
-
-    // _setCreateAlbum_details: (release: typeof singleRelease2) => void;
 
     // updatePlayerAsync: () => Promise<void>;
 };
@@ -249,15 +88,10 @@ type _typeInterface_ = {
 
 export const useCreateReleaseStore = create<_typeInterface_>((set) => ({
     singleRelease: defaultReleaseData,
+    albumRelease: defaultReleaseData,
 
-    singleRelease1: singleRelease1,
-    singleRelease2: singleRelease2,
-    completeAlbumData,
-    albumReleaseDetails,
-    albumReleaseAdvanceFeatures,
-    albumReleaseStores,
-    albumReleaseSongUpload: [],
-    albumReleaseAlbumArt,
+
+    // albumReleaseSongUpload: [],
   
     _handleSetSingleRelease1: (release: singleRelease1Interface | releaseInterface) => {
         // setLocalStorage("user", user);
@@ -292,191 +126,111 @@ export const useCreateReleaseStore = create<_typeInterface_>((set) => ({
             };
         });
     },
-  
 
 
 
-    _setSingleRelease1: (release) => {
+    _handleSetAlbumRelease1: (release: albumRelease1Interface | releaseInterface) => {
         // setLocalStorage("user", user);
-        setLocalStorage("singleRelease1", release);
-
-        set((_state) => {
-            return {
-                singleRelease1: release,
-            };
-        });
-    },
-  
-    _setSingleRelease2: (release) => {
-        // setLocalStorage("user", user);
-        const releaData = { ...release, mp3_file: '', songAudioPreview: '', cover_photo: '', imagePreview: '' };
-        setLocalStorage("singleRelease2", releaData);
-
-        set((_state) => {
-            return {
-                singleRelease2: release,
-            };
-        });
-    },
-  
-    _setCompleteAlbumData: (data) => {
-        // setLocalStorage("user", user);
-        setLocalStorage("completeAlbumData", data);
-
-        set((_state) => {
-            return {
-                completeAlbumData: data,
-            };
-        });
-    },
-  
-    // _setCreateAlbum_details: (release) => {
-    //     // setLocalStorage("user", user);
-
-    //     set((_state) => {
-    //         return {
-    //             singleRelease2: release,
-    //         };
-    //     });
-    // },
-  
-    _setAlbumReleaseDetails: (details) => {
-        setLocalStorage("albumReleaseDetails", details);
-
-        set((_state) => {
-            return {
-                albumReleaseDetails: details,
-            };
-        });
-    },
-  
-    _setAlbumReleaseAdvanceFeatures: (details) => {
-        setLocalStorage("albumReleaseAdvanceFeatures", details);
-
-        set((_state) => {
-            return {
-                albumReleaseAdvanceFeatures: details,
-            };
-        });
-    },
-  
-    _setAlbumReleaseStores: (details) => {
-        setLocalStorage("albumReleaseStores", details);
-
-        set((_state) => {
-            return {
-                albumReleaseStores: details,
-            };
-        });
-    },
-  
-    _setAlbumReleaseSongUpload: (details) => {
-        const albumReleaseSongUpload = getLocalStorage('albumReleaseSongUpload');
-        const newDetail = { ...details, mp3_file: '', songAudioPreview: '' };
-        if (albumReleaseSongUpload && albumReleaseSongUpload.length) {
-            setLocalStorage("albumReleaseSongUpload", [ ...albumReleaseSongUpload, newDetail ]);
-        } else {
-            setLocalStorage("albumReleaseSongUpload", [ newDetail ]);
-        }
-
-        set((state) => {
-            const songUpload = [ ...state.albumReleaseSongUpload, details ];
-            // setLocalStorage("albumReleaseSongUpload", songUpload);
-
-            return {
-                albumReleaseSongUpload: songUpload,
-            };
-        });
-    },
-  
-    _removeAlbumReleaseSongUpload: (index) => {
-        const albumReleaseSongUpload = getLocalStorage('albumReleaseSongUpload');
-        if (albumReleaseSongUpload && albumReleaseSongUpload.length) {
-            const result = albumReleaseSongUpload.filter((_: any, i: number) => i !== index);
-            setLocalStorage("albumReleaseSongUpload", result);
-        }
-        
         
         set((state) => {
-            // const remainingFruits = state.albumReleaseSongUpload.filter((_, i) => i !== index).concat([]);
-            const result = state.albumReleaseSongUpload.filter((_, i) => i !== index);
-            // setLocalStorage("albumReleaseSongUpload", result);
+            const updateRelease: any = { ...state.albumRelease, ...release };
+            setLocalStorage("albumRelease", updateRelease);
 
             return {
-                albumReleaseSongUpload: result,
+                albumRelease: updateRelease,
             };
         });
     },
 
-    _setAlbumReleaseAlbumArt: (details) => {
-        // setLocalStorage("albumReleaseAlbumArt", { ...details, image: '' });
+    _handleSetAlbumRelease2: (release: albumRelease2Interface | releaseInterface) => {
+        // setLocalStorage("user", user);
+        
+        set((state) => {
+            const updateRelease: any = { ...state.albumRelease, ...release };
+            setLocalStorage("albumRelease", updateRelease);
 
+            return {
+                albumRelease: updateRelease,
+            };
+        });
+    },
+  
+    _handleSetAlbumRelease3: (release: albumRelease3Interface | releaseInterface) => {
+        // setLocalStorage("user", user);
+        
+        set((state) => {
+            const updateRelease: any = { ...state.albumRelease, ...release };
+            setLocalStorage("albumRelease", updateRelease);
+
+            return {
+                albumRelease: updateRelease,
+            };
+        });
+    },
+  
+    _handleSetAlbumRelease4: (release: songInterface | releaseInterface) => {
+        // setLocalStorage("user", user);
+        
+        set((state) => {
+            const updateRelease: any = { ...state.albumRelease, ...release };
+            setLocalStorage("albumRelease", updateRelease);
+
+            return {
+                albumRelease: updateRelease,
+            };
+        });
+    },
+  
+    _handleSetAlbumRelease: (release: releaseInterface) => {
+        set((state) => {
+            const updateRelease: any = { ...state.albumRelease, ...release };
+            setLocalStorage("albumRelease", updateRelease);
+
+            return {
+                albumRelease: updateRelease,
+            };
+        });
+    },
+
+    _removeAlbumReleaseSongUpload: (index: number) => {
+        
+        set((state) => {
+            // const remainingFruits = state.albumRelease.filter((_, i) => i !== index).concat([]);
+            const result = state.albumRelease.albumSongs?.filter((_, i) => i !== index);
+            // setLocalStorage("albumRelease", result);
+
+            if (!result) {
+                return {
+                    albumRelease: state.albumRelease,
+                };
+            }
+
+            return {
+                albumRelease: { ...state.albumRelease, albumSongs: result},
+            };
+        });
+    },
+
+    _handleClearAlbumRelease: () => {
+        removeLocalStorageItem("albumRelease");
         set((_state) => {
             return {
-                albumReleaseAlbumArt: details,
+                albumRelease: defaultReleaseData,
             };
         });
     },
-
-    _clearAlbumRelease: () => {
-        removeLocalStorageItem("completeAlbumData");
-        removeLocalStorageItem("albumReleaseDetails");
-        removeLocalStorageItem("albumReleaseAdvanceFeatures");
-        removeLocalStorageItem("albumReleaseStores");
-        removeLocalStorageItem("albumReleaseSongUpload");
-
-        set((_state) => {
-            return {
-                albumReleaseDetails: albumReleaseDetails,
-                albumReleaseAdvanceFeatures: albumReleaseAdvanceFeatures,
-                albumReleaseStores: albumReleaseStores,
-                albumReleaseSongUpload: [],
-                albumReleaseAlbumArt: albumReleaseAlbumArt,
-            };
-        });
-    },
-
-    _clearSingleRelease: () => {
-        removeLocalStorageItem("singleRelease1");
-        removeLocalStorageItem("singleRelease2");
-
-        set((_state) => {
-            return {
-                singleRelease1: singleRelease1,
-                singleRelease2: singleRelease2,
-            };
-        });
-    },
+  
 
     _restoreAllRelease: () => {
-        const singleRelease1_LS = getLocalStorage("singleRelease1");
-        const singleRelease2_LS = getLocalStorage("singleRelease2");
-
-        const completeAlbumData_LS = getLocalStorage("completeAlbumData");
-
-        const albumReleaseDetails_LS = getLocalStorage("albumReleaseDetails");
-        const albumReleaseAdvanceFeatures_LS = getLocalStorage("albumReleaseAdvanceFeatures");
-        const albumReleaseStores_LS = getLocalStorage("albumReleaseStores");
-        const albumReleaseSongUpload_LS = getLocalStorage("albumReleaseSongUpload");
-        const albumReleaseAlbumArt_LS = getLocalStorage("albumReleaseAlbumArt");
-
+        const singleRelease = getLocalStorage("singleRelease");
+        const albumRelease = getLocalStorage("albumRelease");
 
         set((_state) => {
             return {
-                singleRelease1: singleRelease1_LS ? singleRelease1_LS : singleRelease1,
-                singleRelease2: singleRelease2_LS ? singleRelease2_LS : singleRelease2,
-
-                completeAlbumData: completeAlbumData_LS ? completeAlbumData_LS : completeAlbumData,
-
-                albumReleaseDetails: albumReleaseDetails_LS ? albumReleaseDetails_LS : albumReleaseDetails,
-                albumReleaseAdvanceFeatures: albumReleaseAdvanceFeatures_LS ? albumReleaseAdvanceFeatures_LS : albumReleaseAdvanceFeatures,
-                albumReleaseStores: albumReleaseStores_LS ? albumReleaseStores_LS : albumReleaseStores,
-                albumReleaseSongUpload: albumReleaseSongUpload_LS ? albumReleaseSongUpload_LS : [],
-                albumReleaseAlbumArt: albumReleaseAlbumArt_LS ? albumReleaseAlbumArt_LS : albumReleaseAlbumArt,
+                singleRelease: singleRelease ? singleRelease : defaultReleaseData,
+                albumRelease: albumRelease ? albumRelease : defaultReleaseData,
             };
         });
     }
-
-
 }));
   

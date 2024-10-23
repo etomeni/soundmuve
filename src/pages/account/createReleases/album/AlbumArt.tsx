@@ -16,7 +16,7 @@ import { useCreateReleaseStore } from '@/state/createReleaseStore';
 import SideNav from './SideNav';
 import AccountWrapper from '@/components/AccountWrapper';
 import cloudUploadIconImg from "@/assets/images/cloudUploadIcon.png";
-import { emekaApiEndpoint, artWorkAllowedTypes, convertToBase64, validateImageArtWork } from '@/util/resources';
+import { apiEndpoint, artWorkAllowedTypes, convertToBase64, validateImageArtWork } from '@/util/resources';
 import CircularProgress from '@mui/material/CircularProgress';
 import ArtWorkFileInfoComponent from '@/components/ArtWorkFileInfo';
 import colors from '@/constants/colors';
@@ -24,13 +24,11 @@ import colors from '@/constants/colors';
 
 function CreateAlbumReleaseAlbumArt() {
     const navigate = useNavigate();
+    const accessToken = useUserStore((state) => state.accessToken);
     const darkTheme = useSettingStore((state) => state.darkTheme);
     // const userData = useUserStore((state) => state.userData);
-    const accessToken = useUserStore((state) => state.accessToken);
-    const albumReleaseAlbumArt = useCreateReleaseStore((state) => state.albumReleaseAlbumArt);
-    const _setAlbumReleaseAlbumArt = useCreateReleaseStore((state) => state._setAlbumReleaseAlbumArt);
-    const completeAlbumData = useCreateReleaseStore((state) => state.completeAlbumData);
-    const _setCompleteAlbumData = useCreateReleaseStore((state) => state._setCompleteAlbumData);
+    const albumRelease = useCreateReleaseStore((state) => state.albumRelease);
+    const _handleSetAlbumRelease = useCreateReleaseStore((state) => state._handleSetAlbumRelease);
 
     const _setToastNotification = useSettingStore((state) => state._setToastNotification);
     const [apiResponse, setApiResponse] = useState({
@@ -40,15 +38,15 @@ function CreateAlbumReleaseAlbumArt() {
     });
     
     const [image, setImage] = useState<Blob | null>();
-    const [imagePreview, setImagePreview] = useState();
+    const [imagePreview, setImagePreview] = useState(albumRelease.coverArt);
     const [isBtnSubmitting, setIsBtnSubmitting] = useState(false);
 
     useEffect(() => {
-        if (albumReleaseAlbumArt.image) {
-            setImage(albumReleaseAlbumArt.image);
-            setImagePreview(albumReleaseAlbumArt.imagePreview);
+        if (albumRelease.coverArt) {
+            // setImage(albumReleaseAlbumArt.image);
+            setImagePreview(albumRelease.coverArt);
         }
-    }, [albumReleaseAlbumArt]);
+    }, [albumRelease.coverArt]);
     
 
     const handleFileUpload = async (e: ChangeEvent<HTMLInputElement>) => {
@@ -72,7 +70,7 @@ function CreateAlbumReleaseAlbumArt() {
             setImagePreview(base64.result);
         } else {
             setImage(null);
-            setImagePreview(undefined);
+            setImagePreview('');
             setApiResponse(base64);
         }
     
@@ -87,6 +85,13 @@ function CreateAlbumReleaseAlbumArt() {
         });
 
         if (!image) {
+            // if the user is editing without uploading new image, continue
+            if (albumRelease.coverArt) {
+                setIsBtnSubmitting(false);
+                navigate("/account/create-album-release-overview");
+                return;
+            }
+
             setApiResponse({
                 display: true,
                 status: false,
@@ -103,16 +108,13 @@ function CreateAlbumReleaseAlbumArt() {
         }
 
         const data2db = new FormData();
-        // data2db.append('email', userData.email);
-        // data2db.append('release_type', "Album");
-        data2db.append('song_cover_url', image);
-
-        _setAlbumReleaseAlbumArt({image, imagePreview});
+        data2db.append('release_id', albumRelease._id || '' );
+        data2db.append('coverArt', image);
 
         try {
             setIsBtnSubmitting(true);
-            const response = (await axios.put(
-                `${emekaApiEndpoint}/songs/albums/${ completeAlbumData._id }/page5`,
+            const response = (await axios.patch(
+                `${apiEndpoint}/releases/album/create-update-5`,
                 data2db,  
                 {
                     headers: {
@@ -121,27 +123,27 @@ function CreateAlbumReleaseAlbumArt() {
                     },
                 }
             )).data;
-            console.log(response);
+            // console.log(response);
 
-            const savedImage = response.song_cover_url;
+            if (response.result) {
+                setIsBtnSubmitting(false);
 
-            // _setCompleteAlbumData(response.updatedAlbum);
-            _setCompleteAlbumData(response);
-            _setAlbumReleaseAlbumArt({image: savedImage, imagePreview: savedImage});
-            setIsBtnSubmitting(false);
+                _handleSetAlbumRelease(response.result);
+                navigate("/account/create-album-release-overview");
+            }
 
-            navigate("/account/create-album-release-overview");
         } catch (error: any) {
             console.log(error);
-            
             setIsBtnSubmitting(false);
-            const err = error.response.data;
-            console.log(err);
+
+            const err = error.response.data || error;
+            const fixedErrorMsg = "Oooops, failed to save details. please try again.";
+            // console.log(err);
 
             setApiResponse({
                 display: true,
                 status: false,
-                message: err.message || "Oooops, failed to update details. please try again."
+                message: err.errors && err.errors.length ? err.errors[0].msg : err.message || fixedErrorMsg
             });
         }
 

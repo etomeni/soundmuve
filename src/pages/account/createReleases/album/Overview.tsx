@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
@@ -19,9 +19,9 @@ import { useCreateReleaseStore } from '@/state/createReleaseStore';
 import AccountWrapper from '@/components/AccountWrapper';
 import SongPreviewComponent from '@/components/account/SongPreview';
 import SuccessModalComponent from '@/components/account/SuccessModal';
-import { emekaApiEndpoint } from '@/util/resources';
-import { albumInterface } from '@/constants/typesInterface';
+import { apiEndpoint } from '@/util/resources';
 import colors from '@/constants/colors';
+import { useCartItemStore } from '@/state/cartStore';
 // import { useCartItemStore } from '@/state/cartStore';
 
 
@@ -30,15 +30,13 @@ function CreateAlbumReleaseOverview() {
     const darkTheme = useSettingStore((state) => state.darkTheme);
     const userData = useUserStore((state) => state.userData);
     const accessToken = useUserStore((state) => state.accessToken);
-    const albumReleaseDetails = useCreateReleaseStore((state) => state.albumReleaseDetails);
-    const albumReleaseAdvanceFeatures = useCreateReleaseStore((state) => state.albumReleaseAdvanceFeatures);
-    const albumReleaseStores = useCreateReleaseStore((state) => state.albumReleaseStores);
-    const albumReleaseSongUpload = useCreateReleaseStore((state) => state.albumReleaseSongUpload);
-    const _removeAlbumReleaseSongUpload = useCreateReleaseStore((state) => state._removeAlbumReleaseSongUpload);
-    const _clearAlbumRelease = useCreateReleaseStore((state) => state._clearAlbumRelease);
-    const albumReleaseAlbumArt = useCreateReleaseStore((state) => state.albumReleaseAlbumArt);
-    const completeAlbumData = useCreateReleaseStore((state) => state.completeAlbumData);
-    // const _addToCart = useCartItemStore((state) => state._addToCart);
+
+    const albumRelease = useCreateReleaseStore((state) => state.albumRelease);
+
+    const _handleSetAlbumRelease = useCreateReleaseStore((state) => state._handleSetAlbumRelease);
+    // const _removeAlbumReleaseSongUpload = useCreateReleaseStore((state) => state._removeAlbumReleaseSongUpload);
+    const _handleClearAlbumRelease = useCreateReleaseStore((state) => state._handleClearAlbumRelease);
+    const _addToCart = useCartItemStore((state) => state._addToCart);
 
     const [openSuccessModal, setOpenSuccessModal] = useState(false);
     const _setToastNotification = useSettingStore((state) => state._setToastNotification);
@@ -47,63 +45,41 @@ function CreateAlbumReleaseOverview() {
         status: true,
         message: ""
     });
-    const [releasedAlbum, setReleasedAlbum] = useState<albumInterface>();
 
-    useEffect(() => {
-        getAlbumRelease();
-    }, [])
-    
-
-    const getAlbumRelease = async () => {
-        try {
-            const response = (await axios.get(
-                // `${emekaApiEndpoint}/Album/albums?email=${ userData.email }`,
-                `${emekaApiEndpoint}/songs/albums-songs-by-email/${ userData.email }?album_id=${completeAlbumData._id}`,
-                {
-                    headers: {
-                        Authorization: `Bearer ${accessToken}`
-                    },
-                }
-            )).data;
-            console.log(response);
-
-            setReleasedAlbum(response.albums[0]);
-
-
-        } catch (error: any) {
-            const err = error.response.data;
-            console.log(err);
-        }
-    }
 
     const deleteSong = async (index: number) => {
-        const song = albumReleaseSongUpload[index];
+        if (!albumRelease.albumSongs) return;
+        const song = albumRelease.albumSongs[index];
 
         try {
             const response = (await axios.delete(
-                `${emekaApiEndpoint}/songs/songs/${song._id}`,
+                `${apiEndpoint}/releases/album/${ albumRelease._id || '' }/delete-song/${ song._id || '' }`,
                 {
                     headers: {
                         Authorization: `Bearer ${accessToken}`
                     },
                 }
             )).data;
-            console.log(response);
-            _removeAlbumReleaseSongUpload(index);
+            // console.log(response);
+            
+            if (response.result) {
+                _handleSetAlbumRelease(response.result);
+                _setToastNotification({
+                    display: true,
+                    status: "info",
+                    message: response.message
+                });
+            }
 
-            _setToastNotification({
-                display: true,
-                status: "info",
-                message: response.message
-            });
         } catch (error: any) {
-            const err = error.response.data;
-            console.log(err);
+            const err = error.response.data || error;
+            const fixedErrorMsg = "Oooops, failed to save details. please try again.";
+            // console.log(err);
 
-            _setToastNotification({
+            setApiResponse({
                 display: true,
-                status: "error",
-                message: err.message
+                status: false,
+                message: err.errors && err.errors.length ? err.errors[0].msg : err.message || fixedErrorMsg
             });
         }
     }
@@ -117,24 +93,28 @@ function CreateAlbumReleaseOverview() {
 
         setOpenSuccessModal(true);
 
-        _clearAlbumRelease();
+        // clear the release from memory and rest the state
+        _handleClearAlbumRelease();
 
 
-        // _addToCart({
-        //     id: albumReleaseDetails._id,
-        //     email: albumReleaseDetails.email,
-        //     artistName: albumReleaseDetails.artist_name,
-        //     artWorkImg: albumReleaseAlbumArt.imagePreview,
-        //     price: 45,
-        //     releaseType: "Album",
-        //     songTitle: albumReleaseDetails.album_title
-        // });
+        setOpenSuccessModal(true);
+
+        _addToCart({
+            release_id: albumRelease._id || '',
+            user_email: userData.email,
+            user_id: userData._id || '',
+            artistName: albumRelease.mainArtist.spotifyProfile.name,
+            coverArt: albumRelease.coverArt,
+            price: 45,
+            releaseType: "Single",
+            title: albumRelease.title 
+        });
 
         setTimeout(() => {
-            setOpenSuccessModal(false);
-
             navigate("/account/cart");
+            setOpenSuccessModal(false);
         }, 1000);
+        return;
     }
 
 
@@ -233,7 +213,7 @@ function CreateAlbumReleaseOverview() {
                                             lineHeight: {xs: "10.84px", sm: "24px"},
                                             letterSpacing: {xs: "-0.61px", sm: "-1.34px"},
                                         }}
-                                    > { releasedAlbum?.album_title || albumReleaseDetails.album_title } : { releasedAlbum?.artist_name || albumReleaseDetails.artist_name } </Typography>
+                                    > { albumRelease.title } : { albumRelease.mainArtist.spotifyProfile.name } </Typography>
 
                                     <Box sx={{ mt: {xs: "15px", sm: "30px"} }}>
                                         <Stack direction="row" spacing={"auto"} justifyContent="space-between" alignItems="center">
@@ -253,7 +233,7 @@ function CreateAlbumReleaseOverview() {
                                                     lineHeight: {xs: "25px", sm: "40px"},
                                                     letterSpacing: "-0.13px"
                                                 }}
-                                            > { releasedAlbum?.release_date || albumReleaseDetails.releaseDate } </Typography>
+                                            > { albumRelease.releaseDate } </Typography>
                                         </Stack>
                                         
                                         <Stack direction="row" spacing={"auto"} justifyContent="space-between" alignItems="center">
@@ -273,7 +253,7 @@ function CreateAlbumReleaseOverview() {
                                                     lineHeight: {xs: "25px", sm: "40px"},
                                                     letterSpacing: "-0.13px"
                                                 }}
-                                            > { releasedAlbum?.label_name || albumReleaseAdvanceFeatures.label_name } </Typography>
+                                            > { albumRelease.labelName } </Typography>
                                         </Stack>
 
                                         <Stack direction="row" spacing={"auto"} justifyContent="space-between" alignItems="center">
@@ -293,7 +273,7 @@ function CreateAlbumReleaseOverview() {
                                                     lineHeight: {xs: "25px", sm: "40px"},
                                                     letterSpacing: "-0.13px"
                                                 }}
-                                            > { releasedAlbum?.upc_ean || albumReleaseAdvanceFeatures.upc_ean } </Typography>
+                                            > { albumRelease.upc_ean } </Typography>
                                         </Stack>
 
                                         <Stack direction="row" spacing={"auto"} justifyContent="space-between" alignItems="center">
@@ -313,7 +293,7 @@ function CreateAlbumReleaseOverview() {
                                                     lineHeight: {xs: "25px", sm: "40px"},
                                                     letterSpacing: "-0.13px"
                                                 }}
-                                            > { releasedAlbum?.primary_genre || albumReleaseDetails.primary_genre } </Typography>
+                                            > { albumRelease.primaryGenre } </Typography>
                                         </Stack>
 
                                         <Stack direction="row" spacing={"auto"} justifyContent="space-between" alignItems="center">
@@ -333,7 +313,7 @@ function CreateAlbumReleaseOverview() {
                                                     lineHeight: {xs: "25px", sm: "40px"},
                                                     letterSpacing: "-0.13px"
                                                 }}
-                                            > { releasedAlbum?.secondary_genre || albumReleaseDetails.secondary_genre } </Typography>
+                                            > { albumRelease.secondaryGenre } </Typography>
                                         </Stack>
 
                                         <Stack direction="row" spacing={"auto"} justifyContent="space-between" alignItems="center">
@@ -353,7 +333,7 @@ function CreateAlbumReleaseOverview() {
                                                     lineHeight: {xs: "25px", sm: "40px"},
                                                     letterSpacing: "-0.13px"
                                                 }}
-                                            > { releasedAlbum?.language ||  albumReleaseDetails.language } </Typography>
+                                            > { albumRelease.language } </Typography>
                                         </Stack>
                                     </Box>
                                 </Box>
@@ -416,7 +396,7 @@ function CreateAlbumReleaseOverview() {
                                         textAlign: "center"
                                     }}
                                 >
-                                    { releasedAlbum?.store || albumReleaseStores.stores }
+                                    { albumRelease.stores.toString() }
                                 </Box>
                             </Box>
 
@@ -491,7 +471,7 @@ function CreateAlbumReleaseOverview() {
                                     </Typography>
 
                                     <Box mt={2}>
-                                        { releasedAlbum?.social_platform || albumReleaseStores.socialPlatforms }
+                                        { albumRelease.socialPlatforms.toString() }
                                     </Box>
                                 </Box>
                             </Box>
@@ -556,13 +536,13 @@ function CreateAlbumReleaseOverview() {
                                 >
                                     {
                                         // albumReleaseSongUpload.map((item, i) => (
-                                            releasedAlbum?.songs.map((item, i) => (
+                                            albumRelease.albumSongs?.map((item, i) => (
                                             <Box key={i} width="100%">
                                                 {
                                                     <SongPreviewComponent key={i}
                                                         // songAudio={item.songAudioPreview}
-                                                        songAudio={item.song_mp3} 
-                                                        songTitle={item.song_title}
+                                                        songAudio={item.songAudio} 
+                                                        songTitle={item.songTitle}
                                                         deleteSong={() => {
                                                             deleteSong(i);
                                                         }} 
@@ -644,82 +624,13 @@ function CreateAlbumReleaseOverview() {
                                             my: {xs: "10px", sm: "20px"},
                                             p: {xs: "5px 5px 10px 5px", sm: "5px 5px 25px 5px"},
 
-                                            backgroundImage: `url(${ releasedAlbum?.song_cover_url || albumReleaseAlbumArt.imagePreview})`, // Replace with your image URL
+                                            backgroundImage: `url(${ albumRelease.coverArt })`, // Replace with your image URL
                                             backgroundPosition: 'center',
                                             backgroundSize: 'cover',
                                         }}
                                     ></Box>
                                 </Box>
                             </Box>
-
-
-                            {/* <Stack direction="column" justifyContent="center" alignItems="center"
-                                sx={{ p: {xs: "10px", sm: "25px"} }}
-                            >
-                                <Box sx={{ width: {xs: "90%", sm: "347px"}, maxWidth: {xs: "330px", sm: "892px"} }}>
-                                    <Typography component={"h3"} variant='h3'
-                                        sx={{
-                                            fontWeight: "900",
-                                            fontSize: {xs: "13px", sm: "16px"},
-                                            lineHeight: {xs: "25px", sm: "32px"},
-                                            letterSpacing: "-0.13px",
-                                            // bgcolor: "green",
-                                            alignSelf: "start"
-                                        }}
-                                    > Album art </Typography>
-
-                                    <Box
-                                        sx={{
-                                            display: "flex",
-                                            flexDirection: "column",
-                                            justifyContent: "end",
-                                            alignItems: "center",
-                                            bgcolor: "#272727",
-                                            borderRadius: "12px",
-                                            height: {xs: "146.55px", sm: "326px"},
-                                            // width: {xs: "128.45px", sm: "347px"},
-                                            // width: "100%",
-                                            my: {xs: "10px", sm: "20px"},
-                                            p: {xs: "5px 5px 10px 5px", sm: "5px 5px 25px 5px"},
-
-                                            backgroundImage: `url(${imagePreview})`, // Replace with your image URL
-                                            backgroundPosition: 'center',
-                                            backgroundSize: 'cover',
-                                        }}
-                                    >
-                                        <Box></Box>
-
-                                        <Box 
-                                            sx={{
-                                                p: {xs: "10.18px 19.68px", sm: "15px 29px"},
-                                                borderRadius: {xs: "8.14px", sm: "12px"},
-                                                // background: "#FFFFFF80",
-                                                background: "#c4c4c480",
-
-                                                color: "#000",
-                                                cursor: "pointer",
-                                                display: "inline-block",
-                                                mt: {xs: "7px", sm: "15px"},
-                                                position: "",
-                                                // bottom: 0
-                                            }}
-                                            onClick={() => {
-                                                document.getElementById("uploadSongCoverImage")?.click();
-                                            }}
-                                        >
-                                            <Typography 
-                                                sx={{
-                                                    fontWeight: '900',
-                                                    fontSize: {xs: "10.18px", sm: "15px"},
-                                                    lineHeight: {xs: "8.82px", sm: "13px"},
-                                                    letterSpacing: {xs: "-0.09px", sm: "-0.13px"},
-                                                    textAlign: 'center',
-                                                }}
-                                            > Edit </Typography>
-                                        </Box>
-                                    </Box>
-                                </Box>
-                            </Stack> */}
 
                             {
                                 apiResponse.display && (

@@ -50,8 +50,10 @@ function CreateSingleRelease() {
         apiResponse, // setApiResponse,
         navigate,
 
+        language, setLanguage,
+        selectPrimaryGenre, setSelectPrimaryGenre,
+        selectSecondaryGenre, setSelectSecondaryGenre,
         selectReleaseDateValue, setSelectReleaseDateValue,
-
         spotifyReleaseTimezone, setSpotifyReleaseTimezone,
 
         soldWorldwide, setSoldWorldwide,
@@ -261,9 +263,9 @@ function CreateSingleRelease() {
                                     <FormControl fullWidth>
                                         <Select
                                             id="language"
-                                            defaultValue="Select Language"
+                                            // defaultValue="Select Language"
                                             // placeholder='Select Language'
-                                            // value={selectLanguageValue}
+                                            value={language}
 
                                             sx={releaseSelectStyle}
                                             
@@ -272,7 +274,7 @@ function CreateSingleRelease() {
 
                                             onChange={(event) => {
                                                 const value: any = event.target.value;
-                                                // setSelectLanguageValue(value);
+                                                setLanguage(value);
 
                                                 setValue(
                                                     "language", 
@@ -320,8 +322,8 @@ function CreateSingleRelease() {
                                             labelId="primaryGenre"
                                             id="primaryGenre-select"
                                             // placeholder='Select Primary Genre'
-                                            // value={selectPrimaryGenreValue}
-                                            defaultValue="Select Primary Genre"
+                                            value={selectPrimaryGenre}
+                                            // defaultValue="Select Primary Genre"
                                             sx={releaseSelectStyle}
                                             
                                             error={ errors.primaryGenre ? true : false }
@@ -329,7 +331,7 @@ function CreateSingleRelease() {
 
                                             onChange={(event) => {
                                                 const value: any = event.target.value;
-                                                // setSelectPrimaryGenreValue(value);
+                                                setSelectPrimaryGenre(value);
 
                                                 setValue(
                                                     "primaryGenre", 
@@ -374,11 +376,9 @@ function CreateSingleRelease() {
                                 <Box>
                                     <FormControl fullWidth>
                                         <Select
-                                            labelId="secondaryGenre"
                                             id="secondaryGenre-select"
-                                            label=""
-                                            defaultValue='Select Secondary Genre'
-                                            // value={selectSecondaryGenreValue}
+                                            // defaultValue='Select Secondary Genre'
+                                            value={selectSecondaryGenre}
                                             sx={releaseSelectStyle}
                                             
                                             error={ errors.secondaryGenre ? true : false }
@@ -386,7 +386,7 @@ function CreateSingleRelease() {
 
                                             onChange={(event) => {
                                                 const value: any = event.target.value;
-                                                // setSelectSecondaryGenreValue(value);
+                                                setSelectSecondaryGenre(value);
 
                                                 setValue(
                                                     "secondaryGenre", 
@@ -537,9 +537,7 @@ function CreateSingleRelease() {
                                     fontSize: {xs: "11px", md: "25px"},
                                     lineHeight: {xs: "17.6px", md: "40px"},
                                     letterSpacing: {xs: "-0.06px", md: "-0.13px"}
-                                }}>
-                                    Release Time (Spotify Only)
-                                </Typography>
+                                }}>Release Time (Spotify Only)</Typography>
                             </Grid>
 
                             <Grid item xs={12} md={8}>

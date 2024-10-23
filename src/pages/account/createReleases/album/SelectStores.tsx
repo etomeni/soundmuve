@@ -1,9 +1,3 @@
-import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useForm } from 'react-hook-form';
-import * as yup from "yup";
-import { yupResolver } from '@hookform/resolvers/yup';
-
 import SideNav from './SideNav';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
@@ -14,149 +8,36 @@ import Button from '@mui/material/Button';
 import CircularProgress from '@mui/material/CircularProgress';
 import FormControl from '@mui/material/FormControl';
 
-import { useUserStore } from '@/state/userStore';
 import { useSettingStore } from '@/state/settingStore';
-import { useCreateReleaseStore } from '@/state/createReleaseStore';
 
 import AccountWrapper from '@/components/AccountWrapper';
-import { emekaApiEndpoint, musicStores, socialPlatformStores } from '@/util/resources';
-import axios from 'axios';
+import { musicStores, socialPlatformStores } from '@/util/resources';
 import MultipleSelectCheckmarks from '@/components/MultipleSelectCheckmarks';
 import colors from '@/constants/colors';
-
-const formSchema = yup.object({
-    store: yup.string().trim().label("Store"),
-    socialPlatform: yup.string().trim().label("Social Platform"),
-});
+import { useCreateAlbum3 } from '@/hooks/release/createAlbumRelease/useCreateAlbum3';
 
 
 function CreateAlbumReleaseSelectStores() {
-    const navigate = useNavigate();
     const darkTheme = useSettingStore((state) => state.darkTheme);
-    const userData = useUserStore((state) => state.userData);
-    const accessToken = useUserStore((state) => state.accessToken);
-    const _setToastNotification = useSettingStore((state) => state._setToastNotification);
-    const albumReleaseStores = useCreateReleaseStore((state) => state.albumReleaseStores);
-    const _setAlbumReleaseStores = useCreateReleaseStore((state) => state._setAlbumReleaseStores);
-    const completeAlbumData = useCreateReleaseStore((state) => state.completeAlbumData);
-    const _setCompleteAlbumData = useCreateReleaseStore((state) => state._setCompleteAlbumData);
 
-    const [selectStores, setSelectStores] = useState<string[]>(musicStores);
-    const [selectSocialStores, setSelectSocialStores] = useState<string[]>(socialPlatformStores);
+    const {
+        navigate,
+        apiResponse, // setApiResponse,
 
-    const [apiResponse, setApiResponse] = useState({
-        display: false,
-        status: true,
-        message: ""
-    });
-
-    const { 
-        handleSubmit, setValue, setError, formState: { errors, isValid, isSubmitting } 
-    } = useForm({ 
-        resolver: yupResolver(formSchema),
-        mode: 'onBlur',
-    });
-
-    useEffect(() => {
-        if (albumReleaseStores.stores) {
-            handleStoreSelect(albumReleaseStores.stores.split(','));
-        }
-        if (albumReleaseStores.socialPlatforms) {
-            handleSocialStoreSelect(albumReleaseStores.socialPlatforms.split(','));
-        }
-    }, [albumReleaseStores]);
-
-
-    const handleStoreSelect = (selected: string[]) => {
-        setSelectStores(selected);
-        setValue("store", selected.toString(), {shouldDirty: true, shouldTouch: true, shouldValidate: true});
-    }
-
-    const handleSocialStoreSelect = (selected: string[]) => {
-        setSelectSocialStores(selected);
-        setValue("socialPlatform", selected.toString(), {shouldDirty: true, shouldTouch: true, shouldValidate: true});
-    }
-            
-    const onSubmit = async (formData: typeof formSchema.__outputType) => {
-
-        setApiResponse({
-            display: false,
-            status: true,
-            message: ""
-        });
-
-        if (formData.store && formData.store == "Select" ) {
-            _setToastNotification({
-                display: true,
-                status: "error",
-                message: "Select stores to distribute your music to."
-            })
-
-            setError("store", {message: "Select stores to distribute your music to."})
-            return;
-        }
-
-        if (formData.socialPlatform && formData.socialPlatform == "Select" ) {
-            _setToastNotification({
-                display: true,
-                status: "error",
-                message: "Select social platforms to distribute your music to."
-            })
-
-            setError("socialPlatform", { message: "Select social platforms to distribute your music to." })
-            return;
-        }
+        // register, setValue,
+        errors, isValid, isSubmitting,
         
+        selectStores, // setSelectStores,
+        selectSocialStores, // setSelectSocialStores,
 
-        const formDetails = {
-            email: userData.email,
-            release_type: "Album",
+        handleStoreSelect,
+        handleSocialStoreSelect,
 
-            stores: formData.store || "All",
-            socialPlatforms: formData.socialPlatform || "All",
-        };
+        submitForm
+    } = useCreateAlbum3();
 
-        // console.log(data2db);
-        _setAlbumReleaseStores(formDetails);
 
-        const data2db = {
-            store: formDetails.stores,
-            social_platform: formDetails.socialPlatforms
-        }
 
-        try {
-            const response = (await axios.put(
-                // `${emekaApiEndpoint}/Album/update-album/${ completeAlbumData._id }/page3?Authorization=Bearer ${accessToken}`,
-                `${emekaApiEndpoint}/songs/albums/${ completeAlbumData._id }/page3`,
-                data2db,  
-                {
-                    headers: {
-                        // 'Content-Type': 'multipart/form-data',
-                        Authorization: `Bearer ${accessToken}`
-                    },
-                }
-            )).data;
-            console.log(response);
-
-            // _setCompleteAlbumData(response.updatedAlbum);
-            _setCompleteAlbumData(response);
-
-            navigate("/account/create-album-release-song-upload");
-
-        } catch (error: any) {
-            console.log(error);
-            const err = error.response.data;
-            console.log(err);
-
-            setApiResponse({
-                display: true,
-                status: false,
-                message: err.message || "Oooops, failed to update details. please try again."
-            });
-        }
-
-        // navigate("/account/create-album-release-song-upload");
-    }
 
 
 
@@ -174,7 +55,7 @@ function CreateAlbumReleaseSelectStores() {
 
 
                         <Box sx={{my: 3}}>
-                            <form noValidate onSubmit={ handleSubmit(onSubmit) } 
+                            <form noValidate onSubmit={ submitForm } 
                                 style={{ width: "100%", maxWidth: "916px" }}
                             >
                                             

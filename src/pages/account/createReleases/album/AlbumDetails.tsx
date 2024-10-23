@@ -1,10 +1,3 @@
-import { useEffect, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
-import { useForm } from 'react-hook-form';
-import * as yup from "yup";
-import { yupResolver } from '@hookform/resolvers/yup';
-import axios from 'axios';
-
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
@@ -35,377 +28,49 @@ import AccountWrapper from '@/components/AccountWrapper';
 import SearchArtistModalComponent from '@/components/account/SearchArtistModal';
 // import AppleSportifyCheckmark from '@/components/AppleSportifyCheckmark';
 
-import { useUserStore } from '@/state/userStore';
-import { useSettingStore } from '@/state/settingStore';
-import { useCreateReleaseStore } from '@/state/createReleaseStore';
-
 import { releaseSelectStyle, releaseSelectStyle2, releaseTextFieldStyle } from '@/util/mui';
 import { languages } from '@/util/languages';
-import { primaryGenre, secondaryGenre, hours, minutes, minReleaseDate, emekaApiEndpoint } from '@/util/resources';
+import { primaryGenre, secondaryGenre, hours, minutes, minReleaseDate } from '@/util/resources';
 // import albumSampleArt from "@/assets/images/albumSampleArt.png"
 import ArtistProfileInfoComponent from '@/components/ArtistProfileInfo';
 import colors from '@/constants/colors';
 import SelectedArtistView from '@/components/release/SelectedArtistView';
-import { searchedArtistSearchInterface } from '@/constants/typesInterface';
+import { useSettingStore } from '@/state/settingStore';
+import { useCreateAlbum1 } from '@/hooks/release/createAlbumRelease/useCreateAlbum1';
+// import { useCreateReleaseStore } from '@/state/createReleaseStore';
 
-
-const formSchema = yup.object({
-    albumTitle: yup.string().required().trim().label("Album Title"),
-    artistName: yup.string().trim().label("Artist Name"),
-
-    appleMusicUrl: yup.string().required().trim().label("Apple Music Profile Link"),
-    spotifyMusicUrl: yup.string().required().trim().label("Spotify Music Profile Link"),
-
-    // explicitSongLyrics: yup.string().trim(),
-    language: yup.string().required().trim().label("Language"),
-    primaryGenre: yup.string().required().trim().label("Primary Genre"),
-    secondaryGenre: yup.string().required().trim().label("Secondary Genre"),
-    releaseDate: yup.string().trim().label("Release Date"),
-    
-    releaseTimeHours: yup.string().trim().label("Hours"),
-    releaseTimeMinutes: yup.string().trim().label("Minutes"),
-    releaseTimeHourFormat: yup.string().trim().label("Time Format"),
-    
-    listenerTimezone: yup.boolean().label("Listener's Timezone"),
-    generalTimezone: yup.boolean().label("General Timezone"),
-});
 
 let dspToSearch: "Apple" | "Spotify";
 
 function AlbumDetails() {
-    const navigate = useNavigate();
-    const location = useLocation();
-    const queryParams = new URLSearchParams(location.search);
-    const rl_artistName: string = queryParams.get('artistName') || '';
-
     const darkTheme = useSettingStore((state) => state.darkTheme);
-    // const [explicitLyrics, setExplicitLyrics] = useState(""); // No
-    const userData = useUserStore((state) => state.userData);
-    const accessToken = useUserStore((state) => state.accessToken);
-    const albumReleaseDetails = useCreateReleaseStore((state) => state.albumReleaseDetails);
-    const _setAlbumReleaseDetails = useCreateReleaseStore((state) => state._setAlbumReleaseDetails);
-    const _setCompleteAlbumData = useCreateReleaseStore((state) => state._setCompleteAlbumData);
-    const _setToastNotification = useSettingStore((state) => state._setToastNotification);
 
-    const [apiResponse, setApiResponse] = useState({
-        display: false,
-        status: true,
-        message: ""
-    });
-
-    const [selectLanguageValue, setSelectLanguageValue] = useState('Select Language');
-    const [selectSecondaryGenreValue, setSelectSecondaryGenreValue] = useState('Select Secondary Genre');
-    const [selectPrimaryGenreValue, setSelectPrimaryGenreValue] = useState('Select Primary Genre');
-    
-    const [selectReleaseDateValue, setSelectReleaseDateValue] = useState<any>('');
-
-    const [selectReleaseTimeHoursValue, setSelectReleaseTimeHoursValue] = useState('12');
-    const [selectReleaseTimeMinutesValue, setSelectReleaseTimeMinutesValue] = useState('00');
-    const [selectReleaseTimeFormatValue, setSelectReleaseTimeFormatValue] = useState('AM');
-
-    const [selectListenerTimezoneValue, setSelectListenerTimezoneValue] = useState(false);
-    const [selectGeneralTimezoneValue, setSelectGeneralTimezoneValue] = useState(false);
-    
-    const [openSearchArtistModal, setOpenSearchArtistModal] = useState(false);
-    const [selectArtistName, setSelectArtistName] = useState<any>();
-    const [selectedSpotifyArtist, setSelectedSpotifyArtist] = useState<searchedArtistSearchInterface>();
+    const {
+        navigate,
+        apiResponse, // setApiResponse,
 
 
+        language, setLanguage,
+        selectPrimaryGenre, setSelectPrimaryGenre,
+        selectSecondaryGenre, setSelectSecondaryGenre,
 
+        selectReleaseDateValue, setSelectReleaseDateValue,
+        spotifyReleaseTimezone, setSpotifyReleaseTimezone,
+        selectedSpotifyArtist,
+        openSearchArtistModal, setOpenSearchArtistModal,
 
-    const { 
-        handleSubmit, register, setValue, setError, formState: { errors, isValid, isSubmitting } 
-    } = useForm({ 
-        resolver: yupResolver(formSchema),
-        mode: 'onBlur',
-        defaultValues: { 
-            // explicitSongLyrics: explicitLyrics,
-            releaseTimeHours: "12",
-            releaseTimeMinutes: "00",
-            releaseTimeHourFormat: "AM",
-            // language: "English",
-            listenerTimezone: true,
-            generalTimezone: true,
-        } 
-    });
+        register, setValue,
+        errors, isValid, isSubmitting,
 
-    useEffect(() => {
+        handleSetArtistName,
 
-        if (albumReleaseDetails.album_title) {
-    
-            setValue("albumTitle", albumReleaseDetails.album_title, {shouldDirty: true, shouldTouch: true, shouldValidate: true});
-            setValue("artistName", albumReleaseDetails.artist_name, {shouldDirty: true, shouldTouch: true, shouldValidate: true});
-
-            setValue("appleMusicUrl", albumReleaseDetails.appleMusicUrl, {shouldDirty: true, shouldTouch: true, shouldValidate: true});
-            setValue("spotifyMusicUrl", albumReleaseDetails.spotifyMusicUrl, {shouldDirty: true, shouldTouch: true, shouldValidate: true});
-
-            // TODO::: work on displaying the artist name and details
-            setSelectArtistName(albumReleaseDetails.selectedArtistName);
-    
-            // setValue("explicitSongLyrics", albumReleaseDetails.explicitLyrics, {shouldDirty: true, shouldTouch: true, shouldValidate: true});
-            // setExplicitLyrics(albumReleaseDetails.explicitLyrics);
-            
-            setValue("language", albumReleaseDetails.language, {shouldDirty: true, shouldTouch: true, shouldValidate: true});
-            setSelectLanguageValue(albumReleaseDetails.language);
-    
-            setValue("primaryGenre", albumReleaseDetails.primary_genre, {shouldDirty: true, shouldTouch: true, shouldValidate: true});
-            setSelectPrimaryGenreValue(albumReleaseDetails.primary_genre);
-    
-            setValue("secondaryGenre", albumReleaseDetails.secondary_genre, {shouldDirty: true, shouldTouch: true, shouldValidate: true});
-            setSelectSecondaryGenreValue(albumReleaseDetails.secondary_genre);
-    
-            // TODO::: release date
-            setValue("releaseDate", albumReleaseDetails.releaseDate, {shouldDirty: true, shouldTouch: true, shouldValidate: true});
-            setSelectReleaseDateValue(albumReleaseDetails.releaseDate);
-    
-            setValue("releaseTimeHours", albumReleaseDetails.releaseTimeHours, {shouldDirty: true, shouldTouch: true, shouldValidate: true});
-            setSelectReleaseTimeHoursValue(albumReleaseDetails.releaseTimeHours);
-    
-            setValue("releaseTimeMinutes", albumReleaseDetails.releaseTimeMinutes, {shouldDirty: true, shouldTouch: true, shouldValidate: true});
-            setSelectReleaseTimeMinutesValue(albumReleaseDetails.releaseTimeMinutes);
-    
-            setValue("releaseTimeHourFormat", albumReleaseDetails.releaseTimeFormat, {shouldDirty: true, shouldTouch: true, shouldValidate: true});
-            setSelectReleaseTimeFormatValue(albumReleaseDetails.releaseTimeFormat);
-    
-            setValue("listenerTimezone", albumReleaseDetails.listenerTimeZone, {shouldDirty: true, shouldTouch: true, shouldValidate: true});
-            setSelectListenerTimezoneValue(albumReleaseDetails.listenerTimeZone);
-    
-            setValue("generalTimezone", albumReleaseDetails.generalTimeZone, {shouldDirty: true, shouldTouch: true, shouldValidate: true});
-            setSelectGeneralTimezoneValue(albumReleaseDetails.generalTimeZone);
-            
-        }
-
-    }, []);
-    
-
-    // const handleSetArtistName = (details: any) => {
-    //     // console.log(details);
-    //     setSelectArtistName(details);
-
-    //     let name = details.spotify ? details.spotify.name : details.apple ? details.apple.name : details.unknown.name;
-
-    //     setValue(
-    //         "artistName", 
-    //         name,
-    //         {shouldDirty: true, shouldTouch: true, shouldValidate: true} 
-    //     );
-    //     setOpenSearchArtistModal(false)
-    // }
-
-
-    const handleSetArtistName = (details: searchedArtistSearchInterface, dspName: "Spotify" | "Apple") => {
-        // console.log(details);
-        if (dspName == "Spotify") {
-            setSelectedSpotifyArtist(details)
-            setValue(
-                "spotifyMusicUrl", 
-                details.name,
-                {shouldDirty: true, shouldTouch: true, shouldValidate: true} 
-            );
-
-            setValue(
-                "artistName", 
-                details.name,
-                {shouldDirty: true, shouldTouch: true, shouldValidate: true} 
-            );
-
-        } else if (dspName == "Apple") {
-            
-        }
-
-
-        return;
-
-        // setSelectArtistName(details);
-        // let name = details.spotify ? details.spotify.name : details.apple ? details.apple.name : details.unknown.name;
-
-        // setValue(
-        //     "artistName", 
-        //     name,
-        //     {shouldDirty: true, shouldTouch: true, shouldValidate: true} 
-        // );
-    }
-            
-    const onSubmit = async (formData: typeof formSchema.__outputType) => {
-        // console.log(formData);
-
-        setApiResponse({
-            display: false,
-            status: true,
-            message: ""
-        });
-
-
-        if (!formData.artistName) {
-            _setToastNotification({
-                display: true,
-                status: "error",
-                message: "Please add an artist."
-            })
-
-            setError("artistName", {message: "Please add an artist."})
-            return;
-        }
-
-        // if (!explicitLyrics) {
-        //     _setToastNotification({
-        //         display: true,
-        //         status: "error",
-        //         message: "Please choose if this song has explicit lyrics."
-        //     })
-
-        //     setError("explicitSongLyrics", {message: "Please choose if this song has explicit lyrics."})
-        //     return;
-        // }
-
-        if (formData.language == "Select Language") {
-            _setToastNotification({
-                display: true,
-                status: "error",
-                message: "Please select a language."
-            })
-
-            setError("language", {message: "Please select a language."}, {shouldFocus: true});
-            return;
-        }
-
-        if (formData.primaryGenre == "Select Primary Genre") {
-            _setToastNotification({
-                display: true,
-                status: "error",
-                message: "Please select primary genre."
-            })
-
-            setError("primaryGenre", {message: "Please select primary genre."}, {shouldFocus: true});
-            return;
-        }
-
-        if (formData.secondaryGenre == "Select Secondary Genre") {
-            _setToastNotification({
-                display: true,
-                status: "error",
-                message: "Please select secondary genre."
-            })
-
-            setError("secondaryGenre", {message: "Please select secondary genre."}, {shouldFocus: true});
-            return;
-        }
-
-        if (!formData.releaseDate) {
-            _setToastNotification({
-                display: true,
-                status: "error",
-                message: "Please select a release date."
-            })
-
-            setError("releaseDate", { message: "Please select a release date." }, {shouldFocus: true});
-
-            // document.getElementById("releaseDate")?.focus();
-            return;
-        }
-
-        const formDetails = {
-            email: userData.email,
-            release_type: "Album",
-        
-            album_title: formData.albumTitle,
-            artist_name: formData.artistName,
-
-            appleMusicUrl: formData.appleMusicUrl || '',
-            spotifyMusicUrl: formData.spotifyMusicUrl || '',
-
-            selectedArtistName: selectArtistName,
-        
-            // explicitLyrics: explicitLyrics,
-        
-            language: formData.language,
-            primary_genre: formData.primaryGenre,
-            secondary_genre: formData.secondaryGenre,
-        
-            releaseDate: formData.releaseDate,
-            release_time: `${ formData.releaseTimeHours || '12' } : ${ formData.releaseTimeMinutes } ${ formData.releaseTimeHourFormat }`,
-
-            releaseTimeHours: formData.releaseTimeHours || '12',
-            releaseTimeMinutes: formData.releaseTimeMinutes || '00',
-            releaseTimeFormat: formData.releaseTimeHourFormat || 'AM',
-
-            listenerTimeZone: formData.listenerTimezone ? true : false,
-            generalTimeZone: formData.generalTimezone ? true : false,
-        };
-        _setAlbumReleaseDetails({ ...formDetails, _id: ''});
-
-        // console.log(data2db);
-
-        const data2db = {
-            email: formDetails.email,
-            album_title: formDetails.album_title,
-            artist_name: formDetails.artist_name,
-
-            record_label_artist: rl_artistName,
-
-            appleMusicUrl: formDetails.appleMusicUrl,
-            spotifyMusicUrl: selectedSpotifyArtist?.id || formDetails.spotifyMusicUrl,
-
-            language: formDetails.language,
-            primary_genre: formDetails.primary_genre,
-            secondary_genre: formDetails.secondary_genre,
-            release_date: formDetails.releaseDate,
-            release_time: formDetails.release_time,
-            listenerTimeZone: formDetails.listenerTimeZone,
-            otherTimeZone: formDetails.generalTimeZone,
-        }
-
-        try {
-            const response = albumReleaseDetails._id ? (await axios.put(
-                // `${emekaApiEndpoint}/Album/create-album`,
-                `${emekaApiEndpoint}/songs/albums/${ albumReleaseDetails._id }`,
-                data2db,
-                {
-                    headers: {
-                        // 'Content-Type': 'multipart/form-data',
-                        Authorization: `Bearer ${accessToken}`
-                    },
-                }
-            )).data : (await axios.post(
-                // `${emekaApiEndpoint}/Album/create-album`,
-                `${emekaApiEndpoint}/songs/albums`,
-                data2db,
-                {
-                    headers: {
-                        // 'Content-Type': 'multipart/form-data',
-                        Authorization: `Bearer ${accessToken}`
-                    },
-                }
-            )).data;
-
-            const result = albumReleaseDetails._id ? response.album : response;
-            // console.log(response);
-            _setAlbumReleaseDetails({ ...formDetails, _id: result._id });
-
-            _setCompleteAlbumData(result);
-            // _setCompleteAlbumData(result.savedAlbum);
-            
-            navigate("/account/create-album-release-advance-features");
-
-        } catch (error: any) {
-            const err = error.response.data;
-            console.log(err);
-
-            setApiResponse({
-                display: true,
-                status: false,
-                message: err.message || "Oooops, failed to update details. please try again."
-            });
-        }
-
-        // navigate("/account/artist/create-album-release-advance-features");
-    }
+        submitForm
+    } = useCreateAlbum1();
 
 
     return (
         <AccountWrapper bottomSpacing={0} topSpacing={false}>
             <Box>
-
                 <Box 
                     sx={{ 
                         display: {xs: 'initial', sm: 'flex'}, 
@@ -443,7 +108,7 @@ function AlbumDetails() {
 
 
                         <Box sx={{my: 3}}>
-                            <form noValidate onSubmit={ handleSubmit(onSubmit) } 
+                            <form noValidate onSubmit={ submitForm } 
                                 style={{ width: "100%", maxWidth: "916px" }}
                             >
                                 <Grid container spacing="20px" sx={{my: "31px"}}>
@@ -468,7 +133,8 @@ function AlbumDetails() {
                                             type='text'
                                             label=''
                                             inputMode='text'
-                                            defaultValue=""
+                                            // defaultValue={albumRelease.title || ""}
+                                            defaultValue=''
                                             InputProps={{
                                                 sx: {
                                                     borderRadius: "16px",
@@ -511,10 +177,9 @@ function AlbumDetails() {
                                             <TextField 
                                                 variant="outlined" 
                                                 fullWidth 
-                                                id='spotifyMusicUrl'
-                                                type='url'
-                                                inputMode='url'
-                                                label=''
+                                                id='spotifyArtistProfile'
+                                                type='text'
+                                                inputMode='text'
                                                 placeholder='Select spotify profile'
                                                 defaultValue=""
                                                 InputProps={{ readOnly: true }}
@@ -524,13 +189,12 @@ function AlbumDetails() {
                                                     setOpenSearchArtistModal(true);
                                                 }}
 
-                                                error={ errors.spotifyMusicUrl ? true : false }
-                                                { ...register('spotifyMusicUrl') }
+                                                error={ errors.spotifyArtistProfile ? true : false }
+                                                { ...register('spotifyArtistProfile') }
                                             />
                                             
-                                            { errors.spotifyMusicUrl && <Box sx={{fontSize: 13, color: "red", textAlign: "left"}}>{ errors.spotifyMusicUrl?.message }</Box> }
+                                            { errors.spotifyArtistProfile && <Box sx={{fontSize: 13, color: "red", textAlign: "left"}}>{ errors.spotifyArtistProfile?.message }</Box> }
                                         </Box>
-
 
                                         {
                                             selectedSpotifyArtist ? (
@@ -612,19 +276,19 @@ function AlbumDetails() {
                                         <Box>
                                             <FormControl fullWidth>
                                                 <Select
-                                                    labelId="language"
-                                                    id="language-select"
-                                                    label=""
-                                                    placeholder='Select Language'
-                                                    value={selectLanguageValue}
+                                                    id="language"
+                                                    // defaultValue="Select Language"
+                                                    // placeholder='Select Language'
+                                                    value={language}
 
                                                     sx={releaseSelectStyle}
                                                     
                                                     error={ errors.language ? true : false }
                                                     // { ...register('language') }
+
                                                     onChange={(event) => {
                                                         const value: any = event.target.value;
-                                                        setSelectLanguageValue(value);
+                                                        setLanguage(value);
 
                                                         setValue(
                                                             "language", 
@@ -669,19 +333,18 @@ function AlbumDetails() {
                                         <Box>
                                             <FormControl fullWidth>
                                                 <Select
-                                                    labelId="primaryGenre"
                                                     id="primaryGenre-select"
-                                                    label=""
-                                                    placeholder='Select Primary Genre'
-                                                    value={selectPrimaryGenreValue}
-
+                                                    // placeholder='Select Primary Genre'
+                                                    value={selectPrimaryGenre}
+                                                    // defaultValue="Select Primary Genre"
                                                     sx={releaseSelectStyle}
-
+                                                    
                                                     error={ errors.primaryGenre ? true : false }
                                                     // { ...register('primaryGenre') }
+
                                                     onChange={(event) => {
                                                         const value: any = event.target.value;
-                                                        setSelectPrimaryGenreValue(value);
+                                                        setSelectPrimaryGenre(value);
 
                                                         setValue(
                                                             "primaryGenre", 
@@ -729,19 +392,17 @@ function AlbumDetails() {
                                                     labelId="secondaryGenre"
                                                     id="secondaryGenre-select"
                                                     label=""
-                                                    // defaultValue="Select Secondary Genre"
-                                                    placeholder='Select Secondary Genre'
-                                                    value={selectSecondaryGenreValue}
-
+                                                    // defaultValue='Select Secondary Genre'
+                                                    value={selectSecondaryGenre}
                                                     sx={releaseSelectStyle}
                                                     
                                                     error={ errors.secondaryGenre ? true : false }
                                                     // { ...register('secondaryGenre') }
-
+        
                                                     onChange={(event) => {
                                                         const value: any = event.target.value;
-                                                        setSelectSecondaryGenreValue(value);
-
+                                                        setSelectSecondaryGenre(value);
+        
                                                         setValue(
                                                             "secondaryGenre", 
                                                             value, 
@@ -763,7 +424,7 @@ function AlbumDetails() {
                                                     )) }
                                                 </Select>
                                             </FormControl>
-
+        
                                             { errors.secondaryGenre && <Box sx={{fontSize: 13, color: "red", textAlign: "left"}}>{ errors.secondaryGenre?.message }</Box> }
                                         </Box>
                                     </Grid>
@@ -899,7 +560,6 @@ function AlbumDetails() {
 
                                     <Grid item xs={12} md={8}>
                                         <Box>
-                                                
                                             <Box
                                                 sx={{
                                                     display: "flex",
@@ -913,19 +573,19 @@ function AlbumDetails() {
                                                     <Select
                                                         labelId="releaseTimeHours"
                                                         id="releaseTimeHours-select"
-                                                        label=""
-                                                        value={selectReleaseTimeHoursValue}
-                                                        placeholder='12'
-
+                                                        // placeholder='12'
+                                                        // value={selectReleaseTimeHoursValue}
+                                                        defaultValue={"12"}
+        
                                                         sx={releaseSelectStyle2}
-                                                        
+        
                                                         error={ errors.releaseTimeHours ? true : false }
                                                         // { ...register('releaseTimeHours') }
-
+        
                                                         onChange={(event) => {
                                                             const value: any = event.target.value;
-                                                            setSelectReleaseTimeHoursValue(value);
-
+                                                            // setSelectReleaseTimeHoursValue(value);
+        
                                                             setValue(
                                                                 "releaseTimeHours", 
                                                                 value, 
@@ -944,24 +604,25 @@ function AlbumDetails() {
                                                         )) }
                                                     </Select>
                                                 </FormControl>
-
+        
                                                 <FormControl fullWidth sx={{maxWidth: {sx: "119.43px", md: "145px"},}}>
                                                     <Select
                                                         labelId="releaseTimeMinutes"
                                                         id="releaseTimeMinutes-select"
-                                                        label=""
-                                                        placeholder='00'
-                                                        value={selectReleaseTimeMinutesValue}
-
+                                                        // placeholder='00'
+                                                        // value={selectReleaseTimeMinutesValue}
+        
+                                                        defaultValue={"00"}
+        
                                                         sx={releaseSelectStyle2}
                                                         
                                                         error={ errors.releaseTimeMinutes ? true : false }
                                                         // { ...register('releaseTimeMinutes') }
-
+        
                                                         onChange={(event) => {
                                                             const value: any = event.target.value;
-                                                            setSelectReleaseTimeMinutesValue(value);
-
+                                                            // setSelectReleaseTimeMinutesValue(value);
+        
                                                             setValue(
                                                                 "releaseTimeMinutes", 
                                                                 value, 
@@ -980,24 +641,23 @@ function AlbumDetails() {
                                                         )) }
                                                     </Select>
                                                 </FormControl>
-
+        
                                                 <FormControl fullWidth sx={{maxWidth: {sx: "119.43px", md: "145px"},}}>
                                                     <Select
                                                         labelId="releaseTimeHourFormat"
                                                         id="releaseTimeHourFormat-select"
-                                                        label=""
-                                                        placeholder='AM'
-                                                        value={selectReleaseTimeFormatValue}
-
+                                                        // placeholder='AM'
+                                                        // value={selectReleaseTimeFormatValue}
+                                                        defaultValue={"AM"}
                                                         sx={releaseSelectStyle2}
                                                         
                                                         error={ errors.releaseTimeHourFormat ? true : false }
                                                         // { ...register('releaseTimeHourFormat') }
-
+        
                                                         onChange={(event) => {
                                                             const value: any = event.target.value;
-                                                            setSelectReleaseTimeFormatValue(value);
-
+                                                            // setSelectReleaseTimeFormatValue(value);
+        
                                                             setValue(
                                                                 "releaseTimeHourFormat", 
                                                                 value, 
@@ -1009,17 +669,12 @@ function AlbumDetails() {
                                                             );
                                                         }}
                                                     >
-                                                        <MenuItem value="AM">
-                                                            AM
-                                                        </MenuItem>
-
-                                                        <MenuItem value="PM">
-                                                            PM
-                                                        </MenuItem>
+                                                        <MenuItem value="AM">AM</MenuItem>
+                                                        <MenuItem value="PM">PM</MenuItem>
                                                     </Select>
                                                 </FormControl>
                                             </Box>
-
+        
                                             <Typography
                                                 sx={{
                                                     fontWeight: "300",
@@ -1031,12 +686,12 @@ function AlbumDetails() {
                                             >
                                                 Set the time you'd like your release to go live on Spotify.
                                             </Typography>
-
+        
                                             <FormGroup>
                                                 <FormControlLabel 
                                                     control={<Checkbox 
                                                         // defaultChecked 
-                                                        checked={selectListenerTimezoneValue}
+                                                        checked={spotifyReleaseTimezone == "listener's timezone" ? true : false}
                                                         sx={{
                                                             color: "#797979",
                                                             '&.Mui-checked': {
@@ -1055,31 +710,23 @@ function AlbumDetails() {
                                                         <Typography sx={{ fontWeight: "700" }}>
                                                             12:00 AM in the listener's timezone
                                                         </Typography>
-
+        
                                                         <Typography sx={{ fontWeight: "300" }}>
                                                             Example: 12:00 AM in NYC, 12:00 AM in London
                                                         </Typography>
                                                     </Box>}
                                                     sx={{ mb: 2, alignItems: 'flex-start' }}
-                                                    // value={selectListenerTimezoneValue}
                                                     onChange={(event) => {
                                                         const eValue: any = event.target;
-                                                        // console.log(eValue.checked);
-
-                                                        if (eValue.checked == true) {
-                                                            setValue("listenerTimezone", eValue.checked, {shouldDirty: true, shouldTouch: true, shouldValidate: true});
-                                                            setSelectListenerTimezoneValue(eValue.checked);
-
-                                                            setValue("generalTimezone", false, {shouldDirty: true, shouldTouch: true, shouldValidate: true});
-                                                            setSelectGeneralTimezoneValue(false);
-                                                        }
+        
+                                                        if (eValue.checked == true) setSpotifyReleaseTimezone("listener's timezone");
                                                     }}
                                                 />
-
+        
                                                 <FormControlLabel 
                                                     control={<Checkbox 
                                                         // defaultChecked 
-                                                        checked={selectGeneralTimezoneValue}
+                                                        checked={spotifyReleaseTimezone == "EST/NYC timezone" ? true : false}
                                                         sx={{
                                                             color: "#797979",
                                                             '&.Mui-checked': {
@@ -1093,23 +740,16 @@ function AlbumDetails() {
                                                         <Typography sx={{ fontWeight: "700" }}>
                                                             12:00 AM EST / NYC and at the same time across all countries/territories regardless of timezone
                                                         </Typography>
-
+        
                                                         <Typography sx={{ fontWeight: "300" }}>
                                                             Example: 12:00 AM in NYC, 12:00 AM in London
                                                         </Typography>
                                                     </Box>}
                                                     sx={{ alignItems: 'flex-start' }}
-                                                    // value={selectGeneralTimezoneValue}
                                                     onChange={(event) => {
                                                         const eValue: any = event.target;
                                                         // console.log(eValue.checked);
-                                                        if (eValue.checked) {
-                                                            setValue("generalTimezone", eValue.checked, {shouldDirty: true, shouldTouch: true, shouldValidate: true} );
-                                                            setSelectGeneralTimezoneValue(eValue.checked);
-
-                                                            setValue("listenerTimezone", false, {shouldDirty: true, shouldTouch: true, shouldValidate: true} );
-                                                            setSelectListenerTimezoneValue(false);
-                                                        }
+                                                        if (eValue.checked == true) setSpotifyReleaseTimezone("EST/NYC timezone");
                                                     }}
                                                 />
                                             </FormGroup>

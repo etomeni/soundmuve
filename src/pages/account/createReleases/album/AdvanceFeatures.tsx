@@ -1,11 +1,3 @@
-// import axios from 'axios';
-import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useForm } from 'react-hook-form';
-import * as yup from "yup";
-import { yupResolver } from '@hookform/resolvers/yup';
-import axios from 'axios';
-
 import SideNav from './SideNav';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
@@ -21,153 +13,40 @@ import IconButton from '@mui/material/IconButton';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 
-import { useUserStore } from '@/state/userStore';
 import { useSettingStore } from '@/state/settingStore';
-import { useCreateReleaseStore } from '@/state/createReleaseStore';
-// import { emekaApiEndpoint } from '@/util/resources';
 
 import AccountWrapper from '@/components/AccountWrapper';
 import { releaseTextFieldStyle } from '@/util/mui';
-import { emekaApiEndpoint } from '@/util/resources';
 import FormControl from '@mui/material/FormControl';
 import LongSelectList from '@/components/LongSelectList';
 import { restCountries } from '@/util/countries';
 import colors from '@/constants/colors';
-
-
-const formSchema = yup.object({
-    labelName: yup.string().trim().label("Label Name"),
-    recordingLocation: yup.string().trim().label("Recording Location"),
-    soldWorldwide: yup.string().trim(),
-    UPC_EANcode: yup.string().trim().label("UPC/EAN Code"),
-});
+import { useCreateAlbum2 } from '@/hooks/release/createAlbumRelease/useCreateAlbum2';
 
 const contriesss = restCountries.map(item => item.name.common);
 contriesss.unshift("All");
 
 function CreateAlbumReleaseAdvanceFeatures() {
-    const navigate = useNavigate();
     const darkTheme = useSettingStore((state) => state.darkTheme);
-    const [soldWorldwide, setSoldWorldwide] = useState(""); // Yes
-    const userData = useUserStore((state) => state.userData);
-    const accessToken = useUserStore((state) => state.accessToken);
 
-    const albumReleaseAdvanceFeatures = useCreateReleaseStore((state) => state.albumReleaseAdvanceFeatures);
-    const _setAlbumReleaseAdvanceFeatures = useCreateReleaseStore((state) => state._setAlbumReleaseAdvanceFeatures);
-    const completeAlbumData = useCreateReleaseStore((state) => state.completeAlbumData);
-    const _setCompleteAlbumData = useCreateReleaseStore((state) => state._setCompleteAlbumData);
-    const _setToastNotification = useSettingStore((state) => state._setToastNotification);
-    const [selectSoldCountries, setSelectSoldCountries] = useState<string[]>(contriesss);
+    const {
+        navigate,
+        apiResponse, // setApiResponse,
 
-    const [apiResponse, setApiResponse] = useState({
-        display: false,
-        status: true,
-        message: ""
-    });
-
-    useEffect(() => {
-        setValue("labelName", albumReleaseAdvanceFeatures.label_name, {shouldDirty: true, shouldTouch: true, shouldValidate: true});
-        setValue("recordingLocation", albumReleaseAdvanceFeatures.recording_location, {shouldDirty: true, shouldTouch: true, shouldValidate: true});
-
-        setValue("soldWorldwide", albumReleaseAdvanceFeatures.soldWorldwide || soldWorldwide, {shouldDirty: true, shouldTouch: true, shouldValidate: true});
-        setSoldWorldwide(albumReleaseAdvanceFeatures.soldWorldwide || soldWorldwide);
-
-        setValue("UPC_EANcode", albumReleaseAdvanceFeatures.upc_ean, {shouldDirty: true, shouldTouch: true, shouldValidate: true});
-    }, [albumReleaseAdvanceFeatures]);
-    
-
-    const { 
-        handleSubmit, register, setValue, setError, formState: { errors, isValid, isSubmitting } 
-    } = useForm({ 
-        resolver: yupResolver(formSchema),
-        mode: 'onBlur'
-    });
-
-
-    const handleSoldCountriesSelect = (selected: string[]) => {
-        setSelectSoldCountries(selected);
-        setValue("soldWorldwide", selected.toString(), {shouldDirty: true, shouldTouch: true, shouldValidate: true});
-    }
-            
-    const onSubmit = async (formData: typeof formSchema.__outputType) => {
-        setApiResponse({
-            display: false,
-            status: true,
-            message: ""
-        });
-
-
-        if (!soldWorldwide) {
-            _setToastNotification({
-                display: true,
-                status: "error",
-                message: "Please select if this release can be sold worldwide?"
-            });
-
-            setError("soldWorldwide", {message: "Please select if this release can be sold worldwide?"})
-            return;
-        }
-
-
-        const formDetails = {
-            email: userData.email,
-            release_type: "Album",
-
-            label_name: formData.labelName || '',
-            recording_location: formData.recordingLocation || '',
-            soldWorldwide: formData.soldWorldwide || soldWorldwide,
-            upc_ean: formData.UPC_EANcode || '',
-        };
-
-        // console.log(data2db);
-        _setAlbumReleaseAdvanceFeatures(formDetails);
-
-        const data2db = {
-            label_name: formDetails.label_name,
-            recording_location: formDetails.recording_location,
-            upc_ean: formDetails.upc_ean,
-            soldWorldwide: formDetails.soldWorldwide || selectSoldCountries || soldWorldwide
-        }
-
-        try {
-            const response = (await axios.put(
-                // `${emekaApiEndpoint}/Album/update-album/${ completeAlbumData._id }/page2`,
-                `${emekaApiEndpoint}/songs/albums/${ completeAlbumData._id }/page2`,
-                data2db,  
-                {
-                    headers: {
-                        // 'Content-Type': 'multipart/form-data',
-                        Authorization: `Bearer ${accessToken}`
-                    },
-                }
-            )).data;
-            console.log(response);
-
-            // _setCompleteAlbumData(response.updatedAlbum);
-            _setCompleteAlbumData(response);
-
-            navigate("/account/create-album-release-select-stores");
-        } catch (error: any) {
-            const err = error.response.data;
-            console.log(err);
-
-            setApiResponse({
-                display: true,
-                status: false,
-                message: err.message || "Oooops, failed to update details. please try again."
-            });
-        }
-
+        register, setValue,
+        errors, isValid, isSubmitting,
         
-        // navigate("/account/artist/create-album-release-select-stores");
-    }
+        soldWorldwide, setSoldWorldwide,
+        selectSoldCountries, // setSelectSoldCountries,
+        handleSoldCountriesSelect,
 
+        submitForm
+    } = useCreateAlbum2();
 
 
     return (
         <AccountWrapper bottomSpacing={0} topSpacing={false}>
             <Box>
-
                 <Box sx={{ display: {xs: 'initial', sm: 'flex'}, height: "100%" }}>
                     <SideNav activePageNumber={2} />
 
@@ -202,7 +81,7 @@ function CreateAlbumReleaseAdvanceFeatures() {
 
 
                         <Box sx={{my: 3}}>
-                            <form noValidate onSubmit={ handleSubmit(onSubmit) } 
+                            <form noValidate onSubmit={ submitForm } 
                                 style={{ width: "100%", maxWidth: "916px" }}
                             >
                                 <Box>
@@ -563,7 +442,6 @@ function CreateAlbumReleaseAdvanceFeatures() {
                         </Box>
                     </Box>
                 </Box>
-
             </Box>
         </AccountWrapper>
     )

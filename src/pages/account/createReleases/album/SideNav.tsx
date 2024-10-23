@@ -58,6 +58,18 @@ const SideNav: React.FC<MyComponentProps> = ({activePageNumber}) => {
     const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
       setValue(newValue);
     };
+
+
+
+    // const handleColor = (index: number, activePageNumber: number ) => {
+    //     if (index + 1 < activePageNumber) {
+    //         return "#666666"
+    //     } else if (index + 1 == activePageNumber) {
+    //         return colors.primary;
+    //     } else {
+    //         return colors.secondary;
+    //     }
+    // }
   
 
 
@@ -107,7 +119,10 @@ const SideNav: React.FC<MyComponentProps> = ({activePageNumber}) => {
 
                                 <ListItemText 
                                     primary={item.title} 
-                                    sx={{ color: index + 1 < activePageNumber ? "#666666" : colors.primary }} 
+                                    sx={{ 
+                                        // color: handleColor(index, activePageNumber) }}
+                                        color: index + 1 < activePageNumber ? "#666666" : colors.primary 
+                                    }} 
                                 />
                             </ListItemButton>
                         </ListItem>

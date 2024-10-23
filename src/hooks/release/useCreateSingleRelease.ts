@@ -1,4 +1,4 @@
-import { ChangeEvent, useCallback, useState } from "react";
+import { ChangeEvent, useCallback, useEffect, useState } from "react";
 import { createSearchParams, useNavigate } from 'react-router-dom';
 
 import axios from "axios";
@@ -27,6 +27,7 @@ export function useCreateSingleRelease() {
     const _handleClearSingleRelease = useCreateReleaseStore((state) => state._handleClearSingleRelease);
 
     const release_id: string = singleRelease._id || getQueryParams('release_id');
+    const recordLabelArtist_id: string = getQueryParams('recordLabelArtist_id');
     
     const userData = useUserStore((state) => state.userData);
     const accessToken = useUserStore((state) => state.accessToken);
@@ -40,6 +41,11 @@ export function useCreateSingleRelease() {
         message: ""
     });
     
+
+    const [language, setLanguage] = useState('Select Language');
+    const [selectPrimaryGenre, setSelectPrimaryGenre] = useState('Select Primary Genre');
+    const [selectSecondaryGenre, setSelectSecondaryGenre] = useState('Select Secondary Genre');
+
     const [soldWorldwide, setSoldWorldwide] = useState(""); // Yes
     const [selectReleaseDateValue, setSelectReleaseDateValue] = useState<any>('');
     const [spotifyReleaseTimezone, setSpotifyReleaseTimezone] = useState<"listener's timezone" | "EST/NYC timezone">("listener's timezone");
@@ -167,6 +173,8 @@ export function useCreateSingleRelease() {
         
         const data2submit: singleRelease1Interface = {
             release_id: release_id, // optional, only add it when you've created the release and want to edit it.
+            recordLabelArtist_id: recordLabelArtist_id,
+            
             title: formData.songTitle,
         
             mainArtist: {
@@ -251,8 +259,7 @@ export function useCreateSingleRelease() {
 
 
 
-    const _clearSingleRelease = useCreateReleaseStore((state) => state._clearSingleRelease);
-    // const _restoreAllRelease = useCreateReleaseStore((state) => state._restoreAllRelease);
+    // const _clearSingleRelease = useCreateReleaseStore((state) => state._clearSingleRelease);
     // const _addToCart = cartItemStore((state) => state._addToCart);
     const [openCopyrightOwnershipModal, setOpenCopyrightOwnershipModal] = useState(false);
 
@@ -604,9 +611,6 @@ export function useCreateSingleRelease() {
                     message: response.message
                 });
 
-                // clear the release from memory and rest the state
-                _handleClearSingleRelease();
-
                 setOpenSuccessModal(true);
 
                 _addToCart({
@@ -623,7 +627,9 @@ export function useCreateSingleRelease() {
                 setTimeout(() => {
                     navigate("/account/cart");
                     setOpenSuccessModal(false);
-                    _clearSingleRelease();
+
+                    // clear the release from memory and rest the state
+                    _handleClearSingleRelease();
                 }, 1000);
                 return;
             }
@@ -694,10 +700,140 @@ export function useCreateSingleRelease() {
 
 
 
+    useEffect(() => {
+        restoreValues()
+    }, [singleRelease]);
+    
+
+    const restoreValues = () => {
+        if (singleRelease.title) {
+            singleRelease1Form.setValue(
+                "songTitle", singleRelease.title,
+                { shouldDirty: true, shouldTouch: true, shouldValidate: true }
+            );
+        }
+
+        if (singleRelease.mainArtist.spotifyProfile.name) {
+            setSelectedSpotifyArtist(singleRelease.mainArtist.spotifyProfile);
+            singleRelease1Form.setValue(
+                "spotifyArtistProfile", 
+                singleRelease.mainArtist.spotifyProfile.name,
+                {shouldDirty: true, shouldTouch: true, shouldValidate: true} 
+            );
+        }
+
+        if (singleRelease.mainArtist.appleMusicProfile) {
+            singleRelease1Form.setValue(
+                "appleMusicUrl", singleRelease.mainArtist.appleMusicProfile,
+                { shouldDirty: true, shouldTouch: true, shouldValidate: true }
+            );
+        }
+
+        if (singleRelease.language) {
+            singleRelease1Form.setValue(
+                "language", singleRelease.language,
+                { shouldDirty: true, shouldTouch: true, shouldValidate: true }
+            );
+
+            setLanguage(singleRelease.language);
+        }
+
+        if (singleRelease.primaryGenre) {
+            singleRelease1Form.setValue(
+                "primaryGenre", singleRelease.primaryGenre,
+                { shouldDirty: true, shouldTouch: true, shouldValidate: true }
+            );
+            setSelectPrimaryGenre(singleRelease.primaryGenre)
+        }
+
+        if (singleRelease.secondaryGenre) {
+            singleRelease1Form.setValue(
+                "secondaryGenre", singleRelease.secondaryGenre,
+                { shouldDirty: true, shouldTouch: true, shouldValidate: true }
+            );
+            setSelectSecondaryGenre(singleRelease.secondaryGenre);
+        }
+        
+        if (singleRelease.releaseDate) {
+            singleRelease1Form.setValue(
+                "releaseDate", singleRelease.releaseDate,
+                { shouldDirty: true, shouldTouch: true, shouldValidate: true }
+            );
+            setSelectReleaseDateValue(singleRelease.releaseDate);
+        }
+
+        if (singleRelease.spotifyReleaseTime.hours) {
+            singleRelease1Form.setValue(
+                "releaseTimeHours", singleRelease.spotifyReleaseTime.hours,
+                { shouldDirty: true, shouldTouch: true, shouldValidate: true }
+            );
+        }
+
+        if (singleRelease.spotifyReleaseTime.minutes) {
+            singleRelease1Form.setValue(
+                "releaseTimeMinutes", singleRelease.spotifyReleaseTime.minutes,
+                { shouldDirty: true, shouldTouch: true, shouldValidate: true }
+            );
+        }
+
+        if (singleRelease.spotifyReleaseTime.am_pm) {
+            singleRelease1Form.setValue(
+                "releaseTimeHourFormat", singleRelease.spotifyReleaseTime.am_pm,
+                { shouldDirty: true, shouldTouch: true, shouldValidate: true }
+            );
+        }
+
+        if (singleRelease.spotifyReleaseTimezone) {
+            const anyValue: any = singleRelease.spotifyReleaseTimezone;
+            setSpotifyReleaseTimezone(anyValue)
+        }
+
+
+        if (singleRelease.labelName) {
+            singleRelease1Form.setValue(
+                "labelName", singleRelease.labelName,
+                { shouldDirty: true, shouldTouch: true, shouldValidate: true }
+            );
+        }
+
+        if (singleRelease.recordingLocation) {
+            singleRelease1Form.setValue(
+                "recordingLocation", singleRelease.recordingLocation,
+                { shouldDirty: true, shouldTouch: true, shouldValidate: true }
+            );
+        }
+        
+        if (singleRelease.soldCountries.worldwide) {
+            singleRelease1Form.setValue(
+                "soldWorldwide", singleRelease.soldCountries.worldwide,
+                { shouldDirty: true, shouldTouch: true, shouldValidate: true }
+            );
+            setSoldWorldwide(singleRelease.soldCountries.worldwide);
+        }
+
+        if (singleRelease.soldCountries.countries) {
+            setSelectSoldCountries(singleRelease.soldCountries.countries)
+        }
+
+        if (singleRelease.upc_ean) {
+            singleRelease1Form.setValue(
+                "UPC_EANcode", singleRelease.upc_ean,
+                { shouldDirty: true, shouldTouch: true, shouldValidate: true }
+            );
+        }
+    }
+
+
+
+
     const returnSingleRelease1 = {
         selectReleaseDateValue, setSelectReleaseDateValue,
 
         spotifyReleaseTimezone, setSpotifyReleaseTimezone,
+
+        language, setLanguage,
+        selectPrimaryGenre, setSelectPrimaryGenre,
+        selectSecondaryGenre, setSelectSecondaryGenre,
 
         soldWorldwide, setSoldWorldwide,
         selectSoldCountries,

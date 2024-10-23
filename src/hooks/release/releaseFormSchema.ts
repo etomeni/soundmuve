@@ -39,3 +39,62 @@ export const singleRelease2FormSchema = yup.object({
     tikTokClipStartTime_Minutes: yup.string().trim().label("TikTok Clip Start Time"),
     tikTokClipStartTime_Seconds: yup.string().trim().label("TikTok Clip Start Time"),
 });
+
+
+
+
+export const albumRelease1FormSchema = yup.object({
+    albumTitle: yup.string().required().trim().label("Album Title"),
+    appleMusicUrl: yup.string().required().trim().label("Apple Music Profile Link"),
+    spotifyArtistProfile: yup.string().required().trim().label("Spotify Profile"),
+
+    language: yup.string().required().trim().label("Language"),
+    primaryGenre: yup.string().required().trim().label("Primary Genre"),
+    secondaryGenre: yup.string().required().trim().label("Secondary Genre"),
+    releaseDate: yup.string().trim().label("Release Date"),
+    
+    releaseTimeHours: yup.string().trim().label("Hours"),
+    releaseTimeMinutes: yup.string().trim().label("Minutes"),
+    releaseTimeHourFormat: yup.string().trim().label("Time Format"),
+
+    // labelName: yup.string().trim().label("Label Name"),
+    // recordingLocation: yup.string().trim().label("Recording Location"),
+    // soldWorldwide: yup.string().trim(),
+    // UPC_EANcode: yup.string().trim().label("UPC/EAN Code"),
+});
+
+
+export const albumRelease2FormSchema = yup.object({
+    labelName: yup.string().trim().label("Label Name"),
+    recordingLocation: yup.string().trim().label("Recording Location"),
+    soldWorldwide: yup.string().trim(),
+    UPC_EANcode: yup.string().trim().label("UPC/EAN Code"),
+});
+
+
+
+export const albumRelease3FormSchema = yup.object({
+    store: yup.string().trim().label("Store"),
+    socialPlatform: yup.string().trim().label("Social Platform"),
+});
+
+
+export const albumRelease4FormSchema = yup.object({
+    songTitle: yup.string().required().trim().label("Song Title"),
+
+    songWriter: yup.string().trim().label("Song Writer"),
+    artistCreativeName: yup.string().trim().label("Artist/Creative Name"),
+    songArtistsCreativeRole: yup.string().trim().label("Artist/Creative Role"),
+
+    explicitSongLyrics: yup.string().trim(),
+    
+    copyrightOwnership: yup.string().trim().label("Copyright Ownership"),
+    copyrightOwnershipPermission: yup.string().trim().label("Copyright Ownership Permission"),
+    
+    ISRC_Number: yup.string().trim().label("ISRC Number"),
+
+    songLyrics: yup.string().trim(),
+    lyricsLanguage: yup.string().trim().label("Lyrics Language"),
+    tikTokClipStartTime_Minutes: yup.string().trim().label("TikTok Clip Start Time"),
+    tikTokClipStartTime_Seconds: yup.string().trim().label("TikTok Clip Start Time"),
+});
