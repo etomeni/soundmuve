@@ -1,22 +1,16 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 
 import Box from '@mui/material/Box';
-import Stack from '@mui/material/Stack';
-import Alert from '@mui/material/Alert';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import { SxProps, Theme } from '@mui/material/styles';
 
 import colors from '@/constants/colors';
-import { useUserStore } from '@/state/userStore';
-import { emekaApiEndpoint } from '@/util/resources';
 
 
 interface _Props {
     setQuestions: (data: string[]) => void;
     handleCurrentView: (number: number) => void;
-
 }
 
 const questions = [
@@ -33,15 +27,8 @@ const questions = [
 const KycSetupQuestionsComponent: React.FC<_Props> = ({
     handleCurrentView, setQuestions
 }) => {
-    const userData = useUserStore((state) => state.userData);
-    const accessToken = useUserStore((state) => state.accessToken);
     
     const [selectedQuestions, setSelectedQuestions] = useState<string[]>([]);
-    const [apiResponse, setApiResponse] = useState({
-        display: false,
-        status: true,
-        message: ""
-    });
 
 
     const questionContainerStyle: SxProps<Theme> = {
@@ -85,34 +72,9 @@ const KycSetupQuestionsComponent: React.FC<_Props> = ({
 
         if (selectedQuestions.length == 3) {
             setQuestions(selectedQuestions);
-    
-            const data2db = {
-                email: userData.email,
-                selectedQuestions: selectedQuestions
-            };
-
-            try {
-                const response = (await axios.post(`${emekaApiEndpoint}/kyc/kyc/select-questions`, data2db, {
-                    headers: {
-                        Authorization: `Bearer ${accessToken}`
-                    }
-                })).data;
-                console.log(response);
-    
-                handleCurrentView(3);
-            } catch (error: any) {
-                const errorResponse = error.response.data || error;
-                // console.error(errorResponse);
-    
-                setApiResponse({
-                    display: true,
-                    status: false,
-                    message: errorResponse.message || "Ooops and error occurred!"
-                });
-            }
+            handleCurrentView(3);
         }
 
-        // confirmBtn(formData);
     }
 
 
@@ -154,13 +116,6 @@ const KycSetupQuestionsComponent: React.FC<_Props> = ({
                 }
             </Box>
 
-            {
-                apiResponse.display && (
-                    <Stack sx={{ width: '100%', my: 2 }}>
-                        <Alert severity={apiResponse.status ? "success" : "error"}>{apiResponse.message}</Alert>
-                    </Stack>
-                )
-            }
 
             <Box 
                 sx={{ 

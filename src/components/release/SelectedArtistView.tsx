@@ -6,12 +6,12 @@ import Typography from '@mui/material/Typography';
 
 import AppleSportifyCheckmark from '../AppleSportifyCheckmark';
 import colors from '@/constants/colors';
-import { searchedArtistSearchInterface } from '@/constants/typesInterface';
+import { artistInterface } from '@/typeInterfaces/release.interface';
 
 
 interface _Props {
     // children: React.ReactNode,
-    selectedArtist: searchedArtistSearchInterface,
+    selectedArtist: artistInterface,
     dspName: "Spotify" | "Apple"
 }
 

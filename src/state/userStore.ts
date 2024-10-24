@@ -26,7 +26,12 @@ const userEmptyData: userInterface = {
         lon: 0
     },
     createdAt: "",
-    updatedAt: ""
+    updatedAt: "",
+    kyc: {
+        isKycSubmitted: false,
+        phoneNumber: "",
+        securityQuestions: []
+    }
 };
 
 type _typeInterface_ = {

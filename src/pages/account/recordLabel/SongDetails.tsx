@@ -24,6 +24,8 @@ import { useReleaseStore } from '@/state/releaseStore';
 import BarChartGraphComponent from '@/components/analytics/BarChartGraph';
 import SingleSongDspOverviewComponent from '@/components/analytics/SingleSongDspOverview';
 import colors from '@/constants/colors';
+// import { useSongAnalytics } from '@/hooks/analytics/useSongAnalytics';
+import sampleCoverArtWorkImage from '@/assets/images/album.png';
 
 
 
@@ -83,9 +85,37 @@ const dataset = [
 function SongDetails_RL() {
     const navigate = useNavigate();
     const darkTheme = useSettingStore((state) => state.darkTheme);
-    
-    const songDetails = useReleaseStore((state) => state.songDetails);
+    // const songDetails = useReleaseStore((state) => state.songDetails);
+    const releaseDetails = useReleaseStore((state) => state.releaseDetails);
 
+
+    // const { 
+    //     // spotifyAndAppleOverview, 
+    //     getSportifiyAppleOverview,
+
+    //     songDashAnalytics, // setSongDashAnalytics,
+
+    //     // spotifyDataset, appleMusicDataset, // graphApiData, 
+    //     getGraphData,
+
+    //     handleDataRangeData,
+    // } = useSongAnalytics();
+
+
+    // useEffect(() => {
+    //     // getAnalyticsData();
+    //     // console.log(songDetails);
+
+    //     if (!releaseDetails._id) {
+    //         navigate("/account");
+    //         return;
+    //     }
+
+    //     getGraphData(releaseDetails._id, releaseDetails.title, "single");
+        
+    //     getSportifiyAppleOverview(releaseDetails._id, "single");
+    //     getSportifiyAppleOverview(releaseDetails._id, "single");
+    // }, []);
 
 
     return (
@@ -172,7 +202,7 @@ function SongDetails_RL() {
                             lineHeight: {xs: "8.71px", md: "24px"},
                             mt: 3
                         }}
-                    > { songDetails.song_title } </Typography>
+                    > { releaseDetails.title } </Typography>
 
                     <Stack direction="row" mt={5} spacing="20px" alignItems="center">
                         <Box
@@ -184,7 +214,8 @@ function SongDetails_RL() {
                             }}
                         >
                             <img
-                                src={ songDetails.cover_photo } alt={`${ songDetails.song_title } cover photo`}
+                                src={ releaseDetails.coverArt || sampleCoverArtWorkImage } 
+                                alt={`${ releaseDetails.title } cover photo`}
                                 style={{
                                     width: "100%",
                                     height: "100%",
@@ -200,7 +231,7 @@ function SongDetails_RL() {
                                     fontSize: "24px",
                                     lineHeight: "24px"
                                 }}
-                            > { songDetails.song_title } </Typography>
+                            > { releaseDetails.title } </Typography>
 
                             <Typography
                                 sx={{
@@ -208,7 +239,7 @@ function SongDetails_RL() {
                                     fontSize: "17px",
                                     lineHeight: "24px",
                                 }}
-                            > { songDetails.artist_name } </Typography>
+                            > { releaseDetails.mainArtist.spotifyProfile.name } </Typography>
 
                             <Stack direction="row" spacing="10px" mt="30px">
                                 <Typography
@@ -229,7 +260,7 @@ function SongDetails_RL() {
                                         // letterSpacing: "-1px",
                                         flex: "1 1 70%",
                                     }}
-                                >{ songDetails.label_name } </Typography>
+                                >{ releaseDetails.labelName } </Typography>
                             </Stack>
 
                             <Stack direction="row" spacing="10px" mt="20px">
@@ -274,7 +305,7 @@ function SongDetails_RL() {
                                         // letterSpacing: "-1px",
                                         flex: "1 1 70%",
                                     }}
-                                > { songDetails.upc_ean } </Typography>
+                                > { releaseDetails.upc_ean } </Typography>
                             </Stack>
                         </Box>
                     </Stack>

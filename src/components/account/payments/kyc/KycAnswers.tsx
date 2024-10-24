@@ -14,9 +14,8 @@ import TextField from '@mui/material/TextField';
 import CircularProgress from '@mui/material/CircularProgress';
 import colors from '@/constants/colors';
 import { paymentTextFieldStyle } from '@/util/mui';
-import { setLocalStorage } from '@/util/storage';
 import { useUserStore } from '@/state/userStore';
-import { emekaApiEndpoint } from '@/util/resources';
+import { apiEndpoint } from '@/util/resources';
 
 
 const formSchema: any = yup.object({
@@ -37,8 +36,8 @@ const KycAnswersComponent: React.FC<_Props> = ({
     phoneNumber, questions, isCompleteState
 
 }) => {
-    const userData = useUserStore((state) => state.userData);
     const accessToken = useUserStore((state) => state.accessToken);
+    const _updateUser = useUserStore((state) => state._updateUser);
     
     const [apiResponse, setApiResponse] = useState({
         display: false,
@@ -52,48 +51,42 @@ const KycAnswersComponent: React.FC<_Props> = ({
 
 
     const onSubmit = async (formData: typeof formSchema.__outputType) => {
-        console.log(phoneNumber);
-        // console.log(questions);
-        // console.log(formData);
-
-        // const answers = Object.values(formData);
-        // console.log(answers);
-
-
         const keys = Object.keys(formData);
-        const values = [];
+        const securityQuestions = [];
 
         for (let i = 0; i < keys.length; i++) {
-            values.unshift(formData[keys[i]]);
+            securityQuestions.push({
+                question: questions[i],
+                answer: formData[keys[i]]
+            });
         }
 
-        const data2db = {
-            email: userData.email,
-            // phoneNumber,
-            answers: values
-        };
-
-        console.log(data2db);
+        const kycInfo = {
+            phoneNumber: phoneNumber,
+            securityQuestions: securityQuestions
+        }
         
-
         try {
-            const response = (await axios.post(`${emekaApiEndpoint}/kyc/kyc/submit-answers`, data2db, {
+            const response = (await axios.post(`${apiEndpoint}/auth/set-kyc`, kycInfo, {
                 headers: {
                     Authorization: `Bearer ${accessToken}`
                 }
             })).data;
-            console.log(response);
 
-            setLocalStorage("isKYCsetupCompleted", true);
-            isCompleteState(true);
+            if (response.status) {
+                _updateUser(response.result);
+                isCompleteState(true);
+            }
+
         } catch (error: any) {
-            const errorResponse = error.response.data || error;
-            // console.error(errorResponse);
+            const err = error.response.data || error;
+            const fixedErrorMsg = "Ooops and error occurred!";
+            console.log(err);
 
             setApiResponse({
                 display: true,
                 status: false,
-                message: errorResponse.message || "Ooops and error occurred!"
+                message: err.errors && err.errors.length ? err.errors[0].msg : err.message || fixedErrorMsg
             });
         }
 

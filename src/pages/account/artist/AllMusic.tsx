@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 // import { useNavigate } from 'react-router-dom';
 
 import Box from '@mui/material/Box';
@@ -12,8 +12,9 @@ import LoadingDataComponent from '@/components/LoadingData';
 import colors from '@/constants/colors';
 import { useGetReleases } from '@/hooks/release/useGetReleases';
 import ViewSongItemComponent from '@/components/account/ViewSongItem';
-
-// type status = "Live" | "Pending" | "Incomplete" | "Complete" | "Failed";
+import Button from '@mui/material/Button';
+import CircularProgress from '@mui/material/CircularProgress';
+import Stack from '@mui/material/Stack';
 
 
 function AllMusic() {
@@ -21,20 +22,24 @@ function AllMusic() {
     const [albumType, setAlbumType] = useState<"Single" | "Album">("Single");
 
     const { 
-        apiResponse, // setApiResponse, 
-        releases, // setReleases,
-        getAlbumRelease, getSingleRelease
-    } = useGetReleases();
+        apiResponse, // setApiResponse,
 
-    useEffect(() => {
-        getSingleRelease();
-    }, []);
+        currentPageNo, // totalRecords,
+        totalPages, isSubmitting,
+
+        // singleReleases, albumReleases,
+        releases, getReleases
+    } = useGetReleases(1, 20, "single");
+
+
+    const handleLoadMore = () => {
+        getReleases(currentPageNo + 1, 20, albumType == "Album" ? "album" : "single" );
+    }
 
       
     return (
         <AccountWrapper>
             <Box>
-
                 <Typography variant='h2'
                     sx={{
                         fontWeight: "900",
@@ -45,7 +50,6 @@ function AllMusic() {
                         my: {xs: "50px", md: "70px"},
                     }}
                 > Your Releases </Typography>
-
 
                 <Box 
                     sx={{ 
@@ -64,7 +68,7 @@ function AllMusic() {
                         alignItems: "center",
                     }} 
                 >
-                    <Box onClick={() => { setAlbumType('Single'); getSingleRelease(); } }
+                    <Box onClick={() => { setAlbumType('Single'); getReleases(1, 20, "single"); } }
                         sx={ albumType === "Single" ? {
                             width: "100%",
                             maxWidth: {xs: "200.03px", md: "257.78px"},
@@ -98,7 +102,7 @@ function AllMusic() {
                         > Single </Typography>
                     </Box>
 
-                    <Box onClick={() => { setAlbumType('Album'); getAlbumRelease(); } }
+                    <Box onClick={() => { setAlbumType('Album'); getReleases(1, 20, "album"); } }
                         sx={ albumType === "Single" ? {
                             width: "100%",
                             maxWidth: {xs: "200.03px", md: "257.78px"},
@@ -143,9 +147,9 @@ function AllMusic() {
 
                                     <Grid item xs={6} md={4} key={index}>
                                         <ViewSongItemComponent 
-                                            albumType={albumType}
+                                            releaseType={albumType}
                                             index={index}
-                                            song={song}
+                                            releaseDetails={song}
                                         />
                                     </Grid>
                                 ))
@@ -153,6 +157,51 @@ function AllMusic() {
                         : <LoadingDataComponent />
                     }
                 </Grid>
+
+
+                {
+                    currentPageNo == totalPages ? <></> :
+                    <Stack mt={5} direction="row" justifyContent="center">
+                        <Button variant="contained" 
+                            fullWidth type="button" 
+                            onClick={handleLoadMore}
+                            disabled={ currentPageNo == totalPages  || isSubmitting } 
+                            sx={{ 
+                                maxWidth: "312px",
+                                bgcolor: colors.primary,
+                                color: colors.milk,
+                                "&.Mui-disabled": {
+                                    background: colors.secondary,
+                                    color: "#797979"
+                                },
+                                "&:hover": {
+                                    bgcolor: colors.primary,
+                                },
+                                "&:active": {
+                                    bgcolor: colors.primary,
+                                },
+                                "&:focus": {
+                                    bgcolor: colors.primary,
+                                },
+                                borderRadius: "12px",
+                                my: 3, py: 1.5,
+                                fontSize: {md: "15.38px"},
+                                fontWeight: "900",
+                                letterSpacing: "-0.12px",
+                                textTransform: "none"
+                            }}
+                        >
+                            <span style={{ display: isSubmitting ? "none" : "initial" }}>See More</span>
+                            <CircularProgress size={25} 
+                                sx={{ 
+                                    display: isSubmitting ? "initial" : "none", 
+                                    color: colors.milk, 
+                                    fontWeight: "bold" 
+                                }} 
+                            />
+                        </Button>
+                    </Stack>
+                }
 
             </Box>
 

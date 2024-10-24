@@ -90,6 +90,11 @@ export function useSongAnalytics() {
         }
     })
 
+    const [songDashAnalytics, setSongDashAnalytics] = useState({
+        total_revenue: 0,
+        streams: 0,
+        stream_time: 0,
+    });
     const [appleMusicDataset, setAppleMusicDataset] = useState<typeof dataset>(dataset);
     const [spotifyDataset, setSpotifyDataset] = useState<typeof dataset>(dataset);
 
@@ -156,11 +161,11 @@ export function useSongAnalytics() {
     // }, []);
 
 
-    const handleGetGraphData = async (songId: string, songTitle: string, songType: string) => {
+    const getGraphData = useCallback(async (songId: string, songTitle: string, songType: 'album' | 'single') => {
         try {
             const d = new Date();
             const year = d.getFullYear();
-
+    
             const response: graphApiRespondInterface[] = (await axios.get(`${emekaApiEndpoint}/analyticsManager/analytics/revenue-monthly`, {
                 headers: {
                     Authorization: `Bearer ${accessToken}`
@@ -175,27 +180,27 @@ export function useSongAnalytics() {
             })).data;
             // console.log(response);
             
-
+    
             if (response.length) {
                 setGraphApiData(response);
-
+    
                 let sportify: typeof dataset = []; 
                 let apple: typeof dataset = []; 
-
+    
                 response.forEach((item) => {
                     const appleData = {
                         percentageValue: Number(item.totalAppleRevenue),
                         month: item.month,
                     };
                     apple.push(appleData);
-
+    
                     const sportifyData = {
                         percentageValue: Number(item.totalAppleRevenue),
                         month: item.month,
                     };
                     sportify.push(sportifyData);
                 })
-
+    
                 setSpotifyDataset(sportify);
                 setAppleMusicDataset(apple);
             }
@@ -203,13 +208,10 @@ export function useSongAnalytics() {
             const errorResponse = error.response.data || error;
             console.error(errorResponse);
         }
-    }
-    const getGraphData = useCallback((songId: string, songTitle: string, songType: 'album' | 'single') => {
-        handleGetGraphData(songId, songTitle, songType)
     }, []);
 
 
-    const handleGetSportifiyAppleOverview = async (songId: string, songType: string) => {
+    const getSportifiyAppleOverview = useCallback(async (songId: string, songType: 'album' | 'single') => {
         try {
             const response = (await axios.get(`${emekaApiEndpoint}/analyticsManager/analytics/revenue-yearly`, {
                 headers: {
@@ -222,7 +224,7 @@ export function useSongAnalytics() {
                 }
             })).data;
             // console.log(response);
-
+    
             if (response.analytics) {
                 setSpotifyAndAppleOverview(response.analytics)
             }
@@ -230,9 +232,6 @@ export function useSongAnalytics() {
             const errorResponse = error.response.data || error;
             console.error(errorResponse);
         }
-    }
-    const getSportifiyAppleOverview = useCallback((songId: string, songType: 'album' | 'single') => {
-        handleGetSportifiyAppleOverview(songId, songType)
     }, []);
 
 
@@ -260,6 +259,8 @@ export function useSongAnalytics() {
         spotifyDataset,
         appleMusicDataset,
         getGraphData,
+
+        songDashAnalytics, setSongDashAnalytics,
 
         spotifyAndAppleOverview,
         getSportifiyAppleOverview,

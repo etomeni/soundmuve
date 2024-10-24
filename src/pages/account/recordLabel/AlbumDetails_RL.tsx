@@ -23,11 +23,11 @@ import { useReleaseStore } from '@/state/releaseStore';
 function AlbumDetails_RL() {
     const navigate = useNavigate();
     // const darkTheme = useSettingStore((state) => state.darkTheme);
-    const albumDetails = useReleaseStore((state) => state.albumDetails);
+    const releaseDetails = useReleaseStore((state) => state.releaseDetails);
     const _setSongDetails = useReleaseStore((state) => state._setSongDetails);
 
     useEffect(() => {
-        if (!albumDetails._id || !albumDetails.album_title) {
+        if (!releaseDetails._id) {
             navigate("/account");
         }
     }, []);
@@ -576,15 +576,15 @@ function AlbumDetails_RL() {
                         }}
                     >Songs on your album</Typography>
 
-                    {albumDetails.songs.map((item, index) => (
+                    {releaseDetails.albumSongs?.map((item, index) => (
                         <Box key={index} onClick={() => {
                             _setSongDetails(item);
                             navigate("/account/record-label/song-details");
                         }}>
                             <AlbumSongItem 
-                                artistName={item.artist_name}
-                                artworkImage={item.cover_photo}
-                                songTitle={item.song_title}
+                                artistName={releaseDetails.mainArtist.spotifyProfile.name}
+                                artworkImage={releaseDetails.coverArt}
+                                songTitle={item.songTitle}
                                 distributedDSP={["Apple", "Spotify"]} 
                                 displaySeeMore={true}
                             />

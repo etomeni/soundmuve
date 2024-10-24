@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 
-import axios from 'axios';
 import { useForm } from 'react-hook-form';
 import * as yup from "yup";
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -12,24 +11,25 @@ import Button from '@mui/material/Button';
 import colors from '@/constants/colors';
 import PaymentModalWrapper from '../PaymentWrapper';
 import TextField from '@mui/material/TextField';
-import { paymentTextFieldStyle, releaseSelectStyle2 } from '@/util/mui';
+import { paymentTextFieldStyle, // releaseSelectStyle2 
+} from '@/util/mui';
 import CircularProgress from '@mui/material/CircularProgress';
 import Stack from '@mui/material/Stack';
 import Alert from '@mui/material/Alert';
 import PaypalInfoTooltip from './PaypalInfoTooltip';
-import { emekaApiEndpoint } from '@/util/resources';
-import { currencyLists, getSupportedCurrency } from '@/util/currencies';
-import FormControl from '@mui/material/FormControl';
-import Select from '@mui/material/Select';
-import MenuItem from '@mui/material/MenuItem';
+// import FormControl from '@mui/material/FormControl';
+// import Select from '@mui/material/Select';
+// import MenuItem from '@mui/material/MenuItem';
 import { useUserStore } from '@/state/userStore';
+import { usePayoutData } from '@/hooks/payments/usePayoutInfo';
+import { savePayoutDetailsInterface } from '@/typeInterfaces/payout.interface';
 
 
 
 const formSchema = yup.object({
     email: yup.string().required().trim().label("Email"),
     beneficiary_name: yup.string().required().trim().label("Beneficiary Name"),
-    currency: yup.string().trim().label("Currency"),
+    // currency: yup.string().trim().label("Currency"),
 });
 
 export type formInterface = typeof formSchema.__outputType;
@@ -44,102 +44,66 @@ interface _Props {
 const PaypalSetupModalComponent: React.FC<_Props> = ({
     openModal, closeModal, confirmBtn, changeMethod
 }) => {
-    const [currencies, setCurrencies] = useState(currencyLists);
-    const [selectedCurrency, setSelectedCurrency] = useState('');
-    const [errorMsg, setErrorMsg] = useState('');
+    // const [selectedCurrency, setSelectedCurrency] = useState('');
+    // const [errorMsg, setErrorMsg] = useState('');
     const userData = useUserStore((state) => state.userData);
-    const accessToken = useUserStore((state) => state.accessToken);
 
 
-    const [apiResponse, setApiResponse] = useState({
-        display: false,
-        status: true,
-        message: ""
-    });
+    const {
+        apiResponse, setApiResponse,
+        saveBankPayoutDetails,
+
+        // currencies,
+        // getSupportedCurrencies
+    } = usePayoutData();
 
     useEffect(() => {
         if (!openModal) {
             reset()
-        } else {
-            getSupportedCurrencies()
         }
     }, [openModal]);
 
     
     const {
-        handleSubmit, register, setValue, reset, formState: { errors, isSubmitting, isValid } 
+        handleSubmit, register, reset, formState: { errors, isSubmitting, isValid } 
     } = useForm({ resolver: yupResolver(formSchema), mode: 'onBlur', reValidateMode: 'onChange' });
 
 
-    const getSupportedCurrencies = async () => {
-        try {
-            const response = (await axios.get(`${emekaApiEndpoint}/currency/currencies`, {
-                // headers: {
-                //     Authorization: `Bearer ${accessToken}`
-                // }
-            })).data;
-            // console.log(response);
-
-            const supportedCurrency = getSupportedCurrency(response);
-
-            setCurrencies(supportedCurrency);
-
-        } catch (error: any) {
-            const errorResponse = error.response.data;
-            console.error(errorResponse);
-        }
-    }
 
 
     const onSubmit = async (formData: formInterface) => {
-        // console.log(formData);
         setApiResponse({
             display: false,
             status: true,
             message: ""
         });
 
-        if (!selectedCurrency || !formData.currency) {
-            setApiResponse({
-                display: true,
-                status: false,
-                message: "Please select a currency"
-            });
+        // if (!selectedCurrency || !formData.currency) {
+        //     setApiResponse({
+        //         display: true,
+        //         status: false,
+        //         message: "Please select a currency"
+        //     });
 
-            return;
-        }
+        //     return;
+        // }
 
         // confirmBtn(formData);
 
-        const data2db = {
-            email: formData.email,
+        const data2db: savePayoutDetailsInterface = {
+            currency: {
+                currency_code: "USD",
+                currency_symbol: "$",
+                currency_name: "United States Dollar"
+            },
+            paymentMethod: 'PayPal',
+            beneficiary_email: formData.email,
             beneficiary_name: formData.beneficiary_name || userData.firstName + ' ' + userData.lastName,
-            currency: formData.currency || selectedCurrency,
+            // currency: formData.currency || selectedCurrency,
         };
 
-
-        try {
-            const response = (await axios.post(`${emekaApiEndpoint}/transactionInit/PaypalPayoutDetails`,
-                data2db, {
-                headers: {
-                    Authorization: `Bearer ${accessToken}`
-                }
-            })).data;
-            console.log(response);
-
-            confirmBtn(formData);
-            
-        } catch (error: any) {
-            const errorResponse = error.response.data || error;
-            console.error(errorResponse);
-
-            setApiResponse({
-                display: true,
-                status: false,
-                message: errorResponse.message || "Ooops and error occurred!"
-            });
-        }
-
+        const result = await saveBankPayoutDetails(data2db);
+        if (result) confirmBtn(formData); // saveBtn();
     }
 
 
@@ -224,7 +188,7 @@ const PaypalSetupModalComponent: React.FC<_Props> = ({
                         { errors.beneficiary_name && <Box sx={{fontSize: 13, color: "red", textAlign: "left"}}>{ errors.beneficiary_name?.message }</Box> }
                     </Box>
 
-                    <Box>
+                    {/* <Box>
                         <Typography sx={{
                             fontWeight: "400",
                             fontSize: "15.38px",
@@ -259,7 +223,7 @@ const PaypalSetupModalComponent: React.FC<_Props> = ({
                         </FormControl>
 
                         { errorMsg && <Box sx={{fontSize: 13, color: "red", textAlign: "left"}}>{ errorMsg }</Box> }
-                    </Box>
+                    </Box> */}
 
 
                     {

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import Box from '@mui/material/Box';
@@ -22,16 +22,17 @@ import { useGetReleases } from '@/hooks/release/useGetReleases';
 function AllMusic_RL() {
     const navigate = useNavigate();
     const [albumType, setAlbumType] = useState<"Single" | "Album">("Single");
-    
-    const { 
-        apiResponse, // setApiResponse, 
-        releases, // setReleases,
-        getAlbumRelease, getSingleRelease
-    } = useGetReleases();
 
-    useEffect(() => {
-        getSingleRelease();
-    }, []);
+    const { 
+        apiResponse, // setApiResponse,
+
+        // currentPageNo, totalRecords,
+        // totalPages,
+
+        // singleReleases, albumReleases,
+        releases, getReleases
+    } = useGetReleases(1, 20, "album");
+
 
       
     return (
@@ -76,7 +77,7 @@ function AllMusic_RL() {
                         alignItems: "center",
                     }} 
                 >
-                    <Box onClick={() => { setAlbumType('Single'); getSingleRelease(); } }
+                    <Box onClick={() => { setAlbumType('Single'); getReleases(1, 20, "single"); } }
                         sx={ albumType === "Single" ? {
                             width: "100%",
                             maxWidth: {xs: "200.03px", md: "257.78px"},
@@ -110,7 +111,7 @@ function AllMusic_RL() {
                         > Single </Typography>
                     </Box>
 
-                    <Box onClick={() => { setAlbumType('Album'); getAlbumRelease(); } }
+                    <Box onClick={() => { setAlbumType('Album'); getReleases(1, 20, "album"); } }
                         sx={ albumType === "Single" ? {
                             width: "100%",
                             maxWidth: {xs: "200.03px", md: "257.78px"},
@@ -156,9 +157,9 @@ function AllMusic_RL() {
 
                                     <Grid item xs={6} md={4} key={index}>
                                         <ViewSongItemComponent 
-                                            albumType={albumType}
+                                            releaseType={albumType}
                                             index={index}
-                                            song={song}
+                                            releaseDetails={song}
                                         />
                                     </Grid>
                                 ))

@@ -1,13 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import axios from 'axios';
 
 import Box from '@mui/material/Box';
-// import IconButton from '@mui/material/IconButton';
-// import Modal from '@mui/material/Modal';
-// import CloseIcon from '@mui/icons-material/Close';
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
 import Grid from '@mui/material/Grid';
@@ -19,17 +15,15 @@ import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 
-// import FlutterwaveLogo2 from "@/assets/images/FlutterwaveLogo2.png";
-
-import { useUserStore } from '@/state/userStore';
-// import { useSettingStore } from '@/state/settingStore';
-
-import { emekaApiEndpoint, getQueryParams } from '@/util/resources';
+import { getQueryParams } from '@/util/resources';
 import { paymentTextFieldStyle, releaseSelectStyle2 } from '@/util/mui';
 import { euroPaymentFormSchema, euroPaymentsInterface } from './FL_Europayments';
 import { restCountries } from '@/util/countries';
 import colors from '@/constants/colors';
 import PaymentModalWrapper from '../../PaymentWrapper';
+import { getCurrencyByCode } from '@/util/currencies';
+import { savePayoutDetailsInterface } from '@/typeInterfaces/payout.interface';
+import { usePayoutData } from '@/hooks/payments/usePayoutInfo';
 
 
 interface _Props {
@@ -39,19 +33,15 @@ interface _Props {
     formDetails: euroPaymentsInterface
 }
 
-
 const FL_EuroConfirmationModalComponent: React.FC<_Props> = ({
     openModal, closeModal, saveBtn, formDetails
 }) => {
-    // const darkTheme = useSettingStore((state) => state.darkTheme);
-    const accessToken = useUserStore((state) => state.accessToken);
-    const userData = useUserStore((state) => state.userData);
-
-    const [apiResponse, setApiResponse] = useState({
-        display: false,
-        status: true,
-        message: ""
-    });
+    
+    const {
+        apiResponse, setApiResponse,
+        saveBankPayoutDetails,
+    } = usePayoutData()
+  
 
     useEffect(() => {
         if (!openModal) {
@@ -65,8 +55,6 @@ const FL_EuroConfirmationModalComponent: React.FC<_Props> = ({
 
 
     const onSubmit = async (formData: euroPaymentsInterface) => {
-        // console.log(formData);
-
         setApiResponse({
             display: false,
             status: true,
@@ -74,9 +62,16 @@ const FL_EuroConfirmationModalComponent: React.FC<_Props> = ({
         });
 
         const currency = getQueryParams('currency');
-        const data2db = {
-            email: userData.email,
-            currency: currency || '',
+        const currencyData = getCurrencyByCode(currency);
+
+        const data2db:savePayoutDetailsInterface = {
+            currency: currencyData ? currencyData : {
+                currency_code: currency,
+                currency_name: "",
+                currency_symbol: ""
+            },
+            paymentMethod: 'Bank',
+            beneficiary_email: formData.email,
             account_number: formData.accountNumber,
             routing_number: formData.routingNumber,
             swift_code: formData.swiftCode,
@@ -89,28 +84,8 @@ const FL_EuroConfirmationModalComponent: React.FC<_Props> = ({
             city: formData.city
         }
 
-        try {
-            const response = (await axios.post(`${emekaApiEndpoint}/payoutDetails/payout-details`, data2db, {
-                headers: {
-                    Authorization: `Bearer ${accessToken}`
-                }
-            })).data;
-            console.log(response);
-            // setBanks(response.data);
-
-            saveBtn();
-            
-        } catch (error: any) {
-            const errorResponse = error.response.data;
-            console.error(errorResponse);
-
-            setApiResponse({
-                display: true,
-                status: false,
-                message: errorResponse.message || "Ooops and error occurred!"
-            });
-        }
-
+        const result = await saveBankPayoutDetails(data2db);
+        if (result) saveBtn();
     }
 
 

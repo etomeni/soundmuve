@@ -1,73 +1,79 @@
 import { create } from "zustand";
 import temptCoverPhotoImg from '@/assets/images/album.png';
+import { releaseInterface, songInterface } from "@/typeInterfaces/release.interface";
 // import { releaseInterface } from "@/constants/typesInterface";
 
-const songDetails = {
-    _id: "",
+
+
+const defaultReleaseData: releaseInterface = {
+    user_id: "",
     email: "",
-    // release_type: "",
-    song_title: "", // Sensami
-    artist_name: "", //Skiibii
+    releaseType: "single",
+    title: "",
+    mainArtist: {
+        spotifyProfile: {
+            name: "",
+            id: "",
+            profilePicture: "",
+            latestAlbum: undefined
+        },
+        appleMusicProfile: undefined
+    },
+    language: "",
+    primaryGenre: "",
+    secondaryGenre: "",
+    releaseDate: "",
+    spotifyReleaseTime: {
+        hours: "",
+        minutes: "",
+        am_pm: "AM"
+    },
+    spotifyReleaseTimezone: "",
+    labelName: "",
+    recordingLocation: "",
+    soldCountries: {
+        worldwide: "Yes",
+        countries: []
+    },
+    upc_ean: "",
+    stores: [],
+    socialPlatforms: [],
+    coverArt: temptCoverPhotoImg,
+    status: "Incomplete"
+};
 
-    cover_photo: temptCoverPhotoImg,
 
-    // language: 'Select Language',
-    primary_genre: '', // Dance
-    secondary_genre: '', // Alternative
-
-    label_name: "", // More Grace Music
-    upc_ean: "", // 123456789
-
-    total_revenue: '', // $60,000.00
-    streams: '', // 80,000,000
-    stream_time: '', // 120hrs
+const defaultSongData: songInterface = {
+    songAudio: undefined,
+    songTitle: "",
+    songWriters: [],
+    songArtists_Creatives: [],
+    copyrightOwnership: {
+        coverVersion: "Yes",
+        permissions: undefined
+    },
+    explicitLyrics: "Yes",
+    isrcNumber: "",
+    lyricsLanguage: ""
 }
 
-const albumDetails = {
-    _id: '',
-    email: '',
-    appleMusicUrl: '',
-    spotifyMusicUrl: '',
-    album_title: '',
-    artist_name: '',
-    language: '',
-    primary_genre: '',
-    secondary_genre: '',
-    release_date: '',
-    release_time: '',
-    listenerTimeZone: '',
-    otherTimeZone: '',
-    label_name: '',
-    soldWorldwide: '',
-    recording_location: '',
-    upc_ean: '',
-    store: '',
-    social_platform: '',
-    status: '',
-    song_cover_url: '',
-    created_at: '',
-    songs:<typeof songDetails[]> [],
-    numberOfSongs: 0,
 
-    total_revenue: '', // $60,000.00
-    streams: '', // 80,000,000
-    stream_time: '', // 120hrs
-}
 
 
 type _typeInterface_ = {
-    songDetails: typeof songDetails;
-    albumDetails: typeof albumDetails;
+    releaseDetails: releaseInterface;
+    songDetails: songInterface;
 
-    _setSongDetails : (details: typeof songDetails) => void;
-    _setAlbumDetails : (details: typeof albumDetails) => void;
+    _setSongDetails : (details: songInterface) => void;
+    _setReleaseDetails : (details: releaseInterface) => void;
 
     // updatePlayerAsync: () => Promise<void>;
 };
   
 
 export const useReleaseStore = create<_typeInterface_>((set) => ({
-    songDetails, albumDetails,
+    releaseDetails: defaultReleaseData,
+    songDetails: defaultSongData,
   
     _setSongDetails: (details) => {
         // setLocalStorage("user", user);
@@ -79,12 +85,12 @@ export const useReleaseStore = create<_typeInterface_>((set) => ({
         });
     },
   
-    _setAlbumDetails: (details) => {
+    _setReleaseDetails: (details) => {
         // setLocalStorage("user", user);
 
         set((_state) => {
             return {
-                albumDetails: details,
+                releaseDetails: details,
             };
         });
     },

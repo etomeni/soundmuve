@@ -88,7 +88,14 @@ const FL_ReviewModalComponent: React.FC<_Props> = ({
 
         // const thisData: any = {};
         // saveBtn(thisData);
-        // return;
+
+
+        setApiResponse({
+            display: true,
+            status: false,
+            message: "Insufficient balance"
+        });
+        return;
         
         try {
             const response = (await axios.post(`${emekaApiEndpoint}/transactionInit/initiate`, data2db, {

@@ -12,6 +12,7 @@ import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import AlbumSongItem from '@/components/account/AlbumSongItem';
 import AccountWrapper from '@/components/AccountWrapper';
 // import { useSettingStore } from '@/state/settingStore';
+import sampleCoverArtWorkImage from '@/assets/images/album.png';
 
 // import AppleSportifyCheckmark from '@/components/AppleSportifyCheckmark';
 import colors from '@/constants/colors';
@@ -25,11 +26,12 @@ import CopyShareLink from '@/components/release/CopyShareLink';
 function AlbumDetails() {
     const navigate = useNavigate();
     // const darkTheme = useSettingStore((state) => state.darkTheme);
-    const albumDetails = useReleaseStore((state) => state.albumDetails);
+    const releaseDetails = useReleaseStore((state) => state.releaseDetails);
+
     const _setSongDetails = useReleaseStore((state) => state._setSongDetails);
 
     useEffect(() => {
-        if (!albumDetails._id || !albumDetails.album_title) {
+        if (!releaseDetails._id) {
             navigate("/account");
         }
     }, []);
@@ -117,7 +119,7 @@ function AlbumDetails() {
                                 fontSize: {xs: "21.78px", md: "60px"},
                                 lineHeight: {xs: "8.71px", md: "24px"},
                             }}
-                        >{ albumDetails.album_title }</Typography>
+                        >{ releaseDetails.title }</Typography>
 
                         <Typography
                             sx={{
@@ -140,7 +142,7 @@ function AlbumDetails() {
                                 }}
                             >
                                 <img
-                                    src={ albumDetails.song_cover_url } alt='album image'
+                                    src={ releaseDetails.coverArt || sampleCoverArtWorkImage } alt='album image'
                                     style={{
                                         width: "100%",
                                         height: "100%",
@@ -159,7 +161,7 @@ function AlbumDetails() {
                                             fontSize: "24px",
                                             lineHeight: "24px"
                                         }}
-                                    >{ albumDetails.album_title }</Typography>
+                                    >{ releaseDetails.title }</Typography>
 
                                     <Typography
                                         sx={{
@@ -167,7 +169,7 @@ function AlbumDetails() {
                                             fontSize: "17px",
                                             lineHeight: "24px",
                                         }}
-                                    >{ albumDetails.artist_name }</Typography>
+                                    >{ releaseDetails.mainArtist.spotifyProfile.name }</Typography>
                                 </Box>
 
                                 <Box sx={{ flex: "1 1 30%" }}>
@@ -196,7 +198,7 @@ function AlbumDetails() {
                                         // letterSpacing: "-1px",
                                         flex: "1 1 30%",
                                     }}
-                                >{ albumDetails.label_name }</Typography>
+                                >{ releaseDetails.labelName }</Typography>
                             </Stack>
 
                             <Stack direction="row" spacing="10px" mt="20px">
@@ -218,7 +220,7 @@ function AlbumDetails() {
                                         // letterSpacing: "-1px",
                                         flex: "1 1 30%",
                                     }}
-                                >{ albumDetails.primary_genre }</Typography>
+                                >{ releaseDetails.primaryGenre }</Typography>
                             </Stack>
 
                             <Stack direction="row" spacing="10px" mt="20px">
@@ -240,7 +242,7 @@ function AlbumDetails() {
                                         // letterSpacing: "-1px",
                                         flex: "1 1 30%",
                                     }}
-                                >{ albumDetails.upc_ean }</Typography>
+                                >{ releaseDetails.upc_ean }</Typography>
                             </Stack>
                         </Box>
                     </Stack>
@@ -373,7 +375,7 @@ function AlbumDetails() {
                             lineHeight: "16.21px",
                             mt: 3
                         }}
-                    >{ albumDetails.album_title }</Typography>
+                    >{ releaseDetails.title }</Typography>
 
                     <Typography
                         sx={{
@@ -395,7 +397,7 @@ function AlbumDetails() {
                         }}
                     >
                         <img
-                            src={ albumDetails.song_cover_url } alt='album image'
+                            src={ releaseDetails.coverArt || sampleCoverArtWorkImage } alt='album image'
                             style={{
                                 width: "100%",
                                 height: "100%",
@@ -478,7 +480,7 @@ function AlbumDetails() {
                                         fontSize: "15.43px",
                                         lineHeight: "15.43px",
                                     }}
-                                >{ albumDetails.album_title }</Typography>
+                                >{ releaseDetails.title }</Typography>
 
                                 <Typography
                                     sx={{
@@ -486,7 +488,7 @@ function AlbumDetails() {
                                         fontSize: "10.93px",
                                         lineHeight: "7.71px",
                                     }}
-                                >{ albumDetails.artist_name }</Typography>
+                                >{ releaseDetails.mainArtist.spotifyProfile.name }</Typography>
                             </Box>
 
                             <Box sx={{ flex: "1 1 40%", maxWidth: "50%" }} >
@@ -514,7 +516,7 @@ function AlbumDetails() {
                                     // letterSpacing: "-1px",
                                     flex: "1 1 45%",
                                 }}
-                            >{ albumDetails.label_name }</Typography>
+                            >{ releaseDetails.labelName }</Typography>
                         </Stack>
 
                         <Stack direction="row" spacing="10px" mt="10px">
@@ -536,7 +538,7 @@ function AlbumDetails() {
                                     // letterSpacing: "-1px",
                                     flex: "1 1 45%",
                                 }}
-                            >{ albumDetails.primary_genre }</Typography>
+                            >{ releaseDetails.primaryGenre }</Typography>
                         </Stack>
 
                         <Stack direction="row" spacing="10px" mt="10px">
@@ -558,7 +560,7 @@ function AlbumDetails() {
                                     // letterSpacing: "-1px",
                                     flex: "1 1 45%",
                                 }}
-                            >{ albumDetails.upc_ean }</Typography>
+                            >{ releaseDetails.upc_ean }</Typography>
                         </Stack>
 
                     </Box>
@@ -577,15 +579,15 @@ function AlbumDetails() {
                         }}
                     >Songs on your album</Typography>
 
-                    {albumDetails.songs.map((item, index) => (
+                    {releaseDetails.albumSongs?.map((item, index) => (
                         <Box key={index} onClick={() => {
                             _setSongDetails(item);
                             navigate("/account/artist/song-details");
                         }}>
                             <AlbumSongItem 
-                                artistName={item.artist_name}
-                                artworkImage={item.cover_photo}
-                                songTitle={item.song_title}
+                                artistName={releaseDetails.mainArtist.spotifyProfile.name}
+                                artworkImage={releaseDetails.coverArt}
+                                songTitle={item.songTitle}
                                 distributedDSP={["Apple", "Spotify"]} 
                                 displaySeeMore={true}
                             />

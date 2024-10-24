@@ -1,3 +1,6 @@
+import { currencyInterface } from "@/typeInterfaces/payout.interface.js";
+
+
 const availableCurrencies =  [
     {
       _id: "66a7993ed098b924da78e119",
@@ -111,13 +114,13 @@ const availableCurrencies =  [
     }
 ];
 
-type currencyInteeface = {
+type _currencyInteeface = {
   _id: string;
   currency_name: string;
   currency_symbol: string;
 }
 
-export function getSupportedCurrency(currencies: currencyInteeface[]) {
+export function getSupportedCurrency(currencies: _currencyInteeface[]) {
   // Define the list of valid currency symbols
   const validSymbols = ['USD', 'GBP', 'EUR', 'NGN', 'XOF', 'XAF', 'GNF', 'RWF', 'GHS', 'TZS', 'UGX'];
 
@@ -146,4 +149,53 @@ export function getCurrencySymbol(currencyCode: string): string {
   };
 
   return currencySymbols[currencyCode];
+}
+
+
+
+export const supportCurrencies: currencyInterface[] = [
+  {
+    currency_code: "USD",
+    currency_symbol: "$",
+    currency_name: "United States Dollar"
+  },
+  {
+    currency_code: "EUR",
+    currency_symbol: "€",
+    currency_name: "Euro"
+  },
+  {
+    currency_code: "NGN",
+    currency_symbol: "₦",
+    currency_name: "Nigerian Naira"
+  },
+  {
+    currency_code: "GHS",
+    currency_symbol: "₵",
+    currency_name: "Ghanaian Cedi"
+  },
+  {
+    currency_code: "TZS",
+    currency_symbol: "TSh",
+    currency_name: "Tanzanian Shilling"
+  },
+  {
+    currency_code: "UGX",
+    currency_symbol: "USh",
+    currency_name: "Ugandan Shilling"
+  },
+  {
+    currency_code: "XOF",
+    currency_symbol: "CFA",
+    currency_name: "West African CFA Franc"
+  },
+  {
+    currency_code: "XAF",
+    currency_symbol: "FCFA",
+    currency_name: "Central African CFA Franc"
+  }
+];
+
+export function getCurrencyByCode(code: string, _currencies = supportCurrencies) {
+  return _currencies.find(currency => currency.currency_code === code);
 }

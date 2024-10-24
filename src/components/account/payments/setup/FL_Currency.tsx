@@ -1,22 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import { emekaApiEndpoint } from '@/util/resources';
 import Box from '@mui/material/Box';
-// import IconButton from '@mui/material/IconButton';
-// import Modal from '@mui/material/Modal';
 import Typography from '@mui/material/Typography';
-// import CloseIcon from '@mui/icons-material/Close';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import Button from '@mui/material/Button';
 
-// import { useSettingStore } from '@/state/settingStore';
-import { currencyLists, getSupportedCurrency } from '@/util/currencies';
-// import FlutterwaveLogo2 from "@/assets/images/FlutterwaveLogo2.png";
 import colors from '@/constants/colors';
 import { releaseSelectStyle2 } from '@/util/mui';
 import PaymentModalWrapper from '../PaymentWrapper';
+import { usePayoutData } from '@/hooks/payments/usePayoutInfo';
 
 
 interface _Props {
@@ -32,7 +25,11 @@ const FL_CurrencyModalComponent: React.FC<_Props> = ({
     // const darkTheme = useSettingStore((state) => state.darkTheme);
     const [selectedCurrency, setSelectedCurrency] = useState('');
     const [errorMsg, setErrorMsg] = useState('');
-    const [currencies, setCurrencies] = useState(currencyLists);
+
+    const {
+        currencies,
+        getSupportedCurrencies
+    } = usePayoutData();
 
     useEffect(() => {
         getSupportedCurrencies();
@@ -46,25 +43,6 @@ const FL_CurrencyModalComponent: React.FC<_Props> = ({
         }
 
         confirmBtn(selectedCurrency);
-    }
-
-    const getSupportedCurrencies = async () => {
-        try {
-            const response = (await axios.get(`${emekaApiEndpoint}/currency/currencies`, {
-                // headers: {
-                //     Authorization: `Bearer ${accessToken}`
-                // }
-            })).data;
-            // console.log(response);
-
-            const supportedCurrency = getSupportedCurrency(response);
-
-            setCurrencies(supportedCurrency);
-
-        } catch (error: any) {
-            const errorResponse = error.response.data;
-            console.error(errorResponse);
-        }
     }
 
     return (
@@ -99,10 +77,12 @@ const FL_CurrencyModalComponent: React.FC<_Props> = ({
                             
                         >
                             { currencies.map((currency, index) => (
-                                <MenuItem key={index} value={ currency.currency_symbol }
+                                <MenuItem key={index} value={ currency.currency_code }
                                     title={ currency.currency_name }
                                 >
-                                    { currency.currency_symbol }
+                                    { currency.currency_code } 
+                                    ({ currency.currency_symbol }) 
+                                    - { currency.currency_name } 
                                 </MenuItem>
                             )) }
                         </Select>

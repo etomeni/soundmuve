@@ -2,13 +2,13 @@ import axios from "axios";
 import { useCallback, useState } from "react";
 import { useUserStore } from "@/state/userStore";
 import { apiEndpoint } from "@/util/resources";
-import { searchedArtistSearchInterface } from '@/constants/typesInterface';
+import { artistInterface } from "@/typeInterfaces/release.interface";
 
 
 export function useSearchArtists() {
     // const userData = useUserStore((state) => state.userData);
     const accessToken = useUserStore((state) => state.accessToken);
-    const [spotifyArtistResults, setSpotifyArtistResults] = useState<searchedArtistSearchInterface[]>([]);
+    const [spotifyArtistResults, setSpotifyArtistResults] = useState<artistInterface[]>([]);
 
     const [apiResponse, setApiResponse] = useState({
         display: false,

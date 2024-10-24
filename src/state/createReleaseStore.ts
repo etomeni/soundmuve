@@ -3,7 +3,6 @@ import { getLocalStorage, removeLocalStorageItem, setLocalStorage } from "@/util
 import { create } from "zustand";
 
 
-// const singleRelease: releaseInterface = {
 const defaultReleaseData: releaseInterface = {
     user_id: "",
     email: "",
@@ -40,25 +39,6 @@ const defaultReleaseData: releaseInterface = {
     coverArt: "",
     status: "Incomplete"
 };
-
-
-
-// const albumReleaseSongUpload = {
-//     _id: '',
-//     email: '',
-//     mp3_file: <any> '',
-//     songAudioPreview: <any> '',
-//     song_title: '',
-//     song_writer: <string[]> [],
-//     songArtistsCreativeRole: <creativeType[]> [],
-//     explicitLyrics: '',
-//     copyright_ownership: '',
-//     copyright_ownership_permissions: '',
-//     isrc_number: '',
-//     language_lyrics: '',
-//     lyrics: '',
-//     tikTokClipStartTime: '',
-// }
 
 
 type _typeInterface_ = {

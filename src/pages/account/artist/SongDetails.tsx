@@ -33,22 +33,20 @@ import { useEffect } from 'react';
 import { allMonths } from '@/util/months';
 import { getCurrentMonthValue } from '@/util/dateTime';
 import CopyShareLink from '@/components/release/CopyShareLink';
+import sampleCoverArtWorkImage from '@/assets/images/album.png';
 
 
 
 
 function SongDetails() {
     const navigate = useNavigate();
-    // const darkTheme = useSettingStore((state) => state.darkTheme);
-    const songDetails = useReleaseStore((state) => state.songDetails);
-    // const userData = useUserStore((state) => state.userData); 
-    // const accessToken = useUserStore((state) => state.accessToken);
-    // const _setToastNotification = useSettingStore((state) => state._setToastNotification);
-
+    const releaseDetails = useReleaseStore((state) => state.releaseDetails);
 
     const { 
         // spotifyAndAppleOverview, 
         getSportifiyAppleOverview,
+
+        songDashAnalytics, // setSongDashAnalytics,
 
         // spotifyDataset, appleMusicDataset, // graphApiData, 
         getGraphData,
@@ -60,15 +58,15 @@ function SongDetails() {
         // getAnalyticsData();
         // console.log(songDetails);
 
-        if (!songDetails._id || !songDetails.artist_name) {
+        if (!releaseDetails._id) {
             navigate("/account");
             return;
         }
 
-        getGraphData(songDetails._id, songDetails.song_title, "single");
+        getGraphData(releaseDetails._id, releaseDetails.title, "single");
         
-        getSportifiyAppleOverview(songDetails._id, "single");
-        getSportifiyAppleOverview(songDetails._id, "single");
+        getSportifiyAppleOverview(releaseDetails._id, "single");
+        getSportifiyAppleOverview(releaseDetails._id, "single");
     }, []);
 
 
@@ -158,7 +156,7 @@ function SongDetails() {
                             lineHeight: {xs: "8.71px", md: "24px"},
                             mt: 3
                         }}
-                    > { songDetails.song_title } </Typography>
+                    > { releaseDetails.title } </Typography>
 
                     <Stack direction="row" mt={5} spacing="20px" alignItems="center">
                         <Box
@@ -170,7 +168,8 @@ function SongDetails() {
                             }}
                         >
                             <img
-                                src={ songDetails.cover_photo } alt={`${ songDetails.song_title } cover photo`}
+                                src={ releaseDetails.coverArt || sampleCoverArtWorkImage } 
+                                alt={`${ releaseDetails.title } cover art work`}
                                 style={{
                                     width: "100%",
                                     height: "100%",
@@ -186,7 +185,7 @@ function SongDetails() {
                                     fontSize: "24px",
                                     lineHeight: "24px"
                                 }}
-                            > { songDetails.song_title } </Typography>
+                            > { releaseDetails.title } </Typography>
 
                             <Typography
                                 sx={{
@@ -194,7 +193,7 @@ function SongDetails() {
                                     fontSize: "17px",
                                     lineHeight: "24px",
                                 }}
-                            > { songDetails.artist_name } </Typography>
+                            > { releaseDetails.mainArtist.spotifyProfile.name } </Typography>
 
                             <Stack direction="row" spacing="10px" mt="30px">
                                 <Typography
@@ -215,7 +214,7 @@ function SongDetails() {
                                         // letterSpacing: "-1px",
                                         flex: "1 1 70%",
                                     }}
-                                >{ songDetails.label_name } </Typography>
+                                >{ releaseDetails.labelName } </Typography>
                             </Stack>
 
                             <Stack direction="row" spacing="10px" mt="20px">
@@ -260,7 +259,7 @@ function SongDetails() {
                                         // letterSpacing: "-1px",
                                         flex: "1 1 70%",
                                     }}
-                                > { songDetails.upc_ean } </Typography>
+                                > { releaseDetails.upc_ean } </Typography>
                             </Stack>
                         </Box>
                     </Stack>
@@ -277,7 +276,7 @@ function SongDetails() {
                                                 fontSize: {xs: '12px', md: '24px'},
                                                 lineHeight: {xs: '8.71px', md: '24px'}
                                             }}
-                                        >{ currencyDisplay(Number(songDetails.total_revenue)) }</Typography>
+                                        >{ currencyDisplay(Number(songDashAnalytics.total_revenue)) }</Typography>
 
                                         <Typography
                                             sx={{
@@ -295,7 +294,7 @@ function SongDetails() {
                                                 fontSize: {xs: '12px', md: '24px'},
                                                 lineHeight: {xs: '8.71px', md: '24px'}
                                             }}
-                                        >{ formatedNumber(Number(songDetails.streams)) } </Typography>
+                                        >{ formatedNumber(Number(songDashAnalytics.streams)) } </Typography>
 
                                         <Typography
                                             sx={{
@@ -313,7 +312,7 @@ function SongDetails() {
                                                 fontSize: {xs: '12px', md: '24px'},
                                                 lineHeight: {xs: '8.71px', md: '24px'}
                                             }}
-                                        >{formatedNumber(Number(songDetails.stream_time))}</Typography>
+                                        >{formatedNumber(Number(songDashAnalytics.stream_time))}</Typography>
 
                                         <Typography
                                             sx={{
@@ -407,7 +406,7 @@ function SongDetails() {
                             lineHeight: "16.21px",
                             mt: 3
                         }}
-                    >{ songDetails.song_title }</Typography>
+                    >{ releaseDetails.title }</Typography>
 
                     {/* <Typography
                         sx={{
@@ -429,7 +428,8 @@ function SongDetails() {
                         }}
                     >
                         <img
-                            src={ songDetails.cover_photo } alt='album image'
+                            src={ releaseDetails.coverArt || sampleCoverArtWorkImage } 
+                            alt='album image'
                             style={{
                                 width: "100%",
                                 height: "100%",
@@ -446,7 +446,7 @@ function SongDetails() {
                                     fontSize: "17.8px",
                                     lineHeight: "17.8px"
                                 }}
-                            >{ currencyDisplay(Number(songDetails.total_revenue)) }</Typography>
+                            >{ currencyDisplay(Number(songDashAnalytics.total_revenue)) }</Typography>
 
                             <Typography
                                 sx={{
@@ -464,7 +464,7 @@ function SongDetails() {
                                     fontSize: "17.8px",
                                     lineHeight: "17.8px"
                                 }}
-                            >{ formatedNumber(Number(songDetails.streams)) }</Typography>
+                            >{ formatedNumber(Number(songDashAnalytics.streams)) }</Typography>
 
                             <Typography
                                 sx={{
@@ -482,7 +482,7 @@ function SongDetails() {
                                     fontSize: "17.8px",
                                     lineHeight: "17.8px"
                                 }}
-                            >{ formatedNumber(Number(songDetails.streams)) }</Typography>
+                            >{ formatedNumber(Number(songDashAnalytics.streams)) }</Typography>
 
                             <Typography
                                 sx={{
@@ -512,7 +512,7 @@ function SongDetails() {
                                         fontSize: "15.43px",
                                         lineHeight: "15.43px",
                                     }}
-                                >{ songDetails.song_title }</Typography>
+                                >{ releaseDetails.title }</Typography>
 
                                 <Typography
                                     sx={{
@@ -520,7 +520,7 @@ function SongDetails() {
                                         fontSize: "10.93px",
                                         lineHeight: "7.71px",
                                     }}
-                                >{ songDetails.artist_name }</Typography>
+                                >{ releaseDetails.mainArtist.spotifyProfile.name }</Typography>
                             </Box>
 
                             <Box sx={{ flex: "1 1 40%", maxWidth: "50%" }} >
@@ -548,7 +548,7 @@ function SongDetails() {
                                     // letterSpacing: "-1px",
                                     flex: "1 1 45%",
                                 }}
-                            >{ songDetails.label_name }</Typography>
+                            >{ releaseDetails.labelName }</Typography>
                         </Stack>
 
                         <Stack direction="row" spacing="10px" mt="10px">
@@ -570,7 +570,7 @@ function SongDetails() {
                                     // letterSpacing: "-1px",
                                     flex: "1 1 45%",
                                 }}
-                            >{ songDetails.primary_genre }</Typography>
+                            >{ releaseDetails.primaryGenre }</Typography>
                         </Stack>
 
                         <Stack direction="row" spacing="10px" mt="10px">
@@ -592,7 +592,7 @@ function SongDetails() {
                                     // letterSpacing: "-1px",
                                     flex: "1 1 45%",
                                 }}
-                            >{ songDetails.upc_ean }</Typography>
+                            >{ releaseDetails.upc_ean }</Typography>
                         </Stack>
 
                     </Box>

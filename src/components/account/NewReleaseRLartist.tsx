@@ -56,9 +56,9 @@ const NewReleaseRLartist: React.FC<MyProps> = ({
                         const { key, ...optionProps } = props;
                         return (
                             <Box
-                                key={key}
                                 component="li"
                                 {...optionProps}
+                                key={option._id}
                             >
                                 { option.artistName }
                             </Box>

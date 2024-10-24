@@ -1,4 +1,3 @@
-
 export type flutterwavePaymentDetailsInterface = {
     bank: string;
     accountNumber: string;
@@ -7,50 +6,6 @@ export type flutterwavePaymentDetailsInterface = {
     verificationNumber: string;
     countryCode: string;
 }
-
-
-export type albumInterface = {
-    _id: string,
-    email: string,
-    album_title: string,
-    artist_name: string,
-    language: string,
-    primary_genre: string,
-    secondary_genre: string,
-    release_date: string,
-    release_time: string,
-    listenerTimeZone: string,
-    otherTimeZone: string,
-    label_name: string,
-    soldWorldwide: string,
-    recording_location: string,
-    upc_ean: string,
-    store: string,
-    social_platform: string,
-    status: string,
-    song_cover_url: any,
-    created_at: string,
-    songs: songsInterface[]
-}
-
-
-export type songsInterface = {
-    song_mp3: string,
-    song_title: string,
-    song_writer: string[],
-    creatives: creativesInterface[],
-    copyright_ownership: string,
-    isrc_number: string,
-    language_of_lyrics: string,
-    lyrics: string,
-    ticktokClipStartTime: string
-}
-
-export type creativesInterface = {
-    creative_name: string,
-    creative_role: string
-}
-
 
 
 export type balTransactionsInterface = {
@@ -78,67 +33,4 @@ export type recordLabelArtistInterface = {
     artistAvatarUrl: string,
 
     songCount: number,
-}
-
-
-
-export type releaseInterface = {
-    _id: string,
-    email: string,
-    appleMusicUrl: string,
-    spotifyMusicUrl: string,
-    album_title?: string,
-    song_title?: string,
-    artist_name: string,
-    language: string,
-    primary_genre: string,
-    secondary_genre: string,
-    release_date: string,
-    release_time: string,
-    listenerTimeZone: string,
-    otherTimeZone: string,
-    label_name: string,
-    soldWorldwide: string,
-    recording_location: string,
-    upc_ean: string,
-    store: string,
-    social_platform: string,
-    status: string,
-    song_cover_url?: string,
-    song_cover?: string,
-    created_at: string,
-
-    songs?: releaseSongsInterface[]
-
-    numberOfSongs?: number
-}
-
-
-export type releaseSongsInterface = {
-    _id: string,
-    email: string,
-    song_mp3: string,
-    song_title: string,
-    creative_name: string[],
-    album_id: string,
-    song_writer: string[],
-    creative_role: string[],
-    copyright_ownership: string,
-    copyright_ownership_permissions: string,
-    isrc_number: string,
-    upc_ean?: string,
-    language_of_lyrics: string,
-    lyrics: string,
-    ticktokClipStartTime: string,
-}
-
-export type searchedArtistSearchInterface = {
-    name: string,
-    id: string,
-    profilePicture: string,
-    latestAlbum?: {
-        name?: string,
-        releaseDate?: string,
-        externalUrl?: string,
-    },
 }

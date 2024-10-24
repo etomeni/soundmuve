@@ -1,17 +1,10 @@
 import React from 'react';
 
 import Box from '@mui/material/Box';
-// import IconButton from '@mui/material/IconButton';
-// import Modal from '@mui/material/Modal';
-// import CloseIcon from '@mui/icons-material/Close';
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
 
-// import FlutterwaveLogo2 from "@/assets/images/FlutterwaveLogo2.png";
-
-// import { useSettingStore } from '@/state/settingStore';
 import successImg from "@/assets/images/successImg.gif";
-// import colors from '@/constants/colors';
 import PaymentModalWrapper from '../PaymentWrapper';
 import { getQueryParams } from '@/util/resources';
 
@@ -24,8 +17,6 @@ interface _Props {
 const PayoutSetupSuccessModalComponent: React.FC<_Props> = ({
     openModal, closeModal
 }) => {
-    // const [useEmail_n_PhoneNo, setUseEmail_n_PhoneNo] = useState(false);
-    // const darkTheme = useSettingStore((state) => state.darkTheme);
     
     const handlePaymentMethod = () => {
         const paymentMethod = getQueryParams('paymentMethod');

@@ -30,7 +30,7 @@ import PaymentModalWrapper from '../PaymentWrapper';
 import LoadingDataComponent from '@/components/LoadingData';
 import InputAdornment from '@mui/material/InputAdornment';
 import { getCurrencySymbol } from '@/util/currencies';
-import { paymentDetailsInterface, usePayoutData } from '@/hooks/payments/usePayoutInfo';
+import { usePayoutData } from '@/hooks/payments/usePayoutInfo';
 import { allNgBanks } from '@/util/banks';
 
 
@@ -43,7 +43,7 @@ export type withdrawInterface = {
     currency: string;
     narration: string;
     amount: string;
-    paymentDetails?: paymentDetailsInterface
+    paymentDetails?: any
 }
 
 type exchangeInterface = {
@@ -72,7 +72,10 @@ const WithdrawModalComponent: React.FC<_Props> = ({
     const accessToken = useUserStore((state) => state.accessToken);
     const [errorMsg, setErrorMsg] = useState('');
 
-    const { paymentDetails, selectedPaymentDetails, setSelectedPaymentDetails, getPayoutInfo } = usePayoutData();
+    const { 
+        paymentDetails, selectedPaymentDetails, 
+        setSelectedPaymentDetails, getPayoutInfo 
+    } = usePayoutData();
 
     const [exchangeData, setExchangeData] = useState<exchangeInterface>();
 
@@ -90,13 +93,6 @@ const WithdrawModalComponent: React.FC<_Props> = ({
                 });
             }
         } else {
-            // getSupportedCurrencies();
-
-            // const localPayoutDetails = getLocalStorage("payoutDetails");
-            // if (localPayoutDetails && localPayoutDetails.length) {
-            //     setPaymentDetails(localPayoutDetails)
-            // }
-
             getPayoutInfo();
         }
     }, [openModal]);
@@ -157,7 +153,7 @@ const WithdrawModalComponent: React.FC<_Props> = ({
                 });
             }
 
-            getExchangeRate( amount, payoutData ? payoutData[0].currency : '' );
+            getExchangeRate( amount, payoutData ? payoutData[0].currency.currency_code : '' );
         }
     }
 
@@ -165,7 +161,7 @@ const WithdrawModalComponent: React.FC<_Props> = ({
         if (selectedPaymentDetails) {
             const payoutData = paymentDetails?.filter(data => data._id == selectedPaymentDetails);
 
-            return getCurrencySymbol(payoutData ? payoutData[0].currency : '');
+            return getCurrencySymbol(payoutData ? payoutData[0].currency.currency_code : '');
         }
 
         return '';
@@ -176,7 +172,7 @@ const WithdrawModalComponent: React.FC<_Props> = ({
             setErrorMsg("Please select your preffered currency.");
             return;
         }
-        console.log(formData);
+        // console.log(formData);
 
         setApiResponse({
             display: false,
@@ -188,7 +184,7 @@ const WithdrawModalComponent: React.FC<_Props> = ({
 
         confirmBtn({
             ...formData, 
-            currency: payoutData ? payoutData[0].currency : '',
+            currency: payoutData ? payoutData[0].currency.currency_code : '',
             paymentDetails: payoutData ? payoutData[0] : undefined
         });
     }
@@ -312,13 +308,17 @@ const WithdrawModalComponent: React.FC<_Props> = ({
                                                 >
                                                     <Box>
                                                         <Typography variant='body1'>
-                                                            { payoutData.currency } -&nbsp;
-                                                            { payoutData.account_number || payoutData.email || ' ' } 
+                                                            { payoutData.paymentMethod }
+                                                            &nbsp;
+                                                            { payoutData.currency.currency_code } 
+                                                            ({ payoutData.currency.currency_symbol })
+                                                             -&nbsp;
+                                                            { payoutData.account_number || payoutData.beneficiary_email || ' ' } 
                                                             { payoutData.beneficiary_name ? ` (${ payoutData.beneficiary_name })` : '' }
                                                         </Typography>
 
                                                         <Typography variant='body1'>
-                                                            { resolveAccountName(payoutData.account_bank || payoutData.bank_name || "") } 
+                                                            { resolveAccountName(payoutData.bank_name || "") } 
                                                         </Typography>
                                                     </Box>
                                                 </MenuItem>

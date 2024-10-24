@@ -5,113 +5,45 @@ import Typography from '@mui/material/Typography';
 
 import albumImage from '@/assets/images/album.png';
 
-import { releaseInterface } from '@/constants/typesInterface';
 import { useReleaseStore } from '@/state/releaseStore';
 import ReleaseStatusComponent from '../ReleaseStatus';
+import { releaseInterface } from '@/typeInterfaces/release.interface';
+import { useCreateReleaseStore } from '@/state/createReleaseStore';
+
 
 interface _Props {
     // children: React.ReactNode,
-    song: releaseInterface, 
+    releaseDetails: releaseInterface, 
     index: number,
-    albumType: string
+    releaseType: string
 }
 
-
-const ViewSongItemComponent: React.FC<_Props> = ({ song, index, albumType }) => {
+const ViewSongItemComponent: React.FC<_Props> = ({ releaseDetails, index, releaseType }) => {
     const navigate = useNavigate();
-    const _setSongDetails = useReleaseStore((state) => state._setSongDetails);
-    const _setAlbumDetails = useReleaseStore((state) => state._setAlbumDetails);
+    const _setReleaseDetails = useReleaseStore((state) => state._setReleaseDetails);
+    const _handleSetSingleRelease = useCreateReleaseStore((state) => state._handleSetSingleRelease1);
+    const _handleSetAlbumRelease = useCreateReleaseStore((state) => state._handleSetAlbumRelease);
 
     const handleNavigation = () => {
-        // Single" | "Album"
-        navigate(`/account/artist/${albumType == "Album" ? "album-details" : "song-details"}`);
-        let song_id = song.songs ? song?.songs[index]._id : song._id;
+        console.log(index);
+        _setReleaseDetails(releaseDetails);
 
+        if (releaseDetails.status == "Incomplete") {
+            if (releaseDetails.releaseType == "album") {
+                _handleSetAlbumRelease(releaseDetails);
+            } 
 
-        if (albumType == "Album") {
-            let songs_: any[] = [];
-            song.songs?.forEach((item) => {
-                const songs_Item = {
-                    _id: item._id,
-                    artist_name: song.artist_name,
-                    cover_photo: song.song_cover || song.song_cover_url || albumImage,
-                    email: item.email || song.email,
-                    label_name: song.label_name,
-                    primary_genre: song.primary_genre,
-                    secondary_genre: song.secondary_genre,
-                    song_title: item.song_title || '',
-                    stream_time: '',
-                    streams: "",
-                    total_revenue: "",
-                    upc_ean: item.upc_ean || item.isrc_number || ''
-                };
+            if (releaseDetails.releaseType == "single") {
+                _handleSetSingleRelease(releaseDetails);
+            } 
 
-                songs_.push(songs_Item);
-            });
+            navigate(`/account/${releaseDetails.releaseType == "album" ? "create-album-release-details" : "create-single-release"}`);
 
-            _setAlbumDetails({
-                _id: song._id,
-                email: song.email,
-                appleMusicUrl: song.appleMusicUrl,
-                spotifyMusicUrl: song.spotifyMusicUrl,
-                album_title: song.album_title || '',
-                artist_name: song.artist_name,
-                language: song.language,
-                primary_genre: song.primary_genre,
-                secondary_genre: song.secondary_genre,
-                release_date: song.release_date,
-                release_time: song.release_time,
-                listenerTimeZone: song.listenerTimeZone,
-                otherTimeZone: song.otherTimeZone,
-                label_name: song.label_name,
-                soldWorldwide: song.soldWorldwide,
-                recording_location: song.recording_location,
-                upc_ean: song.upc_ean,
-                store: song.store,
-                social_platform: song.social_platform,
-                status: song.status,
-                song_cover_url: song.song_cover_url || song.song_cover || albumImage,
-
-                created_at: song.created_at,
-                songs: songs_,
-                numberOfSongs: song.numberOfSongs || 0,
-            
-                total_revenue: '', // $60,000.00
-                streams: '', // 80,000,000
-                stream_time: '', // 120hrs
-            })
-        } else if (albumType == "Single") {
-                
-            _setSongDetails({
-                _id: song_id,
-                artist_name: song.artist_name,
-                cover_photo: song.song_cover || song.song_cover_url || albumImage,
-                email: song.email,
-                label_name: song.label_name,
-                primary_genre: song.primary_genre,
-                secondary_genre: song.secondary_genre,
-                song_title: song.album_title || song.song_title || '',
-                stream_time: '',
-                streams: "",
-                total_revenue: "",
-                upc_ean: song.upc_ean
-            });
-        } else {
-            _setSongDetails({
-                _id: song_id,
-                artist_name: song.artist_name,
-                cover_photo: song.song_cover || song.song_cover_url || albumImage,
-                email: song.email,
-                label_name: song.label_name,
-                primary_genre: song.primary_genre,
-                secondary_genre: song.secondary_genre,
-                song_title: song.album_title || song.song_title || '',
-                stream_time: '',
-                streams: "",
-                total_revenue: "",
-                upc_ean: song.upc_ean
-            });
+            return;
         }
+
+        // Single" | "Album"
+        navigate(`/account/artist/${releaseType == "Album" ? "album-details" : "song-details"}`);
     };
 
 
@@ -166,8 +98,8 @@ const ViewSongItemComponent: React.FC<_Props> = ({ song, index, albumType }) => 
                     }}
                 >
                     <img
-                        src={ song.song_cover || song.song_cover_url || albumImage } 
-                        alt={`${song.song_title} song cover`}
+                        src={ releaseDetails.coverArt || albumImage } 
+                        alt={`${releaseDetails.title} song cover art work`}
                         style={{
                             width: "100%",
                             height: "100%",
@@ -186,11 +118,11 @@ const ViewSongItemComponent: React.FC<_Props> = ({ song, index, albumType }) => 
                     // color: "#fff",
                     m: {xs: "8px 0 0 0", md: "8px 0 8px 0"}
                 }}
-            > { song.song_title } </Typography>
+            > { releaseDetails.title } </Typography>
 
             <Typography
                 sx={{
-                    display: albumType == "Album" ? "block" : "none",
+                    display: releaseType == "Album" ? "block" : "none",
                     fontWeight: "400",
                     fontSize: {xs: "8.02px", md: "15px"},
                     lineHeight: {xs: "12.83px", md: "24px"},
@@ -200,7 +132,7 @@ const ViewSongItemComponent: React.FC<_Props> = ({ song, index, albumType }) => 
                 }}
             > Album </Typography>
 
-            <ReleaseStatusComponent status={song.status} />
+            <ReleaseStatusComponent status={releaseDetails.status} />
         </Box>
     )
 }

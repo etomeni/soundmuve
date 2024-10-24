@@ -1,23 +1,21 @@
 import axios from "axios";
 import { useCallback, useEffect, useState } from "react";
 import { useUserStore } from "@/state/userStore";
-import { emekaApiEndpoint } from "@/util/resources";
-import { getLocalStorage, setLocalStorage } from "@/util/storage";
-import { releaseInterface } from '@/constants/typesInterface';
+import { apiEndpoint } from "@/util/resources";
+// import { getLocalStorage, setLocalStorage } from "@/util/storage";
+import { releaseInterface } from "@/typeInterfaces/release.interface";
 
-
-function getLocalSingleRelease() {
-    const localResponds = getLocalStorage("singleRelease");
-    if (localResponds && localResponds.length) return localResponds;
-    return undefined
-}
-
-export function useGetReleases() {
-    const userData = useUserStore((state) => state.userData);
+export function useGetReleases(pageNo = 1, limitNo = 5, releaseType: 'single' | 'album' = "single") {
     const accessToken = useUserStore((state) => state.accessToken);
-    // const [singleRelease, setSingleRelease] = useState<any[]>();
 
-    const [releases, setReleases] = useState<releaseInterface[]>(getLocalSingleRelease);
+    const [currentPageNo, setCurrentPageNo] = useState(pageNo);
+    const [totalRecords, setTotalRecords] = useState(0);
+    const [totalPages, setTotalPages] = useState(1);
+    const [isSubmitting, setIsSubmitting] = useState(false);
+
+    const [releases, setReleases] = useState<releaseInterface[]>();
+    const [singleReleases, setSingleReleases] = useState<releaseInterface[]>();
+    const [albumReleases, setAlbumReleases] = useState<releaseInterface[]>();
 
     const [apiResponse, setApiResponse] = useState({
         display: false,
@@ -27,107 +25,94 @@ export function useGetReleases() {
 
     
     useEffect(() => {
-        getSingleRelease();
+        getReleases(currentPageNo, limitNo, releaseType);
     }, []);
 
+    const getReleases = useCallback(async (pageNo: number, limitNo: number, releaseType: 'single' | 'album') => {
+        // const localResponds = getLocalStorage("allSingleReleases");
+        // if (localResponds && localResponds.length) setReleases(localResponds);
 
-    const getSingleRelease = useCallback(() => {
-        _getSingleRelease()
-    }, []);
-    const _getSingleRelease = async () => {
-        const localResponds = getLocalStorage("allSingleReleases");
-        if (localResponds && localResponds.length) setReleases(localResponds);
+        setIsSubmitting(true);
 
+        if (pageNo == 1 || !releases) {
+            if (releaseType == "album" && albumReleases?.length) setReleases(albumReleases);
+            if (releaseType == "single" && singleReleases?.length) setReleases(singleReleases);
+        }
+
+    
         try {
-            const response = (await axios.get(`${emekaApiEndpoint}/Release/getReleaseByEmail/${ userData.email }`, {
+            const response = (await axios.get(`${apiEndpoint}/releases`, {
                 headers: {
                     Authorization: `Bearer ${accessToken}`
+                },
+                params: {
+                    page: pageNo,
+                    limit: limitNo,
+                    releaseType
                 }
             })).data;
             // console.log(response);
 
-            setLocalStorage("allSingleReleases", response);
-            setReleases(response);
-            // setSingleRelease(response);
+            if (response.status) {
+                if (pageNo == 1 || !releases) {
+                    setReleases(response.result.relases);
+    
+                    if (releaseType == "single") setSingleReleases(response.result.relases);
+                    if (releaseType == "album") setAlbumReleases(response.result.relases);
 
-            if (!response.length) {
+                    return;
+                }
+
+
+                const oldReleases = releases ? releases : [];
+                setReleases([ ...oldReleases, ...response.result.relases ]);
+
+                const oldSingleReleases = singleReleases ? singleReleases : [];
+                const oldAlbumReleases = albumReleases ? albumReleases : [];
+                if (releaseType == "single") setSingleReleases([ ...oldSingleReleases, ...response.result.relases ]);
+                if (releaseType == "album") setAlbumReleases([ ...oldAlbumReleases, ...response.result.relases ]);
+
+                setCurrentPageNo(response.result.currentPage);
+                setTotalPages(response.result.totalPages);
+                setTotalRecords(response.result.totalRecords);
+            }
+
+    
+            if (!response.result.relases.length) {
                 setApiResponse({
                     display: true,
                     status: true,
                     message: "You don't have any single Release yet."
                 });
             }
-
+    
+            setIsSubmitting(false);
         } catch (error: any) {
-            const errorResponse = error.response.data || error;
-            console.error(errorResponse);
-
-            setReleases([]);
-            // setSingleRelease([]);
+            const err = error.response.data || error;
+            const fixedErrorMsg = "Ooops and error occurred!";
+            // console.log(err);
+            // setReleases([]);
 
             setApiResponse({
                 display: true,
                 status: false,
-                message: errorResponse.message || "Ooops and error occurred!"
+                message: err.errors && err.errors.length ? err.errors[0].msg : err.message || fixedErrorMsg
             });
 
-            // _setToastNotification({
-            //     display: true,
-            //     status: "error",
-            //     message: errorResponse.message || "Ooops and error occurred!"
-            // });
+            setIsSubmitting(false);
         }
-    }
-
-
-    const getAlbumRelease = useCallback(() => {
-        _getAlbumRelease()
     }, []);
-    const _getAlbumRelease = async () => {
-        const localResponds = getLocalStorage("allAlbumReleases");
-        if (localResponds && localResponds.length) setReleases(localResponds);
-
-        try {
-            // const response = (await axios.get(`${emekaApiEndpoint}/songs/GetMyAlbumsByEmail?email=latham01@yopmail.com`, {
-            const response = (await axios.get(`${emekaApiEndpoint}/songs/GetMyAlbumsByEmail?email=${ userData.email }`, {
-                headers: {
-                    Authorization: `Bearer ${accessToken}`
-                }
-            })).data;
-            console.log(response);
-
-            setLocalStorage("allAlbumReleases", response.albums);
-            setReleases(response.albums);
-
-            if (!response.length) {
-                setApiResponse({
-                    display: true,
-                    status: true,
-                    message: "You don't have any single Release yet."
-                });
-            }
-
-        } catch (error: any) {
-            const errorResponse = error.response.data || error;
-            console.error(errorResponse);
-
-            // _setToastNotification({
-            //     display: true,
-            //     status: "error",
-            //     message: errorResponse.message || "Ooops and error occurred!"
-            // });
-        }
-    }
 
 
     return {
-        apiResponse,
-        setApiResponse,
+        apiResponse, setApiResponse,
 
-        releases,
-        setReleases,
+        currentPageNo, totalRecords,
+        totalPages,
 
-        getSingleRelease,
-        getAlbumRelease,
+        isSubmitting,
+
+        singleReleases, albumReleases,
+        releases, getReleases,
     }
 }

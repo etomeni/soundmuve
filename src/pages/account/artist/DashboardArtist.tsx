@@ -22,7 +22,6 @@ import { useReleaseStore } from '@/state/releaseStore';
 
 import { currencyDisplay } from '@/util/resources';
 import colors from '@/constants/colors';
-import { releaseInterface } from '@/constants/typesInterface';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
@@ -31,6 +30,7 @@ import { usePayoutData } from '@/hooks/payments/usePayoutInfo';
 import { useGetReleases } from '@/hooks/release/useGetReleases';
 import ViewSongItemComponent from '@/components/account/ViewSongItem';
 import PromotionalAdsComponent from '@/components/PromotionalAds';
+import { releaseInterface } from '@/typeInterfaces/release.interface';
 
 
 function DashboardArtist() {
@@ -38,12 +38,17 @@ function DashboardArtist() {
     const [albumType, setAlbumType] = useState<"Single" | "Album">("Single");
     const userData = useUserStore((state) => state.userData); 
     const _setSongDetails = useReleaseStore((state) => state._setSongDetails);
+    const _setReleaseDetails = useReleaseStore((state) => state._setReleaseDetails);
     const { paymentDetails, getPayoutInfo } = usePayoutData();
 
     const { 
-        // apiResponse, // setApiResponse, 
-        releases, setReleases,
-        getAlbumRelease, getSingleRelease
+        // apiResponse, setApiResponse,
+
+        // currentPageNo, totalRecords,
+        // totalPages,
+
+        // singleReleases, albumReleases,
+        releases, getReleases,
     } = useGetReleases();
 
     useEffect(() => {
@@ -57,57 +62,15 @@ function DashboardArtist() {
     const [openPayoutModal, setOpenPayoutModal] = useState(false);
     const [withdrawlModal, setWithdrawlModal] = useState(false);
 
-    const handleGetSingleRelease = () => {
-        setReleases([]);
-
-        getSingleRelease();
-    }
-
 
     const handleOnclickedSong = (release: releaseInterface, albumSongIndex: number = 0) => {
+        _setReleaseDetails(release);
 
-        // albumType == "Album" 
-
-        if (albumType == "Single") {
-            
-            _setSongDetails({
-                _id: release._id,
-                email: release.email,
-                song_title: release.song_title || '',
-                artist_name: release.artist_name,
-                cover_photo: release.song_cover || release.song_cover_url || '',
-                primary_genre: release.primary_genre || '',
-                secondary_genre: release.secondary_genre || '',
-                label_name: release.label_name || '',
-                upc_ean: release.upc_ean || '',
-                total_revenue: '',
-                streams: '',
-                stream_time: '',
-            });
-            
-        } else if (albumType == "Album") {
-            let upc_ean = '';
-            let albumSong_id = '';
-            if (release.songs) {
-                upc_ean = release.songs[albumSongIndex].upc_ean || release.songs[albumSongIndex].isrc_number;
-                albumSong_id = release.songs[albumSongIndex]._id;
-            }
-            
-            _setSongDetails({
-                _id: albumSong_id,
-                email: release.email,
-                song_title: release.song_title || '',
-                artist_name: release.artist_name,
-                cover_photo: release.song_cover_url || release.song_cover || '',
-                primary_genre: release.primary_genre,
-                secondary_genre: release.secondary_genre,
-                label_name: release.label_name,
-                upc_ean: upc_ean,
-                total_revenue: '',
-                streams: '',
-                stream_time: '',
-            });
-            
+        // if (albumType == "Single") {
+        //     _setReleaseDetails(release);
+        // } else 
+        if (albumType == "Album" && release.albumSongs) {
+            _setSongDetails(release.albumSongs[albumSongIndex]);
         }
 
         navigate("/account/artist/song-details");
@@ -650,7 +613,7 @@ function DashboardArtist() {
                             alignItems: "center",
                         }} 
                     >
-                        <Box onClick={() => { setAlbumType('Single'); handleGetSingleRelease(); } }
+                        <Box onClick={() => { setAlbumType('Single'); getReleases(1, 5, "single"); } }
                             sx={ albumType === "Single" ? {
                                 width: "100%",
                                 maxWidth: {xs: "200.03px", md: "257.78px"},
@@ -684,7 +647,7 @@ function DashboardArtist() {
                             > Single </Typography>
                         </Box>
 
-                        <Box onClick={() => { setAlbumType('Album'); getAlbumRelease(); } }
+                        <Box onClick={() => { setAlbumType('Album'); getReleases(1, 5, "album"); } }
                             sx={ albumType === "Single" ? {
                                 width: "100%",
                                 maxWidth: {xs: "200.03px", md: "257.78px"},
@@ -780,12 +743,12 @@ function DashboardArtist() {
                                     setAlbumType(value);
 
                                     if (value == "Single") {
-                                        handleGetSingleRelease();
+                                        getReleases(1, 5, "single");
                                         return;
                                     }
 
                                     if (value == "Album") {
-                                        getAlbumRelease();
+                                        getReleases(1, 5, "album");
                                         return;
                                     }
                                 }}
@@ -826,9 +789,9 @@ function DashboardArtist() {
                                 // viewSong(song, index)
                                 <Grid item xs={6} md={4} key={index}>
                                     <ViewSongItemComponent 
-                                        albumType={albumType}
+                                        releaseType={albumType}
                                         index={index}
-                                        song={song}
+                                        releaseDetails={song}
                                     />
                                 </Grid>
                             ))
@@ -905,17 +868,17 @@ function DashboardArtist() {
                                         color: "#666666",
                                         mb: 3
                                     }}
-                                > Songs from { releases[0].album_title } Album </Typography>
+                                > Songs from { releases[0].title } Album </Typography>
 
                                 {
-                                    releases[0].songs && releases[0].songs.length ? (
+                                    releases[0].albumSongs && releases[0].albumSongs.length ? (
                                         <Box>
-                                            {releases[0].songs.map((item, index) => (
+                                            {releases[0].albumSongs.map((item, index) => (
                                                 <Box key={index} onClick={() => handleOnclickedSong(releases[0], index) }>
                                                     <AlbumSongItem 
-                                                        artistName={ releases[0].artist_name}
-                                                        artworkImage={releases[0].song_cover_url}
-                                                        songTitle={item.song_title}
+                                                        artistName={ releases[0].mainArtist.spotifyProfile.name}
+                                                        artworkImage={releases[0].coverArt}
+                                                        songTitle={item.songTitle}
                                                         distributedDSP={["Apple", "Spotify"]} 
                                                     />
                                                 </Box>
@@ -940,17 +903,17 @@ function DashboardArtist() {
                                                 color: "#666666",
                                                 mb: 3
                                             }}
-                                        > Songs from { releases[1].album_title } Album </Typography>
+                                        > Songs from { releases[1].title } Album </Typography>
 
                                         {
-                                            releases[1].songs && releases[1].songs.length ? (
+                                            releases[1].albumSongs && releases[1].albumSongs.length ? (
                                                 <Box>
-                                                    {releases[1].songs.map((item, index) => (
+                                                    {releases[1].albumSongs.map((item, index) => (
                                                         <Box key={index} onClick={() => handleOnclickedSong(releases[1], index) }>
                                                             <AlbumSongItem 
-                                                                artistName={ releases[1].artist_name}
-                                                                artworkImage={releases[1].song_cover_url}
-                                                                songTitle={item.song_title}
+                                                                artistName={ releases[1].mainArtist.spotifyProfile.name}
+                                                                artworkImage={releases[1].coverArt}
+                                                                songTitle={item.songTitle}
                                                                 distributedDSP={["Apple", "Spotify"]} 
                                                             />
                                                         </Box>
