@@ -9,7 +9,7 @@ import { useRecordLabelFn } from '@/hooks/recordLabel/useRecordLabelFn';
 import { useUserStore } from '@/state/userStore';
 import NewReleaseRLartist from './NewReleaseRLartist';
 import colors from '@/constants/colors';
-import { recordLabelArtistInterface } from '@/constants/typesInterface';
+import { recordLabelArtistInterface } from '@/typeInterfaces/recordLabelArtist.interface';
 
 
 interface _Props {
@@ -30,22 +30,17 @@ const NewReleaseModalComponent: React.FC<_Props> = ({
         getAllRecordLabelArtist,
         recordLabelArtist,
     } = useRecordLabelFn();
-
-    React.useEffect(() => {
-        // const artistsList = getLocalStorage("artistsList");
-        // console.log(userData);
-
-        // "Record Label"
-        if (userData.userType.toLowerCase() == "record label") {
-            getAllRecordLabelArtist();
-        }
-    }, [userData.userType]);
-
+    
     React.useEffect(() => {
         if (openReleaseModal) {
             setSelectedReleaseType(undefined);
             // setselectedRlArtist(undefined);
             setshowArtistSearch(false);
+    
+            // "Record Label"
+            if (userData.userType.toLowerCase() == "record label") {
+                getAllRecordLabelArtist();
+            }
         }
     }, [openReleaseModal])
 
@@ -54,7 +49,7 @@ const NewReleaseModalComponent: React.FC<_Props> = ({
         // setselectedRlArtist(artist);
 
         const params = {
-            artistName: artist?.artistName || "",
+            recordLabelArtist_id: artist._id,
         };
 
         if (selectedReleaseType == "single") {

@@ -1,11 +1,12 @@
-import { recordLabelArtistInterface } from '@/constants/typesInterface'
-import { useRecordLabelFn } from '@/hooks/recordLabel/useRecordLabelFn'
-import { stringAvatar } from '@/util/resources'
+import React from 'react'
 import Avatar from '@mui/material/Avatar'
 import Grid from '@mui/material/Grid'
 import Stack from '@mui/material/Stack'
 import Typography from '@mui/material/Typography'
-import React from 'react'
+// import { recordLabelArtistInterface } from '@/constants/typesInterface'
+import { useRecordLabelFn } from '@/hooks/recordLabel/useRecordLabelFn'
+import { stringAvatar } from '@/util/resources'
+import { recordLabelArtistInterface } from '@/typeInterfaces/recordLabelArtist.interface'
 
 
 interface _Props {
@@ -29,7 +30,7 @@ const ArtistListItemView: React.FC<_Props> = ({
                         >
                             <Avatar
                                 alt={`${item.artistName} image`}
-                                src={item.artistAvatarUrl}
+                                src={item.artistAvatar}
                                 // variant="rounded"
                                 aria-label={item.artistName}
                                 sx={{ 
@@ -65,7 +66,10 @@ const ArtistListItemView: React.FC<_Props> = ({
                                     color: '#666666',
                                     mt: '13px'
                                 }}
-                            >{ item.songCount } Songs</Typography>
+                            >
+                                { item.totalReleases || 0 } Releases
+                                {/* Songs */}
+                            </Typography>
                         </Stack>
                     </Grid>
                 ))

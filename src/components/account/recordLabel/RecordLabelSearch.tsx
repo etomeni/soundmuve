@@ -10,10 +10,11 @@ import SearchIcon from '@mui/icons-material/Search';
 import ClearIcon from '@mui/icons-material/Clear';
 
 import { stringAvatar } from '@/util/resources';
-import { recordLabelArtistInterface } from '@/constants/typesInterface';
+// import { recordLabelArtistInterface } from '@/constants/typesInterface';
 import colors from '@/constants/colors';
 import Stack from '@mui/material/Stack';
 import { useRecordLabelFn } from '@/hooks/recordLabel/useRecordLabelFn';
+import { recordLabelArtistInterface } from '@/typeInterfaces/recordLabelArtist.interface';
 
 
 interface _Props {
@@ -53,7 +54,7 @@ const ArtistListComponent: React.FC<_Props> = ({ artists }) => {
 
                             <Avatar
                                 alt={`${item.artistName} icon`}
-                                src={item.artistAvatarUrl}
+                                src={item.artistAvatar}
                                 // variant="rounded"
                                 aria-label={item.artistName}
                                 sx={{ 
@@ -89,7 +90,9 @@ const ArtistListComponent: React.FC<_Props> = ({ artists }) => {
                                     color: '#666666',
                                     mt: {xs: "7px", md: '13px'}
                                 }}
-                            >{item.songCount} Songs</Typography>
+                            >{item.totalReleases || 0} Releases
+                                {/* Songs */}
+                            </Typography>
                         </Stack>
                     </Box>
                 ))

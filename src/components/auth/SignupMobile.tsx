@@ -296,7 +296,7 @@ function SignupMobileComponent() {
                                             fontSize: {xs: "13.33px", md: "15.38px"},
                                             lineHeight: "20.33px",
                                             letterSpacing: "-0.12px"
-                                        }}>I agree with SoundMuv terms and conditions</Typography>}
+                                        }}>I agree with SoundMuve terms and conditions</Typography>}
                                     />
                                 </FormGroup>
 

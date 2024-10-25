@@ -29,9 +29,8 @@ function DashboardRecordLabel() {
     const userData = useUserStore((state) => state.userData);
 
     const {
-        getTotalNumberOfArtist,
+        getTotalRelease_Artist,
         getAllRecordLabelArtist,
-        getRecordLabelTotalSongs,
 
         totalArtists,
         totalSongs,
@@ -39,14 +38,8 @@ function DashboardRecordLabel() {
     } = useRecordLabelFn();
 
     useEffect(() => {
-        // const artistsList = getLocalStorage("artistsList");
-        // if (artistsList) {
-        //     setRecordLabelArtist(artistsList);
-        // }
-
-        getTotalNumberOfArtist();
+        getTotalRelease_Artist();
         getAllRecordLabelArtist();
-        getRecordLabelTotalSongs();
     }, []);
 
 
@@ -247,7 +240,9 @@ function DashboardRecordLabel() {
                                                     lineHeight: {xs: "5.68px", md: '14.24px'},
                                                     letterSpacing: {xs: "-0.24px", md: '-0.59px'}
                                                 }}
-                                            >Total Songs</Typography>
+                                            >Total Release
+                                            {/* Songs */}
+                                            </Typography>
 
                                             <Typography variant='h3' component="h3" 
                                                 sx={{

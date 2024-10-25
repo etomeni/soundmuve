@@ -20,13 +20,14 @@ import RecordLabelWrapper from '@/components/account/recordLabel/RecordLabelWrap
 import CircularProgressWithLabel from '@/components/CircularProgressWithLabel';
 
 import { getCountries, getUserLocation } from '@/util/location';
-import { emekaApiEndpoint } from '@/util/resources';
+import { apiEndpoint } from '@/util/resources';
 import { useUserStore } from '@/state/userStore';
 import { restCountries } from '@/util/countries';
 import { releaseSelectStyle2, releaseTextFieldStyle } from '@/util/mui';
 import cloudUploadIconImg from "@/assets/images/cloudUploadIcon.png";
 import colors from '@/constants/colors';
 import { useNavigate } from 'react-router-dom';
+import { useSettingStore } from '@/state/settingStore';
 
 
 const formSchema = yup.object({
@@ -49,7 +50,7 @@ function AddArtistRecordLabel() {
     const navigate = useNavigate();
     const [countries, setCountries] = useState(restCountries);
     const [userCountry, setUserCountry] = useState("");
-    const userData = useUserStore((state) => state.userData);
+    // const userData = useUserStore((state) => state.userData);
     // const darkTheme = useSettingStore((state) => state.darkTheme);
     const accessToken = useUserStore((state) => state.accessToken);
     const [image, setImage] = useState<any>();
@@ -60,7 +61,7 @@ function AddArtistRecordLabel() {
         status: true,
         message: ""
     });
-    // const _setToastNotification = useSettingStore((state) => state._setToastNotification);
+    const _setToastNotification = useSettingStore((state) => state._setToastNotification);
     const [songUploadProgress, setSongUploadProgress] = useState(0);
     
     
@@ -129,15 +130,6 @@ function AddArtistRecordLabel() {
             status: true,
             message: ""
         });
-        
-        const data2db = {
-            email: formData.email,
-            recordLabelemail: userData.email,
-            artistName: formData.artistName,
-            country: formData.country,
-            phoneNumber: formData.phoneNumber,
-            gender: formData.gender,
-        };
 
         if (!image) {
             setApiResponse({
@@ -150,16 +142,17 @@ function AddArtistRecordLabel() {
         }
 
         const data_2db = new FormData();
-        data_2db.append('email', data2db.email || '');
-        data_2db.append('recordLabelemail', data2db.recordLabelemail);
-        data_2db.append('artistName', data2db.artistName);
-        data_2db.append('country', data2db.country);
-        data_2db.append('phoneNumber', data2db.phoneNumber || '');
-        data_2db.append('gender', data2db.gender);
+        // data_2db.append('email', data2db.email || '');
+        // data_2db.append('recordLabelemail', data2db.recordLabelemail);
+        data_2db.append('artistName', formData.artistName);
+        data_2db.append('artistEmail', formData.email || '');
+        data_2db.append('artistPhoneNumber', formData.phoneNumber || '');
+        data_2db.append('country', formData.country);
+        data_2db.append('gender', formData.gender);
         data_2db.append('artistAvatar', image);
 
         try {
-            const response = (await axios.post(`${emekaApiEndpoint}/recordLabel/artists`, data_2db,
+            const response = (await axios.post(`${apiEndpoint}/record-label/add-artist`, data_2db,
                 {
                     headers: {
                         'Content-Type': 'multipart/form-data',
@@ -177,29 +170,34 @@ function AddArtistRecordLabel() {
                 }
              )).data;
             // console.log(response);
+
+            if (response.status) {
+                _setToastNotification({
+                    display: true,
+                    status: "success",
+                    message: response.message
+                });
+
+                navigate("/account/record-label/artist");
+                reset();
+
+                return
+            }
             
             setApiResponse({
                 display: true,
-                status: true,
+                status: false,
                 message: response.message
             });
-            navigate("/account/record-label/artist");
-            // _setToastNotification({
-            //     display: true,
-            //     status: "success",
-            //     message: response.message
-            // });
-
-            reset();
-
         } catch (error: any) {
-            const err = error.response.data;
+            const err = error.response.data || error;
+            const fixedErrorMsg = "Ooops and error occurred!";
             console.log(err);
 
             setApiResponse({
                 display: true,
                 status: false,
-                message: err.message || "Oooops, failed to add new artists. please try again."
+                message: err.errors && err.errors.length ? err.errors[0].msg : err.message || fixedErrorMsg
             });
         }
     }

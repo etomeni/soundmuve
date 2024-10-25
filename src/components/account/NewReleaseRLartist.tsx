@@ -4,11 +4,12 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import colors from '@/constants/colors';
-import { recordLabelArtistInterface } from '@/constants/typesInterface';
+// import { recordLabelArtistInterface } from '@/constants/typesInterface';
 import Typography from '@mui/material/Typography';
 import {  releaseTextFieldStyle, submitBtnStyle } from '@/util/mui';
 import Autocomplete from '@mui/material/Autocomplete';
 import Button from '@mui/material/Button';
+import { recordLabelArtistInterface } from '@/typeInterfaces/recordLabelArtist.interface';
 
 
 interface MyProps {
@@ -86,9 +87,9 @@ const NewReleaseRLartist: React.FC<MyProps> = ({
             >
                 <Button variant="contained" 
                     fullWidth type="button" 
-                    disabled={ !selectedArtist || !selectedArtist.artistName } 
+                    disabled={ !selectedArtist || !selectedArtist._id } 
                     onClick={() => {
-                        if (selectedArtist && selectedArtist.artistName) handleSelected(selectedArtist);
+                        if (selectedArtist && selectedArtist._id) handleSelected(selectedArtist);
                     }}
                     sx={{
                         ...submitBtnStyle,
