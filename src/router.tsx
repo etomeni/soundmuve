@@ -51,6 +51,7 @@ import AccountFaq from "./pages/account/AccountFaq";
 import CartPage from "./pages/account/createReleases/cartCheckout/Cart";
 import CartCheckoutPage from "./pages/account/createReleases/cartCheckout/Checkout";
 import ArtistAnalytics_RL from "./pages/account/recordLabel/ArtistAnalytics_RL";
+import SuccessfulPayment from "./pages/account/createReleases/cartCheckout/SuccessfulPayment";
 
 
 export const router = createBrowserRouter([
@@ -154,6 +155,10 @@ export const router = createBrowserRouter([
             {
               path: "checkout",
               element: <CartCheckoutPage />
+            },
+            {
+              path: "checkout/success",
+              element: <SuccessfulPayment />
             },
 
             {

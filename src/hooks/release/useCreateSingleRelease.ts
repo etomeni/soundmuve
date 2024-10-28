@@ -14,7 +14,8 @@ import { restCountries } from "@/util/countries";
 import { useSettingStore } from "@/state/settingStore";
 import { useCreateReleaseStore } from "@/state/createReleaseStore";
 import { musicStores, socialPlatformStores } from '@/util/resources';
-import { useCartItemStore } from "@/state/cartStore";
+// import { useCartItemStore } from "@/state/cartStore";
+import { useCart } from "../useCart";
 
 
 const contriesss = restCountries.map(item => item.name.common);
@@ -33,8 +34,8 @@ export function useCreateSingleRelease() {
     const accessToken = useUserStore((state) => state.accessToken);
     const _setToastNotification = useSettingStore((state) => state._setToastNotification);
     const _handleSetSingleRelease1 = useCreateReleaseStore((state) => state._handleSetSingleRelease1);
-    const _addToCart = useCartItemStore((state) => state._addToCart);
-    
+    const { handleAddToCart } = useCart();
+
     const [apiResponse, setApiResponse] = useState({
         display: false,
         status: true,
@@ -613,14 +614,14 @@ export function useCreateSingleRelease() {
 
                 setOpenSuccessModal(true);
 
-                _addToCart({
+                handleAddToCart({
                     release_id: result._id || '',
                     user_email: userData.email,
                     user_id: userData._id || '',
                     artistName: result.mainArtist.spotifyProfile.name,
                     coverArt: result.coverArt,
                     price: 25,
-                    releaseType: "Single",
+                    releaseType: result.releaseType,
                     title: result.title 
                 });
 

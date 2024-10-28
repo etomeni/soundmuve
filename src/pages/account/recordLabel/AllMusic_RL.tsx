@@ -16,8 +16,6 @@ import colors from '@/constants/colors';
 import ViewSongItemComponent from '@/components/account/ViewSongItem';
 import { useGetReleases } from '@/hooks/release/useGetReleases';
 
-// type status = "Live" | "Pending" | "Incomplete" | "Complete" | "Failed";
-
 
 function AllMusic_RL() {
     const navigate = useNavigate();

@@ -1,63 +1,46 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useStripe, useElements, PaymentElement } from '@stripe/react-stripe-js';
-import axios from 'axios';
-import Stack from '@mui/material/Stack';
-import Alert from '@mui/material/Alert';
+
 import Box from '@mui/material/Box';
-import { emekaApiEndpoint } from '@/util/resources';
-import { useUserStore } from '@/state/userStore';
+import Alert from '@mui/material/Alert';
+import Stack from '@mui/material/Stack';
+import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
+import CircularProgress from '@mui/material/CircularProgress';
+
 import LoadingDataComponent from '@/components/LoadingData';
+import { useCartItemStore } from '@/state/cartStore';
+import { submitBtnStyle } from '@/util/mui';
 
 function CheckoutFormPage({ amount }: { amount: number }) {
     const stripe = useStripe();
     const elements = useElements();
-    const accessToken = useUserStore((state) => state.accessToken);
+    const paymentIntent = useCartItemStore((state) => state.paymentIntent);
+
     const [apiResponse, setApiResponse] = useState({
         display: false,
         status: true,
         message: ""
     });
 
-    const [clientSecret, setClientSecret] = useState('');
     const [isLoading, setIsLoading] = useState(false);
-
-    useEffect(() => {
-        handleGetClientSecret();
-    }, [amount]);
-    
-
-    const handleGetClientSecret = async () => {
-        try {
-            const response = (await axios.post(`${emekaApiEndpoint}/checkout/create-payment-intent`,
-                {amount}, {
-                    headers: {
-                        Authorization: `Bearer ${accessToken}`
-                    }
-                }
-            )).data;
-            console.log(response);
-
-            if (response.clientSecret) {
-                setClientSecret(response.clientSecret);
-            }
-
-        } catch (error: any) {
-            const err = error.response.data || error;
-            console.log(err);
-            setApiResponse({
-                display: true,
-                status: false,
-                message: err.message || '',
-            });
-        }
-    }
-
+  
     const handleClickedPay = async () => {
         setIsLoading(true);
 
         if (!stripe || !elements) {
             // Stripe.js hasn't yet loaded.
             // Make sure to disable form submission until Stripe.js has loaded.
+
+            console.log("Stripe.js hasn't yet loaded.");
+            console.log("Make sure to disable form submission until Stripe.js has loaded.");
+
+            setApiResponse({
+                display: true,
+                status: false,
+                message: "Stripe.js hasn't yet loaded.",
+            });
+            setIsLoading(true);
             return;
         }
 
@@ -73,19 +56,18 @@ function CheckoutFormPage({ amount }: { amount: number }) {
             return;
         }
 
-
         const result = await stripe.confirmPayment({
             //`Elements` instance that was used to create the Payment Element
             elements, 
-            clientSecret,
+            clientSecret: paymentIntent.clientSecret,
             confirmParams: {
-                return_url: `https://http://localhost:5173/account/success?amount=${ amount }`,
+                return_url: `${window.location.origin}/account/checkout/success?amount=${ amount }`,
             },
         });
-    
+
         if (result.error) {
             // Show error to your customer (for example, payment details incomplete)
-            console.log(result.error.message);
+            console.log(result.error);
 
             setApiResponse({
                 display: true,
@@ -99,10 +81,10 @@ function CheckoutFormPage({ amount }: { amount: number }) {
         }
 
         setIsLoading(false);
-
     }
 
-    if (!clientSecret || !stripe || !elements) {
+    // show a loading page this parameters are not available
+    if (!paymentIntent.clientSecret || !stripe || !elements) {
         return (
             <Box>
                 <LoadingDataComponent />
@@ -114,7 +96,7 @@ function CheckoutFormPage({ amount }: { amount: number }) {
 
     return (
         <Box>
-            { clientSecret && <PaymentElement /> }
+            { paymentIntent.clientSecret && <PaymentElement /> }
 
             {
                 apiResponse.display && (
@@ -126,15 +108,41 @@ function CheckoutFormPage({ amount }: { amount: number }) {
                 )
             }
 
-            <button type='button'
-                onClick={() => handleClickedPay}
+            <Button variant="contained" 
+                fullWidth type="button"
+                onClick={() => {
+                    handleClickedPay();
+                }} 
                 disabled={!stripe || isLoading}
+                sx={{
+                    ...submitBtnStyle,
+                    // maxWidth: "320px"
+                    mt: 3
+                }}
             >
-                { !isLoading ? `Pay ${amount}` : "Processing" }
-            </button>
+                {
+                    isLoading ? 
+                        <CircularProgress size={25} 
+                            sx={{ 
+                                // display: isSubmitting ? "initial" : "none", 
+                                color: "#fff", // colors.primary,
+                                fontWeight: "bold" 
+                            }} 
+                        />
+                    : 
+                    <Typography variant='body1'
+                        sx={{
+                            fontSize: "16px",
+                            fontWeight: "900",
+                            lineHeight: "13px",
+                            letterSpacing: "-0.13px"
+                        }}
+                    >{ `Pay ${amount}` }</Typography>
+           
+                }
 
+            </Button>
 
-            {/* <div onClick={() => handleClickedPay} >CheckoutFormPage</div> */}
 
         </Box>
     )

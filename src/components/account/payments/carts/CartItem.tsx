@@ -7,7 +7,7 @@ import Grid from '@mui/material/Grid';
 import colors from '@/constants/colors';
 import { numberOfLinesTypographyStyle } from '@/util/mui';
 import { currencyDisplay } from '@/util/resources';
-import { cartItemInterface } from '@/constants/cartInterface';
+import { cartItemInterface } from '@/typeInterfaces/cartInterface';
 
 
 interface _Props {

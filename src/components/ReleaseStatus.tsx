@@ -1,12 +1,13 @@
 import React from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
+import colors from '@/constants/colors';
 
 
 interface _Props {
-    status: "Live" | "Pending" | "Incomplete" | "Complete" | "Failed" | string
+    // status: "Live" | "Pending" | "Incomplete" | "Complete" | "Failed" | string
+    status: "Incomplete" | "Unpaid" | "Processing" |  "Complete" | "Live" | "Failed" | string
 };
-// type status = "Live" | "Pending" | "Incomplete" | "Complete" | "Failed";
 
 const ReleaseStatusComponent: React.FC<_Props> = ({status = "Pending"}) => {
 
@@ -26,7 +27,8 @@ const ReleaseStatusComponent: React.FC<_Props> = ({status = "Pending"}) => {
                     lineHeight: {xs: "13.7px", md: "24px"},
                     letterSpacing: {xs: "0.06px", md: "0.1px"}
                 }}
-            > { status.toUpperCase() } </Typography>
+            > { status } </Typography>
+            {/* > { status.toUpperCase() } </Typography> */}
         </Box>
     );
 
@@ -110,6 +112,26 @@ const ReleaseStatusComponent: React.FC<_Props> = ({status = "Pending"}) => {
         </Box>
     );
 
+    const processing = (
+        <Box
+            sx={{
+                bgcolor: colors.primary,
+                p: {xs: "0px 11.99px", md: "0px 21px"},
+                borderRadius: {xs: "15.98px", md: "28px"},
+                display: "inline-block"
+            }}
+        >
+            <Typography
+                sx={{
+                    color: colors.milk,
+                    fontSize: {xs: "6.28px", md: "11px"},
+                    lineHeight: {xs: "13.7px", md: "24px"},
+                    letterSpacing: {xs: "0.06px", md: "0.1px"}
+                }}
+            > { status } </Typography>
+        </Box>
+    );
+
     if (status.toLowerCase() == 'complete') {
         return complete;
     } else if (status.toLowerCase() == 'failed') {
@@ -118,6 +140,10 @@ const ReleaseStatusComponent: React.FC<_Props> = ({status = "Pending"}) => {
         return incomplete;
     } else if (status.toLowerCase() == 'live') {
         return live;
+    } else if (status.toLowerCase() == 'unpaid') {
+        return pending;
+    } else if (status.toLowerCase() == 'processing') {
+        return processing;
     } else {
         return pending;
     }

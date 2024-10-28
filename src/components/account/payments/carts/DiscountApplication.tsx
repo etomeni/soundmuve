@@ -16,10 +16,11 @@ import CircularProgress from '@mui/material/CircularProgress';
 import { paymentTextFieldStyle, submitBtnStyle } from '@/util/mui';
 
 import { useUserStore } from '@/state/userStore';
-import { emekaApiEndpoint } from '@/util/resources';
+import { apiEndpoint } from '@/util/resources';
 import colors from '@/constants/colors';
 import ModalWrapper from '@/components/account/ModalWrapper';
 import SuccessModalComponent from './SuccessModal';
+import { cartItemInterface } from '@/typeInterfaces/cartInterface';
 
 
 const formSchema = yup.object({
@@ -29,15 +30,15 @@ const formSchema = yup.object({
 });
 
 interface _Props {
+    cartItems: cartItemInterface[],
     openModal: boolean,
     closeModal: () => void;
     // confirmBtn: (data: any) => void;
 }
 
 const DiscountApplicationModalComponent: React.FC<_Props> = ({
-    openModal, closeModal, // confirmBtn
+    cartItems, openModal, closeModal, // confirmBtn
 }) => {
-    const userData = useUserStore((state) => state.userData);
     const accessToken = useUserStore((state) => state.accessToken);
     const [successModalState, setSuccessModalState] = useState(false)
 
@@ -55,14 +56,14 @@ const DiscountApplicationModalComponent: React.FC<_Props> = ({
     const onSubmit = async (formData: typeof formSchema.__outputType) => {
         // console.log(formData);
         const data2db = {
+            cartItems,
             youtubeLink: formData.youtubeLink,
-            facebookInstaLink: formData.instagramFacebookLink,
+            instagramFacebookLink: formData.instagramFacebookLink,
             xLink: formData.xLink,
-            email: userData.email
         }
 
         try {
-            const response = (await axios.post(`${emekaApiEndpoint}/musicDist/input-profile`,
+            const response = (await axios.post(`${apiEndpoint}/checkout/discount-application`,
                 data2db, {
                     headers: {
                         Authorization: `Bearer ${accessToken}`
@@ -72,18 +73,27 @@ const DiscountApplicationModalComponent: React.FC<_Props> = ({
             console.log(response);
             // setBanks(response.data);
 
-            setSuccessModalState(true);
+            if (response.status) {
+                setSuccessModalState(true);
+                return;
+            }
 
-            // confirmBtn(response)
-        } catch (error: any) {
-            const errorResponse = error.response.data || error;
-            console.error(errorResponse);
 
             setApiResponse({
                 display: true,
                 status: false,
-                message: errorResponse.message || "server error occurred, please try later."
+                message: response.message
             })
+        } catch (error: any) {
+            console.log(error);
+            const err = error.response.data || error;
+            const fixedErrorMsg = "Oooops, something went wrong";
+
+            setApiResponse({
+                display: true,
+                status: false,
+                message: err.errors && err.errors.length ? err.errors[0].msg : err.message || fixedErrorMsg
+            });
         }
 
     }

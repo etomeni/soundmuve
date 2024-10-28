@@ -21,8 +21,7 @@ import SongPreviewComponent from '@/components/account/SongPreview';
 import SuccessModalComponent from '@/components/account/SuccessModal';
 import { apiEndpoint } from '@/util/resources';
 import colors from '@/constants/colors';
-import { useCartItemStore } from '@/state/cartStore';
-// import { useCartItemStore } from '@/state/cartStore';
+import { useCart } from '@/hooks/useCart';
 
 
 function CreateAlbumReleaseOverview() {
@@ -36,7 +35,7 @@ function CreateAlbumReleaseOverview() {
     const _handleSetAlbumRelease = useCreateReleaseStore((state) => state._handleSetAlbumRelease);
     // const _removeAlbumReleaseSongUpload = useCreateReleaseStore((state) => state._removeAlbumReleaseSongUpload);
     const _handleClearAlbumRelease = useCreateReleaseStore((state) => state._handleClearAlbumRelease);
-    const _addToCart = useCartItemStore((state) => state._addToCart);
+    const { handleAddToCart } = useCart();
 
     const [openSuccessModal, setOpenSuccessModal] = useState(false);
     const _setToastNotification = useSettingStore((state) => state._setToastNotification);
@@ -99,14 +98,14 @@ function CreateAlbumReleaseOverview() {
 
         setOpenSuccessModal(true);
 
-        _addToCart({
+        handleAddToCart({
             release_id: albumRelease._id || '',
             user_email: userData.email,
             user_id: userData._id || '',
             artistName: albumRelease.mainArtist.spotifyProfile.name,
             coverArt: albumRelease.coverArt,
             price: 45,
-            releaseType: "Single",
+            releaseType: albumRelease.releaseType,
             title: albumRelease.title 
         });
 

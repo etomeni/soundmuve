@@ -19,6 +19,7 @@ import DiscountApplicationModalComponent from '@/components/account/payments/car
 import CircularProgress from '@mui/material/CircularProgress';
 import { useCart } from '@/hooks/useCart';
 import Alert from '@mui/material/Alert';
+import StripePayment from './StripePayment';
 
 
 const formSchema = yup.object({
@@ -27,6 +28,8 @@ const formSchema = yup.object({
 
 function CartCheckoutPage() {
     const [openDiscountFormModal, setOpenDiscountFormModal] = useState(false);
+    const [openStripeModal, setOpenStripeModal] = useState(false);
+
     const { 
         cartItems, totalAmount, handleRemoveCartItem,
         handleApplyPromo, // applyPromoResponse
@@ -190,7 +193,10 @@ function CartCheckoutPage() {
                     >Get a discount for your release</Typography>
 
                     <Button variant="contained" 
-                        fullWidth type="submit" 
+                        fullWidth type="button"
+                        onClick={() => {
+                            setOpenStripeModal(true);
+                        }} 
                         // disabled={ !isValid || isSubmitting } 
                         disabled={!cartItems.length}
                         sx={{
@@ -221,7 +227,14 @@ function CartCheckoutPage() {
 
             <DiscountApplicationModalComponent 
                 closeModal={() => setOpenDiscountFormModal(false)}
-                openModal={openDiscountFormModal}
+                openModal={openDiscountFormModal} 
+                cartItems={cartItems}
+            />
+
+            <StripePayment 
+                closeModal={() => setOpenStripeModal(false)}
+                openModal={openStripeModal} 
+                cartItems={cartItems}
             />
 
         </AccountWrapper>

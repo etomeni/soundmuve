@@ -9,6 +9,7 @@ import { useReleaseStore } from '@/state/releaseStore';
 import ReleaseStatusComponent from '../ReleaseStatus';
 import { releaseInterface } from '@/typeInterfaces/release.interface';
 import { useCreateReleaseStore } from '@/state/createReleaseStore';
+import { useCart } from '@/hooks/useCart';
 
 
 interface _Props {
@@ -18,14 +19,16 @@ interface _Props {
     releaseType: string
 }
 
-const ViewSongItemComponent: React.FC<_Props> = ({ releaseDetails, index, releaseType }) => {
+const ViewSongItemComponent: React.FC<_Props> = ({ releaseDetails, releaseType }) => {
     const navigate = useNavigate();
     const _setReleaseDetails = useReleaseStore((state) => state._setReleaseDetails);
     const _handleSetSingleRelease = useCreateReleaseStore((state) => state._handleSetSingleRelease1);
     const _handleSetAlbumRelease = useCreateReleaseStore((state) => state._handleSetAlbumRelease);
 
-    const handleNavigation = () => {
-        console.log(index);
+    const { handleCheckReleaseCart } = useCart();
+
+    const handleNavigation = async () => {
+        // console.log(index);
         _setReleaseDetails(releaseDetails);
 
         if (releaseDetails.status == "Incomplete") {
@@ -39,6 +42,28 @@ const ViewSongItemComponent: React.FC<_Props> = ({ releaseDetails, index, releas
 
             navigate(`/account/${releaseDetails.releaseType == "album" ? "create-album-release-details" : "create-single-release"}`);
 
+            return;
+        }
+
+        if (releaseDetails.status == "Unpaid") {
+            // check if the item is still in cart
+            // if not add it to cart else proceed
+
+            // if it returns any error do nothing else navigate to the cart page.
+
+            const releaseCartData = {
+                release_id: releaseDetails._id || '',
+                user_email: releaseDetails.email,
+                user_id: releaseDetails.user_id || '',
+                artistName: releaseDetails.mainArtist.spotifyProfile.name,
+                coverArt: releaseDetails.coverArt,
+                price: releaseDetails.releaseType == "album" ? 45 : 25,
+                releaseType: releaseDetails.releaseType,
+                title: releaseDetails.title 
+            };
+
+            const response = await handleCheckReleaseCart(releaseCartData);
+            if (response) navigate(`/account/cart`);
             return;
         }
 

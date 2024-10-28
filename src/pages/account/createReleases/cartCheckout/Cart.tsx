@@ -13,14 +13,20 @@ import DiscountApplicationModalComponent from '@/components/account/payments/car
 import { useCart } from '@/hooks/useCart';
 import Stack from '@mui/material/Stack';
 import Alert from '@mui/material/Alert';
+import { useNavigate } from 'react-router-dom';
 
 
 function CartPage() {
+    const navigate = useNavigate();
     const [openDiscountFormModal, setOpenDiscountFormModal] = useState(false);
+
     const { 
         cartItems, totalAmount, handleRemoveCartItem,
-        handleAddToCart, apiResponse
+        apiResponse, // handleCheckoutBtn,
     } = useCart();
+
+    // console.log(cartItems);
+
 
     return (
         <AccountWrapper bottomSpacing={0} topSpacing={false}>
@@ -77,7 +83,10 @@ function CartPage() {
                         fullWidth type="button" 
                         // disabled={ !isValid || isSubmitting } 
                         disabled={!cartItems.length}
-                        onClick={() => { handleAddToCart() }}
+                        onClick={() => { 
+                            navigate("/account/checkout");
+                            // handleCheckoutBtn(cartItems);
+                        }}
                         sx={{
                             ...submitBtnStyle,
                             maxWidth: "320px"
@@ -97,6 +106,7 @@ function CartPage() {
             </Box>
 
             <DiscountApplicationModalComponent 
+                cartItems={cartItems}
                 closeModal={() => setOpenDiscountFormModal(false)}
                 openModal={openDiscountFormModal}
             />

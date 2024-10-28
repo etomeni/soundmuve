@@ -1,24 +1,25 @@
 import { useCallback, useEffect, useState } from "react";
+// import { useNavigate } from 'react-router-dom';
 import axios from "axios";
-import { useNavigate } from 'react-router-dom';
 
 import { useCartItemStore } from "@/state/cartStore";
-import { emekaApiEndpoint } from "@/util/resources";
+import { emekaApiEndpoint, getQueryParams, apiEndpoint } from "@/util/resources";
 import { useUserStore } from "@/state/userStore";
-import { 
-    applyPromoResponseInterface, cartItemInterface 
-} from "@/constants/cartInterface";
+import { cartItemInterface } from "@/typeInterfaces/cartInterface";
+import { getLocalStorage } from "@/util/storage";
+import { useSettingStore } from "@/state/settingStore";
 
 
 export function useCart() {
-    const navigate = useNavigate();
+    // const navigate = useNavigate();
     const cartItems = useCartItemStore((state) => state.cart);
-    const _removeFromCart = useCartItemStore((state) => state._removeFromCart);
-    const _setAdd2cartResponse = useCartItemStore((state) => state._setAdd2cartResponse);
-    const add2cartResponse = useCartItemStore((state) => state.add2cartResponse);
+    const _setPaymentKeys = useCartItemStore((state) => state._setPaymentKeys);
+    const _handleSetCartItems = useCartItemStore((state) => state._handleSetCartItems);
+    const _clearCartItems = useCartItemStore((state) => state._clearCartItems);
     const [totalAmount, setTotalAmount] = useState<number>(0);
     const userData = useUserStore((state) => state.userData); 
     const accessToken = useUserStore((state) => state.accessToken);
+    const _setToastNotification = useSettingStore((state) => state._setToastNotification);
 
     const [apiResponse, setApiResponse] = useState({
         display: false,
@@ -26,39 +27,97 @@ export function useCart() {
         message: ""
     });
 
-    const [applyPromoResponse, setApplyPromoResponse] = useState<applyPromoResponseInterface>();
+    // const [applyPromoResponse, setApplyPromoResponse] = useState<applyPromoResponseInterface>();
 
-    const handleRemoveCartItem = (item: cartItemInterface) => {
-        // console.log(item);
-        _removeFromCart(item);
-    }
 
     useEffect(() => {
-        const totalPrice = cartItems.reduce((accumulator, currentObject) => {
-            return accumulator + currentObject.price;
-        }, 0);
-
-        setTotalAmount(totalPrice);
+        if (cartItems.length) {
+            const totalPrice = cartItems.reduce((accumulator, currentObject) => {
+                return accumulator + currentObject.price;
+            }, 0);
+    
+            setTotalAmount(totalPrice);
+        }
     }, [cartItems]);
 
 
-    const handleAddToCart = useCallback(async() => {
-        const newItems = cartItems.map(item => ({
-            _id: item.release_id,
-            type: item.releaseType.toLowerCase(),
-        }));
+    const handleAddToCart = useCallback(async(item: cartItemInterface) => {
+        try {
+            const response = (await axios.post(`${apiEndpoint}/checkout/add-to-cart`,
+                item, {
+                    headers: {
+                        Authorization: `Bearer ${accessToken}`
+                    }
+                }
+            )).data;
+            // console.log(response);
 
-        const data2db = {
-            email: userData.email,
-            items: newItems,
+            if (response.status) {
+                _handleSetCartItems(response.result);
+                return
+            }
 
-            // type: cartItems[0].releaseType.toLowerCase(),
-            // id: cartItems[0].id,
-        };
+            setApiResponse({
+                display: true,
+                status: false,
+                message: response.message
+            });
+        } catch (error: any) {
+            console.log(error);
+            const err = error.response.data || error;
+            const fixedErrorMsg = "Oooops, something went wrong";
+
+            setApiResponse({
+                display: true,
+                status: false,
+                message: err.errors && err.errors.length ? err.errors[0].msg : err.message || fixedErrorMsg
+            });
+        }
+    }, []);
+
+    const handleRemoveCartItem = useCallback(async (item: cartItemInterface) => {
+        try {
+            const response = (await axios.delete(`${apiEndpoint}/checkout/${item._id}`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${accessToken}`
+                    }
+                }
+            )).data;
+            // console.log(response);
+
+            if (response.status) {
+                _handleSetCartItems(response.result);
+                return
+            }
+
+            _setToastNotification({
+                display: true,
+                status: "info",
+                message: response.message
+            });
+        } catch (error: any) {
+            console.log(error);
+            const err = error.response.data || error;
+            const fixedErrorMsg = "Oooops, something went wrong";
+
+            _setToastNotification({
+                display: true,
+                status: "error",
+                message: err.errors && err.errors.length ? err.errors[0].msg : err.message || fixedErrorMsg
+            });
+        }
+    }, []);
+
+    const getCartItems = useCallback(async () => {
+        const cartItems = getLocalStorage("cart");
+        if (cartItems && cartItems.length) {
+            _handleSetCartItems(cartItems);
+        }
 
         try {
-            const response = (await axios.post(`${emekaApiEndpoint}/checkout/add-to-cart`,
-                data2db, {
+            const response = (await axios.get(`${apiEndpoint}/checkout/get-cart-items`,
+                {
                     headers: {
                         Authorization: `Bearer ${accessToken}`
                     }
@@ -66,27 +125,85 @@ export function useCart() {
             )).data;
             console.log(response);
 
-            if (response.cart) {
-                _setAdd2cartResponse(response.cart);
-                navigate("/account/checkout");
+            if (response.status) {
+                _handleSetCartItems(response.result);
+                // navigate("/account/checkout");
+                return
             }
 
+            // setApiResponse({
+            //     display: true,
+            //     status: false,
+            //     message: response.message
+            // });
         } catch (error: any) {
-            const err = error.response.data || error;
-            console.log(err);
+            console.log(error);
+            // const err = error.response.data || error;
+            // const fixedErrorMsg = "Oooops, something went wrong";
+
+            // setApiResponse({
+            //     display: true,
+            //     status: false,
+            //     message: err.errors && err.errors.length ? err.errors[0].msg : err.message || fixedErrorMsg
+            // });
+        }
+    }, []);
+
+
+
+    const handleGetPaymentIntent = useCallback(async(amount: number) => {
+        try {
+            const response = (await axios.post(`${apiEndpoint}/checkout/create-payment-intent`,
+                { amount }, {
+                    headers: {
+                        Authorization: `Bearer ${accessToken}`
+                    }
+                }
+            )).data;
+            // console.log(response);
+
+            if (response.status) {
+                _setPaymentKeys({
+                    clientSecret: response.result.clientSecret,
+                    secretKey: response.result.secretKey,
+                    publishableKey: response.result.publishableKey,
+                })
+
+                return;
+            }
+
             setApiResponse({
                 display: true,
                 status: false,
-                message: err.message || "server error"
-            })
+                message: response.message
+            });
+        } catch (error: any) {
+            console.log(error);
+            const err = error.response.data || error;
+            const fixedErrorMsg = "Oooops, something went wrong";
+
+            setApiResponse({
+                display: true,
+                status: false,
+                message: err.errors && err.errors.length ? err.errors[0].msg : err.message || fixedErrorMsg
+            });
         }
     }, []);
+
+    const handleCheckoutBtn = useCallback((cartItems: cartItemInterface[]) => {
+        const totalPrice = cartItems.reduce((accumulator, currentObject) => {
+            return accumulator + currentObject.price;
+        }, 0);
+
+        handleGetPaymentIntent(totalPrice)
+    }, []);
+
 
     const handleApplyPromo = useCallback(async(promoCode: string) => {
         const data2db = {
             email: userData.email,
             code: promoCode,
-            itemId: add2cartResponse.items.map(item => item._id),
+            // itemId: add2cartResponse.items.map(item => item._id),
             // itemId: add2cartResponse.items[0]._id || add2cartResponse._id,
         };
 
@@ -101,7 +218,7 @@ export function useCart() {
             console.log(response);
 
             if (response.cart) {
-                setApplyPromoResponse(response.cart);
+                // setApplyPromoResponse(response.cart);
             }
 
             return {
@@ -119,52 +236,109 @@ export function useCart() {
         }
     }, []);
     
-    const handleCheckout = useCallback(async(promoCode: string) => {
-        const data2db = {
-            email: userData.email,
-            paymentMethodId: promoCode,
+        
+    const handleSuccessfulPayment = async () => {
+        const amount = getQueryParams('amount');
+        const payment_intent = getQueryParams('payment_intent');
+        const payment_intent_client_secret = getQueryParams('payment_intent_client_secret');
+        const redirect_status = getQueryParams('redirect_status');
+
+        const data2submit = {
+            cartItems: cartItems,
+            paidAmount: amount,
+            paymentIntent: payment_intent,
+            paymentIntentClientSecret: payment_intent_client_secret,
+            paymentStatus: redirect_status,
         };
 
+
         try {
-            const response = (await axios.post(`${emekaApiEndpoint}/checkout/checkout`,
-                data2db, {
+            const response = (await axios.post(`${apiEndpoint}/checkout/successful-payment`,
+                data2submit, {
                     headers: {
                         Authorization: `Bearer ${accessToken}`
                     }
                 }
             )).data;
-            console.log(response);
+            // console.log(response);
 
-            if (response.cart) {
-                setApplyPromoResponse(response);
+            if (response.status) {
+                // setApplyPromoResponse(response);
+                _clearCartItems()
+            }
+        } catch (error: any) {
+            console.log(error);
+            const err = error.response.data || error;
+            const fixedErrorMsg = "Oooops, something went wrong";
+
+            _setToastNotification({
+                display: true,
+                status: "error",
+                message: err.errors && err.errors.length ? err.errors[0].msg : err.message || fixedErrorMsg
+            });
+        }
+    }
+        
+
+
+    const handleCheckReleaseCart = useCallback(async(item: cartItemInterface) => {
+        try {
+            const response = (await axios.post(`${apiEndpoint}/checkout/check-release-cart`,
+                item, {
+                    headers: {
+                        Authorization: `Bearer ${accessToken}`
+                    }
+                }
+            )).data;
+            // console.log(response);
+
+            if (response.status) {
+                _handleSetCartItems(response.result);
+                return true
             }
 
-        } catch (error: any) {
-            const err = error.response.data || error;
-            console.log(err);
-
-            setApiResponse({
+            _setToastNotification({
                 display: true,
-                status: false,
-                message: err.message || "server error"
-            })
+                status: "info",
+                message: response.message
+            });
+
+            return false;
+        } catch (error: any) {
+            console.log(error);
+            const err = error.response.data || error;
+            const fixedErrorMsg = "Oooops, something went wrong";
+
+            _setToastNotification({
+                display: true,
+                status: "error",
+                message: err.errors && err.errors.length ? err.errors[0].msg : err.message || fixedErrorMsg
+            });
+
+            return false;
         }
     }, []);
+
     
  
     return {
         cartItems,
         totalAmount,
         handleRemoveCartItem,
-
         handleAddToCart,
+        getCartItems,
 
-        applyPromoResponse,
+        handleCheckoutBtn,
+        handleGetPaymentIntent,
+
+        // applyPromoResponse,
         handleApplyPromo,
 
         apiResponse,
         setApiResponse,
 
-        handleCheckout,
+        handleSuccessfulPayment,
+
+        handleCheckReleaseCart
     }
 }

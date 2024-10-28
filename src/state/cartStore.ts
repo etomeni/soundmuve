@@ -1,46 +1,39 @@
 import { create } from "zustand";
-import { 
-    add2cartResponseInterface, cartItemInterface,
-} from "@/constants/cartInterface";
+import axios from "axios";
+import { useUserStore } from "./userStore";
+import { apiEndpoint } from "@/util/resources";
+import { getLocalStorage, removeLocalStorageItem, setLocalStorage } from "@/util/storage";
+import { cartItemInterface } from "@/typeInterfaces/cartInterface";
 
 
-const add2cartResponse: add2cartResponseInterface = {
-    email: "",
-    items: [],
-    total: 0,
-    _id: "",
-    createdAt: ""
+const defaultPaymentIntent = {
+    clientSecret: '',
+    secretKey: '',
+    publishableKey: ''
 };
 
-type _typeInterface_ = {
-    add2cartResponse: add2cartResponseInterface;
-    cart: cartItemInterface[];
-    
-    _clearCartItems: () => void;
 
-    // updatePlayerAsync: () => Promise<void>;
+type _typeInterface_ = {
+    cart: cartItemInterface[];
+    paymentIntent: typeof defaultPaymentIntent;
+    
+    // _clearCartItems: () => void;
 
     _addToCart: (newCartItem: cartItemInterface) => void;
-    _removeFromCart: (cartItem: cartItemInterface) => void;
-    _editCart: (cartItem: cartItemInterface) => void;
-    _overRideCart: (cartItem: cartItemInterface[]) => void;
+    _handleSetCartItems: (newCartItem: cartItemInterface[]) => void;
+    // _removeFromCart: (cartItem: cartItemInterface) => void;
+    // _editCart: (cartItem: cartItemInterface) => void;
+    // _overRideCart: (cartItem: cartItemInterface[]) => void;
 
-    _setAdd2cartResponse: (data: add2cartResponseInterface) => void;
+    _restoreCartItems: () => void;
+    _clearCartItems: () => void;
+    _setPaymentKeys: (data: typeof defaultPaymentIntent) => void;
+    // updatePlayerAsync: () => Promise<void>;
 };
   
 export const useCartItemStore = create<_typeInterface_>((set) => ({
-    cart: [
-        // {
-        //     artistName: "john",
-        //     artWorkImg: "",
-        //     email: "sundaywht@gmail.com",
-        //     id: "1234567cfghj",
-        //     price: 25,
-        //     releaseType: "Single",
-        //     songTitle: "God is Good"
-        // }
-    ],
-    add2cartResponse: add2cartResponse,
+    cart: [],
+    paymentIntent: defaultPaymentIntent,
 
     _addToCart: (newCartItem) => {
         set((state) => {
@@ -49,7 +42,7 @@ export const useCartItemStore = create<_typeInterface_>((set) => ({
             );
             const result = [...remove_result, newCartItem];
 
-            // setLocalStorage("cart", result);
+            setLocalStorage("cart", result);
 
             return {
                 cart: result,
@@ -58,35 +51,37 @@ export const useCartItemStore = create<_typeInterface_>((set) => ({
         });
     },
 
-    _removeFromCart: (cartItem) => {
-        set((state) => {
-            const result = state.cart.filter((item) => item.release_id !== cartItem.release_id);
-            // setLocalStorage("cart", result);
+    // _removeFromCart: (cartItem) => {
+    //     set((state) => {
+    //         const result = state.cart.filter((item) => item.release_id !== cartItem.release_id);
+    //         // setLocalStorage("cart", result);
 
-            return {
-                cart: result,
-            };
-        });
-    },
+    //         return {
+    //             cart: result,
+    //         };
+    //     });
+    // },
 
-    _editCart: (cartItem) => {
-        set((state) => {
-            const result = state.cart.map((obj) => {
-                if (obj.release_id === cartItem.release_id) {
-                return cartItem;
-                }
-                // If the ID doesn't match, return the original object
-                return obj;
-            });
-            // setLocalStorage("cart", result);
+    // _editCart: (cartItem) => {
+    //     set((state) => {
+    //         const result = state.cart.map((obj) => {
+    //             if (obj.release_id === cartItem.release_id) {
+    //             return cartItem;
+    //             }
+    //             // If the ID doesn't match, return the original object
+    //             return obj;
+    //         });
+    //         // setLocalStorage("cart", result);
 
-            return {
-                cart: result,
-            };
-        });
-    },
+    //         return {
+    //             cart: result,
+    //         };
+    //     });
+    // },
 
-    _overRideCart: (cartItem) => {
+    _handleSetCartItems: (cartItem) => {
+        setLocalStorage("cart", cartItem);
+
         set((_state) => {
             return {
                 cart: cartItem,
@@ -96,22 +91,72 @@ export const useCartItemStore = create<_typeInterface_>((set) => ({
 
     _clearCartItems: () => {
         set((_state) => {
-            // removeLocalStorageItem("cart");
-
+            removeLocalStorageItem("cart");
             return {
                 cart: [],
+                paymentIntent: defaultPaymentIntent
             };
         });
     },
 
 
-    _setAdd2cartResponse: (data) => {
+    // _setAdd2cartResponse: (data) => {
+    //     set((_state) => {
+    //         return {
+    //             add2cartResponse: data,
+    //         };
+    //     });
+    // },
+
+    _restoreCartItems: async () => {
+        const cartItems = getLocalStorage("cart");
+        const accessToken = useUserStore.getState().accessToken;
+
+        try {
+            const response = (await axios.get(`${apiEndpoint}/checkout/get-cart-items`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${accessToken}`
+                    }
+                }
+            )).data;
+            // console.log(response);
+
+            if (response.status) {
+                setLocalStorage("cart", response.result);
+
+                set((_state) => {
+                    return {
+                        cart: response.result,
+                    };
+                });
+                return
+            };
+
+            set((_state) => {
+                return {
+                    cart: cartItems && cartItems.length ? cartItems : [],
+                };
+            });
+        } catch (error: any) {
+            console.log(error);            
+
+            set((_state) => {
+                return {
+                    cart: cartItems && cartItems.length ? cartItems : [],
+                };
+            });
+        }
+
+    },
+
+    _setPaymentKeys: async (data) => {
         set((_state) => {
             return {
-                add2cartResponse: data,
+                paymentIntent: data,
             };
         });
-    },
+    }
     
 }));
   
