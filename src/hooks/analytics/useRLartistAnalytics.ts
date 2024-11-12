@@ -44,7 +44,7 @@ export function useRLartistAnalytics() {
             console.log(response);
     
             if (response.data) {
-                setReportMainDashData({ ...reportMainDashData, ...response.data });
+                // setReportMainDashData({ ...reportMainDashData, ...response.data });
             }
     
         } catch (error: any) {
@@ -85,9 +85,11 @@ export function useRLartistAnalytics() {
                     Authorization: `Bearer ${accessToken}`
                 }
             })).data;
-            // console.log(response);
+            console.log(response);
     
-            setReportMonthlyAnalytics(response);
+            // setReportMonthlyAnalytics(response);
+
+            setReportMonthlyAnalytics([]);
         } catch (error: any) {
             const errorResponse = error.response.data || error;
             console.error(errorResponse);
@@ -112,10 +114,13 @@ export function useRLartistAnalytics() {
                 console.log(response);
         
                 if (reportType == "album") {
-                    setSalesReportAlbumAnalytics(response);
+                    // setSalesReportAlbumAnalytics(response);
                 } else if (reportType == "single") {
-                    setSalesReportSingleAnalytics(response);
+                    // setSalesReportSingleAnalytics(response);
                 }
+
+                setSalesReportAlbumAnalytics([]);
+                setSalesReportSingleAnalytics([]);
             } catch (error: any) {
                 const errorResponse = error.response.data || error;
                 console.error(errorResponse);
@@ -140,11 +145,12 @@ export function useRLartistAnalytics() {
             console.log(response);
     
             if (response.length) {
-                setLocationsAnalytics(response);
+                // setLocationsAnalytics(response);
             } else {
                 setLocationsAnalytics([]);
             }
-    
+
+            setLocationsAnalytics([]);
         } catch (error: any) {
             const errorResponse = error.response.data || error;
             console.error(errorResponse);
@@ -166,7 +172,7 @@ export function useRLartistAnalytics() {
         getSalesReportMonthlyAnalytics,
 
         
-        reportMainDashData,
+        reportMainDashData, setReportMainDashData,
         // getSalesReportMainDashAnalytics,
 
         getNewDataRangeData

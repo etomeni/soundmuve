@@ -10,27 +10,8 @@ import { emekaApiEndpoint } from "@/util/resources";
 import { useUserStore } from "@/state/userStore";
 import { useEffect, useState } from "react";
 
+import promotionalImg from "@/assets/branded/images/promotion.png";
 
-// const adverts = [
-//     {
-//         url: "https://gsssecurity.ng/",
-//         xsImage: "https://placehold.co/369x160?text=Promotional+Ads",
-//         smImage: "https://placehold.co/600x200?text=Promotional+Ads",
-//         mdImage: 'https://placehold.co/890x215?text=Promotional+Ads'
-//     },
-//     {
-//         url: "/account/record-label/add-artist",
-//         xsImage: "https://placehold.co/369x160?text=Promotional+Ads",
-//         smImage: "https://placehold.co/600x200?text=Promotional+Ads",
-//         mdImage: 'https://placehold.co/890x215?text=Promotional+Ads'
-//     },
-//     {
-//         url: "",
-//         xsImage: "https://placehold.co/369x160?text=Promotional+Ads",
-//         smImage: "https://placehold.co/600x200?text=Promotional+Ads",
-//         mdImage: 'https://placehold.co/890x215?text=Promotional+Ads'
-//     }
-// ]
 
 interface advertsInterface {
     _id: string;
@@ -79,8 +60,9 @@ function PromotionalAdsComponent() {
                     Authorization: `Bearer ${accessToken}`
                 }
             })).data;
-            // console.log(response);
-            setAdverts(response.length ? response: []);
+            console.log(response);
+            // setAdverts(response.length ? response: []);
+            setAdverts([]);
         } catch (error: any) {
             const errorResponse = error.response.data || error;
             console.error(errorResponse);
@@ -157,10 +139,28 @@ function PromotionalAdsComponent() {
                             </Swiper>
                         </Stack>
                     )
-                ) : <></>
+                ) : 
+                <Box
+                    sx={{
+                        // height: {xs: "160px", md: '215px'},
+                        // borderRadius: "21px",
+                        overflow: "hidden",
+                        // bgcolor: "#ccc"
+                    }}  
+                >
+                    <img src={promotionalImg} alt='promotional Ads' 
+                        style={{ 
+                            width: "100%",
+                            height: "100%",
+                            // borderRadius: "21px",
+                            objectFit: "contain" // "cover"
+                        }} 
+                    />
+                </Box>
             }
         </Box>
-    )
+    );
+
 }
 
 export default PromotionalAdsComponent

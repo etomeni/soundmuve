@@ -52,6 +52,7 @@ import CartPage from "./pages/account/createReleases/cartCheckout/Cart";
 import CartCheckoutPage from "./pages/account/createReleases/cartCheckout/Checkout";
 import ArtistAnalytics_RL from "./pages/account/recordLabel/ArtistAnalytics_RL";
 import SuccessfulPayment from "./pages/account/createReleases/cartCheckout/SuccessfulPayment";
+import ArtistSongs_RL from "./pages/account/recordLabel/ArtistSongs_RL";
 
 
 export const router = createBrowserRouter([
@@ -275,6 +276,10 @@ export const router = createBrowserRouter([
                 {
                   path: "artist",
                   element: <ArtistList_RL />,
+                },
+                {
+                  path: "artist-songs",
+                  element: <ArtistSongs_RL />,
                 },
                 {
                   path: "artist-analytics",

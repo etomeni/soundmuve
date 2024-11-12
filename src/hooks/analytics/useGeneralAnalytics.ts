@@ -43,7 +43,7 @@ export function useGeneralAnalytics() {
             console.log(response);
     
             if (response.data) {
-                setReportMainDashData({ ...reportMainDashData, ...response.data });
+                // setReportMainDashData({ ...reportMainDashData, ...response.data });
             }
     
         } catch (error: any) {
@@ -81,9 +81,10 @@ export function useGeneralAnalytics() {
                     Authorization: `Bearer ${accessToken}`
                 }
             })).data;
-            // console.log(response);
+            console.log(response);
     
-            setReportMonthlyAnalytics(response);
+            // setReportMonthlyAnalytics(response);
+            setReportMonthlyAnalytics([]);
         } catch (error: any) {
             const errorResponse = error.response.data || error;
             console.error(errorResponse);
@@ -107,9 +108,11 @@ export function useGeneralAnalytics() {
             console.log(response);
     
             if (reportType == "album") {
-                setSalesReportAlbumAnalytics(response);
+                // setSalesReportAlbumAnalytics(response);
+                setSalesReportAlbumAnalytics([]);
             } else if (reportType == "single") {
-                setSalesReportSingleAnalytics(response);
+                // setSalesReportSingleAnalytics(response);
+                setSalesReportSingleAnalytics([]);
             }
         } catch (error: any) {
             const errorResponse = error.response.data || error;
@@ -134,11 +137,12 @@ export function useGeneralAnalytics() {
             console.log(response);
 
             if (response.length) {
-                setLocationsAnalytics(response);
+                // setLocationsAnalytics(response);
+                setLocationsAnalytics([]);
             } else {
                 setLocationsAnalytics([]);
             }
-    
+
         } catch (error: any) {
             const errorResponse = error.response.data || error;
             console.error(errorResponse);
@@ -159,7 +163,7 @@ export function useGeneralAnalytics() {
         reportMonthlyAnalytics,
         getSalesReportMonthlyAnalytics,
 
-        reportMainDashData,
+        reportMainDashData, setReportMainDashData,
         getSalesReportMainDashAnalytics,
 
         getNewDataRangeData

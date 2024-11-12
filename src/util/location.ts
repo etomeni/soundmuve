@@ -33,6 +33,21 @@ export async function getUserLocation() {
         return location;
     } catch (error) {
         console.log(error);
+
+        const response = (await axios.get("https://ipapi.co/json/")).data;
+        if (response.ip) {
+            const location: locationInterface = {
+                ip: response.ip,
+                city: response.city,
+                region: response.region,
+                country: response.country_name,
+                isp: response.org || response.asn,
+                lat: response.latitude,
+                lon: response.longitude,
+                usedIps: [response.query]
+            };
+            return location;            
+        }
     }
 }
 

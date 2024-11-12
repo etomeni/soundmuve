@@ -66,9 +66,10 @@ function BalanceHistory() {
                     Authorization: `Bearer ${accessToken}`
                 }
             })).data;
-            // console.log(response);
+            console.log(response);
 
-            setBalTransactions(response.transactions);
+            // setBalTransactions(response.transactions);
+            setBalTransactions([]);
 
         } catch (error: any) {
             const errorResponse = error.response.data || error;
@@ -86,27 +87,13 @@ function BalanceHistory() {
             })).data;
             console.log(response);
 
-            setBalTransactions(response);
+            // setBalTransactions(response);
+            setBalTransactions([]);
 
         } catch (error: any) {
             const errorResponse = error.response.data;
             console.error(errorResponse);
             setBalTransactions([]);
-
-
-            // setReleases([]);
-
-            // setApiResponse({
-            //     display: true,
-            //     status: false,
-            //     message: errorResponse.message || "Ooops and error occurred!"
-            // });
-
-            // _setToastNotification({
-            //     display: true,
-            //     status: "error",
-            //     message: errorResponse.message || "Ooops and error occurred!"
-            // });
         }
     }
 

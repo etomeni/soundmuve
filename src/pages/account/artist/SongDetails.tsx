@@ -36,8 +36,6 @@ import CopyShareLink from '@/components/release/CopyShareLink';
 import sampleCoverArtWorkImage from '@/assets/images/album.png';
 
 
-
-
 function SongDetails() {
     const navigate = useNavigate();
     const releaseDetails = useReleaseStore((state) => state.releaseDetails);
@@ -68,7 +66,6 @@ function SongDetails() {
         getSportifiyAppleOverview(releaseDetails._id, "single");
         getSportifiyAppleOverview(releaseDetails._id, "single");
     }, []);
-
 
     
     return (
@@ -218,7 +215,6 @@ function SongDetails() {
                             </Stack>
 
                             <Stack direction="row" spacing="10px" mt="20px">
-
                                 <Typography
                                     sx={{
                                         fontWeight: "900",
@@ -326,7 +322,7 @@ function SongDetails() {
                             </Box>
 
                             <Box maxWidth="35%">
-                                <CopyShareLink linkUrl='www.soundmuve.com' />
+                                <CopyShareLink linkUrl={releaseDetails.liveUrl} />
                             </Box>
                         </Stack>
                     </Box>
@@ -524,7 +520,7 @@ function SongDetails() {
                             </Box>
 
                             <Box sx={{ flex: "1 1 40%", maxWidth: "50%" }} >
-                                <CopyShareLink linkUrl='www.soundmuve.com' />
+                                <CopyShareLink linkUrl={releaseDetails.liveUrl} />
                             </Box>
                         </Stack>
 

@@ -11,6 +11,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import LoadingDataComponent from '@/components/LoadingData';
 import { useCartItemStore } from '@/state/cartStore';
 import { submitBtnStyle } from '@/util/mui';
+import { currencyDisplay } from '@/util/resources';
 
 function CheckoutFormPage({ amount }: { amount: number }) {
     const stripe = useStripe();
@@ -137,7 +138,7 @@ function CheckoutFormPage({ amount }: { amount: number }) {
                             lineHeight: "13px",
                             letterSpacing: "-0.13px"
                         }}
-                    >{ `Pay ${amount}` }</Typography>
+                    >{ `Pay ${currencyDisplay(Number(amount))}` }</Typography>
            
                 }
 

@@ -78,10 +78,14 @@ export function useRecordLabelFn() {
         // console.log(artistData);
         
         const params = {
-            recordLabelArtist_id: artistData._id,
+            // recordLabelArtist_id: artistData._id,
+            _id: artistData._id,
+            img: artistData.artistAvatar,
+            name: artistData.artistName,
         };
         navigate({
-            pathname: "/account/record-label/artist-analytics",
+            // pathname: "/account/record-label/artist-analytics",
+            pathname: "/account/record-label/artist-songs",
             search: `?${createSearchParams(params)}`,
         });
         // navigate(options, { replace: true });

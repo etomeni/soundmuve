@@ -1,4 +1,14 @@
-function shareText(text: string) {
+export function copyToClipboard(text: string) {
+    navigator.clipboard.writeText(text)
+    .then(() => {
+        console.log('Text copied to clipboard!');
+    })
+    .catch((error) => {
+        console.error('Error copying text:', error);
+    });
+}
+  
+export function shareText(text: string) {
     if (navigator.share) {
         navigator.share({
             text: text
@@ -10,19 +20,7 @@ function shareText(text: string) {
             console.error('Error sharing text:', error);
         });
     } else {
-        // copyToClipboard(text);
+        copyToClipboard(text);
         console.log('Web Share API is not supported in this browser.');
     }
 }
-  
-
-function copyToClipboard(text: string) {
-    navigator.clipboard.writeText(text)
-    .then(() => {
-        console.log('Text copied to clipboard!');
-    })
-    .catch((error) => {
-        console.error('Error copying text:', error);
-    });
-}
-  

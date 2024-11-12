@@ -2,7 +2,7 @@ import { useCallback, useState } from "react";
 import axios from "axios";
 import { useUserStore } from "@/state/userStore";
 import { emekaApiEndpoint } from "@/util/resources";
-import { getLocalStorage, setLocalStorage } from "@/util/storage";
+import { setLocalStorage } from "@/util/storage";
 import { 
     appleSpotifyRecordInterface, graphApiRespondInterface, 
     spotifyAndAppleOverviewInterface, // totalStreamsAndRevenueRecordInterface 
@@ -12,12 +12,12 @@ import { getMonthDateRange } from "@/util/dateTime";
 
 
 
-function getLocalAppleSpotifyRecord() {
-    const localAppleSpotifyRecord = getLocalStorage("appleSpotifyRecord");
-    if (localAppleSpotifyRecord && localAppleSpotifyRecord._id) {
-        return localAppleSpotifyRecord;
-    }
-}
+// function getLocalAppleSpotifyRecord() {
+//     const localAppleSpotifyRecord = getLocalStorage("appleSpotifyRecord");
+//     if (localAppleSpotifyRecord && localAppleSpotifyRecord._id) {
+//         return localAppleSpotifyRecord;
+//     }
+// }
 
 
 const dataset = [
@@ -101,7 +101,21 @@ export function useSongAnalytics() {
     const [graphApiData, setGraphApiData] = useState<graphApiRespondInterface[]>([]);
 
     const [appleSpotifyRecord, setAppleSpotifyRecord] = 
-    useState<appleSpotifyRecordInterface>(getLocalAppleSpotifyRecord);
+    useState<appleSpotifyRecordInterface>({
+        stream: {
+            apple: 0,
+            spotify: 0
+        },
+        revenue: {
+            apple: 0,
+            spotify: 0
+        },
+        _id: '',
+        email: '',
+        album_name: '',
+        album_sold: 0,
+        created_at: '',
+    });
 
     // const [totalStreamsAndRevenueRecord, setTotalStreamsAndRevenueRecord] = 
     // useState<totalStreamsAndRevenueRecordInterface>(getLocalTotalStreamsAndRevenueRecord);
@@ -118,7 +132,7 @@ export function useSongAnalytics() {
     
             if (response.data._id) {
                 setLocalStorage("appleSpotifyRecord", response.data);
-                setAppleSpotifyRecord(response.data);
+                // setAppleSpotifyRecord(response.data);
             }
     
         } catch (error: any) {
@@ -201,8 +215,8 @@ export function useSongAnalytics() {
                     sportify.push(sportifyData);
                 })
     
-                setSpotifyDataset(sportify);
-                setAppleMusicDataset(apple);
+                // setSpotifyDataset(sportify);
+                // setAppleMusicDataset(apple);
             }
         } catch (error: any) {
             const errorResponse = error.response.data || error;
@@ -226,7 +240,7 @@ export function useSongAnalytics() {
             // console.log(response);
     
             if (response.analytics) {
-                setSpotifyAndAppleOverview(response.analytics)
+                // setSpotifyAndAppleOverview(response.analytics)
             }
         } catch (error: any) {
             const errorResponse = error.response.data || error;
@@ -252,17 +266,17 @@ export function useSongAnalytics() {
     
 
     return {
-        appleSpotifyRecord,
+        appleSpotifyRecord, setAppleSpotifyRecord,
         getAppleSpotifyRecord,
 
         graphApiData,
-        spotifyDataset,
-        appleMusicDataset,
+        spotifyDataset, setSpotifyDataset,
+        appleMusicDataset, setAppleMusicDataset,
         getGraphData,
 
         songDashAnalytics, setSongDashAnalytics,
 
-        spotifyAndAppleOverview,
+        spotifyAndAppleOverview, setSpotifyAndAppleOverview,
         getSportifiyAppleOverview,
 
         // totalStreamsAndRevenueRecord,
