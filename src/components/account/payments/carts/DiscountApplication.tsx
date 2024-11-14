@@ -39,6 +39,7 @@ interface _Props {
 const DiscountApplicationModalComponent: React.FC<_Props> = ({
     cartItems, openModal, closeModal, // confirmBtn
 }) => {
+    const userData = useUserStore((state) => state.userData);
     const accessToken = useUserStore((state) => state.accessToken);
     const [successModalState, setSuccessModalState] = useState(false)
 
@@ -55,8 +56,15 @@ const DiscountApplicationModalComponent: React.FC<_Props> = ({
 
     const onSubmit = async (formData: typeof formSchema.__outputType) => {
         // console.log(formData);
+        setApiResponse({
+            display: false,
+            status: true,
+            message: ""
+        });
+        
         const data2db = {
             cartItems,
+            user_name: userData.firstName + " " + userData.lastName,
             youtubeLink: formData.youtubeLink,
             instagramFacebookLink: formData.instagramFacebookLink,
             xLink: formData.xLink,
@@ -70,7 +78,7 @@ const DiscountApplicationModalComponent: React.FC<_Props> = ({
                     }
                 }
             )).data;
-            console.log(response);
+            // console.log(response);
             // setBanks(response.data);
 
             if (response.status) {

@@ -14,11 +14,13 @@ import { useCart } from '@/hooks/useCart';
 import Stack from '@mui/material/Stack';
 import Alert from '@mui/material/Alert';
 import { useNavigate } from 'react-router-dom';
+import { useCartItemStore } from '@/state/cartStore';
 
 
 function CartPage() {
     const navigate = useNavigate();
     const [openDiscountFormModal, setOpenDiscountFormModal] = useState(false);
+    const couponDiscount = useCartItemStore((state) => state.couponDiscount);
 
     const { 
         cartItems, totalAmount, handleRemoveCartItem,
@@ -46,6 +48,7 @@ function CartPage() {
                         cartItems={cartItems}
                         removeItemFn={handleRemoveCartItem}
                         totalPrice={totalAmount}
+                        discount={couponDiscount}
                     />
                 </Box>
 

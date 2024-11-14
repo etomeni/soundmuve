@@ -19,7 +19,9 @@ function SuccessfulPayment() {
     const { handleSuccessfulPayment } = useCart();
 
     useEffect(() => {
-        handleSuccessfulPayment()
+        setTimeout(() => {
+            handleSuccessfulPayment();
+        }, 1000); // 1 second delay to get the cart items ready
     }, [])
     
     

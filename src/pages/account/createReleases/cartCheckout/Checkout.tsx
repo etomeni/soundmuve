@@ -20,6 +20,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import { useCart } from '@/hooks/useCart';
 import Alert from '@mui/material/Alert';
 import StripePayment from './StripePayment';
+import { useCartItemStore } from '@/state/cartStore';
 
 
 const formSchema = yup.object({
@@ -29,7 +30,8 @@ const formSchema = yup.object({
 function CartCheckoutPage() {
     const [openDiscountFormModal, setOpenDiscountFormModal] = useState(false);
     const [openStripeModal, setOpenStripeModal] = useState(false);
-
+    const couponDiscount = useCartItemStore((state) => state.couponDiscount);
+    
     const { 
         cartItems, totalAmount, handleRemoveCartItem,
         handleApplyPromo, // applyPromoResponse
@@ -46,7 +48,7 @@ function CartCheckoutPage() {
     const onSubmit = async (formData: typeof formSchema.__outputType) => {
         // console.log(formData);
 
-        const response = await handleApplyPromo(formData.promoCode);
+        const response = await handleApplyPromo(formData.promoCode, cartItems);
 
         if (!response.status) {
             setError(
@@ -159,6 +161,7 @@ function CartCheckoutPage() {
                         cartItems={cartItems}
                         removeItemFn={handleRemoveCartItem}
                         totalPrice={totalAmount}
+                        discount={couponDiscount}
                     />
                 </Box>
 
@@ -235,6 +238,7 @@ function CartCheckoutPage() {
                 closeModal={() => setOpenStripeModal(false)}
                 openModal={openStripeModal} 
                 cartItems={cartItems}
+                discount={couponDiscount}
             />
 
         </AccountWrapper>

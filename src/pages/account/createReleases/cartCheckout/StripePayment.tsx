@@ -7,7 +7,7 @@ import { loadStripe } from '@stripe/stripe-js';
 import { convertToSubCurrency } from '@/util/resources';
 import CheckoutFormPage from './CheckoutFormPage';
 import ModalWrapper from '@/components/account/ModalWrapper';
-import { cartItemInterface } from '@/typeInterfaces/cartInterface';
+import { cartItemInterface, couponInterface } from '@/typeInterfaces/cartInterface';
 import { useCart } from '@/hooks/useCart';
 
 // Make sure to call `loadStripe` outside of a component’s render to avoid
@@ -17,6 +17,7 @@ const stripePromise = loadStripe('pk_test_51Q44BMFHz9inXqLwQhDWvdMJFrWWpiGyRxlus
 
 interface _Props {
     cartItems: cartItemInterface[],
+    discount: couponInterface,
     openModal: boolean,
     closeModal: () => void;
     // confirmBtn: (data: any) => void;
@@ -34,17 +35,24 @@ function getTotalAmount(cartItems: cartItemInterface[]) {
 }
 
 const StripePayment: React.FC<_Props> = ({
-    cartItems, openModal, closeModal, // confirmBtn
+    cartItems, discount, openModal, closeModal, // confirmBtn
 }) => {
-    const [amount, setamount] = useState(getTotalAmount(cartItems));
-    const { handleCheckoutBtn } = useCart();
+    const [amount, setamount] = useState(discount.payableAmount || getTotalAmount(cartItems));
+    const { handleGetPaymentIntent } = useCart();
 
 
     useEffect(() => {
-        setamount(getTotalAmount(cartItems));
+        if (discount._id) {
+            setamount(discount.payableAmount || 0);
+        } else {
+            setamount(getTotalAmount(cartItems));
+        }
 
-        handleCheckoutBtn(cartItems);
-    }, [cartItems]);
+        // setamount(getTotalAmount(cartItems));
+        setTimeout(() => {
+            handleGetPaymentIntent(amount);
+        }, 500);
+    }, [cartItems, discount]);
 
       
     return (

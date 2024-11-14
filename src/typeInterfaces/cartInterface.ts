@@ -11,29 +11,25 @@ export interface cartItemInterface {
 }
 
 
+export interface couponInterface {
+    _id: string,
+    cartItems: cartItemInterface[],
+    user_id: string,
+    user_name: string,
+    user_email: string,
 
-// interface responseCartItemInterface {
-//     type: string,
-//     name: string,
-//     price: number,
-//     _id: string
-// }
+    youtubeLink: string,
+    instagramFacebookLink: string,
+    xLink: string,
+    code?: string,
+    discount?: number,
+    discountedAmount?: number,
+    payableAmount?: number,
 
-// export interface add2cartResponseInterface {
-//     email: string,
-//     items: responseCartItemInterface[],
-//     total: number,
-//     _id: string,
-//     createdAt: string,
-// }
+    status: "Pending" | "Rejected" | "Approved" | "Used",
 
-// export interface applyPromoResponseInterface {
-//     cart: {
-//         _id: string,
-//         email: string,
-//         items: responseCartItemInterface[],
-//         total: number,
-//         createdAt: string,
-//     },
-//     originalPrice: number
-// }
+    usedDate?: string;
+
+    createdAt?: string;
+    updatedAt?: string;
+}

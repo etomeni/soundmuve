@@ -3,7 +3,8 @@ import { useCallback, useEffect, useState } from "react";
 import axios from "axios";
 
 import { useCartItemStore } from "@/state/cartStore";
-import { emekaApiEndpoint, getQueryParams, apiEndpoint } from "@/util/resources";
+import { getQueryParams, apiEndpoint } from "@/util/resources";
+// import { localApiEndpoint } from "@/util/resources";
 import { useUserStore } from "@/state/userStore";
 import { cartItemInterface } from "@/typeInterfaces/cartInterface";
 import { getLocalStorage } from "@/util/storage";
@@ -16,8 +17,11 @@ export function useCart() {
     const _setPaymentKeys = useCartItemStore((state) => state._setPaymentKeys);
     const _handleSetCartItems = useCartItemStore((state) => state._handleSetCartItems);
     const _clearCartItems = useCartItemStore((state) => state._clearCartItems);
+
+    const _setCouponDiscount = useCartItemStore((state) => state._setCouponDiscount);
+    const _clearCouponDiscount = useCartItemStore((state) => state._clearCouponDiscount);
     const [totalAmount, setTotalAmount] = useState<number>(0);
-    const userData = useUserStore((state) => state.userData); 
+    // const userData = useUserStore((state) => state.userData); 
     const accessToken = useUserStore((state) => state.accessToken);
     const _setToastNotification = useSettingStore((state) => state._setToastNotification);
 
@@ -26,8 +30,6 @@ export function useCart() {
         status: true,
         message: ""
     });
-
-    // const [applyPromoResponse, setApplyPromoResponse] = useState<applyPromoResponseInterface>();
 
 
     useEffect(() => {
@@ -150,7 +152,6 @@ export function useCart() {
     }, []);
 
 
-
     const handleGetPaymentIntent = useCallback(async(amount: number) => {
         try {
             const response = (await axios.post(`${apiEndpoint}/checkout/create-payment-intent`,
@@ -190,35 +191,32 @@ export function useCart() {
         }
     }, []);
 
-    const handleCheckoutBtn = useCallback((cartItems: cartItemInterface[]) => {
-        const totalPrice = cartItems.reduce((accumulator, currentObject) => {
-            return accumulator + currentObject.price;
-        }, 0);
 
-        handleGetPaymentIntent(totalPrice)
-    }, []);
-
-
-    const handleApplyPromo = useCallback(async(promoCode: string) => {
+    const handleApplyPromo = useCallback(async(promoCode: string, cartItems: cartItemInterface[]) => {
         const data2db = {
-            email: userData.email,
-            code: promoCode,
-            // itemId: add2cartResponse.items.map(item => item._id),
-            // itemId: add2cartResponse.items[0]._id || add2cartResponse._id,
+            cartItems,
+            promoCode: promoCode,
         };
 
         try {
-            const response = (await axios.post(`${emekaApiEndpoint}/checkout/apply-promo`,
+            const response = (await axios.post(`${apiEndpoint}/checkout/apply-promo-code`,
                 data2db, {
                     headers: {
                         Authorization: `Bearer ${accessToken}`
                     }
                 }
             )).data;
-            console.log(response);
+            // console.log(response);
 
-            if (response.cart) {
-                // setApplyPromoResponse(response.cart);
+            if (response.status) {
+                _setCouponDiscount(response.result);
+                setTotalAmount(response.result.payableAmount);
+
+                _setToastNotification({
+                    display: true,
+                    status: "success",
+                    message: response.message
+                });
             }
 
             return {
@@ -226,12 +224,22 @@ export function useCart() {
                 result: response
             };
         } catch (error: any) {
+            // console.log(error);
             const err = error.response.data || error;
+            const fixedErrorMsg = "Oooops, something went wrong";
             console.log(err);
+
+            const errorMessage = err.errors && err.errors.length ? err.errors[0].msg : err.message || fixedErrorMsg;
+
+            _setToastNotification({
+                display: true,
+                status: "error",
+                message: errorMessage
+            });
 
             return {
                 status: false,
-                result: err
+                result: { ...err, message: errorMessage }
             };
         }
     }, []);
@@ -260,11 +268,12 @@ export function useCart() {
                     }
                 }
             )).data;
-            // console.log(response);
+            console.log(response);
 
             if (response.status) {
                 // setApplyPromoResponse(response);
-                _clearCartItems()
+                _clearCartItems();
+                _clearCouponDiscount();
             }
         } catch (error: any) {
             console.log(error);
@@ -328,7 +337,6 @@ export function useCart() {
         handleAddToCart,
         getCartItems,
 
-        handleCheckoutBtn,
         handleGetPaymentIntent,
 
         // applyPromoResponse,

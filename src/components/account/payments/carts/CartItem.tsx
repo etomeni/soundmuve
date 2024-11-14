@@ -1,24 +1,25 @@
 import React from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
-import { Stack } from '@mui/material';
+import { Divider, Stack } from '@mui/material';
 import Grid from '@mui/material/Grid';
 
 import colors from '@/constants/colors';
 import { numberOfLinesTypographyStyle } from '@/util/mui';
 import { currencyDisplay } from '@/util/resources';
-import { cartItemInterface } from '@/typeInterfaces/cartInterface';
+import { cartItemInterface, couponInterface } from '@/typeInterfaces/cartInterface';
 
 
 interface _Props {
     // children: React.ReactNode,
     cartItems: cartItemInterface[],
+    discount: couponInterface,
     totalPrice: number,
     removeItemFn: (item: cartItemInterface) => void,
 }
 
 const CartItemComponent: React.FC<_Props> = ({
-    cartItems, totalPrice, removeItemFn
+    cartItems, discount, totalPrice, removeItemFn
 }) => {
 
     return (
@@ -157,6 +158,47 @@ const CartItemComponent: React.FC<_Props> = ({
                                             color: colors.dark,
                                         }}
                                     >{ currencyDisplay(totalPrice) }</Typography>
+
+                                    {
+                                        discount._id ? (
+                                            <>
+                                                <Typography variant='body1'
+                                                    sx={{
+                                                        fontWeight: "700",
+                                                        fontSize: "20px",
+                                                        lineHeight: "40px",
+                                                        letterSpacing: "-0.13px",
+                                                        color: colors.dark,
+                                                    }}
+                                                > - { currencyDisplay(discount.discountedAmount || 0) }</Typography>
+            
+                                                <Divider />
+                                                
+                                                <Typography variant='body1'
+                                                    sx={{
+                                                        fontWeight: "700",
+                                                        fontSize: "24px",
+                                                        lineHeight: "40px",
+                                                        letterSpacing: "-0.13px",
+                                                        color: colors.dark,
+                                                    }}
+                                                >{ currencyDisplay(discount.payableAmount || 0) }</Typography>
+                                                
+                                                <Typography variant='subtitle2' component="small"
+                                                    sx={{
+                                                        fontWeight: "300",
+                                                        fontSize: "12px",
+                                                        // lineHeight: "40px",
+                                                        // letterSpacing: "-0.13px",
+                                                        color: colors.dark,
+                                                        textAlign: "right",
+                                                        float: "right"
+                                                    }}
+                                                >{ discount.discount || 0 }% discount applied</Typography>
+                                            </>
+                                        ) : <></>
+                                    }
+
                                 </Box>
                             </Grid>
                         </Grid>
@@ -285,6 +327,46 @@ const CartItemComponent: React.FC<_Props> = ({
                                             mt: "10px",
                                         }}
                                     >{ currencyDisplay(totalPrice) }</Typography>
+
+                                    {
+                                        discount._id ? (
+                                            <>
+                                                <Typography variant='body1'
+                                                    sx={{
+                                                        fontWeight: "700",
+                                                        fontSize: "16px",
+                                                        lineHeight: "20px",
+                                                        letterSpacing: "-0.06px",
+                                                        color: colors.dark,
+                                                    }}
+                                                > - { currencyDisplay(discount.discountedAmount || 0) }</Typography>
+            
+                                                <Divider sx={{my: 0.5}} />
+                                                
+                                                <Typography variant='body1'
+                                                    sx={{
+                                                        fontWeight: "700",
+                                                        fontSize: "20px",
+                                                        lineHeight: "20px",
+                                                        letterSpacing: "-0.06px",
+                                                        color: colors.dark,
+                                                    }}
+                                                >{ currencyDisplay(discount.payableAmount || 0) }</Typography>
+                                                
+                                                <Typography variant='subtitle2' component="small"
+                                                    sx={{
+                                                        fontWeight: "300",
+                                                        fontSize: "12px",
+                                                        // lineHeight: "40px",
+                                                        // letterSpacing: "-0.13px",
+                                                        color: colors.dark,
+                                                        textAlign: "right",
+                                                        float: "right"
+                                                    }}
+                                                >{ discount.discount || 0 }% discount applied</Typography>
+                                            </>
+                                        ) : <></>
+                                    }
 
                                 </Box>
                             </Grid>

@@ -3,7 +3,7 @@ import axios from "axios";
 import { useUserStore } from "./userStore";
 import { apiEndpoint } from "@/util/resources";
 import { getLocalStorage, removeLocalStorageItem, setLocalStorage } from "@/util/storage";
-import { cartItemInterface } from "@/typeInterfaces/cartInterface";
+import { cartItemInterface, couponInterface } from "@/typeInterfaces/cartInterface";
 
 
 const defaultPaymentIntent = {
@@ -12,9 +12,22 @@ const defaultPaymentIntent = {
     publishableKey: ''
 };
 
+const defaultCouponDiscount: couponInterface = {
+    _id: "",
+    cartItems: [],
+    user_id: "",
+    user_name: "",
+    user_email: "",
+    youtubeLink: "",
+    instagramFacebookLink: "",
+    xLink: "",
+    status: "Pending"
+};
+
 
 type _typeInterface_ = {
     cart: cartItemInterface[];
+    couponDiscount: couponInterface;
     paymentIntent: typeof defaultPaymentIntent;
     
     // _clearCartItems: () => void;
@@ -28,12 +41,16 @@ type _typeInterface_ = {
     _restoreCartItems: () => void;
     _clearCartItems: () => void;
     _setPaymentKeys: (data: typeof defaultPaymentIntent) => void;
+
+    _setCouponDiscount: (data: couponInterface) => void;
+    _clearCouponDiscount: () => void;
     // updatePlayerAsync: () => Promise<void>;
 };
   
 export const useCartItemStore = create<_typeInterface_>((set) => ({
     cart: [],
     paymentIntent: defaultPaymentIntent,
+    couponDiscount: defaultCouponDiscount,
 
     _addToCart: (newCartItem) => {
         set((state) => {
@@ -113,6 +130,12 @@ export const useCartItemStore = create<_typeInterface_>((set) => ({
         const accessToken = useUserStore.getState().accessToken;
 
         try {
+            set((_state) => {
+                return {
+                    cart: cartItems && cartItems.length ? cartItems : [],
+                };
+            });
+
             const response = (await axios.get(`${apiEndpoint}/checkout/get-cart-items`,
                 {
                     headers: {
@@ -120,7 +143,6 @@ export const useCartItemStore = create<_typeInterface_>((set) => ({
                     }
                 }
             )).data;
-            // console.log(response);
 
             if (response.status) {
                 setLocalStorage("cart", response.result);
@@ -132,12 +154,7 @@ export const useCartItemStore = create<_typeInterface_>((set) => ({
                 });
                 return
             };
-
-            set((_state) => {
-                return {
-                    cart: cartItems && cartItems.length ? cartItems : [],
-                };
-            });
+            
         } catch (error: any) {
             console.log(error);            
 
@@ -156,7 +173,26 @@ export const useCartItemStore = create<_typeInterface_>((set) => ({
                 paymentIntent: data,
             };
         });
-    }
+    },
+
+
+
+    _setCouponDiscount: async (data) => {
+        set((_state) => {
+            return {
+                couponDiscount: data,
+            };
+        });
+    },
+
+    _clearCouponDiscount: () => {
+        set((_state) => {
+            return {
+                couponDiscount: defaultCouponDiscount
+            };
+        });
+    },
+
     
 }));
   

@@ -29,6 +29,12 @@ function CheckoutFormPage({ amount }: { amount: number }) {
     const handleClickedPay = async () => {
         setIsLoading(true);
 
+        setApiResponse({
+            display: false,
+            status: true,
+            message: ""
+        });
+
         if (!stripe || !elements) {
             // Stripe.js hasn't yet loaded.
             // Make sure to disable form submission until Stripe.js has loaded.
