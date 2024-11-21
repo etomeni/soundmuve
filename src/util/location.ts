@@ -48,6 +48,8 @@ export async function getUserLocation() {
             };
             return location;            
         }
+
+        return defaultUserLocation
     }
 }
 

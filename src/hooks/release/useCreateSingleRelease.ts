@@ -714,7 +714,7 @@ export function useCreateSingleRelease() {
             );
         }
 
-        if (singleRelease.mainArtist.spotifyProfile.name) {
+        if (singleRelease.mainArtist && singleRelease.mainArtist.spotifyProfile && singleRelease.mainArtist.spotifyProfile.name) {
             setSelectedSpotifyArtist(singleRelease.mainArtist.spotifyProfile);
             singleRelease1Form.setValue(
                 "spotifyArtistProfile", 
