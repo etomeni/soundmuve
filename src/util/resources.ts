@@ -6,6 +6,8 @@ export const apiEndpoint = `${Etom_Sunday_backendUrl}/api/v1`;
 export const localApiEndpoint = "http://localhost:3000/api/v1";
 
 
+export const passwordRegex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[~!@#$^&*()_\-+={}[\]\\|"'`;<>,.?/]).{6,}$/;
+
 
 export function validateEmail(email: string) {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Comprehensive email validation regex
