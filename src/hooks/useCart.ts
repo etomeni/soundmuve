@@ -4,7 +4,6 @@ import axios from "axios";
 
 import { useCartItemStore } from "@/state/cartStore";
 import { getQueryParams, apiEndpoint } from "@/util/resources";
-// import { localApiEndpoint } from "@/util/resources";
 import { useUserStore } from "@/state/userStore";
 import { cartItemInterface } from "@/typeInterfaces/cartInterface";
 import { getLocalStorage } from "@/util/storage";

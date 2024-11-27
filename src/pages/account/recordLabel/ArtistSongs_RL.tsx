@@ -19,6 +19,11 @@ import { currencyDisplay, formatedNumber, getQueryParams } from '@/util/resource
 import Button from '@mui/material/Button';
 import CircularProgress from '@mui/material/CircularProgress';
 
+import artistCoverImg from "@/assets/branded/images/artistCoverImg.png";
+import artistCoverImgLogo from "@/assets/branded/images/artistCoverImgLogo.png";
+import soundmuveLogo from "@/assets/branded/icon.png";
+import Avatar from '@mui/material/Avatar';
+
 
 function ArtistSongs_RL() {
     const navigate = useNavigate();
@@ -86,44 +91,85 @@ function ArtistSongs_RL() {
 
                 <Box
                     sx={{
-                        height: {xs: "250px", md: "350px"},
-                        // maxHeight: "495px",
-                        // minHeight: "200px",
-                        borderRadius: "8px",
-                        backgroundColor: colors.secondary,
-                        background: `url(${ profileImg }) lightgray 50% / cover no-repeat`,
-                        // background: `url(${recordLabelArtist[0].artistAvatar})`,
-                        // backgroundSize: "cover",
-                        // backgroundRepeat: "no-repeat",
-                        // boxShadow: "inset 0 0 0 2000px rgba(0, 0, 0, 0.3)"
-                        display: "flex",
-                        flexDirection: "column",
-                        padding: "20px"
-                        
+                        // height: {xs: "250px", md: "350px"},
+                        borderRadius: "11px",
+                        backgroundColor: colors.primary,
+                        position: "relative",
+                        // overflow: "hidden",
+                        mb: 10
                     }}
                 >
-
-                    {/* <Box
+                    <Box
                         sx={{
-                            borderRadius: "17px",
-                            background: "#FFF",
-                            padding: {xs: "10px 15px", md: "15px 20px"},
-                            marginTop: "auto",
-                            width: "fit-content"
+                            position: "relative",
+                            height: {xs: "250px", md: "350px"},
+                            overflow: "hidden",
+
+                            backgroundSize: 'cover',
+                            backgroundRepeat: "no-repeat",
+                            backgroundPosition: 'center',
+
+                            backgroundImage: `url(${artistCoverImg})`,
+                            mixBlendMode: "overlay",
                         }}
                     >
-                        <Typography
-                            sx={{
-                                color: "#272727",
-                                textAlign: "center",
-                                fontSize: {xs: "15px", md: "24px"},
-                                fontWeight: "900",
-                                lineHeight: "24px"
-                            }}
-                        >Add new music</Typography>
-                    </Box> */}
+                        <Box sx={{
+                            mixBlendMode: "overlay",
+                            position: "absolute",
+                            width: "100%",
+                            bottom: "-5px",
+                            display: {xs: "none", md: "initial"}
+                        }}>
+                            <img src={artistCoverImgLogo} alt='soundMuve logo' 
+                                style={{
+                                    width: "100%",
+                                    // height: "50%",
+                                    objectFit: 'cover',
+                                }}
+                            />
+                        </Box>
 
+                        <Box sx={{
+                            mixBlendMode: "overlay",
+                            position: "absolute",
+                            width: "100%",
+                            bottom: "-20px",
+                            display: {xs: "initial", md: "none"}
+                        }}>
+                            <img src={soundmuveLogo} alt='soundMuve logo' 
+                                style={{
+                                    width: "100%",
+                                    // height: "50%",
+                                    objectFit: 'cover',
+                                }}
+                            />
+                        </Box>
+                    </Box>
+
+                    <Box
+                        sx={{
+                            position: "absolute",
+                            zIndex: 9,
+                            bottom: {xs: -35, md: -45, lg: -60},
+                            left: "5%",
+                        }}
+                    >
+                        <Avatar 
+                            alt={artistName}
+                            src={profileImg}
+                            sx={{ 
+                                bgcolor: '#fff',
+                                border: "2px solid #fff",
+                                width: {xs: 100, md: 140, lg: 240},
+                                height: {xs: 100, md: 140, lg: 240} 
+                            }}
+
+                        />
+                    </Box>
                 </Box>
+
+
+
 
                 <Stack direction="row" alignItems="center" 
                     justifyContent="space-around" flexWrap="wrap"

@@ -38,7 +38,7 @@ import NewReleaseModalComponent from './account/NewReleaseModal';
 import { useUserStore } from '@/state/userStore';
 import { stringAvatar, stringToColor } from '@/util/resources';
 import ListItemIcon from '@mui/material/ListItemIcon';
-import LanguageTranslate from './LanguageTranslate';
+// import LanguageTranslate from './LanguageTranslate';
 import { contentWidth } from '@/util/mui';
 import colors from '@/constants/colors';
 import PaymentModalWrapper from './account/payments/PaymentWrapper';
@@ -223,13 +223,13 @@ export default function AccountHeaderComponent({headerSpacing = false} : _Props)
                         )
                     }
 
-                    <ListItem disablePadding sx={{color: colors.dark}}>
+                    {/* <ListItem disablePadding sx={{color: colors.dark}}>
                         <ListItemButton>
                             <ListItemText 
                                 primary={<LanguageTranslate />}
                             />
                         </ListItemButton>
-                    </ListItem>
+                    </ListItem> */}
                 </List>
             </Box>
 
@@ -449,11 +449,11 @@ export default function AccountHeaderComponent({headerSpacing = false} : _Props)
                                 </Typography>
                             </Box>
 
-                            <Box sx={{ display: { xs: 'none', sm: 'block' }, alignSelf: "center" }}>
+                            {/* <Box sx={{ display: { xs: 'none', sm: 'block' }, alignSelf: "center" }}>
                                 <Box sx={{display: "flex", flexDirection: "row", gap: 0, color: "#FFF"}}>
                                     <LanguageTranslate />
                                 </Box>
-                            </Box>
+                            </Box> */}
 
                             <Box sx={{ display: { xs: 'none', sm: 'block' }, alignSelf: "center" }}>
                                 <ClickAwayListener onClickAway={() => setOpenAccountProfile(false)}>

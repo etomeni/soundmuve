@@ -1,3 +1,37 @@
+# Production Deployment Steps
+To push a production deployment release of this app, its important you follow this steps.
+
+This three files are required `.env`, `.env.production`, `.env.staging`.
+1. `.env` - This holds environment variables for local development.
+2. `.env.staging` - This holds environment variables for staging deployment.
+3. `.env.production` - This holds environment variables for production deployment
+
+This values are required in `.env`, `.env.production` & `.env.staging` file to run this application.
+
+```bash
+VITE_STRIPE_PUBLISHABLE_KEY
+VITE_API_BASE_URL
+```
+
+### use this command to start or build the application
+
+local development use to start the app.
+```bash
+npm run dev
+```
+
+staging deployment use to build the app for testing.
+```bash
+npm run build:test
+```
+
+production deployment use to build the app for production.
+```bash
+npm run build
+```
+
+
+
 # React + TypeScript + Vite
 
 

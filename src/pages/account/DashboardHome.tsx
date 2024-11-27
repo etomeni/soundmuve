@@ -21,7 +21,7 @@ function DashboardHome() {
             navigate("/account/record-label", {replace: true});
             return;
         }
-    }
+    }    
 
     
     useEffect(() => {

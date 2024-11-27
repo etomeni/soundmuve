@@ -17,7 +17,7 @@ import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
 import CloseIcon from '@mui/icons-material/Close';
 
-import LanguageTranslate from './LanguageTranslate';
+// import LanguageTranslate from './LanguageTranslate';
 import { contentWidth } from '../util/mui';
 import logo from "@/assets/branded/logo.png";
 import icon from "@/assets/branded/icon.png";
@@ -115,7 +115,7 @@ export default function HeaderComponent() {
                 </List>
             </Box>
 
-            <Box sx={{mt: "20px"}}>
+            {/* <Box sx={{mt: "20px"}}>
                 <Box 
                     sx={{
                         display: "flex", flexDirection: "row", gap: 0, 
@@ -128,7 +128,7 @@ export default function HeaderComponent() {
                 >
                     <LanguageTranslate />
                 </Box>
-            </Box>
+            </Box> */}
 
             <Box mt="70px">
                 { 
@@ -250,13 +250,11 @@ export default function HeaderComponent() {
                         <Box>
                             <Box sx={{ display: { xs: 'none', md: 'block' } }}>
                                 <Stack spacing={2} direction="row" alignItems="center">
-                                    <Box sx={{ alignSelf: "center" }}>
+                                    {/* <Box sx={{ alignSelf: "center" }}>
                                         <Box sx={{display: "flex", flexDirection: "row", gap: 0, color: "#FFF"}}>
                                             <LanguageTranslate />
                                         </Box>
-                                    </Box>
-
-
+                                    </Box> */}
 
 
                                     { isLoggedIn ? (
