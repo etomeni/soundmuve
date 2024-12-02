@@ -30,6 +30,8 @@ import HomeIcon from '@mui/icons-material/Home';
 import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
 // import AssessmentOutlinedIcon from '@mui/icons-material/AssessmentOutlined';
 import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
+import AccountBalanceOutlinedIcon from '@mui/icons-material/AccountBalanceOutlined';
+import PersonIcon from '@mui/icons-material/Person';
 
 import SoundMuve from "@/assets/branded/logo.png";
 import icon from "@/assets/branded/icon.png";
@@ -43,6 +45,7 @@ import { contentWidth } from '@/util/mui';
 import colors from '@/constants/colors';
 import PaymentModalWrapper from './account/payments/PaymentWrapper';
 import ContactUsComponent from './ContactUsComponent';
+import PaymentzComponent from './account/payments/PaymentzComponent';
 
 
 interface _Props {
@@ -63,6 +66,9 @@ export default function AccountHeaderComponent({headerSpacing = false} : _Props)
     // const isLoggedIn = useUserStore((state) => state.isLoggedIn);
     const [openAccountProfile, setOpenAccountProfile] = useState(false);
 
+    const [withdrawlModal, setWithdrawlModal] = useState(false);
+    const [openPayoutModal, setOpenPayoutModal] = useState(false);
+
     const [contactUsModal, setContactUs] = useState(false);
     const [openReleaseModal, setOpenReleaseModal] = useState(false);
     // const closeReleaseModal = () => { setOpenReleaseModal(false) }
@@ -77,19 +83,31 @@ export default function AccountHeaderComponent({headerSpacing = false} : _Props)
             title: "Home",
             link: "/account/record-label",
             icon: HomeIcon,
-            active: pathname.startsWith('/account/record-label'),
+            active: pathname.endsWith('/account/record-label') || pathname.endsWith('/account/record-label/'),
         },
         {
             title: "Sales report",
-            link: "/account",
+            link: "/account/record-label/sales-report",
             icon: ReceiptLongIcon,
             active: pathname.includes('/sales-report'),
         },
         {
             title: "Balance history",
-            link: "/contact",
+            link: "/account/record-label/balance-history",
             icon: AccountBalanceWalletIcon,
             active: pathname.includes('/balance-history'),
+        },
+        {
+            title: "Withdraw",
+            link: "#",
+            icon: AccountBalanceOutlinedIcon,
+            active: withdrawlModal,
+        },
+        {
+            title: "Add Artist",
+            link: "/account/record-label/add-artist",
+            icon: PersonIcon,
+            active: pathname.includes('/add-artist'),
         },
         // {
         //     title: "Reach",
@@ -137,6 +155,8 @@ export default function AccountHeaderComponent({headerSpacing = false} : _Props)
     const handleContactUsDisplay = (title: string) => {
         if (title == "Contact") {
             setContactUs(true);
+        } else if (title == "Withdraw") {
+            setWithdrawlModal(true);
         }
     }
 
@@ -531,6 +551,11 @@ export default function AccountHeaderComponent({headerSpacing = false} : _Props)
                 closeReleaseModal={() => setOpenReleaseModal(false)}
             />
 
+
+            <PaymentzComponent 
+                withdrawlModal={withdrawlModal} setWithdrawlModal={setWithdrawlModal} 
+                openPayoutModal={openPayoutModal} setOpenPayoutModal={setOpenPayoutModal}
+            />
             
             {/* Contact Us modal */}
             <PaymentModalWrapper title=''
