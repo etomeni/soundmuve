@@ -1368,7 +1368,7 @@ function CreateAlbumReleaseSongUpload() {
                 type="file" 
                 id='songAudioUpload' 
                 name="songAudioUpload" 
-                accept='audio/*' 
+                accept='.mp3, .wav' 
                 onChange={handleAudioFileUpload}
                 style={{display: "none"}}
             />

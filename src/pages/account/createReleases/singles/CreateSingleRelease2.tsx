@@ -1379,7 +1379,8 @@ function CreateSingleRelease2() {
                 type="file" 
                 id='songAudioUpload' 
                 name="songAudioUpload" 
-                accept='audio/*' 
+                // accept='audio/*'
+                accept='.mp3, .wav' 
                 onChange={handleAudioFileUpload}
                 style={{display: "none"}}
             />
