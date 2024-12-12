@@ -76,7 +76,6 @@ export const useReleaseStore = create<_typeInterface_>((set) => ({
     songDetails: defaultSongData,
   
     _setSongDetails: (details) => {
-        // setLocalStorage("user", user);
 
         set((_state) => {
             return {
@@ -86,7 +85,6 @@ export const useReleaseStore = create<_typeInterface_>((set) => ({
     },
   
     _setReleaseDetails: (details) => {
-        // setLocalStorage("user", user);
 
         set((_state) => {
             return {

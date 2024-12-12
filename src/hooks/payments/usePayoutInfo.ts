@@ -2,7 +2,6 @@ import { useCallback, useState } from "react";
 import axios from "axios";
 import { useUserStore } from "@/state/userStore";
 import { apiEndpoint } from "@/util/resources";
-// import { getLocalStorage, setLocalStorage } from "@/util/storage";
 import { payoutDetailsInterface, savePayoutDetailsInterface } from "@/typeInterfaces/payout.interface";
 import { supportCurrencies } from "@/util/currencies";
 import { allNgBanks } from "@/util/banks";
@@ -42,7 +41,6 @@ export function usePayoutData() {
             })).data;
             
             if (response.status) {
-                // setLocalStorage("payoutDetails", response.result);
                 setPaymentDetails(response.result);
 
                 if (response.result.length == 1) {

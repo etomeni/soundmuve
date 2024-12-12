@@ -70,12 +70,7 @@ export const useCreateReleaseStore = create<_typeInterface_>((set) => ({
     singleRelease: defaultReleaseData,
     albumRelease: defaultReleaseData,
 
-
-    // albumReleaseSongUpload: [],
-  
     _handleSetSingleRelease1: (release: singleRelease1Interface | releaseInterface) => {
-        // setLocalStorage("user", user);
-        
         set((state) => {
             const updateRelease: any = { ...state.singleRelease, ...release };
             setLocalStorage("singleRelease", updateRelease);
@@ -89,7 +84,7 @@ export const useCreateReleaseStore = create<_typeInterface_>((set) => ({
     _handleSetSingleRelease2: (release: singleRelease2Interface | releaseInterface) => {
         set((state) => {
             const updateRelease: any = { ...state.singleRelease, ...release };
-            setLocalStorage("singleRelease", updateRelease);
+            // setLocalStorage("singleRelease", updateRelease);
 
             return {
                 singleRelease: updateRelease,
@@ -110,8 +105,6 @@ export const useCreateReleaseStore = create<_typeInterface_>((set) => ({
 
 
     _handleSetAlbumRelease1: (release: albumRelease1Interface | releaseInterface) => {
-        // setLocalStorage("user", user);
-        
         set((state) => {
             const updateRelease: any = { ...state.albumRelease, ...release };
             setLocalStorage("albumRelease", updateRelease);
@@ -123,8 +116,6 @@ export const useCreateReleaseStore = create<_typeInterface_>((set) => ({
     },
 
     _handleSetAlbumRelease2: (release: albumRelease2Interface | releaseInterface) => {
-        // setLocalStorage("user", user);
-        
         set((state) => {
             const updateRelease: any = { ...state.albumRelease, ...release };
             setLocalStorage("albumRelease", updateRelease);
@@ -136,8 +127,6 @@ export const useCreateReleaseStore = create<_typeInterface_>((set) => ({
     },
   
     _handleSetAlbumRelease3: (release: albumRelease3Interface | releaseInterface) => {
-        // setLocalStorage("user", user);
-        
         set((state) => {
             const updateRelease: any = { ...state.albumRelease, ...release };
             setLocalStorage("albumRelease", updateRelease);
@@ -149,8 +138,6 @@ export const useCreateReleaseStore = create<_typeInterface_>((set) => ({
     },
   
     _handleSetAlbumRelease4: (release: songInterface | releaseInterface) => {
-        // setLocalStorage("user", user);
-        
         set((state) => {
             const updateRelease: any = { ...state.albumRelease, ...release };
             setLocalStorage("albumRelease", updateRelease);

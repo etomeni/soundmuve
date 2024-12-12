@@ -2,22 +2,12 @@ import { useCallback, useState } from "react";
 import axios from "axios";
 import { useUserStore } from "@/state/userStore";
 import { emekaApiEndpoint } from "@/util/resources";
-import { setLocalStorage } from "@/util/storage";
 import { 
     appleSpotifyRecordInterface, graphApiRespondInterface, 
     spotifyAndAppleOverviewInterface, // totalStreamsAndRevenueRecordInterface 
 } from "@/constants/analyticsTypesInterface";
 import { getMonthDateRange } from "@/util/dateTime";
 // import { useReleaseStore } from "@/state/releaseStore";
-
-
-
-// function getLocalAppleSpotifyRecord() {
-//     const localAppleSpotifyRecord = getLocalStorage("appleSpotifyRecord");
-//     if (localAppleSpotifyRecord && localAppleSpotifyRecord._id) {
-//         return localAppleSpotifyRecord;
-//     }
-// }
 
 
 const dataset = [
@@ -131,7 +121,6 @@ export function useSongAnalytics() {
             // console.log(response);
     
             if (response.data._id) {
-                setLocalStorage("appleSpotifyRecord", response.data);
                 // setAppleSpotifyRecord(response.data);
             }
     
@@ -143,38 +132,6 @@ export function useSongAnalytics() {
     }, []);
     
     
-
-    // const getTotalStreamsAndRevenueRecord = useCallback(async (reqType: string = "album") => {
-    //     try {
-    //         const response = (await axios.get(`${emekaApiEndpoint}/analyticsManager/analytics/revenue-monthly`, {
-    //             headers: {
-    //                 Authorization: `Bearer ${accessToken}`
-    //             },
-    //             params: {
-    //                 type: reqType // I'm assuming the other possible value is album or single
-    //             }
-    //         })).data;
-    //         // console.log(response);
-    
-    //         if (response.totalAppleRevenue) {
-    //             setLocalStorage("totalStreamsAndRevenueRecord", response);
-    //             setTotalStreamsAndRevenueRecord(response);
-
-
-
-    //             // _setSongDetails({
-    //             //     ...songDetails,
-    //             // })
-    //         }
-    
-    //     } catch (error: any) {
-    //         const errorResponse = error.response.data || error;
-    //         console.error(errorResponse);
-    //         // setPaymentDetails([]);
-    //     }
-    // }, []);
-
-
     const getGraphData = useCallback(async (songId: string, songTitle: string, songType: 'album' | 'single') => {
         try {
             const d = new Date();

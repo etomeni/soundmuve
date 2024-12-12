@@ -297,7 +297,6 @@ const ArtWorkFileInfoComponent: React.FC<myProps> = ({iconColor}) => {
                     </Tooltip>
                 </div>
             </ClickAwayListener>
-
         </Box>
     );
 }

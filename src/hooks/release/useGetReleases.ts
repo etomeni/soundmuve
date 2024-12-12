@@ -2,7 +2,6 @@ import axios from "axios";
 import { useCallback, useEffect, useState } from "react";
 import { useUserStore } from "@/state/userStore";
 import { apiEndpoint } from "@/util/resources";
-// import { getLocalStorage, setLocalStorage } from "@/util/storage";
 import { releaseInterface } from "@/typeInterfaces/release.interface";
 import { useSettingStore } from "@/state/settingStore";
 

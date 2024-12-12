@@ -7,7 +7,6 @@ import { yupResolver } from '@hookform/resolvers/yup';
 
 import { useUserStore } from "@/state/userStore";
 import { convertToBase64, getQueryParams, apiEndpoint, validateImageArtWork } from "@/util/resources";
-// import { getLocalStorage, setLocalStorage } from "@/util/storage";
 import { artistInterface, releaseInterface, singleRelease1Interface, songArtists_CreativesInterface } from "@/typeInterfaces/release.interface";
 import { singleRelease1FormSchema, singleRelease2FormSchema } from "./releaseFormSchema";
 import { restCountries } from "@/util/countries";
@@ -641,7 +640,7 @@ export function useCreateSingleRelease() {
                 message: response.message
             });
         } catch (error: any) {
-            const err = error.response.data || error;
+            const err = error.response && error.response.data ? error.response.data : error;
             const fixedErrorMsg = "Oooops, failed to save details. please try again.";
             console.log(err);
 

@@ -1,5 +1,8 @@
 import { create } from "zustand";
-import { getLocalStorage, removeLocalStorageItem, setLocalStorage } from "../util/storage";
+import { 
+    clearLocalStorage, getLocalStorage, 
+    removeLocalStorageItem, setLocalStorage 
+} from "../util/storage";
 import { userInterface } from "@/typeInterfaces/users.interface";
 
 
@@ -107,6 +110,7 @@ export const useUserStore = create<_typeInterface_>((set) => ({
         removeLocalStorageItem("user");
         removeLocalStorageItem("access_token");
         // removeLocalStorageItem("refreshToken");
+        clearLocalStorage();
     
         set((_state) => {
             return {

@@ -26,7 +26,6 @@ import { emekaApiEndpoint, currencyDisplay, isNumeric } from '@/util/resources';
 import colors from '@/constants/colors';
 import { useUserStore } from '@/state/userStore';
 import PaymentModalWrapper from '../PaymentWrapper';
-// import { getLocalStorage, setLocalStorage } from '@/util/storage';
 import LoadingDataComponent from '@/components/LoadingData';
 import InputAdornment from '@mui/material/InputAdornment';
 import { getCurrencySymbol } from '@/util/currencies';
