@@ -1407,13 +1407,25 @@ function CreateSingleRelease2() {
 
             <SearchArtistModalComponent 
                 openSearchArtistModal={openSearchArtistModal}
-                closeSearchArtistModal={() => {
-                    setOpenSearchArtistModal(false);
-                    resetField("songArtistsCreativeRole");
-                    setSelectCreativeRoleValue('Choose Roles');
+                closeSearchArtistModal={(continueState, inputValue) => {
+                    if (continueState) {
+                        setOpenSearchArtistModal(false);
+
+                        setValue(
+                            "artistCreativeName", inputValue ? inputValue : '',
+                            { shouldDirty: true, shouldTouch: true, shouldValidate: true } 
+                        );
+                        
+                    } else {
+                        setOpenSearchArtistModal(false);
+                        resetField("songArtistsCreativeRole");
+                        setSelectCreativeRoleValue('Choose Roles');
+                    }
                 }}
                 onSaveSelection={handleSetArtistName2}
                 dspName={ dspToSearch }
+                // searchType='Creatives - Main Artist'
+                searchType={ selectCreativeRoleValue.includes("artist") ? "Creatives - Main Artist" : "Creatives - Featured" }
             />
         </AccountWrapper>
     )

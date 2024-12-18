@@ -361,3 +361,18 @@ export function isNumeric(str: string) {
 export function convertToSubCurrency(amount: number, factor = 100) {
   return Math.round(amount*factor);
 }
+
+
+
+export function handleExternalUrl (
+  url: string, 
+  target: "_blank" | "_parent" | "_self" | "_top" = "_blank"
+) {
+  if (!url) return;
+  
+  window.open(
+    url,
+    target,
+    'noopener,noreferrer'
+  ) 
+};

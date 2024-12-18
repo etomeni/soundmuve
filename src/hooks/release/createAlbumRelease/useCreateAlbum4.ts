@@ -7,7 +7,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { useUserStore } from '@/state/userStore';
 import { useSettingStore } from '@/state/settingStore';
 import { useCreateReleaseStore } from '@/state/createReleaseStore';
-import { artistInterface, songArtists_CreativesInterface } from '@/typeInterfaces/release.interface';
+import { artistInterface, releaseInterface, songArtists_CreativesInterface } from '@/typeInterfaces/release.interface';
 import { apiEndpoint, pauseExecution } from '@/util/resources';
 import { albumRelease4FormSchema } from '../releaseFormSchema';
 
@@ -114,7 +114,7 @@ export function useCreateAlbum4() {
     }
 
 
-    const handleNextBTN = useCallback(() => {
+    const handleNextBTN = useCallback((albumRelease: releaseInterface) => {
         if (albumRelease.albumSongs?.length) {
             navigate("/account/create-album-release-album-art");
 
@@ -324,8 +324,6 @@ export function useCreateAlbum4() {
                 }
             )).data;
             
-            console.log(response);
-
             if (response.result) {
                 await pauseExecution(500);
 
@@ -358,7 +356,6 @@ export function useCreateAlbum4() {
 
                 return;
             }
-
 
             setApiResponse({
                 display: true,

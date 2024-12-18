@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
 import Modal from '@mui/material/Modal';
@@ -19,12 +20,14 @@ import { useSearchArtists } from '@/hooks/release/useSearchArtists';
 interface _Props {
     openSearchArtistModal: boolean,
     dspName: "Spotify" | "Apple",
-    closeSearchArtistModal: () => void;
+    searchType?: "Main Artist" | "Creatives - Main Artist" | "Creatives - Featured",
+    closeSearchArtistModal: (continueWithoutProfile?: boolean, searchedValue?: string) => void;
     onSaveSelection: (data: artistInterface, dspName: "Spotify" | "Apple") => void;
 }
 
 const SearchArtistModalComponent: React.FC<_Props> = ({
-    openSearchArtistModal, dspName, closeSearchArtistModal, onSaveSelection
+    openSearchArtistModal, dspName, searchType = "Main Artist",
+    closeSearchArtistModal, onSaveSelection
 }) => {
     // const darkTheme = useSettingStore((state) => state.darkTheme);
     // const [searchResult, setSearchResult] = useState<typeof artistData>([]);
@@ -37,10 +40,13 @@ const SearchArtistModalComponent: React.FC<_Props> = ({
     // const [selectedSpotifyArtist, setSelectedSpotifyArtist] = useState<searchedArtistSearchInterface>();
     // const [selectedAppleMusicArtist, setSelectedAppleMusicArtist] = useState<any>();
 
-    // useEffect(() => {
-    //     if (openSearchArtistModal) setSelectedArtist(undefined);
-    // }, [openSearchArtistModal]);
-    
+    useEffect(() => {
+        if (openSearchArtistModal) {
+            setSelectedArtist(undefined);
+            // setArtistNameInput('');
+        }
+    }, [openSearchArtistModal]);
+
 
     const handleSearchInput = (e: any) => {
         const value = e.target.value;
@@ -92,6 +98,8 @@ const SearchArtistModalComponent: React.FC<_Props> = ({
         onSaveSelection(selectedArtist, dspName);
         closeSearchArtistModal();
     }
+
+    const createArtistProfileUrl = dspName == "Spotify" ? "https://artists.spotify.com" : "https://artists.apple.com"
 
     return (
         <Modal
@@ -288,7 +296,6 @@ const SearchArtistModalComponent: React.FC<_Props> = ({
                     
 
                     <Box id="release-modal-description" mt="10px" sx={{ overflow: "scroll" }}>
-
                         <Box>
                             <Box>
                                 {/* <Box sx={{ height: "35px" }}>
@@ -364,13 +371,11 @@ const SearchArtistModalComponent: React.FC<_Props> = ({
                                 }
                             </Box>
                         </Box>
-
                     </Box>
 
                     <Box
                         sx={{
                             mt: spotifyArtistResults.length ? "15px" : "60px",
-
                         }}
                     >
                         <Typography variant='body1'
@@ -382,13 +387,38 @@ const SearchArtistModalComponent: React.FC<_Props> = ({
                         >
                             Don't have 
                             a {dspName == "Spotify" ? dspName : dspName + " Music" } artist
-                            account? <Typography 
+                            account? <span style={{ 
+                                display: searchType == "Main Artist" ? "none" : "initial" 
+                            }}>
+                            <Typography 
                                 variant='body1' component="span"
+                                onClick={() => closeSearchArtistModal(true, artistNameInput)}
                                 sx={{
                                     cursor: "pointer",
                                     color: colors.primary,
                                 }}
-                            > create one here.</Typography>
+                            > continue </Typography>
+                            or </span>
+                            <Link to={createArtistProfileUrl} target='_top'
+                                style={{
+                                    cursor: "pointer",
+                                    color: colors.primary,
+                                    textDecoration: "none",
+                                    fontWeight: "inherit"
+                                }}
+                            > create one here.</Link>
+
+                            {/* or <Typography 
+                                variant='body1' component="span"
+                                onClick={() => {
+                                    const url = dspName == "Spotify" ? "https://artists.spotify.com" : "https://artists.apple.com"
+                                    handleExternalUrl(url)
+                                }}
+                                sx={{
+                                    cursor: "pointer",
+                                    color: colors.primary,
+                                }}
+                            > create one here.</Typography> */}
                         </Typography>
 
 

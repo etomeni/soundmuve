@@ -1351,7 +1351,7 @@ function CreateAlbumReleaseSongUpload() {
                                                 letterSpacing: "-0.12px",
                                                 textTransform: "none"
                                             }}
-                                            onClick={() => handleNextBTN() }
+                                            onClick={() => handleNextBTN(albumRelease) }
                                         > Next </Button>
                                     </Stack>
                                 </Box>
@@ -1380,13 +1380,24 @@ function CreateAlbumReleaseSongUpload() {
 
             <SearchArtistModalComponent 
                 openSearchArtistModal={openSearchArtistModal}
-                closeSearchArtistModal={() => {
-                    setOpenSearchArtistModal(false);
-                    resetField("songArtistsCreativeRole");
-                    setSelectRoleValue('Choose Roles');
+                closeSearchArtistModal={(continueState, inputValue) => {
+                    if (continueState) {
+                        setOpenSearchArtistModal(false);
+
+                        setValue(
+                            "artistCreativeName", inputValue ? inputValue : '',
+                            { shouldDirty: true, shouldTouch: true, shouldValidate: true } 
+                        );
+                        
+                    } else {
+                        setOpenSearchArtistModal(false);
+                        resetField("songArtistsCreativeRole");
+                        setSelectRoleValue('Choose Roles');
+                    }
                 }}
                 onSaveSelection={handleSetArtistName}
                 dspName={ dspToSearch }
+                searchType={ selectRoleValue.includes("artist") ? "Creatives - Main Artist" : "Creatives - Featured" }
             />
         </AccountWrapper>
     )
