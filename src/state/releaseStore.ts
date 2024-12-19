@@ -39,7 +39,8 @@ const defaultReleaseData: releaseInterface = {
     stores: [],
     socialPlatforms: [],
     coverArt: temptCoverPhotoImg,
-    status: "Incomplete"
+    status: "Incomplete",
+    songs: []
 };
 
 

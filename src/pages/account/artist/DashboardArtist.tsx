@@ -69,8 +69,8 @@ function DashboardArtist() {
         // if (albumType == "Single") {
         //     _setReleaseDetails(release);
         // } else 
-        if (albumType == "Album" && release.albumSongs) {
-            _setSongDetails(release.albumSongs[albumSongIndex]);
+        if (albumType == "Album" && release.songs) {
+            _setSongDetails(release.songs[albumSongIndex]);
         }
 
         navigate("/account/artist/song-details");
@@ -871,9 +871,9 @@ function DashboardArtist() {
                                 > Songs from { releases[0].title } Album </Typography>
 
                                 {
-                                    releases[0].albumSongs && releases[0].albumSongs.length ? (
+                                    releases[0].songs && releases[0].songs.length ? (
                                         <Box>
-                                            {releases[0].albumSongs.map((item, index) => (
+                                            {releases[0].songs.map((item, index) => (
                                                 <Box key={index} onClick={() => handleOnclickedSong(releases[0], index) }>
                                                     <AlbumSongItem 
                                                         artistName={ releases[0].mainArtist.spotifyProfile.name}
@@ -906,9 +906,9 @@ function DashboardArtist() {
                                         > Songs from { releases[1].title } Album </Typography>
 
                                         {
-                                            releases[1].albumSongs && releases[1].albumSongs.length ? (
+                                            releases[1].songs && releases[1].songs.length ? (
                                                 <Box>
-                                                    {releases[1].albumSongs.map((item, index) => (
+                                                    {releases[1].songs.map((item, index) => (
                                                         <Box key={index} onClick={() => handleOnclickedSong(releases[1], index) }>
                                                             <AlbumSongItem 
                                                                 artistName={ releases[1].mainArtist.spotifyProfile.name}

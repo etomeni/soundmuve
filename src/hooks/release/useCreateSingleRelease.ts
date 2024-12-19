@@ -559,8 +559,9 @@ export function useCreateSingleRelease() {
             release_id: release_id,
             stores: selectStores,
             socialPlatforms: selectSocialStores,
-            singleSong: songDetails,
-            coverArt: "" // image,
+            // singleSong: songDetails,
+            songs: [songDetails],
+            coverArt: "" // image,`
         }
 
         _handleSetSingleRelease2(singleRelease2data2submit);
@@ -572,8 +573,8 @@ export function useCreateSingleRelease() {
         data2submit.append('stores', JSON.stringify(singleRelease2data2submit.stores));
         data2submit.append('socialPlatforms', JSON.stringify(singleRelease2data2submit.socialPlatforms));
 
-        // Append singleSong properties
-        data2submit.append('singleSong', JSON.stringify(singleRelease2data2submit.singleSong));
+        // Append songs properties
+        data2submit.append('songDetails', JSON.stringify(songDetails));
         data2submit.append('songAudio', songAudio);
         // Append coverArt (assumed to be a file upload or URL)
         if (image) data2submit.append('coverArt', image);

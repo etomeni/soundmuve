@@ -43,11 +43,11 @@ export function useCreateAlbum3() {
     }, [albumRelease]);
     
     const restoreValues = () => {
-        if (albumRelease.stores) {
+        if (albumRelease.stores.length) {
             handleStoreSelect(albumRelease.stores);
         }
 
-        if (albumRelease.socialPlatforms) {
+        if (albumRelease.socialPlatforms.length) {
             handleSocialStoreSelect(albumRelease.socialPlatforms);
         }
     }

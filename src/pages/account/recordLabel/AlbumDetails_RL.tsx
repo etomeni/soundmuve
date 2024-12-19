@@ -576,7 +576,7 @@ function AlbumDetails_RL() {
                         }}
                     >Songs on your album</Typography>
 
-                    {releaseDetails.albumSongs?.map((item, index) => (
+                    {releaseDetails.songs.map((item, index) => (
                         <Box key={index} onClick={() => {
                             _setSongDetails(item);
                             navigate("/account/record-label/song-details");

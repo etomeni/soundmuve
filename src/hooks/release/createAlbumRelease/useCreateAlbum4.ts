@@ -62,8 +62,8 @@ export function useCreateAlbum4() {
     const handleEdit = (i: number) => {
         // const songData = albumReleaseSongUpload[i];
 
-        if (!albumRelease.albumSongs) return;
-        const songData = albumRelease.albumSongs[i];
+        if (!albumRelease.songs) return;
+        const songData = albumRelease.songs[i];
 
         setValue("songTitle", songData.songTitle, {shouldDirty: true, shouldTouch: true, shouldValidate: true});
         setValue("ISRC_Number", songData.isrcNumber, {shouldDirty: true, shouldTouch: true, shouldValidate: true});
@@ -115,7 +115,7 @@ export function useCreateAlbum4() {
 
 
     const handleNextBTN = useCallback((albumRelease: releaseInterface) => {
-        if (albumRelease.albumSongs?.length) {
+        if (albumRelease.songs.length) {
             navigate("/account/create-album-release-album-art");
 
         } else {
@@ -323,7 +323,7 @@ export function useCreateAlbum4() {
                     },
                 }
             )).data;
-            
+
             if (response.result) {
                 await pauseExecution(500);
 

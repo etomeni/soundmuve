@@ -94,7 +94,7 @@ function CreateAlbumReleaseSongUpload() {
                                 style={{ width: "100%", maxWidth: "916px" }}
                             >
 
-                                { albumRelease.albumSongs && albumRelease.albumSongs.length ? (
+                                { albumRelease.songs && albumRelease.songs.length ? (
                                         <Box
                                             sx={{
                                                 maxWidth: {xs: "330px", md: "892px"},
@@ -146,7 +146,7 @@ function CreateAlbumReleaseSongUpload() {
                                                 }}
                                             >
                                                 {
-                                                    albumRelease.albumSongs.map((item, i) => (
+                                                    albumRelease.songs.map((item, i) => (
                                                         <SongPreviewComponent key={i}
                                                             songTitle={`${item.songTitle} - ${albumRelease.mainArtist.spotifyProfile.name}`}
                                                             subTitle={item.isrcNumber}
@@ -1325,7 +1325,7 @@ function CreateAlbumReleaseSongUpload() {
                                         <Button variant="contained" 
                                             fullWidth // type="submit" 
                                             // disabled={ (!albumReleaseSongUpload.length && !isValid) || isSubmitting } 
-                                            disabled={ !albumRelease.albumSongs?.length } 
+                                            disabled={ !albumRelease.songs.length } 
                                             sx={{ 
                                                 bgcolor: colors.primary,
                                                 color: colors.milk,

@@ -37,7 +37,8 @@ const defaultReleaseData: releaseInterface = {
     stores: [],
     socialPlatforms: [],
     coverArt: "",
-    status: "Incomplete"
+    status: "Incomplete",
+    songs: []
 };
 
 
@@ -163,7 +164,7 @@ export const useCreateReleaseStore = create<_typeInterface_>((set) => ({
         
         set((state) => {
             // const remainingFruits = state.albumRelease.filter((_, i) => i !== index).concat([]);
-            const result = state.albumRelease.albumSongs?.filter((_, i) => i !== index);
+            const result = state.albumRelease.songs.filter((_, i) => i !== index);
             // setLocalStorage("albumRelease", result);
 
             if (!result) {
@@ -173,7 +174,7 @@ export const useCreateReleaseStore = create<_typeInterface_>((set) => ({
             }
 
             return {
-                albumRelease: { ...state.albumRelease, albumSongs: result},
+                albumRelease: { ...state.albumRelease, songs: result},
             };
         });
     },

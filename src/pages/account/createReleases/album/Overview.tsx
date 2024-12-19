@@ -47,8 +47,8 @@ function CreateAlbumReleaseOverview() {
 
 
     const deleteSong = async (index: number) => {
-        if (!albumRelease.albumSongs) return;
-        const song = albumRelease.albumSongs[index];
+        if (!albumRelease.songs) return;
+        const song = albumRelease.songs[index];
 
         try {
             const response = (await axios.delete(
@@ -535,7 +535,7 @@ function CreateAlbumReleaseOverview() {
                                 >
                                     {
                                         // albumReleaseSongUpload.map((item, i) => (
-                                            albumRelease.albumSongs?.map((item, i) => (
+                                            albumRelease.songs.map((item, i) => (
                                             <Box key={i} width="100%">
                                                 {
                                                     <SongPreviewComponent key={i}
