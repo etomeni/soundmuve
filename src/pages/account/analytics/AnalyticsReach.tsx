@@ -10,13 +10,15 @@ import MenuItem from '@mui/material/MenuItem';
 
 import IconButton from '@mui/material/IconButton';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import PersonIcon from '@mui/icons-material/Person';
 
 import AccountWrapper from '@/components/AccountWrapper';
 import { useSettingStore } from '@/state/settingStore';
 import ArtistAnalyticsNavComponent from '@/components/account/ArtistAnalyticsNav';
+
+// import albumImage from '@/assets/images/album.png';
 import BarChartGraphComponent from '@/components/analytics/BarChartGraph';
 import colors from '@/constants/colors';
+
 
 const dataset = [
     {
@@ -68,9 +70,8 @@ const dataset = [
       month: 'Dec',
     },
 ];
-  
 
-function AnalyticsReach_RL() {
+function AnalyticsReach() {
     const navigate = useNavigate();
     const darkTheme = useSettingStore((state) => state.darkTheme);
 
@@ -81,7 +82,11 @@ function AnalyticsReach_RL() {
                 <Stack direction={"row"} spacing={"20px"} justifyContent={"space-between"} alignItems={"center"}>
                     <IconButton 
                         onClick={() => navigate(-1)}
-                        sx={{ color: colors.primary, mb: 2 }}
+                        sx={{
+                            color: colors.primary, 
+                            mb: 2,
+                            
+                        }}
                     >
                         <ChevronLeftIcon sx={{ display: {xs: "none", md: "block"} }} />
                     </IconButton>
@@ -98,7 +103,7 @@ function AnalyticsReach_RL() {
                                 sx={{
                                     color: "#fff",
                                     borderRadius: "8px",
-                                    bgcolor: colors.dark,
+                                    bgcolor: darkTheme ? "#272727" : "#414141",
                                     // textAlign: "center",
                                     fontWeight: "900",
                                     border: "none",
@@ -141,7 +146,7 @@ function AnalyticsReach_RL() {
                 </Stack>
 
                 <Box sx={{ display: "flex", justifyContent: "center", mt: "20px" }}>
-                    <ArtistAnalyticsNavComponent darkTheme={darkTheme} currentPage='analytics-reach' accountType='record-label' />
+                    <ArtistAnalyticsNavComponent currentPage='analytics-reach' accountType='artist' />
                 </Box>
 
 
@@ -223,7 +228,6 @@ function AnalyticsReach_RL() {
                         </Stack>
                     </Box>
 
-
                     <Box my={5}>
                         <BarChartGraphComponent 
                             darkTheme={darkTheme}
@@ -259,38 +263,82 @@ function AnalyticsReach_RL() {
                     </Grid> */}
 
 
-                    <Stack mb={5} mt={10} justifyContent="center" alignItems="center">
-                        <Stack direction="row" alignItems="center" spacing="15px"
-                            onClick={() => navigate('/account/record-label/add-artist')}
+                    {/* <Box mt={5}>
+                        <Typography
                             sx={{
-                                color: "#627C1D",
-                                fontWeight: '400',
-                                fontSize: '13px',
-                                border: `1px solid #627C1D`,
-                                borderRadius: '6.09px',
-                                padding: 1,
-                                width: "130px",
-                                cursor: 'pointer'
+                                fontWeight: "900",
+                                fontSize: "30px",
+                                lineHeight: "24px",
+                                color: "#797979",
+                                mb: 2
                             }}
-                        >
-                            <PersonIcon />
-                            <Typography>Add Artist</Typography>
-                        </Stack>
+                        >More insight</Typography>
 
-                        <Typography variant='body1'
-                            sx={{
-                                fontWeight: '400',
-                                fontSize: '24px',
-                                lineHeight: '41px',
-                                textAlign: 'center',
-                                color: colors.dark,
-                                mt: '25px'
-                            }}
-                        >
-                            Artists that are on you record label would be displayed here
-                        </Typography>
-                    </Stack>
+                        <Grid container spacing="20px">
+                            {
+                                moreInsights.map((insight, index) => (
+                                    <Grid key={index} item xs={6} md={4}>
+                                        <Box 
+                                            sx={{ 
+                                                width: "95%",
+                                                // maxWidth: {xs: "196.38px", md: "345px"},
+                                                // mx: "auto"
+                                            }}
+                                            onClick={() => navigate("/account/analytics/song-details")}
+                                        >
+                                            <Box
+                                                sx={{
+                                                    height: {xs: "152.99px", md: "268px"},
+                                                    borderRadius: {xs: "6.85px", md: "12px"},
+                                                    bgcolor: "#343434",
+                                                    textAlign: "center",
+                                                    display: "flex",
+                                                    justifyContent: "center",
+                                                    alignItems: "center"
+                                                }}
+                                            >
+                                                <Box 
+                                                    sx={{
+                                                        width: {xs: "124.48px", md: "218.06px"},
+                                                        height: {xs: "124.48px", md: "218.06px"}
+                                                    }}
+                                                >
+                                                    <img
+                                                        src={albumImage} alt='album image'
+                                                        style={{
+                                                            width: "100%",
+                                                            objectFit: "contain"
+                                                        }}
+                                                    />
+                                                </Box>
+                                            </Box>
 
+                                            <Stack direction={"row"} justifyContent={"space-between"} my="8px" spacing={"20px"} alignItems={"center"}>
+                                                <Typography
+                                                    sx={{
+                                                        fontWeight: "900",
+                                                        fontSize: {xs: "10.85px", md: "19px"},
+                                                        lineHeight: {xs: "13.7px", md: "24px"},
+                                                        letterSpacing: {xs: "-0.77px", md: "-1.34px"},
+                                                    }}
+                                                > { insight.title } </Typography>
+
+                                                <Typography
+                                                    sx={{
+                                                        fontWeight: "400",
+                                                        fontSize: {xs: "10.85px", md: "19px"},
+                                                        lineHeight: {xs: "13.7px", md: "24px"},
+                                                        letterSpacing: {xs: "-0.77px", md: "-1.34px"},
+                                                        color: insight.status ? darkTheme ? "#C8F452" : "#33500B" : "#CE2937"
+                                                    }}
+                                                > { insight.percentage } </Typography>
+                                            </Stack>
+                                        </Box>
+                                    </Grid>
+                                ))
+                            }
+                        </Grid>
+                    </Box> */}
                 </Box>
             </Box>
 
@@ -298,4 +346,4 @@ function AnalyticsReach_RL() {
     )
 }
 
-export default AnalyticsReach_RL;
+export default AnalyticsReach;

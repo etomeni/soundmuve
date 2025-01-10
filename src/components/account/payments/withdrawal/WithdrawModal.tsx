@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 
-import { useForm } from 'react-hook-form';
 import * as yup from "yup";
+import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 
 import Box from '@mui/material/Box';
@@ -11,52 +11,30 @@ import Alert from '@mui/material/Alert';
 import Button from '@mui/material/Button';
 import CircularProgress from '@mui/material/CircularProgress';
 import TextField from '@mui/material/TextField';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
+import InputAdornment from '@mui/material/InputAdornment';
 
 // import FlutterwaveLogo2 from "@/assets/images/FlutterwaveLogo2.png";
 import { 
     releaseSelectStyle2, paymentTextFieldStyle
 } from '@/util/mui';
-import FormControl from '@mui/material/FormControl';
-import Select from '@mui/material/Select';
-import MenuItem from '@mui/material/MenuItem';
-
 // import { getSupportedCurrency } from '@/util/currencies';
-import axios from 'axios';
-import { emekaApiEndpoint, currencyDisplay, isNumeric } from '@/util/resources';
+import { currencyDisplay, isNumeric } from '@/util/resources';
 import colors from '@/constants/colors';
-import { useUserStore } from '@/state/userStore';
 import PaymentModalWrapper from '../PaymentWrapper';
 import LoadingDataComponent from '@/components/LoadingData';
-import InputAdornment from '@mui/material/InputAdornment';
 import { getCurrencySymbol } from '@/util/currencies';
 import { usePayoutData } from '@/hooks/payments/usePayoutInfo';
 import { allNgBanks } from '@/util/banks';
+import { withdrawInterface } from '@/typeInterfaces/transaction.interface';
 
 
 const formSchema = yup.object({
     amount: yup.string().required().trim().label("Account Number"),
     narration: yup.string().required().label("Narration"),
 });
-
-export type withdrawInterface = {
-    currency: string;
-    narration: string;
-    amount: string;
-    paymentDetails?: any
-}
-
-type exchangeInterface = {
-    rate: number,
-    source: {
-        currency: string,
-        amount: number
-    },
-    destination: {
-        currency: string,
-        amount: number
-    }
-}
-
 
 interface _Props {
     openModal: boolean,
@@ -68,15 +46,29 @@ interface _Props {
 const WithdrawModalComponent: React.FC<_Props> = ({
     openModal, closeModal, changeMethod, confirmBtn
 }) => {
-    const accessToken = useUserStore((state) => state.accessToken);
     const [errorMsg, setErrorMsg] = useState('');
 
+    const defaultExchangeRate = {
+        destination: {
+            amount: 0,
+            currency: ''
+        },
+        rate: 0,
+        source: {
+            amount: 0,
+            currency: ''
+        }
+    };
+
     const { 
+        apiResponse, setApiResponse,
+
         paymentDetails, selectedPaymentDetails, 
-        setSelectedPaymentDetails, getPayoutInfo 
+        setSelectedPaymentDetails, getPayoutInfo,
+
+        exchangeData, getExchangeRate, setExchangeData,
     } = usePayoutData();
 
-    const [exchangeData, setExchangeData] = useState<exchangeInterface>();
 
     useEffect(() => {
         if (!openModal) {
@@ -96,43 +88,10 @@ const WithdrawModalComponent: React.FC<_Props> = ({
         }
     }, [openModal]);
 
-    const [apiResponse, setApiResponse] = useState({
-        display: false,
-        status: true,
-        message: ""
-    });
-
-    
     const {
         handleSubmit, register, getValues, setValue, reset, formState: { errors, isSubmitting, isValid } 
     } = useForm({ resolver: yupResolver(formSchema), mode: 'onBlur', reValidateMode: 'onChange' });
 
-
-    const getExchangeRate = async (amount: string, currency: string) => {
-        try {
-            const response = (await axios.get(`${emekaApiEndpoint}/transactionInit/exchange-rate`, {
-                headers: {
-                    Authorization: `Bearer ${accessToken}`
-                },
-                params: {
-                    amount: amount,
-                    currency: currency
-                }
-            })).data;
-            // console.log(response);
-
-            setExchangeData(response.data);
-
-            if (response.length == 1) {
-                setSelectedPaymentDetails(response[0]._id);
-            }
-
-        } catch (error: any) {
-            const errorResponse = error.response.data;
-            console.error(errorResponse);
-            // setPaymentDetails([]);
-        }
-    }
 
     const displayExchange = (enteredAmount: string = '') => {
         if (selectedPaymentDetails) {
@@ -179,14 +138,17 @@ const WithdrawModalComponent: React.FC<_Props> = ({
             message: ""
         });
 
-        const payoutData = paymentDetails?.filter(data => data._id == selectedPaymentDetails);
+        // const payoutData = paymentDetails?.filter(data => data._id == selectedPaymentDetails);
+        const payoutData = paymentDetails?.find(data => data._id == selectedPaymentDetails);
 
         confirmBtn({
             ...formData, 
-            currency: payoutData ? payoutData[0].currency.currency_code : '',
-            paymentDetails: payoutData ? payoutData[0] : undefined
+            currency: payoutData ? payoutData.currency.currency_code : '',
+            paymentDetails: payoutData,
+            exchangeRate: exchangeData || defaultExchangeRate
         });
     }
+
 
     const resolveAccountName = (bankName: string) => {
         if (isNumeric(bankName)) {

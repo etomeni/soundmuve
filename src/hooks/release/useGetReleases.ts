@@ -95,9 +95,9 @@ export function useGetReleases(pageNo = 1, limitNo = 5, releaseType: 'single' | 
     
             setIsSubmitting(false);
         } catch (error: any) {
-            const err = error.response.data || error;
+            const err = error.response && error.response.data ? error.response.data : error;
             const fixedErrorMsg = "Ooops and error occurred!";
-            // console.log(err);
+            console.log(err);
             // setReleases([]);
 
             setApiResponse({
@@ -148,9 +148,9 @@ export function useGetReleases(pageNo = 1, limitNo = 5, releaseType: 'single' | 
     
             setIsSubmitting(false);
         } catch (error: any) {
-            const err = error.response.data || error;
+            const err = error.response && error.response.data ? error.response.data : error;
             const fixedErrorMsg = "Ooops and error occurred!";
-            // console.log(err);
+            console.log(err);
             // setReleases([]);
 
             setApiResponse({
@@ -180,7 +180,7 @@ export function useGetReleases(pageNo = 1, limitNo = 5, releaseType: 'single' | 
             }
 
         } catch (error: any) {
-            const err = error.response.data || error;
+            const err = error.response && error.response.data ? error.response.data : error;
             const fixedErrorMsg = "Ooops and error occurred!";
             // console.log(err);
             // setReleases([]);

@@ -5,6 +5,7 @@ import { apiEndpoint } from "@/util/resources";
 import { payoutDetailsInterface, savePayoutDetailsInterface } from "@/typeInterfaces/payout.interface";
 import { supportCurrencies } from "@/util/currencies";
 import { allNgBanks } from "@/util/banks";
+import { withdrawExchangeInterface } from "@/typeInterfaces/transaction.interface";
 
 
 // function getLocalPayoutData() {
@@ -18,19 +19,20 @@ import { allNgBanks } from "@/util/banks";
 
 export function usePayoutData() {
     const accessToken = useUserStore((state) => state.accessToken);
+    const [apiResponse, setApiResponse] = useState({
+        display: false,
+        status: true,
+        message: ""
+    });
+    
     const [paymentDetails, setPaymentDetails] = useState<payoutDetailsInterface[]>([]);
     const [selectedPaymentDetails, setSelectedPaymentDetails] = useState('');
 
     const [currencies, setCurrencies] = useState(supportCurrencies);
     const [ngBanks, setNgBanks] = useState(allNgBanks);
 
-    const [apiResponse, setApiResponse] = useState({
-        display: false,
-        status: true,
-        message: ""
-    });
-
-
+    const [exchangeData, setExchangeData] = useState<withdrawExchangeInterface>();
+    
 
     const getPayoutInfo = useCallback(async () => {
         try {
@@ -192,6 +194,33 @@ export function usePayoutData() {
         }
     }, []);
 
+    const getExchangeRate = useCallback(async (amount: string, currency: string) => {
+        try {
+            const response = (await axios.get(`${apiEndpoint}/transactions/exchange-rate`, {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`
+                },
+                params: {
+                    amount: amount,
+                    currency: currency
+                }
+            })).data;
+            // console.log(response);
+
+            setExchangeData(response.result);
+
+            // if (response.length == 1) {
+            //     setSelectedPaymentDetails(response[0]._id);
+            // }
+
+        } catch (error: any) {
+            const err = error.response && error.response.data ? error.response.data : error;
+            // const fixedErrorMsg = "Ooops and error occurred!";
+            console.log(err);
+        }
+    }, []);
+
+
 
 
 
@@ -209,6 +238,10 @@ export function usePayoutData() {
 
         getPayoutInfo,
         saveBankPayoutDetails,
+
+        exchangeData,
+        setExchangeData,
+        getExchangeRate,
     }
 }
 

@@ -8,7 +8,7 @@ import IconButton from '@mui/material/IconButton';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 
 import AccountWrapper from '@/components/AccountWrapper';
-import { useSettingStore } from '@/state/settingStore';
+// import { useSettingStore } from '@/state/settingStore';
 import ArtistAnalyticsNavComponent from '@/components/account/ArtistAnalyticsNav';
 
 import colors from '@/constants/colors';
@@ -19,48 +19,45 @@ import SRAT_SinglesComponent from '@/components/analytics/salesReportTables/SRAT
 import SRAT_AlbumsComponent from '@/components/analytics/salesReportTables/SRAT_Albums';
 import SRAT_LocationComponent from '@/components/analytics/salesReportTables/SRAT_Location';
 import SRAT_MonthsComponent from '@/components/analytics/salesReportTables/SRAT_Months';
-import { useGeneralAnalytics } from '@/hooks/analytics/useGeneralAnalytics';
+import { getDateRangeBydays } from '@/util/dateTime';
+import { useAnalyticsStore } from '@/state/analyticsStore';
+import { useAnalyticsHook } from '@/hooks/analytics/useAnalyticsHook';
 
 
 function SalesReport() {
     const navigate = useNavigate();
-    const darkTheme = useSettingStore((state) => state.darkTheme);
+    // const darkTheme = useSettingStore((state) => state.darkTheme);
     const [reportType, setReportType] = useState<'Months' | 'Location' | 'Albums' | 'Singles'>('Singles');
 
+    const [dateRange, setDateRange] = useState(getDateRangeBydays(365));
 
+    const salesReportTotalEarnings = useAnalyticsStore((state) => state.salesReportTotalEarnings);
+    const salesReportMonths = useAnalyticsStore((state) => state.salesReportMonths);
+    const salesReportLocations = useAnalyticsStore((state) => state.salesReportLocations);
+    const salesReportAlbum = useAnalyticsStore((state) => state.salesReportAlbum);
+    const salesReportSingles = useAnalyticsStore((state) => state.salesReportSingles);
+   
     const { 
-        salesReportSingleAnalytics, salesReportAlbumAnalytics,
-        getSalesReportSingle_or_AlbumAnalytics,
-
-        getLocationsAnalytics, locationsAnalytics,
-        
-        reportMonthlyAnalytics, getSalesReportMonthlyAnalytics,
-        
-        reportMainDashData, // getSalesReportMainDashAnalytics,
-
-        getNewDataRangeData
-
-    } = useGeneralAnalytics();
+        getSalesReportAnalytics,
+    } = useAnalyticsHook();
 
     useEffect(() => {
-        // getSalesReportMainDashAnalytics();
-        getNewDataRangeData('30');
-    }, []);
+        getSalesReportAnalytics(dateRange.startDate, dateRange.endDate);
+    }, [dateRange]);
 
-    useEffect(() => {
-        if (reportType == "Location") {
-            getLocationsAnalytics();
-        } else if (reportType == "Albums") {
-            getSalesReportSingle_or_AlbumAnalytics("album");
-        } else if (reportType == "Singles") {
-            getSalesReportSingle_or_AlbumAnalytics("single");
-        } else if (reportType == "Months") {
-            getSalesReportMonthlyAnalytics();
-        } else {
-            getSalesReportSingle_or_AlbumAnalytics("single");
-        }
-    }, [reportType]);
-
+    // useEffect(() => {
+    //     if (reportType == "Location") {
+    //         getLocationsAnalytics();
+    //     } else if (reportType == "Albums") {
+    //         getSalesReportSingle_or_AlbumAnalytics("album");
+    //     } else if (reportType == "Singles") {
+    //         getSalesReportSingle_or_AlbumAnalytics("single");
+    //     } else if (reportType == "Months") {
+    //         getSalesReportMonthlyAnalytics();
+    //     } else {
+    //         getSalesReportSingle_or_AlbumAnalytics("single");
+    //     }
+    // }, [reportType]);
 
 
     return (
@@ -78,7 +75,7 @@ function SalesReport() {
                         <ChevronLeftIcon />
                     </IconButton>
 
-                    <ArtistAnalyticsNavComponent darkTheme={darkTheme} currentPage='sales-report' accountType='artist' />
+                    <ArtistAnalyticsNavComponent currentPage='sales-report' accountType='artist' />
 
                     <Box></Box>
                 </Stack>
@@ -86,15 +83,22 @@ function SalesReport() {
                 <Box sx={{ mt: 7 }}>
                     <ReportMainDashComponent 
                         // dateRange={reportMainDashData.sales_period}
-                        setDateRange={getNewDataRangeData}
+                        setDateRangeValue={(value) => setDateRange(value)}
+                        dateRangeValue={dateRange }
                         // not too sure about the intended data for play, 
                         // since backend didn't account for it, then its same as Streams
-                        plays={ reportMainDashData.totalStreams }
-                        albums={reportMainDashData.totalAlbums}
+                        streamPlays={ salesReportTotalEarnings.streamPlay }
+                        // albums={reportMainDashData.totalAlbums}
+                        albums={ salesReportTotalEarnings.totalSingles }
+                        albumSold={ salesReportTotalEarnings.albumSold }
                         // sold={reportMainDashData.single_sold}
-                        singles={reportMainDashData.totalSingles}
-                        streams={reportMainDashData.totalStreams}
-                        totalEarnedBalance={reportMainDashData.totalRevenue}
+                        // singles={reportMainDashData.totalSingles}
+                        singles={ salesReportTotalEarnings.totalSingles }
+                        singlesSold={ salesReportTotalEarnings.noSold }
+                        // streams={reportMainDashData.totalStreams}
+                        streamRevenue={ salesReportTotalEarnings.streamRevenue }
+                        // totalEarnedBalance={reportMainDashData.totalRevenue}
+                        totalEarnedBalance={salesReportTotalEarnings.revenue}
                     />
 
                     <ReportTabsComponent reportType={reportType} setReportType={setReportType} />
@@ -103,20 +107,20 @@ function SalesReport() {
                     {
                         reportType == "Singles" &&
                         <SRAT_SinglesComponent 
-                            tBodyContent={salesReportSingleAnalytics}
-                            displayDownloadReport={ 
-                                salesReportSingleAnalytics && salesReportSingleAnalytics.length ? true : false 
-                            }
+                            tBodyContent={salesReportSingles}
+                            // displayDownloadReport={ 
+                            //     salesReportSingles && salesReportSingles.length ? true : false 
+                            // }
                         />
                     }
 
                     {
                         reportType == "Albums" &&
                         <SRAT_AlbumsComponent 
-                            tBodyContent={salesReportAlbumAnalytics} 
-                            displayDownloadReport={
-                                salesReportAlbumAnalytics && salesReportAlbumAnalytics.length ? true : false 
-                            }
+                            tBodyContent={salesReportAlbum} 
+                            // displayDownloadReport={
+                            //     salesReportAlbum && salesReportAlbum.length ? true : false 
+                            // }
                         />
                     }
 
@@ -132,14 +136,14 @@ function SalesReport() {
                     {
                         reportType == "Location" &&
                         <SRAT_LocationComponent 
-                            tBodyContent={locationsAnalytics} 
+                            tBodyContent={salesReportLocations} 
                         />
                     }
 
                     {
                         reportType == "Months" &&
                         <SRAT_MonthsComponent 
-                            tBodyContent={reportMonthlyAnalytics}
+                            tBodyContent={salesReportMonths}
                         />
                     }
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { createSearchParams, useNavigate } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 
@@ -24,12 +24,16 @@ const ViewSongItemComponent: React.FC<_Props> = ({ releaseDetails, releaseType }
     const _setReleaseDetails = useReleaseStore((state) => state._setReleaseDetails);
     const _handleSetSingleRelease = useCreateReleaseStore((state) => state._handleSetSingleRelease1);
     const _handleSetAlbumRelease = useCreateReleaseStore((state) => state._handleSetAlbumRelease);
+    const _setSongDetails = useReleaseStore((state) => state._setSongDetails);
 
     const { handleCheckReleaseCart } = useCart();
 
     const handleNavigation = async () => {
         // console.log(index);
         _setReleaseDetails(releaseDetails);
+
+        const song = releaseDetails.songs[0];
+        if (releaseDetails.songs.length) _setSongDetails(song);
 
         if (releaseDetails.status == "Incomplete") {
             if (releaseDetails.releaseType == "album") {
@@ -68,7 +72,15 @@ const ViewSongItemComponent: React.FC<_Props> = ({ releaseDetails, releaseType }
         }
 
         // Single" | "Album"
-        navigate(`/account/artist/${releaseType == "Album" ? "album-details" : "song-details"}`);
+        const url = `/account/analytics/${releaseType == "Album" ? "album-details" : "song-details"}`;
+        const params = {
+            releaseId: releaseDetails._id || '',
+            songId: song._id || ''
+        };
+        navigate({
+            pathname: url,
+            search: `?${createSearchParams(params)}`,
+        });
     };
 
 
@@ -84,7 +96,7 @@ const ViewSongItemComponent: React.FC<_Props> = ({ releaseDetails, releaseType }
                 // return;
 
                 
-                // navigate(`/account/artist/${albumType == "Album" ? "album-details" : "song-details"}`);
+                // navigate(`/account/analytics/${albumType == "Album" ? "album-details" : "song-details"}`);
                 // let song_id = song.songs ? song?.songs[index]._id : song._id;
 
                 // _setSongDetails({

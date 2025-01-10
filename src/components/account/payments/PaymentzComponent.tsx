@@ -17,6 +17,7 @@ import FL_EuroConfirmationModalComponent from './setup/euroPayments/FL_EuroConfi
 import PayoutSetupSuccessModalComponent from './setup/PayoutSetupSuccessModal';
 import PaypalSetupModalComponent from './setup/PaypalSetup';
 import KycSetupModalComponent from './kyc/KycSetup';
+import { transactionInterface, withdrawInterface } from '@/typeInterfaces/transaction.interface';
 
 
 interface _Props {
@@ -97,30 +98,31 @@ const PaymentzComponent: React.FC<_Props> = ({
     // Withdrawals
     const [withdrawalReview, setWithdrawalReview] = useState(false);
     const [withdrawSuccess, setWithdrawSuccess] = useState(false);
-    const [withdrawlDetails, setWithdrawlDetails] = useState({
+    const [withdrawlDetails, setWithdrawlDetails] = useState<withdrawInterface>({
         currency: "",
         narration: "",
         amount: "",
+        exchangeRate: {
+            destination: {
+                amount: 0,
+                currency: ''
+            },
+            rate: 0,
+            source: {
+                amount: 0,
+                currency: ''
+            }
+        },
+        // paymentDetails: ''
     });
-    const [successfulWithdrawlDetails, setSuccessfulWithdrawlDetails] = useState({
-        email: '',
-        narration: '',
-        credit: 0,
-        debit: 0,
-        amount: 0,
-        currency: '',
-        status: '',
-        balance: 0,
-        created_at: '',
-        _id: '',
-    })
+    const [successfulWithdrawlDetails, setSuccessfulWithdrawlDetails] = useState<transactionInterface>();
 
-    const confirmSetWithdrawlBtn = (data: typeof withdrawlDetails) => {
+    const confirmSetWithdrawlBtn = (data: withdrawInterface) => {
         setWithdrawlDetails(data);
         setWithdrawalReview(true);
     }
 
-    const saveWithdrawlBtn = (data: typeof successfulWithdrawlDetails) => {
+    const saveWithdrawlBtn = (data: transactionInterface) => {
         setSuccessfulWithdrawlDetails(data);
         setWithdrawlModal(false);
         setWithdrawalReview(false);
@@ -389,11 +391,6 @@ const PaymentzComponent: React.FC<_Props> = ({
                 closeModal={() => setWithdrawalReview(false) }
                 formDetails={withdrawlDetails}
                 saveBtn={saveWithdrawlBtn}
-                // saveBtn={() => {
-                //     setWithdrawlModal(false);
-                //     setWithdrawalReview(false);
-                //     setWithdrawSuccess(true);
-                // }}
             />
 
             <WithdrawConfirmationModalComponent
@@ -401,7 +398,6 @@ const PaymentzComponent: React.FC<_Props> = ({
                 withdrawlData={successfulWithdrawlDetails}
                 closeModal={() => setWithdrawSuccess(false)}
             />
-
 
         </>
     )

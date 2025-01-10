@@ -4,9 +4,6 @@ import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 // import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
-import FormControl from '@mui/material/FormControl';
-import Select from '@mui/material/Select';
-import MenuItem from '@mui/material/MenuItem';
 
 import IconButton from '@mui/material/IconButton';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
@@ -25,47 +22,41 @@ import { useReleaseStore } from '@/state/releaseStore';
 // import BarChartGraphComponent from '@/components/analytics/BarChartGraph';
 // import SingleSongDspOverviewComponent from '@/components/analytics/SingleSongDspOverview';
 import colors from '@/constants/colors';
-import { currencyDisplay, formatedNumber } from '@/util/resources';
+import { currencyDisplay, formatedNumber, getQueryParams } from '@/util/resources';
 // import { getDateRange, getFormattedDateRange } from '@/util/dateTime';
 // import { useEffect } from 'react';
-import { useSongAnalytics } from '@/hooks/analytics/useSongAnalytics';
-import { useEffect } from 'react';
-import { allMonths } from '@/util/months';
-import { getCurrentMonthValue } from '@/util/dateTime';
+import { useEffect, useState } from 'react';
+// import { allMonths } from '@/util/months';
+import { getDateRangeBydays } from '@/util/dateTime';
 import CopyShareLink from '@/components/release/CopyShareLink';
 import sampleCoverArtWorkImage from '@/assets/images/album.png';
+import DateRangeMonthsYearBasicMenu from '@/components/DateRange_MonthsYear';
+import { useAnalyticsHook } from '@/hooks/analytics/useAnalyticsHook';
 
 
 function SongDetails() {
     const navigate = useNavigate();
     const releaseDetails = useReleaseStore((state) => state.releaseDetails);
+    const songDetails = useReleaseStore((state) => state.songDetails);
+    const [dateRange, setDateRange] = useState(getDateRangeBydays(365));
+
+    const songId = getQueryParams("songId") || songDetails._id || '';
+    const releaseId = getQueryParams("releaseId") || releaseDetails._id || '';
+
 
     const { 
-        // spotifyAndAppleOverview, 
-        getSportifiyAppleOverview,
-
-        songDashAnalytics, // setSongDashAnalytics,
-
-        // spotifyDataset, appleMusicDataset, // graphApiData, 
-        getGraphData,
-
-        handleDataRangeData,
-    } = useSongAnalytics();
+        songTotalEarningsAnalytics,
+        getSongAnalytics,
+    } = useAnalyticsHook();
 
     useEffect(() => {
-        // getAnalyticsData();
-        // console.log(songDetails);
-
-        if (!releaseDetails._id) {
-            navigate("/account");
-            return;
-        }
-
-        getGraphData(releaseDetails._id, releaseDetails.title, "single");
+        console.log(dateRange);
         
-        getSportifiyAppleOverview(releaseDetails._id, "single");
-        getSportifiyAppleOverview(releaseDetails._id, "single");
-    }, []);
+        getSongAnalytics(
+            dateRange.startDate, dateRange.endDate,
+            songId, releaseId,
+        );
+    }, [dateRange]);
 
     
     return (
@@ -90,61 +81,12 @@ function SongDetails() {
                             <ChevronLeftIcon />
                         </IconButton>
 
-                        <Box>
-                            <FormControl fullWidth sx={{ width: "fit-content" }}>
-                                <Select
-                                    labelId="sortByDays"
-                                    id="sortByDays-select"
-                                    label=""
-                                    defaultValue={getCurrentMonthValue}
-                                    // placeholder='Last 30 Days'
-
-                                    sx={{
-                                        color: "#fff",
-                                        borderRadius: "8px",
-                                        bgcolor: colors.dark,
-                                        // textAlign: "center",
-                                        fontWeight: "900",
-                                        border: "none",
-                                        fontSize: {xs: "10px", md: "20px"},
-                                        lineHeight: {xs: "12px", md: "24px"},
-                                        letterSpacing: {xs: "-0.67px", md: "-1.34px"},
-
-                                        '& .MuiSelect-select': {
-                                            p: "5px 14px"
-                                        },
-
-                                        '.MuiOutlinedInput-notchedOutline': {
-                                            border: "none",
-                                            // borderColor: '#fff',
-                                            p: 0
-                                        },
-                                        // '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                                        //     borderColor: '#fff',
-                                        // },
-                                        // '&:hover .MuiOutlinedInput-notchedOutline': {
-                                        //     borderColor: '#fff',
-                                        // },
-                                        '.MuiSvgIcon-root ': {
-                                            fill: "#797979",
-                                        }
-                                    }}
-                                    onChange={(e) => {
-                                        handleDataRangeData(`${e.target.value}`);
-                                    }}
-                                >
-                                    {
-                                        allMonths.map((month, index) => (
-                                            <MenuItem key={index} value={index}>
-                                                { month }
-                                            </MenuItem>
-                                        ))
-                                    }
-                                </Select>
-                            </FormControl>
-                        </Box>
+                        <DateRangeMonthsYearBasicMenu 
+                            dateRangeValue={dateRange}
+                            setDateRangeValue={setDateRange}
+                            // setDateRangeValue={(value) => setDateRangeValue(value)}
+                        />
                     </Stack>
-
 
                     <Typography
                         sx={{
@@ -182,7 +124,7 @@ function SongDetails() {
                                     fontSize: "24px",
                                     lineHeight: "24px"
                                 }}
-                            > { releaseDetails.title } </Typography>
+                            > { songDetails.songTitle } </Typography>
 
                             <Typography
                                 sx={{
@@ -190,7 +132,7 @@ function SongDetails() {
                                     fontSize: "17px",
                                     lineHeight: "24px",
                                 }}
-                            > { releaseDetails.mainArtist.spotifyProfile.name } </Typography>
+                            >{ releaseDetails.mainArtist.spotifyProfile.name } </Typography>
 
                             <Stack direction="row" spacing="10px" mt="30px">
                                 <Typography
@@ -233,7 +175,7 @@ function SongDetails() {
                                         // letterSpacing: "-1px",
                                         flex: "1 1 70%",
                                     }}
-                                >Dance  </Typography>
+                                >{ releaseDetails.primaryGenre } </Typography>
                             </Stack>
 
                             <Stack direction="row" spacing="10px" mt="20px">
@@ -255,7 +197,8 @@ function SongDetails() {
                                         // letterSpacing: "-1px",
                                         flex: "1 1 70%",
                                     }}
-                                > { releaseDetails.upc_ean } </Typography>
+                                >{ releaseDetails.upc_ean } </Typography>
+
                             </Stack>
                         </Box>
                     </Stack>
@@ -272,7 +215,7 @@ function SongDetails() {
                                                 fontSize: {xs: '12px', md: '24px'},
                                                 lineHeight: {xs: '8.71px', md: '24px'}
                                             }}
-                                        >{ currencyDisplay(Number(songDashAnalytics.total_revenue)) }</Typography>
+                                        >{ currencyDisplay(Number(songTotalEarningsAnalytics?.revenue || 0)) }</Typography>
 
                                         <Typography
                                             sx={{
@@ -290,7 +233,7 @@ function SongDetails() {
                                                 fontSize: {xs: '12px', md: '24px'},
                                                 lineHeight: {xs: '8.71px', md: '24px'}
                                             }}
-                                        >{ formatedNumber(Number(songDashAnalytics.streams)) } </Typography>
+                                        >{ formatedNumber(Number(songTotalEarningsAnalytics?.streamPlay || 0)) } </Typography>
 
                                         <Typography
                                             sx={{
@@ -308,7 +251,7 @@ function SongDetails() {
                                                 fontSize: {xs: '12px', md: '24px'},
                                                 lineHeight: {xs: '8.71px', md: '24px'}
                                             }}
-                                        >{formatedNumber(Number(songDashAnalytics.stream_time))}</Typography>
+                                        >{formatedNumber(Number(songTotalEarningsAnalytics?.noSold || 0))}</Typography>
 
                                         <Typography
                                             sx={{
@@ -322,7 +265,7 @@ function SongDetails() {
                             </Box>
 
                             <Box maxWidth="35%">
-                                <CopyShareLink linkUrl={releaseDetails.liveUrl} />
+                                <CopyShareLink linkUrl={ releaseDetails.liveUrl || ''} />
                             </Box>
                         </Stack>
                     </Box>
@@ -340,59 +283,11 @@ function SongDetails() {
                             <ChevronLeftIcon />
                         </IconButton>
 
-                        <Box>
-                            <FormControl fullWidth sx={{ width: "fit-content" }}>
-                                <Select
-                                    labelId="sortByDays"
-                                    id="sortByDays-select"
-                                    label=""
-                                    defaultValue={getCurrentMonthValue}
-                                    // placeholder='Last 30 Days'
-
-                                    onChange={(e) => {
-                                        handleDataRangeData(`${e.target.value}`);
-                                    }}
-                                    sx={{
-                                        color: "#fff",
-                                        borderRadius: "8px",
-                                        bgcolor: colors.dark,
-                                        // textAlign: "center",
-                                        fontWeight: "900",
-                                        border: "none",
-                                        fontSize: {xs: "10px", md: "20px"},
-                                        lineHeight: {xs: "12px", md: "24px"},
-                                        letterSpacing: {xs: "-0.67px", md: "-1.34px"},
-
-                                        '& .MuiSelect-select': {
-                                            p: "5px 14px"
-                                        },
-
-                                        '.MuiOutlinedInput-notchedOutline': {
-                                            border: "none",
-                                            // borderColor: '#fff',
-                                            p: 0
-                                        },
-                                        // '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                                        //     borderColor: '#fff',
-                                        // },
-                                        // '&:hover .MuiOutlinedInput-notchedOutline': {
-                                        //     borderColor: '#fff',
-                                        // },
-                                        '.MuiSvgIcon-root ': {
-                                            fill: "#797979",
-                                        }
-                                    }}
-                                >
-                                    {
-                                        allMonths.map((month, index) => (
-                                            <MenuItem key={index} value={index}>
-                                                { month }
-                                            </MenuItem>
-                                        ))
-                                    }
-                                </Select>
-                            </FormControl>
-                        </Box>
+                        <DateRangeMonthsYearBasicMenu 
+                            dateRangeValue={dateRange}
+                            setDateRangeValue={setDateRange}
+                            // setDateRangeValue={(value) => setDateRangeValue(value)}
+                        />
                     </Stack>
 
                     <Typography
@@ -442,7 +337,7 @@ function SongDetails() {
                                     fontSize: "17.8px",
                                     lineHeight: "17.8px"
                                 }}
-                            >{ currencyDisplay(Number(songDashAnalytics.total_revenue)) }</Typography>
+                            >{ currencyDisplay(Number(songTotalEarningsAnalytics?.revenue || 0)) }</Typography>
 
                             <Typography
                                 sx={{
@@ -460,7 +355,7 @@ function SongDetails() {
                                     fontSize: "17.8px",
                                     lineHeight: "17.8px"
                                 }}
-                            >{ formatedNumber(Number(songDashAnalytics.streams)) }</Typography>
+                            >{ formatedNumber(Number(songTotalEarningsAnalytics?.streamPlay || 0)) }</Typography>
 
                             <Typography
                                 sx={{
@@ -478,7 +373,7 @@ function SongDetails() {
                                     fontSize: "17.8px",
                                     lineHeight: "17.8px"
                                 }}
-                            >{ formatedNumber(Number(songDashAnalytics.streams)) }</Typography>
+                            >{ formatedNumber(Number(songTotalEarningsAnalytics?.noSold || 0)) }</Typography>
 
                             <Typography
                                 sx={{
@@ -508,7 +403,7 @@ function SongDetails() {
                                         fontSize: "15.43px",
                                         lineHeight: "15.43px",
                                     }}
-                                >{ releaseDetails.title }</Typography>
+                                >{ songDetails.songTitle }</Typography>
 
                                 <Typography
                                     sx={{
@@ -520,7 +415,7 @@ function SongDetails() {
                             </Box>
 
                             <Box sx={{ flex: "1 1 40%", maxWidth: "50%" }} >
-                                <CopyShareLink linkUrl={releaseDetails.liveUrl} />
+                                <CopyShareLink linkUrl={releaseDetails.liveUrl || ''} />
                             </Box>
                         </Stack>
 

@@ -32,6 +32,7 @@ import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
 import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
 import AccountBalanceOutlinedIcon from '@mui/icons-material/AccountBalanceOutlined';
 import PersonIcon from '@mui/icons-material/Person';
+import MusicNoteIcon from '@mui/icons-material/MusicNote';
 
 import SoundMuve from "@/assets/branded/logo.png";
 import icon from "@/assets/branded/icon.png";
@@ -87,13 +88,13 @@ export default function AccountHeaderComponent({headerSpacing = false} : _Props)
         },
         {
             title: "Sales report",
-            link: "/account/record-label/sales-report",
+            link: "/account/analytics/sales-report",
             icon: ReceiptLongIcon,
             active: pathname.includes('/sales-report'),
         },
         {
             title: "Balance history",
-            link: "/account/record-label/balance-history",
+            link: "/account/analytics/balance-history",
             icon: AccountBalanceWalletIcon,
             active: pathname.includes('/balance-history'),
         },
@@ -102,6 +103,12 @@ export default function AccountHeaderComponent({headerSpacing = false} : _Props)
             link: "#",
             icon: AccountBalanceOutlinedIcon,
             active: withdrawlModal,
+        },
+        {
+            title: "Projects",
+            link: "/account/analytics/all-music",
+            icon: MusicNoteIcon,
+            active: pathname.includes('/all-music'),
         },
         {
             title: "Add Artist",

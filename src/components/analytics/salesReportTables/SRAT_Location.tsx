@@ -12,9 +12,9 @@ import SRAT_DownloadReportBtn from './SRAT_DownloadBtn';
 import { SxProps, Theme } from '@mui/material/styles';
 import SRAT_TableHead from './SRAT_TableHead';
 import { currencyDisplay, formatedNumber } from '@/util/resources';
-import { locationAnalyticsInterface } from '@/constants/analyticsTypesInterface';
 import LoadingDataComponent from '@/components/LoadingData';
 import EmptyListComponent from '@/components/EmptyList';
+import { locationAnalyticsInterface } from '@/typeInterfaces/analytics.interface';
 
 
 interface _Props {
@@ -22,7 +22,7 @@ interface _Props {
     displayDownloadReport?: boolean,
 };
 
-const headerTitle = [ "Location", "Album Sold", "Singles sold", "Streams", "Total" ];
+const headerTitle = [ "Location", "Album Sold", "Singles sold", "Streams", "Revenue" ];
 
 const tableValueStyle: SxProps<Theme> = {
     fontWeight: "400",
@@ -47,7 +47,7 @@ const SRAT_LocationComponent: React.FC<_Props> = ({
                     color: colors.dark
                 }}
             >
-                <TableContainer sx={{ maxHeight: 440 }}>
+                <TableContainer sx={{ maxHeight: 640 }}>
                     <Table stickyHeader aria-label="sticky table" 
                         sx={{
                             [`& .${tableCellClasses.root}`]: {
@@ -70,35 +70,35 @@ const SRAT_LocationComponent: React.FC<_Props> = ({
                                                         ...tableValueStyle,
                                                         color: colors.dark,
                                                     }}
-                                                > { row.location } </TableCell>
+                                                > { row.country } </TableCell>
 
                                                 <TableCell align={"center"} 
                                                     sx={{ 
                                                         ...tableValueStyle,
                                                         color: colors.dark,
                                                     }}
-                                                > { formatedNumber(Number(row.album_sold)) } </TableCell>
+                                                > { formatedNumber(Number(row.albumSold)) } </TableCell>
 
                                                 <TableCell align={"center"} 
                                                     sx={{ 
                                                         ...tableValueStyle,
                                                         color: colors.dark,
                                                     }}
-                                                > { formatedNumber(Number(row.single_sold)) } </TableCell>
+                                                > { formatedNumber(Number(row.noSold)) } </TableCell>
 
                                                 <TableCell align={"center"} 
                                                     sx={{ 
                                                         ...tableValueStyle,
                                                         color: colors.dark,
                                                     }}
-                                                > { formatedNumber(Number(row.streams)) } </TableCell>
+                                                > { formatedNumber(Number(row.streamPlay)) } </TableCell>
                                                 
                                                 <TableCell align={"center"} 
                                                     sx={{ 
                                                         ...tableValueStyle,
                                                         color: "#627C1D",
                                                     }}
-                                                > { currencyDisplay(Number(row.total)) } </TableCell>
+                                                > { currencyDisplay(Number(row.revenue)) } </TableCell>
 
                                             </TableRow>
                                         );
@@ -109,6 +109,31 @@ const SRAT_LocationComponent: React.FC<_Props> = ({
 
                     </Table>
                 </TableContainer>
+
+
+                {/* {
+                    tBodyContent && tBodyContent.length ?
+                        <TablePagination
+                            rowsPerPageOptions={[5, 10, 25, 50, 100]}
+                            component="div"
+                            count={totalRecords} // totalRecords
+                            rowsPerPage={limitNo}
+                            page={currentPageNo -1}
+                            onPageChange={(_e, page)=> {
+                                // console.log(page);
+                                const newPage = page + 1;
+                                getTransactionHistory(newPage, limitNo, dateRange.startDate, dateRange.endDate);
+                            }}
+                            onRowsPerPageChange={(e) => {
+                                const value = e.target.value;
+                                // console.log(value);
+        
+                                setLimitNo(Number(value));
+                                getTransactionHistory(1, limitNo, dateRange.startDate, dateRange.endDate);
+                            }}
+                        />
+                    : <></>
+                } */}
 
 
                 {

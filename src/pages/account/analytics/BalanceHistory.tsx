@@ -1,10 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
 
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
-
 import Paper from '@mui/material/Paper';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -12,108 +10,125 @@ import TableCell, { tableCellClasses } from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
-
+import Typography from '@mui/material/Typography';
+import TablePagination from '@mui/material/TablePagination';
+import Chip from '@mui/material/Chip';
 
 import IconButton from '@mui/material/IconButton';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 
-import AccountWrapper from '@/components/AccountWrapper';
-import { useSettingStore } from '@/state/settingStore';
-import Typography from '@mui/material/Typography';
-import FormControl from '@mui/material/FormControl';
-import Select, { SelectChangeEvent } from '@mui/material/Select';
-import MenuItem from '@mui/material/MenuItem';
 
+import AccountWrapper from '@/components/AccountWrapper';
+// import { useSettingStore } from '@/state/settingStore';
 // import PaymentComponent from '@/components/account/PaymentComponent';
 import EmptyListComponent from '@/components/EmptyList';
 import LoadingDataComponent from '@/components/LoadingData';
 import PaymentzComponent from '@/components/account/payments/PaymentzComponent';
 import ArtistAnalyticsNavComponent from '@/components/account/ArtistAnalyticsNav';
 
-import { useUserStore } from '@/state/userStore';
-import { balTransactionsInterface } from '@/constants/typesInterface';
-import { emekaApiEndpoint, formatedNumber } from '@/util/resources';
-import { formatTransactionDate, getDateRange, getFormattedDateRange } from '@/util/dateTime';
+import { currencyDisplay, } from '@/util/resources';
+import { formatTransactionDate, getDateRangeBydays } from '@/util/dateTime';
 import colors from '@/constants/colors';
+// import Button from '@mui/material/Button';
+// import Menu from '@mui/material/Menu';
+import DateRangeBasicMenu from '@/components/DateRange';
+import { useAnalyticsHook } from '@/hooks/analytics/useAnalyticsHook';
+import { numberOfLinesTypographyStyle } from '@/util/mui';
+import { transactionInterface } from '@/typeInterfaces/transaction.interface';
+import { useUserStore } from '@/state/userStore';
 
   
 const headerTitle = [
-    "Date", "Description", "Debit", "Credit", "Balance", "Currency", "Status"
+    "Date", "Transaction Type", "Description", "Amount", "Currency", "Status"
 ]
 
 
 function BalanceHistory() {
     const navigate = useNavigate();
-    const darkTheme = useSettingStore((state) => state.darkTheme);
+    // const darkTheme = useSettingStore((state) => state.darkTheme);
     const userData = useUserStore((state) => state.userData); 
-    const accessToken = useUserStore((state) => state.accessToken);
-
-    const [balTransactions, setBalTransactions] = useState<balTransactionsInterface[]>();
-    const [sortByDays, setSortByDays] = useState('All');
+    // const accessToken = useUserStore((state) => state.accessToken);
 
     const [openPayoutModal, setOpenPayoutModal] = useState(false);
     const [withdrawlModal, setWithdrawlModal] = useState(false);
 
+    const [dateRange, setDateRange] = useState(getDateRangeBydays(30));
+
+    const {
+        // apiResponse, setApiResponse,
+        limitNo, setLimitNo,
+
+        currentPageNo, totalRecords,
+        // totalPages,
+        
+        // isSubmitting,
+
+        transactions,
+        getTransactionHistory,
+        handleStatusDisplay,
+    } = useAnalyticsHook();
+
     useEffect(() => {
-        getAllBalanceHistory();
-    }, []);
-    
-    const getAllBalanceHistory = async () => {
-        try {
-            const response = (await axios.get(`${emekaApiEndpoint}/wallet/get-transactionby-email/${ userData.email }`, {
-            // const response = (await axios.get(`${emekaApiEndpoint}/wallet/get-transactionby-email/latham01@yopmail.com`, {
-                headers: {
-                    Authorization: `Bearer ${accessToken}`
-                }
-            })).data;
-            console.log(response);
+        // console.log(dateRange);
+        getTransactionHistory(currentPageNo, limitNo, dateRange.startDate, dateRange.endDate );
+    }, [dateRange]);
 
-            // setBalTransactions(response.transactions);
-            setBalTransactions([]);
-
-        } catch (error: any) {
-            const errorResponse = error.response.data || error;
-            console.error(errorResponse);
-            setBalTransactions([]);
-        }
-    }
-    
-    const getBalanceBetweenDates = async (startDate: string, endDate: string) => {
-        try {
-            const response = (await axios.get(`${emekaApiEndpoint}/wallet/check-transactions?startDate=${startDate}&endDate=${endDate}&email=${ userData.email }`, {
-                headers: {
-                    Authorization: `Bearer ${accessToken}`
-                }
-            })).data;
-            console.log(response);
-
-            // setBalTransactions(response);
-            setBalTransactions([]);
-
-        } catch (error: any) {
-            const errorResponse = error.response.data;
-            console.error(errorResponse);
-            setBalTransactions([]);
-        }
-    }
-
-    const handleChange = (event: SelectChangeEvent) => {
-        const {
-            target: { value },
-        } = event;
-        // console.log(value);
-
-        if (value != "All") {
-            const dateRange = getDateRange(Number(value));
-            setSortByDays(dateRange);
-            const betweenDates = getFormattedDateRange(Number(value));
-            getBalanceBetweenDates(betweenDates.startDate, betweenDates.todayDate);
+    const handleAmountDisplay = (transactions: transactionInterface) => {
+        if (transactions.transactionType == "Withdrawal") {
+            return (
+                <Typography variant='subtitle2'
+                    sx={{
+                        color: "red",
+                        // color: colors.dark,
+                        fontWeight: "400",
+                        fontSize: {xs: "9.07px", md: "18px"},
+                        lineHeight: {xs: "12.1px", md: "24px"},
+                    }}
+                > - {currencyDisplay(Number(transactions.amount))}</Typography>
+            )
+        } else if (transactions.transactionType == "Credit") {
+            return (
+                <Typography variant='subtitle2'
+                    sx={{
+                        color: "green",
+                        // color: colors.dark,
+                        fontWeight: "400",
+                        fontSize: {xs: "9.07px", md: "18px"},
+                        lineHeight: {xs: "12.1px", md: "24px"},
+                    }}
+                > + {currencyDisplay(Number(transactions.amount))}</Typography>
+            )
+        } else if (transactions.transactionType == "Debit") {
+            return (
+                <Typography variant='subtitle2'
+                    sx={{
+                        color: "red",
+                        // color: colors.dark,
+                        fontWeight: "400",
+                        fontSize: {xs: "9.07px", md: "18px"},
+                        lineHeight: {xs: "12.1px", md: "24px"},
+                    }}
+                > - {currencyDisplay(Number(transactions.amount))}</Typography>
+            )
+            
         } else {
-            setSortByDays(value);
-            getAllBalanceHistory();
+            return (
+                <Typography variant='subtitle2'
+                    sx={{
+                        color: colors.dark,
+                        fontWeight: "400",
+                        fontSize: {xs: "9.07px", md: "18px"},
+                        lineHeight: {xs: "12.1px", md: "24px"},
+                    }}
+                >{currencyDisplay(Number(transactions.amount))}</Typography>
+            )
         }
-    };
-    
+
+        // return currencyDisplay(Number(transactions.amount));
+    }
+
+
+
 
     return (
         <AccountWrapper>
@@ -126,7 +141,7 @@ function BalanceHistory() {
                         <ChevronLeftIcon sx={{ display: {xs: "none", md: "block"} }} />
                     </IconButton>
 
-                    <ArtistAnalyticsNavComponent darkTheme={darkTheme} currentPage='balance-history' accountType='artist' />
+                    <ArtistAnalyticsNavComponent currentPage='balance-history' accountType='artist' />
 
                     <Box></Box>
                 </Stack>
@@ -142,7 +157,7 @@ function BalanceHistory() {
                             color: colors.dark
                         }}
                     >
-                        <TableContainer sx={{ maxHeight: 440 }}>
+                        <TableContainer>
                             <Table stickyHeader aria-label="sticky table" 
                                 sx={{
                                     [`& .${tableCellClasses.root}`]: {
@@ -153,59 +168,10 @@ function BalanceHistory() {
                                 <TableHead>
                                     <TableRow>
                                         <TableCell align="left" colSpan={3} sx={{ bgcolor: colors.secondary }}>
-                                            <FormControl fullWidth sx={{ width: "fit-content" }}>
-                                                <Select
-                                                    labelId="sortByDays"
-                                                    id="sortByDays-select"
-                                                    label=""
-                                                    defaultValue="All"
-                                                    onChange={handleChange}
-
-                                                    sx={{
-                                                        color: "#fff",
-                                                        borderRadius: "8px",
-                                                        bgcolor: "#272727",
-                                                        // textAlign: "center",
-                                                        border: "none",
-                                                        fontWeight: "900",
-                                                        fontSize: {xs: "10px", md: "20px"},
-                                                        lineHeight: {xs: "12px", md: "24px"},
-                                                        letterSpacing: {xs: "-0.67px", md: "-1.34px"},
-
-                                                        '& .MuiSelect-select': {
-                                                            p: "5px 14px"
-                                                        },
-
-                                                        '.MuiOutlinedInput-notchedOutline': {
-                                                            border: "none",
-                                                            // borderColor: '#fff',
-                                                            p: 0
-                                                        },
-                                                        // '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                                                        //     borderColor: '#fff',
-                                                        // },
-                                                        // '&:hover .MuiOutlinedInput-notchedOutline': {
-                                                        //     borderColor: '#fff',
-                                                        // },
-                                                        '.MuiSvgIcon-root ': {
-                                                            fill: "#797979",
-                                                        }
-                                                    }}
-                                                >
-                                                    <MenuItem value="All">
-                                                        All
-                                                    </MenuItem>
-                                                    <MenuItem value="7">
-                                                        Last 7 Days
-                                                    </MenuItem>
-                                                    <MenuItem value="14">
-                                                        Last 14 Days
-                                                    </MenuItem>
-                                                    <MenuItem value="30">
-                                                        Last 30 Days
-                                                    </MenuItem>
-                                                </Select>
-                                            </FormControl>
+                                            <DateRangeBasicMenu
+                                                dateRangeValue={dateRange}
+                                                setDateRangeValue={(value) => setDateRange(value)}
+                                            />
                                         </TableCell>
 
                                         <TableCell align="right" colSpan={3} sx={{ bgcolor: colors.secondary }}>
@@ -217,7 +183,19 @@ function BalanceHistory() {
                                                     letterSpacing: {xs: "-0.67px", md: "-1.34px"},
                                                     color: colors.dark
                                                 }}
-                                            >{ sortByDays == "All" ? '' : sortByDays  }</Typography>
+                                            >
+                                                <Typography variant='subtitle1' component="span"
+                                                    sx={{ 
+                                                        color: colors.tertiary,
+                                                        fontWeight: "400",
+                                                        fontSize: "14px"
+                                                    }}
+                                                >Available Bal. </Typography>
+
+                                                <Typography variant='subtitle1' component="span"
+                                                    sx={{ color: 'green', fontWeight: "900" }}
+                                                >{ currencyDisplay(Number(userData.balance)) }</Typography>
+                                            </Typography>
                                         </TableCell>
                                     </TableRow>
 
@@ -260,9 +238,9 @@ function BalanceHistory() {
                                 </TableHead>
 
                                 { 
-                                    balTransactions && balTransactions.length ?
+                                    transactions && transactions.length ?
                                     <TableBody>
-                                        {balTransactions
+                                        {transactions
                                         .map((row, index) => {
                                             return (
                                                 <TableRow hover role="checkbox" tabIndex={-1} key={index}>
@@ -275,11 +253,10 @@ function BalanceHistory() {
                                                             lineHeight: {xs: "12.1px", md: "24px"},
                                                         }}
                                                     >
-                                                        { formatTransactionDate(row.created_at) }
+                                                        { formatTransactionDate(row.createdAt) }
                                                     </TableCell>
 
-                                                    <TableCell 
-                                                        align='center'
+                                                    <TableCell align='center'
                                                         sx={{ 
                                                             color: colors.dark,
                                                             fontWeight: "400",
@@ -287,11 +264,27 @@ function BalanceHistory() {
                                                             lineHeight: {xs: "12.1px", md: "24px"},
                                                         }}
                                                     >
-                                                        { row.narration }
+                                                        { row.transactionType }
                                                     </TableCell>
 
-                                                    <TableCell 
-                                                        align='center'
+                                                    <TableCell align='center'>
+                                                        <Typography
+                                                            sx={{ 
+                                                                color: colors.dark,
+                                                                fontWeight: "400",
+                                                                fontSize: {xs: "9.07px", md: "18px"},
+                                                                // lineHeight: {xs: "12.1px", md: "24px"},
+                                                                ...numberOfLinesTypographyStyle(2)
+                                                            }}
+                                                        >{ row.description }</Typography>
+                                                    </TableCell>
+
+
+                                                    <TableCell align='center'>
+                                                        { handleAmountDisplay(row) }
+                                                    </TableCell>
+
+                                                    <TableCell align='center'
                                                         sx={{ 
                                                             color: colors.dark,
                                                             fontWeight: "400",
@@ -299,31 +292,7 @@ function BalanceHistory() {
                                                             lineHeight: {xs: "12.1px", md: "24px"},
                                                         }}
                                                     >
-                                                        { formatedNumber(row.debit) }
-                                                    </TableCell>
-
-                                                    <TableCell 
-                                                        align='center'
-                                                        sx={{ 
-                                                            color: colors.dark,
-                                                            fontWeight: "400",
-                                                            fontSize: {xs: "9.07px", md: "18px"},
-                                                            lineHeight: {xs: "12.1px", md: "24px"},
-                                                        }}
-                                                    >
-                                                        { formatedNumber(row.credit) }
-                                                    </TableCell>
-
-                                                    <TableCell 
-                                                        align='center'
-                                                        sx={{ 
-                                                            color: colors.dark,
-                                                            fontWeight: "400",
-                                                            fontSize: {xs: "9.07px", md: "18px"},
-                                                            lineHeight: {xs: "12.1px", md: "24px"},
-                                                        }}
-                                                    >
-                                                        { formatedNumber(row.balance) }
+                                                        { row.withdrawal?.currency || "USD" }
                                                     </TableCell>
 
                                                     <TableCell 
@@ -336,20 +305,25 @@ function BalanceHistory() {
                                                             lineHeight: {xs: "12.1px", md: "24px"},
                                                         }}
                                                     >
-                                                        { row.currency }
-                                                    </TableCell>
+                                                        {/* { row.status } */}
 
-                                                    <TableCell 
-                                                        // align='right'
-                                                        align='center'
-                                                        sx={{ 
-                                                            color: colors.dark,
-                                                            fontWeight: "400",
-                                                            fontSize: {xs: "9.07px", md: "18px"},
-                                                            lineHeight: {xs: "12.1px", md: "24px"},
-                                                        }}
-                                                    >
-                                                        { row.status || "Pending" }
+                                                        <Chip label={row.status} size='small'
+                                                            sx={{
+                                                                // color: 'white', 
+                                                                bgcolor: handleStatusDisplay(row.status).bgcolor,
+                                                             
+                                                                '& .MuiChip-label': {
+                                                                    color: handleStatusDisplay(row.status).color,
+                                                                    fontSize: "14px",
+                                                                },
+                                                             
+                                                                '& .MuiChip-icon': {
+                                                                    color: handleStatusDisplay(row.status).color,
+                                                                    // fontSize: 30
+                                                                },
+                                                            }}
+                                                        />
+
                                                     </TableCell>
                                                 </TableRow>
                                             );
@@ -360,10 +334,34 @@ function BalanceHistory() {
 
                             </Table>
                         </TableContainer>
+
+                        {
+                            transactions && transactions.length ?
+                                <TablePagination
+                                    rowsPerPageOptions={[5, 10, 25, 50, 100]}
+                                    component="div"
+                                    count={totalRecords} // totalRecords
+                                    rowsPerPage={limitNo}
+                                    page={currentPageNo -1}
+                                    onPageChange={(_e, page)=> {
+                                        // console.log(page);
+                                        const newPage = page + 1;
+                                        getTransactionHistory(newPage, limitNo, dateRange.startDate, dateRange.endDate);
+                                    }}
+                                    onRowsPerPageChange={(e) => {
+                                        const value = e.target.value;
+                                        // console.log(value);
+                
+                                        setLimitNo(Number(value));
+                                        getTransactionHistory(1, limitNo, dateRange.startDate, dateRange.endDate);
+                                    }}
+                                />
+                            : <></>
+                        }
                         
                         {
-                            balTransactions ? (
-                                balTransactions.length ?
+                            transactions ? (
+                                transactions.length ?
                                     <Stack direction={'row'} justifyContent={"right"} sx={{p: 2 }}>
                                         <Box 
                                             sx={{

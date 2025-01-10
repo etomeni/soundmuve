@@ -12,31 +12,18 @@ import Alert from '@mui/material/Alert';
 import { useUserStore } from '@/state/userStore';
 // import { useSettingStore } from '@/state/settingStore';
 
-import { emekaApiEndpoint, formatedNumber } from '@/util/resources';
-import { withdrawInterface } from './WithdrawModal';
+import { apiEndpoint, currencyDisplay, formatedNumber } from '@/util/resources';
 import { getCurrencySymbol } from '@/util/currencies';
 import colors from '@/constants/colors';
 import PaymentModalWrapper from '../PaymentWrapper';
+import { transactionInterface, withdrawInterface } from '@/typeInterfaces/transaction.interface';
 
-
-export interface successfulWithdrawalInterface {
-    email: string;
-    narration: string;
-    credit: number;
-    debit: number;
-    amount: number;
-    currency: string;
-    status: string;
-    balance: number;
-    created_at: string;
-    _id: string;
-};
 
 interface _Props {
     openModal: boolean,
     closeModal: () => void;
     // changeMethod: () => void;
-    saveBtn: (data: successfulWithdrawalInterface) => void;
+    saveBtn: (data: transactionInterface) => void;
     formDetails: withdrawInterface
 }
 
@@ -71,7 +58,6 @@ const FL_ReviewModalComponent: React.FC<_Props> = ({
     }, []);
 
     const onSubmit = async () => {
-
         setApiResponse({
             display: false,
             status: true,
@@ -79,43 +65,57 @@ const FL_ReviewModalComponent: React.FC<_Props> = ({
         });
 
         const data2db = {
-            email: userData.email,
             narration: formDetails.narration,
-            amount: formDetails.amount,
+            amount: Number(formDetails.exchangeRate.source.amount), // Number(formDetails.amount),
             currency: formDetails.currency,
-            id: formDetails.paymentDetails?._id || ''
+            exchangeRate: formDetails.exchangeRate,
+            paymentDetails: {
+                payout_id: formDetails.paymentDetails?._id || '',
+                paymentMethod: formDetails.paymentDetails?.paymentMethod,
+                accountNumber: formDetails.paymentDetails?.account_number,
+                beneficiaryName: formDetails.paymentDetails?.beneficiary_name,
+                bankName: formDetails.paymentDetails?.bank_name,
+                beneficiaryEmail: formDetails.paymentDetails?.beneficiary_email,
+            }
         };
 
-        // const thisData: any = {};
-        // saveBtn(thisData);
+
+        if (Number(userData.balance) < data2db.amount) {
+            // Abort transaction in case of error
+            setApiResponse({
+                display: true,
+                status: false,
+                message: "insufficient balance."
+            });
+            
+            return;
+        }
 
 
-        setApiResponse({
-            display: true,
-            status: false,
-            message: "Insufficient balance"
-        });
-        return;
         
         try {
-            const response = (await axios.post(`${emekaApiEndpoint}/transactionInit/initiate`, data2db, {
-                headers: {
-                    Authorization: `Bearer ${accessToken}`
+            const response = (await axios.post(`${apiEndpoint}/transactions/initiate-withdrawal`, 
+                data2db, 
+                {
+                    headers: {
+                        Authorization: `Bearer ${accessToken}`
+                    }
                 }
-            })).data;
+            )).data;
             console.log(response);
             // setBanks(response.data);
 
-            saveBtn(response.transaction);
+            saveBtn(response.result);
 
         } catch (error: any) {
-            const errorResponse = error.response.data;
-            // console.error(errorResponse);
+            const err = error.response && error.response.data ? error.response.data : error;
+            const fixedErrorMsg = "Ooops and error occurred!";
+            console.log(err);
 
             setApiResponse({
                 display: true,
                 status: false,
-                message: errorResponse.message || "Ooops and error occurred!"
+                message: err.message || fixedErrorMsg
             });
 
         }
@@ -151,6 +151,12 @@ const FL_ReviewModalComponent: React.FC<_Props> = ({
                         }}
                     >
                         {`${getCurrencySymbol(formDetails.currency)}${formatedNumber(Number(formDetails.amount))} `}
+
+                        <Typography variant='subtitle2' component="span"
+                            sx={{
+                                display: formDetails.currency.toLowerCase() == "usd" ? "none" : "initial",
+                            }}
+                        >( {`${currencyDisplay(Number(formDetails.exchangeRate.source.amount))}`} )</Typography>
                     </Typography>
                 </Box>
 

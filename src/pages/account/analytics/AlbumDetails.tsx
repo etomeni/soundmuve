@@ -1,11 +1,8 @@
-import { useNavigate } from 'react-router-dom';
+import { createSearchParams, useNavigate } from 'react-router-dom';
 
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import FormControl from '@mui/material/FormControl';
-import Select from '@mui/material/Select';
-import MenuItem from '@mui/material/MenuItem';
 import IconButton from '@mui/material/IconButton';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 
@@ -17,24 +14,43 @@ import sampleCoverArtWorkImage from '@/assets/images/album.png';
 // import AppleSportifyCheckmark from '@/components/AppleSportifyCheckmark';
 import colors from '@/constants/colors';
 import { useReleaseStore } from '@/state/releaseStore';
-import { useEffect } from 'react';
-import { allMonths } from '@/util/months';
-import { getCurrentMonthValue } from '@/util/dateTime';
+import { useEffect, useState } from 'react';
+// import { allMonths } from '@/util/months';
+import { getDateRangeBydays } from '@/util/dateTime';
 import CopyShareLink from '@/components/release/CopyShareLink';
+import { useAnalyticsHook } from '@/hooks/analytics/useAnalyticsHook';
+import { currencyDisplay, formatedNumber, getQueryParams } from '@/util/resources';
+import DateRangeMonthsYearBasicMenu from '@/components/DateRange_MonthsYear';
 
   
 function AlbumDetails() {
     const navigate = useNavigate();
-    // const darkTheme = useSettingStore((state) => state.darkTheme);
-    const releaseDetails = useReleaseStore((state) => state.releaseDetails);
-
     const _setSongDetails = useReleaseStore((state) => state._setSongDetails);
 
+    const releaseDetails = useReleaseStore((state) => state.releaseDetails);
+    const songDetails = useReleaseStore((state) => state.songDetails);
+    const [dateRange, setDateRange] = useState(getDateRangeBydays(365));
+
+    // const songId = getQueryParams("songId") || songDetails._id || '';
+    const releaseId = getQueryParams("releaseId") || releaseDetails._id || '';
+
+    const { 
+        albumTotalEarningsAnalytics,
+        getAlbumAnalytics,
+    } = useAnalyticsHook();
+
     useEffect(() => {
-        if (!releaseDetails._id) {
+        // console.log(dateRange);
+        
+        if (!releaseId) {
             navigate("/account");
+        } else {
+            getAlbumAnalytics(
+                dateRange.startDate, dateRange.endDate,
+                releaseId,
+            );
         }
-    }, []);
+    }, [dateRange]);
     
 
     return (
@@ -59,57 +75,11 @@ function AlbumDetails() {
                             <ChevronLeftIcon />
                         </IconButton>
 
-                        <Box>
-                            <FormControl fullWidth sx={{ width: "fit-content" }}>
-                                <Select
-                                    labelId="sortByDays"
-                                    id="sortByDays-select"
-                                    label=""
-                                    defaultValue={getCurrentMonthValue}
-                                    sx={{
-                                        color: "#fff",
-                                        borderRadius: "8px",
-                                        bgcolor: colors.dark,
-                                        // textAlign: "center",
-                                        fontWeight: "900",
-                                        border: "none",
-                                        fontSize: {xs: "10px", md: "20px"},
-                                        lineHeight: {xs: "12px", md: "24px"},
-                                        letterSpacing: {xs: "-0.67px", md: "-1.34px"},
-
-                                        '& .MuiSelect-select': {
-                                            p: "5px 14px"
-                                        },
-
-                                        '.MuiOutlinedInput-notchedOutline': {
-                                            border: "none",
-                                            // borderColor: '#fff',
-                                            p: 0
-                                        },
-                                        // '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                                        //     borderColor: '#fff',
-                                        // },
-                                        // '&:hover .MuiOutlinedInput-notchedOutline': {
-                                        //     borderColor: '#fff',
-                                        // },
-                                        '.MuiSvgIcon-root ': {
-                                            fill: "#797979",
-                                        }
-                                    }}
-                                    onChange={(_e) => {
-                                        // handleDataRangeData(`${e.target.value}`);
-                                    }}
-                                >
-                                    {
-                                        allMonths.map((month, index) => (
-                                            <MenuItem key={index} value={index}>
-                                                { month }
-                                            </MenuItem>
-                                        ))
-                                    }
-                                </Select>
-                            </FormControl>
-                        </Box>
+                        <DateRangeMonthsYearBasicMenu 
+                            dateRangeValue={dateRange}
+                            setDateRangeValue={setDateRange}
+                            // setDateRangeValue={(value) => setDateRangeValue(value)}
+                        />
                     </Stack>
 
                     <Stack mt={5} direction="row" spacing="50px">
@@ -161,7 +131,7 @@ function AlbumDetails() {
                                             fontSize: "24px",
                                             lineHeight: "24px"
                                         }}
-                                    >{ releaseDetails.title }</Typography>
+                                    >{ songDetails.songTitle }</Typography>
 
                                     <Typography
                                         sx={{
@@ -174,7 +144,7 @@ function AlbumDetails() {
 
                                 <Box sx={{ flex: "1 1 30%" }}>
                                     <Box>
-                                        <CopyShareLink linkUrl='www.soundmuve.com' />
+                                        <CopyShareLink linkUrl={releaseDetails.liveUrl || '' } />
                                     </Box>
                                 </Box>
                             </Stack>
@@ -255,7 +225,7 @@ function AlbumDetails() {
                                     fontSize: {xs: '12px', md: '24px'},
                                     lineHeight: {xs: '8.71px', md: '24px'}
                                 }}
-                            >$60,000.00</Typography>
+                            >{ currencyDisplay(Number(albumTotalEarningsAnalytics?.revenue || 0)) }</Typography>
 
                             <Typography
                                 sx={{
@@ -273,7 +243,7 @@ function AlbumDetails() {
                                     fontSize: {xs: '12px', md: '24px'},
                                     lineHeight: {xs: '8.71px', md: '24px'}
                                 }}
-                            >80,000,000</Typography>
+                            >{ formatedNumber(Number(albumTotalEarningsAnalytics?.streamPlay || 0)) } </Typography>
 
                             <Typography
                                 sx={{
@@ -291,7 +261,7 @@ function AlbumDetails() {
                                     fontSize: {xs: '12px', md: '24px'},
                                     lineHeight: {xs: '8.71px', md: '24px'}
                                 }}
-                            >120hrs</Typography>
+                            >{formatedNumber(Number(albumTotalEarningsAnalytics?.albumSold || 0))}</Typography>
 
                             <Typography
                                 sx={{
@@ -299,7 +269,7 @@ function AlbumDetails() {
                                     fontSize: {xs: '10px', md: '17px'},
                                     color: "#797979"
                                 }}
-                            >Stream time</Typography>
+                            >Sold</Typography>
                         </Box>
                     </Stack>
                 </Box>
@@ -315,57 +285,11 @@ function AlbumDetails() {
                             <ChevronLeftIcon />
                         </IconButton>
 
-                        <Box>
-                            <FormControl fullWidth sx={{ width: "fit-content" }}>
-                                <Select
-                                    labelId="sortByDays"
-                                    id="sortByDays-select"
-                                    label=""
-                                    defaultValue={getCurrentMonthValue}
-                                    sx={{
-                                        color: "#fff",
-                                        borderRadius: "8px",
-                                        bgcolor: colors.dark,
-                                        // textAlign: "center",
-                                        fontWeight: "900",
-                                        border: "none",
-                                        fontSize: {xs: "10px", md: "20px"},
-                                        lineHeight: {xs: "12px", md: "24px"},
-                                        letterSpacing: {xs: "-0.67px", md: "-1.34px"},
-
-                                        '& .MuiSelect-select': {
-                                            p: "5px 14px"
-                                        },
-
-                                        '.MuiOutlinedInput-notchedOutline': {
-                                            border: "none",
-                                            // borderColor: '#fff',
-                                            p: 0
-                                        },
-                                        // '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                                        //     borderColor: '#fff',
-                                        // },
-                                        // '&:hover .MuiOutlinedInput-notchedOutline': {
-                                        //     borderColor: '#fff',
-                                        // },
-                                        '.MuiSvgIcon-root ': {
-                                            fill: "#797979",
-                                        }
-                                    }}
-                                    onChange={(_e) => {
-                                        // handleDataRangeData(`${e.target.value}`);
-                                    }}
-                                >
-                                    {
-                                        allMonths.map((month, index) => (
-                                            <MenuItem key={index} value={index}>
-                                                { month }
-                                            </MenuItem>
-                                        ))
-                                    }
-                                </Select>
-                            </FormControl>
-                        </Box>
+                        <DateRangeMonthsYearBasicMenu 
+                            dateRangeValue={dateRange}
+                            setDateRangeValue={setDateRange}
+                            // setDateRangeValue={(value) => setDateRangeValue(value)}
+                        />
                     </Stack>
 
                     <Typography
@@ -414,7 +338,7 @@ function AlbumDetails() {
                                     fontSize: "17.8px",
                                     lineHeight: "17.8px"
                                 }}
-                            >$60,000.00</Typography>
+                            >{ currencyDisplay(Number(albumTotalEarningsAnalytics?.revenue || 0)) }</Typography>
 
                             <Typography
                                 sx={{
@@ -432,7 +356,7 @@ function AlbumDetails() {
                                     fontSize: "17.8px",
                                     lineHeight: "17.8px"
                                 }}
-                            >80,000,000</Typography>
+                            >{ formatedNumber(Number(albumTotalEarningsAnalytics?.streamPlay || 0)) } </Typography>
 
                             <Typography
                                 sx={{
@@ -450,7 +374,7 @@ function AlbumDetails() {
                                     fontSize: "17.8px",
                                     lineHeight: "17.8px"
                                 }}
-                            >120hrs</Typography>
+                            >{formatedNumber(Number(albumTotalEarningsAnalytics?.albumSold || 0))}</Typography>
                             
                             <Typography
                                 sx={{
@@ -458,7 +382,7 @@ function AlbumDetails() {
                                     fontSize: {xs: '10px', md: '17px'},
                                     color: "#797979"
                                 }}
-                            >Stream time</Typography>
+                            >Sold</Typography>
                         </Box>
                     </Stack>
 
@@ -492,7 +416,7 @@ function AlbumDetails() {
                             </Box>
 
                             <Box sx={{ flex: "1 1 40%", maxWidth: "50%" }} >
-                                <CopyShareLink linkUrl='www.soundmuve.com' />
+                                <CopyShareLink linkUrl={releaseDetails.liveUrl || ''} />
                             </Box>
                         </Stack>
 
@@ -582,7 +506,16 @@ function AlbumDetails() {
                     {releaseDetails.songs.map((item, index) => (
                         <Box key={index} onClick={() => {
                             _setSongDetails(item);
-                            navigate("/account/artist/song-details");
+                            // navigate("/account/analytics/song-details");
+
+                            const params = {
+                                releaseId: releaseDetails._id || '',
+                                songId: item._id || ''
+                            };
+                            navigate({
+                                pathname: "/account/analytics/song-details",
+                                search: `?${createSearchParams(params)}`,
+                            });
                         }}>
                             <AlbumSongItem 
                                 artistName={releaseDetails.mainArtist.spotifyProfile.name}

@@ -9,15 +9,15 @@ import Stack from '@mui/material/Stack';
 import CloseIcon from '@mui/icons-material/Close';
 
 // import { useSettingStore } from '@/state/settingStore';
-import { successfulWithdrawalInterface } from './ReviewModal';
 import { getCurrencySymbol } from '@/util/currencies';
-import { formatedNumber } from '@/util/resources';
+import { currencyDisplay, formatedNumber } from '@/util/resources';
 import colors from '@/constants/colors';
+import { transactionInterface } from '@/typeInterfaces/transaction.interface';
 
 
 interface _Props {
     openModal: boolean,
-    withdrawlData: successfulWithdrawalInterface,
+    withdrawlData: transactionInterface | undefined,
     closeModal: () => void;
 }
 
@@ -26,15 +26,22 @@ const FL_RequestConfirmationModalComponent: React.FC<_Props> = ({
 }) => {
     const navigate = useNavigate();
     // const darkTheme = useSettingStore((state) => state.darkTheme);
+    if (!withdrawlData) {
+        if (openModal) {
+            closeModal()
+        }
+        return;
+    };
 
     const handleCloseModal = () => {
-        const url = window.location.pathname;
+        navigate('/account/analytics/balance-history');
 
-        if (url.includes("artist")) {
-            navigate('/account/artist/balance-history');
-        } else {
-            navigate('/account/record-label/balance-history');
-        }
+        // const url = window.location.pathname;
+        // if (url.includes("artist")) {
+        //     navigate('/account/artist/balance-history');
+        // } else {
+        //     navigate('/account/record-label/balance-history');
+        // }
         closeModal();
     }
 
@@ -109,7 +116,15 @@ const FL_RequestConfirmationModalComponent: React.FC<_Props> = ({
                                 mt: "50px"
                             }}
                         >
-                            {`${getCurrencySymbol(withdrawlData.currency)}${formatedNumber(Number(withdrawlData.amount))} `}
+                            {/* {`${getCurrencySymbol(withdrawlData?.withdrawal?.currency)}${formatedNumber(Number(withdrawlData.amount))} `} */}
+                            {`${currencyDisplay(Number(withdrawlData.amount))} `}
+
+                            <Typography variant='subtitle2' component="span"
+                                sx={{
+                                    display: withdrawlData.withdrawal?.currency.toLowerCase() == "usd" ? "none" : "initial",
+                                }}
+                            >( {`${getCurrencySymbol(withdrawlData.withdrawal?.currency || '')}${formatedNumber(Number(withdrawlData.withdrawal?.exchangeRate.destination.amount))}`} )</Typography>
+
                         </Typography>
                         {/* > $200.00 </Typography> */}
 

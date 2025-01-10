@@ -19,6 +19,7 @@ import SettingsPowerIcon from '@mui/icons-material/SettingsPower';
 import CloseIcon from '@mui/icons-material/Close';
 import IconButton from '@mui/material/IconButton';
 import AccountBalanceOutlinedIcon from '@mui/icons-material/AccountBalanceOutlined';
+import MusicNoteIcon from '@mui/icons-material/MusicNote';
 
 import { useUserStore } from '@/state/userStore';
 // import PaymentComponent from './PaymentComponent';
@@ -109,10 +110,10 @@ const RecordLabelBigSidebarComponent: React.FC<_Props> = ({setSideNav}) => {
                     <ListItem disablePadding 
                         sx={{ 
                             mb: '40px',
-                            color: pathname.includes('/account/record-label/sales-report') ? colors.primary : colors.dark,
+                            color: pathname.includes('/account/analytics/sales-report') ? colors.primary : colors.dark,
                         }}
                     >
-                        <ListItemButton onClick={() => navigate('/account/record-label/sales-report')}>
+                        <ListItemButton onClick={() => navigate('/account/analytics/sales-report')}>
                             <ListItemIcon
                                 sx={{
                                     "&.MuiListItemIcon-root": {
@@ -122,7 +123,7 @@ const RecordLabelBigSidebarComponent: React.FC<_Props> = ({setSideNav}) => {
                                 }}
                             >
                                 <ReceiptLongIcon sx={{ 
-                                    color: pathname.includes('/account/record-label/sales-report') ? colors.primary : colors.dark,
+                                    color: pathname.includes('/account/analytics/sales-report') ? colors.primary : colors.dark,
                                 }} />
                             </ListItemIcon>
 
@@ -133,10 +134,10 @@ const RecordLabelBigSidebarComponent: React.FC<_Props> = ({setSideNav}) => {
                     <ListItem disablePadding
                         sx={{ 
                             mb: '40px',
-                            color: pathname.includes('/account/record-label/balance-history') ? colors.primary : colors.dark,
+                            color: pathname.includes('/account/analytics/balance-history') ? colors.primary : colors.dark,
                         }}
                     >
-                        <ListItemButton onClick={() => navigate('/account/record-label/balance-history')}>
+                        <ListItemButton onClick={() => navigate('/account/analytics/balance-history')}>
                             <ListItemIcon
                                 sx={{
                                     "&.MuiListItemIcon-root": {
@@ -146,7 +147,7 @@ const RecordLabelBigSidebarComponent: React.FC<_Props> = ({setSideNav}) => {
                                 }}
                             >
                                 <AccountBalanceWalletIcon sx={{ 
-                                    color: pathname.includes('/account/record-label/balance-history') ? colors.primary : colors.dark,
+                                    color: pathname.includes('/account/analytics/balance-history') ? colors.primary : colors.dark,
                                 }} />
                             </ListItemIcon>
 
@@ -197,6 +198,32 @@ const RecordLabelBigSidebarComponent: React.FC<_Props> = ({setSideNav}) => {
                             <ListItemText primary="Withdraw" />
                         </ListItemButton>
                     </ListItem>
+
+
+                    <ListItem disablePadding
+                        sx={{ 
+                            mb: '40px',
+                            color: pathname.includes('/account/analytics/all-music') ? colors.primary : colors.dark,
+                        }}
+                    >
+                        <ListItemButton onClick={() => navigate('/account/analytics/all-music')}>
+                            <ListItemIcon
+                                sx={{
+                                    "&.MuiListItemIcon-root": {
+                                        minWidth: '0px',
+                                        pr: "5px"
+                                    }
+                                }}
+                            >
+                                <MusicNoteIcon sx={{ 
+                                    color: pathname.includes('/account/analytics/all-music') ? colors.primary : colors.dark,
+                                }} />
+                            </ListItemIcon>
+
+                            <ListItemText primary="Projects"/>
+                        </ListItemButton>
+                    </ListItem>
+
                 </List>
 
                 <Box my="auto">

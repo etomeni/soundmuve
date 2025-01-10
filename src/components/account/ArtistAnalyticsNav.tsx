@@ -10,12 +10,12 @@ import colors from '@/constants/colors';
 interface _Props {
     currentPage: string,
     accountType: string,
-    darkTheme?: boolean,
+    // darkTheme?: boolean,
 }
 
 
 const ArtistAnalyticsNavComponent: React.FC<_Props> = ({
-    currentPage, accountType
+    currentPage,
 }) => {
     const navigate = useNavigate();
 
@@ -33,7 +33,8 @@ const ArtistAnalyticsNavComponent: React.FC<_Props> = ({
                         cursor: "pointer",
                         display: "inline-block"
                     }}
-                    onClick={() => navigate(`/account/${accountType}/balance-history`) }
+                    // onClick={() => navigate(`/account/${accountType}/balance-history`) }
+                    onClick={() => navigate(`/account/analytics/balance-history`) }
                 >
                     <Typography 
                         sx={{
@@ -56,7 +57,7 @@ const ArtistAnalyticsNavComponent: React.FC<_Props> = ({
                         cursor: "pointer",
                         display: "inline-block"
                     }}
-                    onClick={() => navigate(`/account/${accountType}/sales-report`) }
+                    onClick={() => navigate(`/account/analytics/sales-report`) }
                 >
                     <Typography 
                         sx={{

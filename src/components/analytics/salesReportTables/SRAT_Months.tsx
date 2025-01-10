@@ -12,17 +12,19 @@ import SRAT_DownloadReportBtn from './SRAT_DownloadBtn';
 import { SxProps, Theme } from '@mui/material/styles';
 import SRAT_TableHead from './SRAT_TableHead';
 import { currencyDisplay, formatedNumber } from '@/util/resources';
-import { salesReportMonthAnalyticsInterface } from '@/constants/analyticsTypesInterface';
 import EmptyListComponent from '@/components/EmptyList';
 import LoadingDataComponent from '@/components/LoadingData';
+import { analyticsInterface } from '@/typeInterfaces/analytics.interface';
+import { displayDateMonthYear } from '@/util/dateTime';
 
 
 interface _Props {
-    tBodyContent: salesReportMonthAnalyticsInterface[] | undefined,
+    tBodyContent: analyticsInterface[] | undefined,
     displayDownloadReport?: boolean,
 };
 
-const headerTitle = [ "Sales Period", "Album sold", "Singles sold", "Streams", "Total" ];
+// const headerTitle = [ "Sales Period", "Album sold", "Singles sold", "Streams", "Total" ];
+const headerTitle = [ "Sales Period", "Album sold", "Singles sold", "Streams", "Revenue" ];
 
 const tableValueStyle: SxProps<Theme> = {
     fontWeight: "400",
@@ -47,7 +49,7 @@ const SRAT_MonthsComponent: React.FC<_Props> = ({
                     color: colors.dark
                 }}
             >
-                <TableContainer sx={{ maxHeight: 440 }}>
+                <TableContainer sx={{ maxHeight: 640 }}>
                     <Table stickyHeader aria-label="sticky table" 
                         sx={{
                             [`& .${tableCellClasses.root}`]: {
@@ -70,35 +72,35 @@ const SRAT_MonthsComponent: React.FC<_Props> = ({
                                                         ...tableValueStyle,
                                                         color: colors.dark,
                                                     }}
-                                                > { row.month } </TableCell>
+                                                > { displayDateMonthYear(row.date) } </TableCell>
 
                                                 <TableCell align={"center"} 
                                                     sx={{ 
                                                         ...tableValueStyle,
                                                         color: colors.dark,
                                                     }}
-                                                > { formatedNumber(Number(row.album_sold)) } </TableCell>
+                                                > { formatedNumber(Number(row.albumSold)) } </TableCell>
 
                                                 <TableCell align={"center"} 
                                                     sx={{ 
                                                         ...tableValueStyle,
                                                         color: colors.dark,
                                                     }}
-                                                > { formatedNumber(Number(row.single_sold)) } </TableCell>
+                                                > { formatedNumber(Number(row.noSold)) } </TableCell>
 
                                                 <TableCell align={"center"} 
                                                     sx={{ 
                                                         ...tableValueStyle,
                                                         color: colors.dark,
                                                     }}
-                                                > { formatedNumber(Number(row.streams.total_combined)) } </TableCell>
+                                                > { formatedNumber(Number(row.streamPlay)) } </TableCell>
                                                 
                                                 <TableCell align={"center"} 
                                                     sx={{ 
                                                         ...tableValueStyle,
                                                         color: "#627C1D",
                                                     }}
-                                                > { currencyDisplay(Number(row.total_revenue)) } </TableCell>
+                                                > { currencyDisplay(Number(row.revenue)) } </TableCell>
 
                                             </TableRow>
                                         );

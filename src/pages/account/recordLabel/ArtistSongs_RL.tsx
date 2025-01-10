@@ -4,7 +4,10 @@ import { useNavigate } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import Stack from '@mui/material/Stack';
+import Avatar from '@mui/material/Avatar';
+import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
+import CircularProgress from '@mui/material/CircularProgress';
 
 import IconButton from '@mui/material/IconButton';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
@@ -12,17 +15,14 @@ import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import AccountWrapper from '@/components/AccountWrapper';
 import EmptyListComponent from '@/components/EmptyList';
 import LoadingDataComponent from '@/components/LoadingData';
-import colors from '@/constants/colors';
 import ViewSongItemComponent from '@/components/account/ViewSongItem';
+import colors from '@/constants/colors';
 import { useGetReleases } from '@/hooks/release/useGetReleases';
 import { currencyDisplay, formatedNumber, getQueryParams } from '@/util/resources';
-import Button from '@mui/material/Button';
-import CircularProgress from '@mui/material/CircularProgress';
 
 import artistCoverImg from "@/assets/branded/images/artistCoverImg.png";
 import artistCoverImgLogo from "@/assets/branded/images/artistCoverImgLogo.png";
 import soundmuveLogo from "@/assets/branded/icon.png";
-import Avatar from '@mui/material/Avatar';
 
 
 function ArtistSongs_RL() {
@@ -167,9 +167,6 @@ function ArtistSongs_RL() {
                         />
                     </Box>
                 </Box>
-
-
-
 
                 <Stack direction="row" alignItems="center" 
                     justifyContent="space-around" flexWrap="wrap"

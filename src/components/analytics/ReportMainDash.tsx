@@ -1,38 +1,41 @@
 import React from 'react'
 import Box from '@mui/material/Box'
 import Stack from '@mui/material/Stack'
-import Select from '@mui/material/Select'
-import MenuItem from '@mui/material/MenuItem'
 import Typography from '@mui/material/Typography'
-import FormControl from '@mui/material/FormControl'
 import colors from '@/constants/colors'
-import { getSalesPeriod, getCurrentMonthValue } from '@/util/dateTime'
-import { allMonths } from '@/util/months'
+import { displayDateMonthYear, displayDateRange } from '@/util/dateTime'
 import { currencyDisplay, formatedNumber } from '@/util/resources'
+import DateRangeMonthsYearBasicMenu from '../DateRange_MonthsYear'
+import { useUserStore } from '@/state/userStore'
 
 
 interface _Props {
     // children: React.ReactNode,
 
-    dateRange?: string,
-    setDateRange: (newValue: string) => void,
+    dateRangeValue: {
+        startDate: string,
+        endDate: string,
+    };
+    setDateRangeValue: (value: any) => void;
 
     totalEarnedBalance: string | number, // $13,715.98
     albums: string | number, // $13,715.98
     // sold: string | number, // 84
     singles: string | number, // $54.84
-    streams: string | number, // $54.84
-    plays: string | number, // 4,000,000
-
+    // streams: string | number, // $54.84
+    streamRevenue: string | number, // $54.84
+    streamPlays: string | number, // 4,000,000
+    
+    albumSold: string | number,
+    singlesSold: string | number,
 }
 
-
-
 const ReportMainDashComponent:React.FC<_Props> = ({
-    totalEarnedBalance, albums, singles, streams, plays, // sold,
-    setDateRange, // dateRange
+    totalEarnedBalance, albums, singles, streamRevenue, streamPlays, // sold,
+    // setDateRange, // dateRange
+    setDateRangeValue, dateRangeValue
 }) => {
-    const [salesPeriod, setSalesPeriod] = React.useState(getSalesPeriod);
+    const userData = useUserStore((state) => state.userData);
 
 
     return (
@@ -45,83 +48,53 @@ const ReportMainDashComponent:React.FC<_Props> = ({
                 mb: {xs: "50px", md: "70px"}
             }}
         >
-            <Stack direction={"row"} spacing={"20px"} justifyContent={"space-between"}>
-                <FormControl fullWidth sx={{ width: "fit-content" }}>
-                    <Select
-                        labelId="sortByDays"
-                        id="sortByDays-select"
-                        label=""
-                        defaultValue={getCurrentMonthValue}
+            <Stack direction={"row"} gap={"20px"} justifyContent={"space-between"} flexWrap="wrap">
+                <DateRangeMonthsYearBasicMenu 
+                    dateRangeValue={dateRangeValue}
+                    setDateRangeValue={setDateRangeValue}
+                    // setDateRangeValue={(value) => setDateRangeValue(value)}
+                />
+
+                <Typography>
+                    <Typography component="span"
                         sx={{
-                            color: "#fff",
-                            borderRadius: "8px",
-                            bgcolor: colors.dark,
-                            // textAlign: "center",
+                            color: "#666666",
+                            fontWeight: "500",
+                            fontSize: {xs: "12px", md: "14px"}
+                        }}
+                    >Available Bal: </Typography>
+
+                    <Typography component="span"
+                        sx={{
+                            color: "green",
                             fontWeight: "900",
-                            border: "none",
-                            fontSize: {xs: "10px", md: "20px"},
-                            lineHeight: {xs: "12px", md: "24px"},
-                            letterSpacing: {xs: "-0.67px", md: "-1.34px"},
-
-                            '& .MuiSelect-select': {
-                                p: "5px 14px"
-                            },
-
-                            '.MuiOutlinedInput-notchedOutline': {
-                                border: "none",
-                                // borderColor: '#fff',
-                                p: 0
-                            },
-                            // '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                            //     borderColor: '#fff',
-                            // },
-                            // '&:hover .MuiOutlinedInput-notchedOutline': {
-                            //     borderColor: '#fff',
-                            // },
-                            '.MuiSvgIcon-root ': {
-                                fill: "#797979",
-                            }
+                            fontSize: {xs: "15px", md: "18px"}
                         }}
-
-                        onChange={(e) => {
-                            // console.log(e.target.value);
-                            setDateRange(`${e.target.value}`);
-
-                            const sPeriod = getSalesPeriod(Number(e.target.value));
-                            setSalesPeriod(sPeriod);
-                        }}
-                    >
-                        {
-                            allMonths.map((month, index) => (
-                                <MenuItem key={index} value={index}>
-                                    { month }
-                                </MenuItem>
-                            ))
-                        }
-                    </Select>
-                </FormControl>
-
-                <Typography
-                    sx={{
-                        fontWeight: "900",
-                        fontSize: {xs: "10px", md: "18px"},
-                        lineHeight: {xs: "12px", md: "24px"},
-                        letterSpacing: {xs: "-0.67px", md: "-1.34px"},
-                        // color: colors.dark,
-                    }}
-                >{ salesPeriod }</Typography>
+                    >{ currencyDisplay(Number(userData.balance)) }</Typography>
+                </Typography>
             </Stack>
 
             {/* Mobile View Only */}
             <Box 
                 sx={{ 
-                    display: {xs: "flex", md: "none"}, 
-                    my: "30px", 
-                    justifyContent: "right", 
-                    alignItems: "baseline",
-                    gap: "5px"
+                    mb: "30px", 
+                    display: {xs: "initial", md: "none"}, 
+                    // justifyContent: "right", 
+                    // alignItems: "baseline",
+                    // gap: "5px",
+
+                    textAlign: "right"
                 }}
             >
+                <Typography
+                    sx={{
+                        fontWeight: "400",
+                        fontSize: "12px",
+                        // lineHeight: "8px",
+                        color: "#666666",
+                    }}
+                >Total Earned </Typography>
+
                 <Typography variant='body1'
                     sx={{
                         fontWeight: "800",
@@ -134,11 +107,12 @@ const ReportMainDashComponent:React.FC<_Props> = ({
                 <Typography
                     sx={{
                         fontWeight: "400",
-                        fontSize: "8px",
-                        lineHeight: "8px",
+                        fontSize: "10px",
+                        // lineHeight: "8px",
                         color: "#4C4C4C",
                     }}
-                >Balance</Typography>
+                // >Balance</Typography>
+                >{ displayDateMonthYear(dateRangeValue.startDate) } - { displayDateRange(dateRangeValue.endDate) }</Typography>
             </Box>
 
             <Stack direction={"row"} spacing={"20px"} mt={{xs: 0, md: "60px"}} justifyContent={"space-between"} alignItems={"center"}>
@@ -255,7 +229,7 @@ const ReportMainDashComponent:React.FC<_Props> = ({
                                     letterSpacing: {xs: "-0.09px", md: "-0.13px"},
                                     textAlign: 'center',
                                 }}
-                            >{ formatedNumber(Number(streams)) }</Typography>
+                            >{ currencyDisplay(Number(streamRevenue)) }</Typography>
                         </Box>
 
                         <Typography variant='body1'
@@ -266,7 +240,7 @@ const ReportMainDashComponent:React.FC<_Props> = ({
                                 color: "#666666",
                                 mt: 1
                             }}
-                        >{ formatedNumber(Number(plays)) } Plays</Typography>
+                        >{ formatedNumber(Number(streamPlays)) } Plays</Typography>
                     </Box>
                 </Stack>
 
@@ -310,7 +284,7 @@ const ReportMainDashComponent:React.FC<_Props> = ({
                             color: "#666666",
                             mt: 1
                         }}
-                    >{ salesPeriod }</Typography>
+                    >{ displayDateMonthYear(dateRangeValue.startDate) } - { displayDateRange(dateRangeValue.endDate) }</Typography>
                 </Box>
             </Stack>
         </Box>

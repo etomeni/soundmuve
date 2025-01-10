@@ -14,6 +14,7 @@ import PersonIcon from '@mui/icons-material/Person';
 import SettingsPowerIcon from '@mui/icons-material/SettingsPower';
 import IconButton from '@mui/material/IconButton';
 import AccountBalanceOutlinedIcon from '@mui/icons-material/AccountBalanceOutlined';
+import MusicNoteIcon from '@mui/icons-material/MusicNote';
 
 // import { useSettingStore } from '@/state/settingStore';
 import { useUserStore } from '@/state/userStore';
@@ -78,13 +79,13 @@ const RecordLabelSmallSidebarComponent: React.FC<_Props> = ({setSideNav}) => {
                     <ListItem disablePadding 
                         sx={{ 
                             mb: '35px',
-                            color: pathname.includes('/account/record-label/sales-report') ? colors.primary : colors.dark,
+                            color: pathname.includes('/account/analytics/sales-report') ? colors.primary : colors.dark,
                         }}
                     >
-                        <ListItemButton onClick={() => navigate('/account/record-label/sales-report')}>
+                        <ListItemButton onClick={() => navigate('/account/analytics/sales-report')}>
                             <IconButton>
                                 <ReceiptLongIcon sx={{
-                                    color: pathname.includes('/account/record-label/sales-report') ? colors.primary : colors.dark,
+                                    color: pathname.includes('/account/analytics/sales-report') ? colors.primary : colors.dark,
                                 }} />
                             </IconButton>
                         </ListItemButton>
@@ -93,13 +94,13 @@ const RecordLabelSmallSidebarComponent: React.FC<_Props> = ({setSideNav}) => {
                     <ListItem disablePadding
                         sx={{ 
                             mb: '35px', 
-                            color: pathname.includes('/account/record-label/balance-history') ? colors.primary : colors.dark,
+                            color: pathname.includes('/account/analytics/balance-history') ? colors.primary : colors.dark,
                         }}
                     >
-                        <ListItemButton onClick={() => navigate('/account/record-label/balance-history')}>
+                        <ListItemButton onClick={() => navigate('/account/analytics/balance-history')}>
                             <IconButton>
                                 <AccountBalanceWalletIcon sx={{ 
-                                    color: pathname.includes('/account/record-label/balance-history') ? colors.primary : colors.dark,
+                                    color: pathname.includes('/account/analytics/balance-history') ? colors.primary : colors.dark,
                                 }} />
                             </IconButton>
                         </ListItemButton>
@@ -111,7 +112,7 @@ const RecordLabelSmallSidebarComponent: React.FC<_Props> = ({setSideNav}) => {
                             color: "#666666"
                         }}
                     >
-                        <ListItemButton onClick={() => navigate('/account/record-label/analytics-reach')}>
+                        <ListItemButton onClick={() => navigate('/account/analytics/analytics-reach')}>
                             <IconButton>
                                 <AssessmentOutlinedIcon sx={{ color: "#666666" }}  />
                             </IconButton>
@@ -127,6 +128,21 @@ const RecordLabelSmallSidebarComponent: React.FC<_Props> = ({setSideNav}) => {
                         <ListItemButton onClick={() => setWithdrawlModal(true)}>
                             <IconButton>
                                 <AccountBalanceOutlinedIcon sx={{ color: colors.dark }} />
+                            </IconButton>
+                        </ListItemButton>
+                    </ListItem>
+
+                    <ListItem disablePadding
+                        sx={{ 
+                            mb: '35px', 
+                            color: pathname.includes('/account/analytics/all-music') ? colors.primary : colors.dark,
+                        }}
+                    >
+                        <ListItemButton onClick={() => navigate('/account/analytics/all-music')}>
+                            <IconButton>
+                                <MusicNoteIcon sx={{ 
+                                    color: pathname.includes('/account/analytics/all-music') ? colors.primary : colors.dark,
+                                }} />
                             </IconButton>
                         </ListItemButton>
                     </ListItem>

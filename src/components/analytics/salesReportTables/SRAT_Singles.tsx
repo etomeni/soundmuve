@@ -12,18 +12,18 @@ import SRAT_DownloadReportBtn from './SRAT_DownloadBtn';
 import { SxProps, Theme } from '@mui/material/styles';
 import { currencyDisplay, formatedNumber } from '@/util/resources';
 import SRAT_TableHead from './SRAT_TableHead';
-import { salesReportSingleAnalyticsInterface } from '@/constants/analyticsTypesInterface';
 import EmptyListComponent from '@/components/EmptyList';
 import LoadingDataComponent from '@/components/LoadingData';
+import { albumAndSinglesAnalyticsInterface } from '@/typeInterfaces/analytics.interface';
 
 
 interface _Props {
-    tBodyContent: salesReportSingleAnalyticsInterface[] | undefined,
+    tBodyContent: albumAndSinglesAnalyticsInterface[] | undefined,
     displayDownloadReport?: boolean,
 };
 
   
-const headerTitle = [ "Title", "Singles sold", "Streams", "Total" ];
+const headerTitle = [ "Title", "Singles sold", "Streams", "Revenue" ];
 
 const tableValueStyle: SxProps<Theme> = {
     fontWeight: "400",
@@ -48,7 +48,7 @@ const SRAT_SinglesComponent: React.FC<_Props> = ({
                     color: colors.dark
                 }}
             >
-                <TableContainer sx={{ maxHeight: 440 }}>
+                <TableContainer sx={{ maxHeight: 640 }}>
                     <Table stickyHeader aria-label="sticky table" 
                         sx={{
                             [`& .${tableCellClasses.root}`]: {
@@ -78,21 +78,21 @@ const SRAT_SinglesComponent: React.FC<_Props> = ({
                                                         ...tableValueStyle,
                                                         color: colors.dark,
                                                     }}
-                                                > { formatedNumber(Number(row.songs_sold)) } </TableCell>
+                                                > { formatedNumber(Number(row.totalNoSold)) } </TableCell>
 
                                                 <TableCell align={"center"} 
                                                     sx={{ 
                                                         ...tableValueStyle,
                                                         color: colors.dark,
                                                     }}
-                                                > { formatedNumber(Number(row.streams)) } </TableCell>
+                                                > { formatedNumber(Number(row.totalStreamPlay)) } </TableCell>
                                                 
                                                 <TableCell align={"center"} 
                                                     sx={{ 
                                                         ...tableValueStyle,
                                                         color: "#627C1D",
                                                     }}
-                                                > { currencyDisplay(Number(row.total_revenue)) } </TableCell>
+                                                > { currencyDisplay(Number(row.totalRevenue)) } </TableCell>
 
                                             </TableRow>
                                         );

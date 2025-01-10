@@ -7,6 +7,7 @@ import { getLocalStorage } from "@/util/storage";
 export function useCheckAuth() {
     const _autoLogin = useUserStore((state) => state._autoLogin);
     const _logOutUser = useUserStore((state) => state._logOutUser);
+    const _updateUser = useUserStore((state) => state._updateUser);
     const _handleRefreshToken = useUserStore((state) => state._handleRefreshToken);
     const [isLoading, setIsLoading] = useState(true);
 
@@ -41,10 +42,10 @@ export function useCheckAuth() {
                 // _handleRefreshToken(response.accessToken, response.refreshToken)
                 _handleRefreshToken(response.accessToken)
             }
-
+            if (response.result._id) _updateUser(response.result);
     
             setIsLoading(false);
-            if (user_data && access_token) _autoLogin(user_data);
+            if (user_data && access_token) _autoLogin(response.result || user_data);
     
             return true;
         } catch (error: any) {

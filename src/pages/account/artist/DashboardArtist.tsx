@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { createSearchParams, Link, useNavigate } from 'react-router-dom';
 
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
@@ -66,14 +66,25 @@ function DashboardArtist() {
     const handleOnclickedSong = (release: releaseInterface, albumSongIndex: number = 0) => {
         _setReleaseDetails(release);
 
+        const song = release.songs[albumSongIndex];
+
         // if (albumType == "Single") {
         //     _setReleaseDetails(release);
         // } else 
         if (albumType == "Album" && release.songs) {
-            _setSongDetails(release.songs[albumSongIndex]);
+            _setSongDetails(song);
         }
+        // navigate("/account/analytics/song-details");
 
-        navigate("/account/artist/song-details");
+
+        const params = {
+            releaseId: release._id || '',
+            songId: song._id || ''
+        };
+        navigate({
+            pathname: "/account/analytics/song-details",
+            search: `?${createSearchParams(params)}`,
+        });
     }
 
 
@@ -141,7 +152,7 @@ function DashboardArtist() {
                                     mt: "auto"
                                 }}
                             >
-                                <Typography noWrap onClick={() => navigate("/account/artist/balance-history") }
+                                <Typography noWrap onClick={() => navigate("/account/analytics/balance-history") }
                                     sx={{
                                         fontWeight: "900",
                                         fontSize: "25px",
@@ -269,7 +280,7 @@ function DashboardArtist() {
                                 mt: "auto",
                                 mx: "auto"
                             }}>
-                                <Link to="/account/artist/sales-report" style={{
+                                <Link to="/account/analytics/sales-report" style={{
                                     textDecoration: "none",
                                     color: "#000000",
                                     border: "none",
@@ -397,7 +408,7 @@ function DashboardArtist() {
                                 }}
                             >
                                 <Typography variant='h3' component="h3" noWrap
-                                    onClick={() => navigate("/account/artist/balance-history") }
+                                    onClick={() => navigate("/account/analytics/balance-history") }
                                     sx={{
                                         fontWeight: "900",
                                         fontSize: "24px",
@@ -460,7 +471,7 @@ function DashboardArtist() {
                                     mx: "auto"
                                 }}
                             >
-                                <Link to="/account/artist/sales-report" style={{
+                                <Link to="/account/analytics/sales-report" style={{
                                     textDecoration: "none",
                                     color: "#000000",
                                     border: "none",
@@ -684,7 +695,7 @@ function DashboardArtist() {
 
                     {
                         releases && releases.length ? 
-                            <Link to="/account/artist/all-music">
+                            <Link to="/account/analytics/all-music">
                                 <Box 
                                     sx={{
                                         p: "11px 29px",
@@ -765,7 +776,7 @@ function DashboardArtist() {
 
                     {
                         releases && releases.length ? 
-                            <Link to="/account/artist/all-music">
+                            <Link to="/account/analytics/all-music">
                                 <Typography variant='body1'
                                     sx={{
                                         fontFamily: "Geist",
