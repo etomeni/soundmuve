@@ -50,7 +50,8 @@ const FL_NgConfirmationModalComponent: React.FC<_Props> = ({
     } = useForm({ resolver: yupResolver(ngPaymentFormSchema), mode: 'onBlur', reValidateMode: 'onChange' });
 
 
-    const onSubmit = async (formData: ngPaymentsInterface) => {
+    // const onSubmit = async (formData: ngPaymentsInterface) => {
+    const onSubmit = async (_formData: any) => {
         setApiResponse({
             display: false,
             status: true,
@@ -68,9 +69,10 @@ const FL_NgConfirmationModalComponent: React.FC<_Props> = ({
             },
             paymentMethod: 'Bank',
             // beneficiary_email: formData.email,
-            bank_name: formData.bank,
-            account_number: formData.accountNumber,
-            beneficiary_name: formData.beneficiaryName
+            bank_name: formDetails.bankName,
+            bank: formDetails.bank,
+            account_number: formDetails.accountNumber,
+            beneficiary_name: formDetails.beneficiaryName
         }
 
         const result = await saveBankPayoutDetails(data2db);

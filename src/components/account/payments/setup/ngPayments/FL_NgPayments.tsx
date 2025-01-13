@@ -29,7 +29,17 @@ export const ngPaymentFormSchema = yup.object({
     accountNumber: yup.string().required().length(10).trim().label("Account Number"),
 });
 
-export type ngPaymentsInterface = typeof ngPaymentFormSchema.__outputType;
+// export type ngPaymentsInterface = typeof ngPaymentFormSchema.__outputType;
+export type ngPaymentsInterface = {
+    bankName: string;
+    beneficiaryName: string;
+    accountNumber: string;
+    bank: {
+        id: number,
+        code: string,
+        name: string,
+    };
+};
 
 interface _Props {
     openModal: boolean,
@@ -62,23 +72,26 @@ const FL_NgPaymentsModalComponent: React.FC<_Props> = ({
     } = useForm({ resolver: yupResolver(ngPaymentFormSchema), mode: 'onBlur', reValidateMode: 'onChange' });
 
 
-    const onSubmit = async (formData: ngPaymentsInterface) => {
+    const onSubmit = async (formData: typeof ngPaymentFormSchema.__outputType) => {
         // console.log(formData);
 
         // getBankAccountName(formData.accountNumber, formData.bank);
 
 
-        let bankName = ''
+        // let bankName = ''
+        let bank: any;
         // Use the filter method to find the object with the matching code
         const result = ngBanks.filter(obj => obj.code == formData.bank);
         // If a match is found, return the first object
         if (result.length > 0) {
-            bankName = result[0].name;
+            // bankName = result[0].name;
+            bank = result[0];
         }
         
         confirmBtn({
             ...formData,
-            bankName: bankName
+            bankName: bank.name,
+            bank: bank
         });
     }
 

@@ -60,7 +60,12 @@ const PaymentzComponent: React.FC<_Props> = ({
     const [ngPaymentDetails, setNgPaymentDetails] = useState<ngPaymentsInterface>({
         accountNumber: '',
         beneficiaryName: '',
-        bank: ''
+        bankName: "",
+        bank: {
+            id: 0,
+            code: '',
+            name: ''
+        },
     });
     const [ngPaymentModal, setNgPaymentModal] = useState(false);
     const [ngConfirmationModal, setNgConfirmationModal] = useState(false);

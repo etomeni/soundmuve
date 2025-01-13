@@ -1,5 +1,5 @@
-export const emekaBackendUrl = "https://soundmuve-backend-zrap.onrender.com"; // Emeka
-export const emekaApiEndpoint = `${emekaBackendUrl}/api`;
+// export const emekaBackendUrl = "https://soundmuve-backend-zrap.onrender.com"; // Emeka
+// export const emekaApiEndpoint = `${emekaBackendUrl}/api`;
 
 export const apiEndpoint = `${import.meta.env.VITE_API_BASE_URL}/api/v1`;
 
