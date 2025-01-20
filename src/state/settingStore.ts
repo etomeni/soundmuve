@@ -9,11 +9,17 @@ const defaulToastNotification: SnackbarToastInterface = {
     message: '',
 }
 
+const defaultLanguage = {
+    languageCode: "en", displayName: "English" 
+};
+
 
 type _typeInterface_ = {
     darkTheme: boolean;
     toastNotification: SnackbarToastInterface;
+    language: typeof defaultLanguage;
 
+    _setTranslationLanguage: (language: typeof defaultLanguage) => void;
     _setTheme: (theme: boolean) => void;
     _setToastNotification: (toast: SnackbarToastInterface) => void;
 
@@ -27,6 +33,15 @@ export const useSettingStore = create<_typeInterface_>((set) => ({
     // appLoading: defaultLoading,
     // settings: defaultSettings,
     toastNotification: defaulToastNotification,
+    language: defaultLanguage,
+
+    _setTranslationLanguage: (language) => {
+        setLocalStorage("language", language);
+
+        set((_state) => {
+            return { language: language };
+        });
+    },
 
     _setToastNotification: (toast) => {
         set((_state) => {
@@ -43,10 +58,12 @@ export const useSettingStore = create<_typeInterface_>((set) => ({
 
     _restoreSettings: () => {
         const settings = getLocalStorage("settings");
+        const language = getLocalStorage("language");
         
         set((state) => {
             return { 
                 darkTheme: settings?.darkTheme || state.darkTheme,
+                language: language || state.language,
             };
         });
     },

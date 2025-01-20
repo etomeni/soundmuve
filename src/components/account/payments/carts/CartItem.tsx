@@ -35,7 +35,7 @@ const CartItemComponent: React.FC<_Props> = ({
                                     fontSize: {xs: "16px", md: "20px"},
                                     lineHeight: {xs: "20px", md: "40px"},
                                     letterSpacing: "-0.13px",
-                                    color: colors.secondary,
+                                    color: colors.dark,
                                 }}
                             >Product details</Typography>
                         </Box>
@@ -49,7 +49,7 @@ const CartItemComponent: React.FC<_Props> = ({
                                     fontSize: {xs: "16px", md: "20px"},
                                     lineHeight: {xs: "20px", md: "40px"},
                                     letterSpacing: "-0.13px",
-                                    color: colors.secondary,
+                                    color: colors.dark,
                                 }}
                             >Price</Typography>
                         </Box>
@@ -57,15 +57,36 @@ const CartItemComponent: React.FC<_Props> = ({
 
                     <Grid item xs={4} md={4}>
                         <Box textAlign="center">
-                            <Typography variant='body1'
+                            <Box 
                                 sx={{
-                                    fontWeight: "600",
-                                    fontSize: {xs: "16px", md: "20px"},
-                                    lineHeight: {xs: "20px", md: "40px"},
-                                    letterSpacing: "-0.13px",
-                                    color: colors.secondary,
+                                    bgcolor: colors.tertiary,
+                                    p: 1,
+                                    borderRadius: "8px",
+                                    width: "fit-content",
+                                    ml: "auto"
                                 }}
-                            >Total</Typography>
+                            >
+
+                                <Typography variant='body1'
+                                    sx={{
+                                        fontWeight: "400", // "900",
+                                        fontSize: "16px", // {xs: "16px", md: "20px"},
+                                        // lineHeight: {xs: "20px", md: "40px"},
+                                        // letterSpacing: "-0.13px",
+                                        color: colors.milk,
+                                    }}
+                                >
+                                    Total: 
+                                    <Typography component="span"
+                                        sx={{
+                                            fontSize: "20px",
+                                            fontWeight: "900",
+                                            pl: 1
+                                        }}
+                                    > { currencyDisplay(totalPrice) }</Typography>
+                                </Typography>
+
+                            </Box>
                         </Box>
                     </Grid>
                 </Grid>
@@ -100,7 +121,7 @@ const CartItemComponent: React.FC<_Props> = ({
                                                 sx={{
                                                     fontWeight: "700",
                                                     fontSize: "20px",
-                                                    lineHeight: "40px",
+                                                    // lineHeight: "40px",
                                                     letterSpacing: "-0.13px",
                                                     color: colors.dark
                                                 }}
@@ -110,9 +131,9 @@ const CartItemComponent: React.FC<_Props> = ({
                                                 sx={{
                                                     fontWeight: "400",
                                                     fontSize: "16px",
-                                                    lineHeight: "40px",
+                                                    // lineHeight: "40px",
                                                     letterSpacing: "-0.13px",
-                                                    color: colors.secondary
+                                                    color: colors.dark
                                                 }}
                                             >{ item.releaseType }</Typography>
 
@@ -123,7 +144,7 @@ const CartItemComponent: React.FC<_Props> = ({
                                                     fontSize: "16px",
                                                     lineHeight: "40px",
                                                     letterSpacing: "-0.13px",
-                                                    color: colors.secondary,
+                                                    color: colors.primary,
                                                     cursor: "pointer",
                                                     mt: "30px"
                                                 }}
@@ -148,8 +169,8 @@ const CartItemComponent: React.FC<_Props> = ({
                             </Grid>
 
                             <Grid item xs={4} md={4}>
-                                <Box textAlign="center" sx={{ display: index > 0 ? "none" : "initial" }}>
-                                    <Typography variant='body1'
+                                <Box textAlign="right" sx={{ display: index > 0 ? "none" : "initial" }}>
+                                    {/* <Typography variant='body1'
                                         sx={{
                                             fontWeight: "700",
                                             fontSize: "20px",
@@ -157,7 +178,7 @@ const CartItemComponent: React.FC<_Props> = ({
                                             letterSpacing: "-0.13px",
                                             color: colors.dark,
                                         }}
-                                    >{ currencyDisplay(totalPrice) }</Typography>
+                                    >{ currencyDisplay(totalPrice) }</Typography> */}
 
                                     {
                                         discount._id ? (
@@ -174,7 +195,7 @@ const CartItemComponent: React.FC<_Props> = ({
             
                                                 <Divider />
                                                 
-                                                <Typography variant='body1'
+                                                {/* <Typography variant='body1'
                                                     sx={{
                                                         fontWeight: "700",
                                                         fontSize: "24px",
@@ -182,7 +203,38 @@ const CartItemComponent: React.FC<_Props> = ({
                                                         letterSpacing: "-0.13px",
                                                         color: colors.dark,
                                                     }}
-                                                >{ currencyDisplay(discount.payableAmount || 0) }</Typography>
+                                                >{ currencyDisplay(discount.payableAmount || 0) }</Typography> */}
+
+
+                                                <Box 
+                                                    sx={{
+                                                        bgcolor: colors.primary,
+                                                        p: 1,
+                                                        borderRadius: "8px",
+                                                        width: "fit-content",
+                                                        ml: "auto"
+                                                    }}
+                                                >
+                                                    <Typography variant='body1'
+                                                        sx={{
+                                                            fontWeight: "400", // "900",
+                                                            fontSize: "16px", // {xs: "16px", md: "20px"},
+                                                            // lineHeight: {xs: "20px", md: "40px"},
+                                                            // letterSpacing: "-0.13px",
+                                                            color: colors.milk,
+                                                        }}
+                                                    >
+                                                        Total Payable Amount: 
+                                                        <Typography component="span"
+                                                            sx={{
+                                                                fontSize: "20px",
+                                                                fontWeight: "900",
+                                                                pl: 1
+                                                            }}
+                                                        > { currencyDisplay(discount.payableAmount || 0) }</Typography>
+                                                    </Typography>
+                                                </Box>
+
                                                 
                                                 <Typography variant='subtitle2' component="small"
                                                     sx={{
