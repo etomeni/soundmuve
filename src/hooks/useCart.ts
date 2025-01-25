@@ -124,7 +124,7 @@ export function useCart() {
                     }
                 }
             )).data;
-            console.log(response);
+            // console.log(response);
 
             if (response.status) {
                 _handleSetCartItems(response.result);
@@ -258,7 +258,6 @@ export function useCart() {
             paymentStatus: redirect_status,
         };
 
-
         try {
             const response = (await axios.post(`${apiEndpoint}/checkout/successful-payment`,
                 data2submit, {
@@ -267,7 +266,7 @@ export function useCart() {
                     }
                 }
             )).data;
-            console.log(response);
+            // console.log(response);
 
             if (response.status) {
                 // setApplyPromoResponse(response);

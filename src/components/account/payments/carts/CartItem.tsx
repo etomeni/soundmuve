@@ -190,10 +190,11 @@ const CartItemComponent: React.FC<_Props> = ({
                                                         lineHeight: "40px",
                                                         letterSpacing: "-0.13px",
                                                         color: colors.dark,
+                                                        my: 3
                                                     }}
                                                 > - { currencyDisplay(discount.discountedAmount || 0) }</Typography>
             
-                                                <Divider />
+                                                {/* <Divider /> */}
                                                 
                                                 {/* <Typography variant='body1'
                                                     sx={{

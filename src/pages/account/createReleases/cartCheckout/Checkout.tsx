@@ -59,10 +59,36 @@ function CartCheckoutPage() {
         }
     }
 
+    const handleCheckout = () => {
+        if (couponDiscount && couponDiscount.payableAmount && couponDiscount.payableAmount > 0) {
+            setOpenStripeModal(true);
+        } else {
+            // Define your parameters as an object
+            const params: any = {
+                amount: couponDiscount.payableAmount,
+                payment_intent: `Discount id - ${couponDiscount._id}`,
+                payment_intent_client_secret: `Coupon code - ${couponDiscount.code}`,
+                redirect_status: "success"
+            };
+            
+            // Convert the parameters object to a query string
+            const queryString = new URLSearchParams(params).toString();
+            
+            // Get the base URL of the current page
+            const baseURL = `${window.location.origin}/account/checkout/success`;
+            // const baseURL = `${window.location.origin}${window.location.pathname}`;
+            
+            // Combine the base URL with the query string
+            const fullURL = `${baseURL}?${queryString}`;
+            
+            // Navigate to the new URL on the same page
+            window.location.href = fullURL;
+        }
+    }
+
 
     return (
         <AccountWrapper bottomSpacing={0} topSpacing={false}>
-
             <Box my="100px">
                 <Stack direction="row" spacing="10px"
                     justifyContent="space-between"
@@ -76,7 +102,6 @@ function CartCheckoutPage() {
                             color: colors.dark,
                         }}
                     >Your cart</Typography>
-
 
                     <form noValidate onSubmit={ handleSubmit(onSubmit) }>
                         <Box>
@@ -198,7 +223,8 @@ function CartCheckoutPage() {
                     <Button variant="contained" 
                         fullWidth type="button"
                         onClick={() => {
-                            setOpenStripeModal(true);
+                            // setOpenStripeModal(true);
+                            handleCheckout();
                         }} 
                         // disabled={ !isValid || isSubmitting } 
                         disabled={!cartItems.length}

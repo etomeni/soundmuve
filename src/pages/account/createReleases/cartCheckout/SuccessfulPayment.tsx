@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 // import CircularProgress from '@mui/material/CircularProgress';
@@ -18,11 +18,17 @@ function SuccessfulPayment() {
     const navigate = useNavigate();
     const { handleSuccessfulPayment } = useCart();
 
+    const [reRenderHandler, setReRenderHandler] = useState<any>(null);
+
     useEffect(() => {
-        setTimeout(() => {
-            handleSuccessfulPayment();
-        }, 1000); // 1 second delay to get the cart items ready
-    }, [])
+        if (reRenderHandler === null) {
+            setTimeout(() => {
+                handleSuccessfulPayment();
+            }, 1000); // 1 second delay to get the cart items ready
+
+            setReRenderHandler(true);
+        }
+    }, [reRenderHandler]);
     
     
     return (
