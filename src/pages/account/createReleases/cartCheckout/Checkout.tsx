@@ -60,9 +60,7 @@ function CartCheckoutPage() {
     }
 
     const handleCheckout = () => {
-        if (couponDiscount && couponDiscount.payableAmount && couponDiscount.payableAmount > 0) {
-            setOpenStripeModal(true);
-        } else {
+        const skipStripPayment = () => {
             // Define your parameters as an object
             const params: any = {
                 amount: couponDiscount.payableAmount,
@@ -83,6 +81,16 @@ function CartCheckoutPage() {
             
             // Navigate to the new URL on the same page
             window.location.href = fullURL;
+        }
+        
+        if (couponDiscount._id) {
+            if (couponDiscount.payableAmount && couponDiscount.payableAmount > 0) {
+                setOpenStripeModal(true);
+            } else {
+                skipStripPayment();
+            }
+        } else {
+            setOpenStripeModal(true);
         }
     }
 

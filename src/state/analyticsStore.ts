@@ -15,10 +15,9 @@ const defaultTotalsEarnings = {
 }
 
 const defaultSalesReportTotalEarnings: salesReportTotalEarningsAnalyticsInterface = {
+    ...defaultTotalsEarnings,
     totalAlbums: 0,
     totalSingles: 0,
-
-    ...defaultTotalsEarnings,
 
     // albumSold: 0,
     // noSold: 0,

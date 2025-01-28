@@ -89,7 +89,7 @@ function SalesReport() {
                         // since backend didn't account for it, then its same as Streams
                         streamPlays={ salesReportTotalEarnings.streamPlay }
                         // albums={reportMainDashData.totalAlbums}
-                        albums={ salesReportTotalEarnings.totalSingles }
+                        albums={ salesReportTotalEarnings.totalAlbums }
                         albumSold={ salesReportTotalEarnings.albumSold }
                         // sold={reportMainDashData.single_sold}
                         // singles={reportMainDashData.totalSingles}

@@ -31,8 +31,8 @@ interface _Props {
 }
 
 const ReportMainDashComponent:React.FC<_Props> = ({
-    totalEarnedBalance, albums, singles, streamRevenue, streamPlays, // sold,
-    // setDateRange, // dateRange
+    totalEarnedBalance, albums, singles, streamRevenue, streamPlays,
+    albumSold, singlesSold,
     setDateRangeValue, dateRangeValue
 }) => {
     const userData = useUserStore((state) => state.userData);
@@ -156,7 +156,7 @@ const ReportMainDashComponent:React.FC<_Props> = ({
                                 color: "#666666",
                                 mt: 1
                             }}
-                        >{ formatedNumber(Number(albums)) } Sold</Typography>
+                        >{ formatedNumber(Number(albumSold)) } Sold</Typography>
                     </Box>
 
                     <Box>
@@ -198,7 +198,7 @@ const ReportMainDashComponent:React.FC<_Props> = ({
                                 color: "#666666",
                                 mt: 1
                             }}
-                        >{ singles } Sold</Typography>
+                        >{ singlesSold } Sold</Typography>
                     </Box>
 
                     <Box>

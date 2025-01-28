@@ -50,8 +50,8 @@ export type analyticsInterface = {
 
 
 export type salesReportTotalEarningsAnalyticsInterface = {
-    totalAlbums: any;
-    totalSingles: any;
+    totalAlbums: number;
+    totalSingles: number;
     albumSold: number;
     noSold: number;
     revenue: number;
