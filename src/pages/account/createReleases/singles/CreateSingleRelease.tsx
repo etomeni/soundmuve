@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
@@ -17,6 +18,8 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import dayjs from 'dayjs';
+import Tooltip from '@mui/material/Tooltip';
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 
 import IconButton from '@mui/material/IconButton';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
@@ -45,6 +48,8 @@ contriesss.unshift("All");
 let dspToSearch: "Apple" | "Spotify";
 
 function CreateSingleRelease() {
+    const [upcEanMoreInfoTooltip, setUpcEanMoreInfoTooltip] = useState(false);
+
     const {
         // singleRelease, 
         apiResponse, // setApiResponse,
@@ -916,20 +921,68 @@ function CreateSingleRelease() {
 
                             <Grid container spacing="20px" sx={{my: "31px"}}>
                                 <Grid item xs={12} md={4} >
-                                    <Typography variant='h3' sx={{
-                                        fontWeight: "900",
-                                        fontSize: {xs: "19.28px", md: "25px"},
-                                        lineHeight: {xs: "15.42px", md: "20px"},
-                                        letterSpacing: {xs: "-0.1px", md: "-0.13px"}
-                                    }}> UPC/EAN Code </Typography>
+                                    <Stack direction="row" alignItems="center" spacing="5px">
+                                        <Box>
+                                            <Typography variant='h3' sx={{
+                                                fontWeight: "900",
+                                                fontSize: {xs: "19.28px", md: "25px"},
+                                                lineHeight: {xs: "15.42px", md: "20px"},
+                                                letterSpacing: {xs: "-0.1px", md: "-0.13px"}
+                                            }}> UPC/EAN Code </Typography>
 
-                                    <Typography variant='body2' sx={{
-                                        fontWeight: "400",
-                                        fontSize: {xs: "13.88px", md: "18px"},
-                                        lineHeight: {xs: "9.25px", md: "12px"},
-                                        letterSpacing: {xs: "-0.1px", md: "-0.13px"},
-                                        mt: "9px"
-                                    }}> Optional </Typography>
+                                            <Typography variant='body2' sx={{
+                                                fontWeight: "400",
+                                                fontSize: {xs: "13.88px", md: "18px"},
+                                                lineHeight: {xs: "9.25px", md: "12px"},
+                                                letterSpacing: {xs: "-0.1px", md: "-0.13px"},
+                                                mt: "9px"
+                                            }}> Optional </Typography>
+                                        </Box>
+
+                                        <Box>
+                                            <Tooltip
+                                                PopperProps={{
+                                                    disablePortal: true,
+                                                }}
+                                                // placement='bottom-end'
+                                                arrow
+                                                // onClose={() => setUpcEanMoreInfoTooltip(false)}
+                                                // open={upcEanMoreInfoTooltip}
+                                                // disableFocusListener
+                                                // disableHoverListener
+                                                // disableTouchListener
+
+                                                title={<Box
+                                                    sx={{
+                                                        // minWidth: 250,
+                                                        // maxWidth: 700,
+                                                        maxHeight: 450,
+                                                        overflow: "scroll"
+                                                    }}
+                                                >
+                                                    <Typography variant='h3' component="h3"
+                                                        sx={{
+                                                            fontWeight: '900',
+                                                            fontSize: "25px",
+                                                            textAlign: 'center',
+                                                            mb: 2
+                                                        }}
+                                                    > Note! </Typography>
+
+                                                    <Typography variant='body1' fontSize="16px" mb={1}>
+                                                        If this is your first time releasing music 
+                                                        or don't have a Universal Product Code (UPC) / European Article Number (EAN) code,
+                                                        you can leave this field empty,
+                                                        we'll generate one for you.
+                                                    </Typography>
+                                                </Box>}
+                                            >
+                                                <IconButton onClick={() => setUpcEanMoreInfoTooltip(!upcEanMoreInfoTooltip)} aria-label="More Information">
+                                                    <InfoOutlinedIcon sx={{ color: colors.primary }} />
+                                                </IconButton>
+                                            </Tooltip>
+                                        </Box>
+                                    </Stack>
                                 </Grid>
 
                                 <Grid item xs={12} md={8}>

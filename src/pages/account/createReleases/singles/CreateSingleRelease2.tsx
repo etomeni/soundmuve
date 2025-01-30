@@ -1,3 +1,5 @@
+import { useState } from 'react';
+import { createSearchParams } from 'react-router-dom';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
@@ -9,7 +11,8 @@ import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import IconButton from '@mui/material/IconButton';
-
+import Tooltip from '@mui/material/Tooltip';
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import CloudUploadOutlinedIcon from '@mui/icons-material/CloudUploadOutlined';
 import AddIcon from '@mui/icons-material/Add';
@@ -36,12 +39,13 @@ import SearchArtistModalComponent from '@/components/account/SearchArtistModal';
 import ExplicitLyricsReadMoreInfoComponent from '@/components/ExplicitLyricsReadMoreInfo';
 import YesNoOptionsComponent from '@/components/release/YesNoOptions';
 import { useCreateSingleRelease } from '@/hooks/release/useCreateSingleRelease';
-import { createSearchParams } from 'react-router-dom';
 
 
 let dspToSearch: "Apple" | "Spotify";
 
 function CreateSingleRelease2() {
+    const [isrcMoreInfoTooltip, setIsrcMoreInfoTooltip] = useState(false);
+    
     const {
         singleRelease, 
         apiResponse, // setApiResponse,
@@ -109,7 +113,7 @@ function CreateSingleRelease2() {
                     <Stack sx={{mt: "35px", color: colors.dark }} spacing={"35px"} alignItems={"center"}>
                         <Box
                             sx={{
-                                maxWidth: {xs: "330px", md: "892px"},
+                                maxWidth: {xs: "330px", sm: "80%", md: "892px"},
                                 // border: {xs: "0.45px solid #FFFFFF", md: "1px solid #FFFFFF"},
                                 borderRadius: {xs: "5.42px", md: "12px"},
                                 overflow: "hidden",
@@ -162,7 +166,7 @@ function CreateSingleRelease2() {
                                 sx={{
                                     p: {xs: "10px", md: "25px"},
                                     bgcolor: colors.secondary,
-                                    mt: {xs: "15px", md: "0px"}
+                                    mt: {xs: "15px", sm: 0, md: "0px"}
                                 }}
                             >
                                 <Typography
@@ -195,7 +199,10 @@ function CreateSingleRelease2() {
                                         > { singleRelease.releaseDate } </Typography>
                                     </Stack>
                                     
-                                    <Stack direction="row" spacing={"auto"} justifyContent="space-between" alignItems="center">
+                                    <Stack direction="row" spacing={"auto"} 
+                                        justifyContent="space-between" alignItems="center"
+                                        display={ singleRelease.labelName ? "initial" : "none" }
+                                    >
                                         <Typography
                                             sx={{
                                                 fontWeight: "400",
@@ -214,28 +221,11 @@ function CreateSingleRelease2() {
                                             }}
                                         > { singleRelease.labelName } </Typography>
                                     </Stack>
-
-                                    {/* <Stack direction="row" spacing={"auto"} justifyContent="space-between" alignItems="center">
-                                        <Typography
-                                            sx={{
-                                                fontWeight: "400",
-                                                fontSize: {xs: "13px", md: "15px"},
-                                                lineHeight: {xs: "25px", md: "40px"},
-                                                letterSpacing: "-0.13px"
-                                            }}
-                                        >ISRC</Typography>
-
-                                        <Typography
-                                            sx={{
-                                                fontWeight: "400",
-                                                fontSize: {xs: "13px", md: "15px"},
-                                                lineHeight: {xs: "25px", md: "40px"},
-                                                letterSpacing: "-0.13px"
-                                            }}
-                                        >  </Typography>
-                                    </Stack> */}
-
-                                    <Stack direction="row" spacing={"auto"} justifyContent="space-between" alignItems="center">
+                                    
+                                    <Stack direction="row" spacing={"auto"} 
+                                        justifyContent="space-between" alignItems="center"
+                                        display={ singleRelease.upc_ean ? "initial" : "none" }
+                                    >
                                         <Typography
                                             sx={{
                                                 fontWeight: "400",
@@ -320,7 +310,7 @@ function CreateSingleRelease2() {
 
                         <Box
                             sx={{
-                                maxWidth: {xs: "330px", md: "892px"},
+                                maxWidth: {xs: "330px", sm: "80%",  md: "892px"},
                                 // border: {xs: "0.45px solid #FFFFFF", md: "1px solid #FFFFFF"},
                                 borderRadius: {xs: "5.42px", md: "12px"},
                                 overflow: "hidden",
@@ -382,7 +372,7 @@ function CreateSingleRelease2() {
 
                         <Box
                             sx={{
-                                maxWidth: {xs: "330px", md: "892px"},
+                                maxWidth: {xs: "330px", sm: "80%", md: "892px"},
                                 // border: {xs: "0.45px solid #FFFFFF", md: "1px solid #FFFFFF"},
                                 borderRadius: {xs: "5.42px", md: "12px"},
                                 overflow: "hidden"
@@ -455,7 +445,7 @@ function CreateSingleRelease2() {
 
                         <Box
                             sx={{
-                                maxWidth: {xs: "330px", md: "892px"},
+                                maxWidth: {xs: "330px", sm: "80%", md: "892px"},
                                 // border: {xs: "0.45px solid #FFFFFF", md: "1px solid #FFFFFF"},
                                 borderRadius: {xs: "5.42px", md: "12px"},
                                 overflow: "hidden"
@@ -514,9 +504,10 @@ function CreateSingleRelease2() {
 
                                 <Stack direction="row" justifyContent="space-between" alignItems="center"
                                     sx={{
-                                        p: {xs: "", md: "10px 25px"},
+                                        p: {xs: "5px 15px", md: "10px 25px"},
                                         borderRadius: '16px',
-                                        width: "459px",
+                                        width: {xs: "80%", sm: "90%", md: "100%" },
+                                        maxWidth: "459px",
                                         bgcolor: colors.primary,
                                         color: colors.milk,
                                         my: 3,
@@ -1032,15 +1023,68 @@ function CreateSingleRelease2() {
                                         >Additional Information</Typography>
 
                                         <Box sx={{my: "20px"}}>
-                                            <Typography variant='h3'
-                                                sx={{
-                                                    fontWeight: "900",
-                                                    fontSize: {xs: "15px", md: "20px"},
-                                                    lineHeight: {xs: "25px", md: "40px"},
-                                                    letterSpacing: "-0.13px",
-                                                    mb: '10px'
-                                                }}
-                                            >ISRC Number</Typography>
+                                            <Stack direction="row" alignItems="center" spacing="5px">
+                                                <Typography variant='h3'
+                                                    sx={{
+                                                        fontWeight: "900",
+                                                        fontSize: {xs: "15px", md: "20px"},
+                                                        lineHeight: {xs: "25px", md: "40px"},
+                                                        letterSpacing: "-0.13px",
+                                                        mb: '10px'
+                                                    }}
+                                                >ISRC Number</Typography>
+
+                                                <Typography component="small"
+                                                    sx={{
+                                                        fontSize: "11px",
+                                                        fontWeight: '400'
+                                                    }}
+                                                > (Optional)</Typography>
+
+                                                <Box>
+                                                    <Tooltip
+                                                        PopperProps={{
+                                                            disablePortal: true,
+                                                        }}
+                                                        // placement='bottom-end'
+                                                        arrow
+                                                        // onClose={() => setIsrcMoreInfoTooltip(false)}
+                                                        // open={isrcMoreInfoTooltip}
+                                                        // disableFocusListener
+                                                        // disableHoverListener
+                                                        // disableTouchListener
+
+                                                        title={<Box
+                                                            sx={{
+                                                                // minWidth: 250,
+                                                                // maxWidth: 700,
+                                                                maxHeight: 450,
+                                                                overflow: "scroll"
+                                                            }}
+                                                        >
+                                                            <Typography variant='h3' component="h3"
+                                                                sx={{
+                                                                    fontWeight: '900',
+                                                                    fontSize: "25px",
+                                                                    textAlign: 'center',
+                                                                    mb: 2
+                                                                }}
+                                                            > Note! </Typography>
+
+                                                            <Typography variant='body1' fontSize="16px" mb={1}>
+                                                                If this is your first time releasing music 
+                                                                or don't have an International Standard Recording Code (ISRC),
+                                                                you can leave this field empty,
+                                                                we'll generate one for you.
+                                                            </Typography>
+                                                        </Box>}
+                                                    >
+                                                        <IconButton size='small' onClick={() => setIsrcMoreInfoTooltip(!isrcMoreInfoTooltip)} aria-label="More Information">
+                                                            <InfoOutlinedIcon sx={{ color: colors.primary, fontSize: "20px" }} />
+                                                        </IconButton>
+                                                    </Tooltip>
+                                                </Box>
+                                            </Stack>
 
                                             <TextField 
                                                 variant="outlined" 

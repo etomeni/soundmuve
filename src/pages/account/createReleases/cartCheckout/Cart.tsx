@@ -78,7 +78,8 @@ function CartPage() {
                             lineHeight: {xs: '30px', md: "40px"},
                             letterSpacing: {xs: "-0.13px", md: "-0.13px"},
                             color: colors.secondary,
-                            cursor: "pointer"
+                            cursor: "pointer",
+                            display: cartItems.length ? "initial" : "none"
                         }}
                     >Get a discount for your release</Typography>
 

@@ -156,7 +156,7 @@ function CartCheckoutPage() {
 
                                 <Button variant="contained" 
                                     fullWidth type="submit" 
-                                    disabled={ !isValid || isSubmitting } 
+                                    disabled={ !isValid || isSubmitting || !cartItems.length } 
                                     sx={{
                                         ...submitBtnStyle,
                                         maxWidth: {xs: "83px", md: "110px"}
@@ -224,7 +224,8 @@ function CartCheckoutPage() {
                             lineHeight: {xs: '', md: "40px"},
                             letterSpacing: {xs: "", md: "-0.13px"},
                             color: colors.secondary,
-                            cursor: "pointer"
+                            cursor: "pointer",
+                            display: cartItems.length ? "initial" : "none"
                         }}
                     >Get a discount for your release</Typography>
 

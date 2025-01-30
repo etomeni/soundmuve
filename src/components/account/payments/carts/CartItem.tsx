@@ -8,7 +8,7 @@ import colors from '@/constants/colors';
 import { numberOfLinesTypographyStyle } from '@/util/mui';
 import { currencyDisplay } from '@/util/resources';
 import { cartItemInterface, couponInterface } from '@/typeInterfaces/cartInterface';
-
+import EmptyCartComponent from '@/components/EmptyCart';
 
 interface _Props {
     // children: React.ReactNode,
@@ -93,169 +93,175 @@ const CartItemComponent: React.FC<_Props> = ({
 
 
                 {
-                    cartItems.map((item, index) => (
-                        <Grid key={index} container spacing="20px" mb="20px">
-                            <Grid item xs={4} md={4}>
-                                <Box>
-                                    <Stack direction="row" spacing="20px">
-                                        <Box
-                                            sx={{
-                                                width: "152px",
-                                                height: "150px",
-                                                borderRadius: "12px",
-                                                bgcolor: colors.secondary,
-                                                overflow: "hidden"
-                                            }}
-                                        >
-                                            <img src={item.coverArt} alt='song art work image'
-                                                style={{
-                                                    width: "100%",
-                                                    height: "100%",
-                                                    objectFit: "contain"
-                                                }}
-                                            />
-                                        </Box>
-
-                                        <Box>
-                                            <Typography variant='h4'
+                    cartItems.length ?
+                        cartItems.map((item, index) => (
+                            <Grid key={index} container spacing="20px" mb="20px">
+                                <Grid item xs={4} md={4}>
+                                    <Box>
+                                        <Stack direction="row" spacing="20px">
+                                            <Box
                                                 sx={{
-                                                    fontWeight: "700",
-                                                    fontSize: "20px",
-                                                    // lineHeight: "40px",
-                                                    letterSpacing: "-0.13px",
-                                                    color: colors.dark
+                                                    width: "152px",
+                                                    height: "150px",
+                                                    borderRadius: "12px",
+                                                    bgcolor: colors.secondary,
+                                                    overflow: "hidden"
                                                 }}
-                                            >{ item.title }</Typography>
+                                            >
+                                                <img src={item.coverArt} alt='song art work image'
+                                                    style={{
+                                                        width: "100%",
+                                                        height: "100%",
+                                                        objectFit: "contain"
+                                                    }}
+                                                />
+                                            </Box>
 
-                                            <Typography variant='subtitle2'
-                                                sx={{
-                                                    fontWeight: "400",
-                                                    fontSize: "16px",
-                                                    // lineHeight: "40px",
-                                                    letterSpacing: "-0.13px",
-                                                    color: colors.dark
-                                                }}
-                                            >{ item.releaseType }</Typography>
-
-                                            <Typography variant='subtitle2'
-                                                onClick={() => removeItemFn(item) }
-                                                sx={{
-                                                    fontWeight: "400",
-                                                    fontSize: "16px",
-                                                    lineHeight: "40px",
-                                                    letterSpacing: "-0.13px",
-                                                    color: colors.primary,
-                                                    cursor: "pointer",
-                                                    mt: "30px"
-                                                }}
-                                            >Remove</Typography>
-                                        </Box>
-                                    </Stack>
-                                </Box>
-                            </Grid>
-
-                            <Grid item xs={4} md={4}>
-                                <Box textAlign="center">
-                                    <Typography variant='body1'
-                                        sx={{
-                                            fontWeight: "700",
-                                            fontSize: "20px",
-                                            lineHeight: "40px",
-                                            letterSpacing: "-0.13px",
-                                            color: colors.dark,
-                                        }}
-                                    >{ currencyDisplay(item.price) }</Typography>
-                                </Box>
-                            </Grid>
-
-                            <Grid item xs={4} md={4}>
-                                <Box textAlign="right" sx={{ display: index > 0 ? "none" : "initial" }}>
-                                    {/* <Typography variant='body1'
-                                        sx={{
-                                            fontWeight: "700",
-                                            fontSize: "20px",
-                                            lineHeight: "40px",
-                                            letterSpacing: "-0.13px",
-                                            color: colors.dark,
-                                        }}
-                                    >{ currencyDisplay(totalPrice) }</Typography> */}
-
-                                    {
-                                        discount._id ? (
-                                            <>
-                                                <Typography variant='body1'
+                                            <Box>
+                                                <Typography variant='h4'
                                                     sx={{
                                                         fontWeight: "700",
                                                         fontSize: "20px",
+                                                        // lineHeight: "40px",
+                                                        letterSpacing: "-0.13px",
+                                                        color: colors.dark
+                                                    }}
+                                                >{ item.title }</Typography>
+
+                                                <Typography variant='subtitle2'
+                                                    sx={{
+                                                        fontWeight: "400",
+                                                        fontSize: "16px",
+                                                        // lineHeight: "40px",
+                                                        letterSpacing: "-0.13px",
+                                                        color: colors.dark
+                                                    }}
+                                                >{ item.releaseType }</Typography>
+
+                                                <Typography variant='subtitle2'
+                                                    onClick={() => removeItemFn(item) }
+                                                    sx={{
+                                                        fontWeight: "400",
+                                                        fontSize: "16px",
                                                         lineHeight: "40px",
                                                         letterSpacing: "-0.13px",
-                                                        color: colors.dark,
-                                                        my: 3
+                                                        color: colors.primary,
+                                                        cursor: "pointer",
+                                                        mt: "30px"
                                                     }}
-                                                > - { currencyDisplay(discount.discountedAmount || 0) }</Typography>
-            
-                                                {/* <Divider /> */}
-                                                
-                                                {/* <Typography variant='body1'
-                                                    sx={{
-                                                        fontWeight: "700",
-                                                        fontSize: "24px",
-                                                        lineHeight: "40px",
-                                                        letterSpacing: "-0.13px",
-                                                        color: colors.dark,
-                                                    }}
-                                                >{ currencyDisplay(discount.payableAmount || 0) }</Typography> */}
+                                                >Remove</Typography>
+                                            </Box>
+                                        </Stack>
+                                    </Box>
+                                </Grid>
 
+                                <Grid item xs={4} md={4}>
+                                    <Box textAlign="center">
+                                        <Typography variant='body1'
+                                            sx={{
+                                                fontWeight: "700",
+                                                fontSize: "20px",
+                                                lineHeight: "40px",
+                                                letterSpacing: "-0.13px",
+                                                color: colors.dark,
+                                            }}
+                                        >{ currencyDisplay(item.price) }</Typography>
+                                    </Box>
+                                </Grid>
 
-                                                <Box 
-                                                    sx={{
-                                                        bgcolor: colors.primary,
-                                                        p: 1,
-                                                        borderRadius: "8px",
-                                                        width: "fit-content",
-                                                        ml: "auto"
-                                                    }}
-                                                >
+                                <Grid item xs={4} md={4}>
+                                    <Box textAlign="right" sx={{ display: index > 0 ? "none" : "initial" }}>
+                                        {/* <Typography variant='body1'
+                                            sx={{
+                                                fontWeight: "700",
+                                                fontSize: "20px",
+                                                lineHeight: "40px",
+                                                letterSpacing: "-0.13px",
+                                                color: colors.dark,
+                                            }}
+                                        >{ currencyDisplay(totalPrice) }</Typography> */}
+
+                                        {
+                                            discount._id ? (
+                                                <>
                                                     <Typography variant='body1'
                                                         sx={{
-                                                            fontWeight: "400", // "900",
-                                                            fontSize: "16px", // {xs: "16px", md: "20px"},
-                                                            // lineHeight: {xs: "20px", md: "40px"},
-                                                            // letterSpacing: "-0.13px",
-                                                            color: colors.milk,
+                                                            fontWeight: "700",
+                                                            fontSize: "20px",
+                                                            lineHeight: "40px",
+                                                            letterSpacing: "-0.13px",
+                                                            color: colors.dark,
+                                                            my: 3
+                                                        }}
+                                                    > - { currencyDisplay(discount.discountedAmount || 0) }</Typography>
+                
+                                                    {/* <Divider /> */}
+                                                    
+                                                    {/* <Typography variant='body1'
+                                                        sx={{
+                                                            fontWeight: "700",
+                                                            fontSize: "24px",
+                                                            lineHeight: "40px",
+                                                            letterSpacing: "-0.13px",
+                                                            color: colors.dark,
+                                                        }}
+                                                    >{ currencyDisplay(discount.payableAmount || 0) }</Typography> */}
+
+
+                                                    <Box 
+                                                        sx={{
+                                                            bgcolor: colors.primary,
+                                                            p: 1,
+                                                            borderRadius: "8px",
+                                                            width: "fit-content",
+                                                            ml: "auto"
                                                         }}
                                                     >
-                                                        Total Payable Amount: 
-                                                        <Typography component="span"
+                                                        <Typography variant='body1'
                                                             sx={{
-                                                                fontSize: "20px",
-                                                                fontWeight: "900",
-                                                                pl: 1
+                                                                fontWeight: "400", // "900",
+                                                                fontSize: "16px", // {xs: "16px", md: "20px"},
+                                                                // lineHeight: {xs: "20px", md: "40px"},
+                                                                // letterSpacing: "-0.13px",
+                                                                color: colors.milk,
                                                             }}
-                                                        > { currencyDisplay(discount.payableAmount || 0) }</Typography>
-                                                    </Typography>
-                                                </Box>
+                                                        >
+                                                            Total Payable Amount: 
+                                                            <Typography component="span"
+                                                                sx={{
+                                                                    fontSize: "20px",
+                                                                    fontWeight: "900",
+                                                                    pl: 1
+                                                                }}
+                                                            > { currencyDisplay(discount.payableAmount || 0) }</Typography>
+                                                        </Typography>
+                                                    </Box>
 
-                                                
-                                                <Typography variant='subtitle2' component="small"
-                                                    sx={{
-                                                        fontWeight: "300",
-                                                        fontSize: "12px",
-                                                        // lineHeight: "40px",
-                                                        // letterSpacing: "-0.13px",
-                                                        color: colors.dark,
-                                                        textAlign: "right",
-                                                        float: "right"
-                                                    }}
-                                                >{ discount.discount || 0 }% discount applied</Typography>
-                                            </>
-                                        ) : <></>
-                                    }
+                                                    
+                                                    <Typography variant='subtitle2' component="small"
+                                                        sx={{
+                                                            fontWeight: "300",
+                                                            fontSize: "12px",
+                                                            // lineHeight: "40px",
+                                                            // letterSpacing: "-0.13px",
+                                                            color: colors.dark,
+                                                            textAlign: "right",
+                                                            float: "right"
+                                                        }}
+                                                    >{ discount.discount || 0 }% discount applied</Typography>
+                                                </>
+                                            ) : <></>
+                                        }
 
-                                </Box>
+                                    </Box>
+                                </Grid>
                             </Grid>
-                        </Grid>
-                    ))
+                        ))
+                    : <Box width="100%" my={5}>
+                        <EmptyCartComponent 
+                            notFoundText='Your cart is currently empty.'
+                        />
+                    </Box>
                 }
 
             </Box>
@@ -293,138 +299,144 @@ const CartItemComponent: React.FC<_Props> = ({
                 </Grid>
 
                 {
-                    cartItems.map((item, index) => (
-                        <Grid key={index} container spacing="10px" mb="5px">
-                            <Grid item xs={7} sm={8}>
-                                <Box>
-                                    <Stack direction="row" spacing="10px" mt="10px">
-                                        <Box
-                                            sx={{
-                                                width: "80px",
-                                                height: "120px",
-                                                borderRadius: "6px",
-                                                bgcolor: colors.secondary,
-                                                overflow: "hidden"
-                                            }}
-                                        >
-                                            <img src={item.coverArt} alt='song art work image'
-                                                style={{
-                                                    width: "100%",
-                                                    height: "100%",
-                                                    objectFit: "contain"
-                                                }}
-                                            />
-                                        </Box>
-
-                                        <Box>
-                                            <Typography variant='h4'
+                    cartItems.length ?
+                        cartItems.map((item, index) => (
+                            <Grid key={index} container spacing="10px" mb="5px">
+                                <Grid item xs={7} sm={8}>
+                                    <Box>
+                                        <Stack direction="row" spacing="10px" mt="10px">
+                                            <Box
                                                 sx={{
-                                                    ...numberOfLinesTypographyStyle(2),
-                                                    fontWeight: "700",
-                                                    fontSize: "16px",
-                                                    lineHeight: "20px",
-                                                    letterSpacing: "-0.06px",
-                                                    color: colors.dark,
+                                                    width: "80px",
+                                                    height: "120px",
+                                                    borderRadius: "6px",
+                                                    bgcolor: colors.secondary,
+                                                    overflow: "hidden"
                                                 }}
-                                            >{ item.title }</Typography>
+                                            >
+                                                <img src={item.coverArt} alt='song art work image'
+                                                    style={{
+                                                        width: "100%",
+                                                        height: "100%",
+                                                        objectFit: "contain"
+                                                    }}
+                                                />
+                                            </Box>
 
-                                            <Typography variant='subtitle2'
-                                                sx={{
-                                                    fontWeight: "400",
-                                                    fontSize: "15px",
-                                                    lineHeight: "20px",
-                                                    letterSpacing: "-0.06px",
-                                                    color: colors.dark,
-                                                    mt: "14px"
-                                                }}
-                                            >{ item.releaseType }</Typography>
-
-                                            <Typography variant='subtitle2'
-                                                sx={{
-                                                    fontWeight: "500",
-                                                    fontSize: "15px",
-                                                    lineHeight: "20px",
-                                                    letterSpacing: "-0.06px",
-                                                    color: colors.secondary
-                                                }}
-                                            >{ currencyDisplay(item.price) }</Typography>
-
-                                            <Typography variant='subtitle2'
-                                                onClick={() => removeItemFn(item)}
-                                                sx={{
-                                                    fontWeight: "500",
-                                                    fontSize: "14px",
-                                                    lineHeight: "20px",
-                                                    letterSpacing: "-0.06px",
-                                                    color: colors.dark,
-                                                    cursor: "pointer",
-                                                    mt: "17px"
-                                                }}
-                                            >Remove</Typography>
-                                        </Box>
-                                    </Stack>
-                                </Box>
-                            </Grid>
-
-                            <Grid item xs={5} sm={4}>
-                                <Box textAlign="center"
-                                    sx={{ display: index > 0 ? "none" : "initial" }}
-                                >
-                                    <Typography variant='body1'
-                                        sx={{
-                                            fontWeight: "700",
-                                            fontSize: "16px",
-                                            lineHeight: "20px",
-                                            letterSpacing: "-0.06px",
-                                            color: colors.dark,
-                                            mt: "10px",
-                                        }}
-                                    >{ currencyDisplay(totalPrice) }</Typography>
-
-                                    {
-                                        discount._id ? (
-                                            <>
-                                                <Typography variant='body1'
+                                            <Box>
+                                                <Typography variant='h4'
                                                     sx={{
+                                                        ...numberOfLinesTypographyStyle(2),
                                                         fontWeight: "700",
                                                         fontSize: "16px",
                                                         lineHeight: "20px",
                                                         letterSpacing: "-0.06px",
                                                         color: colors.dark,
                                                     }}
-                                                > - { currencyDisplay(discount.discountedAmount || 0) }</Typography>
-            
-                                                <Divider sx={{my: 0.5}} />
-                                                
-                                                <Typography variant='body1'
+                                                >{ item.title }</Typography>
+
+                                                <Typography variant='subtitle2'
                                                     sx={{
-                                                        fontWeight: "700",
-                                                        fontSize: "20px",
+                                                        fontWeight: "400",
+                                                        fontSize: "15px",
                                                         lineHeight: "20px",
                                                         letterSpacing: "-0.06px",
                                                         color: colors.dark,
+                                                        mt: "14px"
                                                     }}
-                                                >{ currencyDisplay(discount.payableAmount || 0) }</Typography>
-                                                
-                                                <Typography variant='subtitle2' component="small"
-                                                    sx={{
-                                                        fontWeight: "300",
-                                                        fontSize: "12px",
-                                                        // lineHeight: "40px",
-                                                        // letterSpacing: "-0.13px",
-                                                        color: colors.dark,
-                                                        textAlign: "right",
-                                                        float: "right"
-                                                    }}
-                                                >{ discount.discount || 0 }% discount applied</Typography>
-                                            </>
-                                        ) : <></>
-                                    }
+                                                >{ item.releaseType }</Typography>
 
-                                </Box>
+                                                <Typography variant='subtitle2'
+                                                    sx={{
+                                                        fontWeight: "500",
+                                                        fontSize: "15px",
+                                                        lineHeight: "20px",
+                                                        letterSpacing: "-0.06px",
+                                                        color: colors.secondary
+                                                    }}
+                                                >{ currencyDisplay(item.price) }</Typography>
+
+                                                <Typography variant='subtitle2'
+                                                    onClick={() => removeItemFn(item)}
+                                                    sx={{
+                                                        fontWeight: "500",
+                                                        fontSize: "14px",
+                                                        lineHeight: "20px",
+                                                        letterSpacing: "-0.06px",
+                                                        color: colors.dark,
+                                                        cursor: "pointer",
+                                                        mt: "17px"
+                                                    }}
+                                                >Remove</Typography>
+                                            </Box>
+                                        </Stack>
+                                    </Box>
+                                </Grid>
+
+                                <Grid item xs={5} sm={4}>
+                                    <Box textAlign="center"
+                                        sx={{ display: index > 0 ? "none" : "initial" }}
+                                    >
+                                        <Typography variant='body1'
+                                            sx={{
+                                                fontWeight: "700",
+                                                fontSize: "16px",
+                                                lineHeight: "20px",
+                                                letterSpacing: "-0.06px",
+                                                color: colors.dark,
+                                                mt: "10px",
+                                            }}
+                                        >{ currencyDisplay(totalPrice) }</Typography>
+
+                                        {
+                                            discount._id ? (
+                                                <>
+                                                    <Typography variant='body1'
+                                                        sx={{
+                                                            fontWeight: "700",
+                                                            fontSize: "16px",
+                                                            lineHeight: "20px",
+                                                            letterSpacing: "-0.06px",
+                                                            color: colors.dark,
+                                                        }}
+                                                    > - { currencyDisplay(discount.discountedAmount || 0) }</Typography>
+                
+                                                    <Divider sx={{my: 0.5}} />
+                                                    
+                                                    <Typography variant='body1'
+                                                        sx={{
+                                                            fontWeight: "700",
+                                                            fontSize: "20px",
+                                                            lineHeight: "20px",
+                                                            letterSpacing: "-0.06px",
+                                                            color: colors.dark,
+                                                        }}
+                                                    >{ currencyDisplay(discount.payableAmount || 0) }</Typography>
+                                                    
+                                                    <Typography variant='subtitle2' component="small"
+                                                        sx={{
+                                                            fontWeight: "300",
+                                                            fontSize: "12px",
+                                                            // lineHeight: "40px",
+                                                            // letterSpacing: "-0.13px",
+                                                            color: colors.dark,
+                                                            textAlign: "right",
+                                                            float: "right"
+                                                        }}
+                                                    >{ discount.discount || 0 }% discount applied</Typography>
+                                                </>
+                                            ) : <></>
+                                        }
+
+                                    </Box>
+                                </Grid>
                             </Grid>
-                        </Grid>
-                    ))
+                        ))
+                    : <Box width="100%" my={5}>
+                        <EmptyCartComponent 
+                            notFoundText='Your cart is currently empty.'
+                        />
+                    </Box>
                 }
                 
             </Box>

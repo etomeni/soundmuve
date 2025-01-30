@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import SideNav from './SideNav';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
@@ -9,7 +10,8 @@ import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
-
+import Tooltip from '@mui/material/Tooltip';
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import CloudUploadOutlinedIcon from '@mui/icons-material/CloudUploadOutlined';
 import AddIcon from '@mui/icons-material/Add';
 import CancelIcon from '@mui/icons-material/Cancel';
@@ -31,6 +33,7 @@ import SearchArtistModalComponent from '@/components/account/SearchArtistModal';
 // import { artistInterface, songArtists_CreativesInterface } from '@/typeInterfaces/release.interface';
 import { useCreateAlbum4 } from '@/hooks/release/createAlbumRelease/useCreateAlbum4';
 import CircularProgress from '@mui/material/CircularProgress';
+import IconButton from '@mui/material/IconButton';
 
 
 let dspToSearch: "Apple" | "Spotify";
@@ -38,6 +41,7 @@ let dspToSearch: "Apple" | "Spotify";
 function CreateAlbumReleaseSongUpload() {
     // const albumReleaseDetails = useCreateReleaseStore((state) => state.albumReleaseDetails);
     const albumRelease = useCreateReleaseStore((state) => state.albumRelease);
+    const [isrcMoreInfoTooltip, setIsrcMoreInfoTooltip] = useState(false);
 
     const {
         navigate,
@@ -97,7 +101,7 @@ function CreateAlbumReleaseSongUpload() {
                                 { albumRelease.songs && albumRelease.songs.length ? (
                                         <Box
                                             sx={{
-                                                maxWidth: {xs: "330px", md: "892px"},
+                                                maxWidth: {xs: "330px", sm: "95%", md: "892px"},
                                                 border: {
                                                     xs: `0.45px solid ${ colors.dark }`,
                                                     md: `1px solid ${ colors.dark }`
@@ -166,7 +170,7 @@ function CreateAlbumReleaseSongUpload() {
 
                                 <Box
                                     sx={{
-                                        maxWidth: {xs: "330px", md: "892px"},
+                                        maxWidth: {xs: "330px",  sm: "95%", md: "892px"},
                                         border: {
                                             xs: `0.45px solid ${ colors.dark }`,
                                             md: `1px solid ${ colors.dark }`
@@ -229,9 +233,10 @@ function CreateAlbumReleaseSongUpload() {
 
                                         <Stack direction="row" justifyContent="space-between" alignItems="center"
                                             sx={{
-                                                p: {xs: "", md: "10px 25px"},
+                                                p: {xs: "5px 15px", md: "10px 25px"},
                                                 borderRadius: '16px',
-                                                width: "459px",
+                                                width: {xs: "95%", sm: "85%", md: "100%"},
+                                                maxWidth: "459px",
                                                 bgcolor: colors.primary,
                                                 color: colors.milk,
                                                 my: 3,
@@ -994,15 +999,68 @@ function CreateAlbumReleaseSongUpload() {
                                                 >Additional Information</Typography>
 
                                                 <Box sx={{my: "20px"}}>
-                                                    <Typography variant='h3'
-                                                        sx={{
-                                                            fontWeight: "900",
-                                                            fontSize: {xs: "13px", md: "16px"},
-                                                            lineHeight: {xs: "25px", md: "32px"},
-                                                            letterSpacing: "-0.13px",
-                                                            mb: '10px'
-                                                        }}
-                                                    >ISRC Number</Typography>
+                                                    <Stack direction="row" alignItems="center" spacing="5px">
+                                                        <Typography variant='h3'
+                                                            sx={{
+                                                                fontWeight: "900",
+                                                                fontSize: {xs: "13px", md: "16px"},
+                                                                lineHeight: {xs: "25px", md: "32px"},
+                                                                letterSpacing: "-0.13px",
+                                                                mb: '10px'
+                                                            }}
+                                                        >ISRC Number </Typography>
+
+                                                        <Typography component="small"
+                                                            sx={{
+                                                                fontSize: "11px",
+                                                                fontWeight: '400'
+                                                            }}
+                                                        > (Optional)</Typography>
+
+                                                        <Box>
+                                                            <Tooltip
+                                                                PopperProps={{
+                                                                    disablePortal: true,
+                                                                }}
+                                                                // placement='bottom-end'
+                                                                arrow
+                                                                // onClose={() => setIsrcMoreInfoTooltip(false)}
+                                                                // open={isrcMoreInfoTooltip}
+                                                                // disableFocusListener
+                                                                // disableHoverListener
+                                                                // disableTouchListener
+
+                                                                title={<Box
+                                                                    sx={{
+                                                                        // minWidth: 250,
+                                                                        // maxWidth: 700,
+                                                                        maxHeight: 450,
+                                                                        overflow: "scroll"
+                                                                    }}
+                                                                >
+                                                                    <Typography variant='h3' component="h3"
+                                                                        sx={{
+                                                                            fontWeight: '900',
+                                                                            fontSize: "25px",
+                                                                            textAlign: 'center',
+                                                                            mb: 2
+                                                                        }}
+                                                                    > Note! </Typography>
+
+                                                                    <Typography variant='body1' fontSize="16px" mb={1}>
+                                                                        If this is your first time releasing music 
+                                                                        or don't have an International Standard Recording Code (ISRC),
+                                                                        you can leave this field empty,
+                                                                        we'll generate one for you.
+                                                                    </Typography>
+                                                                </Box>}
+                                                            >
+                                                                <IconButton size='small' onClick={() => setIsrcMoreInfoTooltip(!isrcMoreInfoTooltip)} aria-label="More Information">
+                                                                    <InfoOutlinedIcon sx={{ color: colors.primary, fontSize: "20px" }} />
+                                                                </IconButton>
+                                                            </Tooltip>
+                                                        </Box>
+                                                    </Stack>
 
                                                     <TextField 
                                                         variant="outlined" 
@@ -1242,7 +1300,7 @@ function CreateAlbumReleaseSongUpload() {
                                         >
                                             <Stack direction="row" justifyContent="space-between" alignItems="center"
                                                 sx={{
-                                                    p: {xs: "", md: "10px 25px"},
+                                                    p: {xs: "5px 15px", md: "10px 25px"},
                                                     borderRadius: '16px',
                                                     width: "200px",
                                                     bgcolor: colors.primary,

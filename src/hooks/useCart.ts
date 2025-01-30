@@ -38,6 +38,8 @@ export function useCart() {
             }, 0);
     
             setTotalAmount(totalPrice);
+        } else {
+            setTotalAmount(0);
         }
     }, [cartItems]);
 

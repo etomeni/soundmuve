@@ -41,6 +41,18 @@ export function getLocalStorage(storageKey: string) {
     return storedValue;
 }
 
+export function setNormalLocalStorage(storageKey: string, value: any) {
+    const lowLevelEncryption = JSON.stringify(value);
+    localStorage.setItem(storageKey, lowLevelEncryption);
+}
+
+export function getNormalLocalStorage(storageKey: string) {
+    const storedData = localStorage.getItem(storageKey);
+    const storedValue = storedData ? JSON.parse(storedData) : null;
+  
+    return storedValue;
+}
+
 export function removeLocalStorageItem(storageKey: string) {
     localStorage.removeItem(storageKey);
 }
@@ -52,13 +64,13 @@ export function clearLocalStorage() {
 
 // THE FOLLOWING FUNCTIONS ARE USED FOR SESSION STORAGE
 export function setSessionStorage(storageKey: string, value: any) {
-    const lowLevelEncryption = btoa(JSON.stringify(value));
+    const lowLevelEncryption = JSON.stringify(value);
     return sessionStorage.setItem(storageKey, lowLevelEncryption);
 }
   
 export function getSessionStorage(storageKey: string) {
     const storedData = sessionStorage.getItem(storageKey);
-    const storedValue = storedData ? JSON.parse(atob(storedData)) : null;
+    const storedValue = storedData ? JSON.parse(storedData) : null;
   
     return storedValue;
 }
