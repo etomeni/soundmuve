@@ -199,51 +199,58 @@ function CreateSingleRelease2() {
                                         > { singleRelease.releaseDate } </Typography>
                                     </Stack>
                                     
-                                    <Stack direction="row" spacing={"auto"} 
-                                        justifyContent="space-between" alignItems="center"
-                                        display={ singleRelease.labelName ? "initial" : "none" }
-                                    >
-                                        <Typography
-                                            sx={{
-                                                fontWeight: "400",
-                                                fontSize: {xs: "13px", md: "15px"},
-                                                lineHeight: {xs: "25px", md: "40px"},
-                                                letterSpacing: "-0.13px"
-                                            }}
-                                        >Label</Typography>
+                                    {
+                                        singleRelease.labelName ?
+                                            <Stack direction="row" spacing={"auto"} 
+                                                justifyContent="space-between" alignItems="center"
+                                            >
+                                                <Typography
+                                                    sx={{
+                                                        fontWeight: "400",
+                                                        fontSize: {xs: "13px", md: "15px"},
+                                                        lineHeight: {xs: "25px", md: "40px"},
+                                                        letterSpacing: "-0.13px"
+                                                    }}
+                                                >Label</Typography>
 
-                                        <Typography
-                                            sx={{
-                                                fontWeight: "400",
-                                                fontSize: {xs: "13px", md: "15px"},
-                                                lineHeight: {xs: "25px", md: "40px"},
-                                                letterSpacing: "-0.13px"
-                                            }}
-                                        > { singleRelease.labelName } </Typography>
-                                    </Stack>
+                                                <Typography
+                                                    sx={{
+                                                        fontWeight: "400",
+                                                        fontSize: {xs: "13px", md: "15px"},
+                                                        lineHeight: {xs: "25px", md: "40px"},
+                                                        letterSpacing: "-0.13px"
+                                                    }}
+                                                > { singleRelease.labelName } </Typography>
+                                            </Stack>
+                                        : <></>
+                                    }
+
+                                    {
+                                        singleRelease.upc_ean ? 
+                                            <Stack direction="row" spacing={"auto"} 
+                                                justifyContent="space-between" alignItems="center"
+                                            >
+                                                <Typography
+                                                    sx={{
+                                                        fontWeight: "400",
+                                                        fontSize: {xs: "13px", md: "15px"},
+                                                        lineHeight: {xs: "25px", md: "40px"},
+                                                        letterSpacing: "-0.13px"
+                                                    }}
+                                                >UPC</Typography>
+
+                                                <Typography
+                                                    sx={{
+                                                        fontWeight: "400",
+                                                        fontSize: {xs: "13px", md: "15px"},
+                                                        lineHeight: {xs: "25px", md: "40px"},
+                                                        letterSpacing: "-0.13px"
+                                                    }}
+                                                > { singleRelease.upc_ean } </Typography>
+                                            </Stack>
+                                        : <></>
+                                    }
                                     
-                                    <Stack direction="row" spacing={"auto"} 
-                                        justifyContent="space-between" alignItems="center"
-                                        display={ singleRelease.upc_ean ? "initial" : "none" }
-                                    >
-                                        <Typography
-                                            sx={{
-                                                fontWeight: "400",
-                                                fontSize: {xs: "13px", md: "15px"},
-                                                lineHeight: {xs: "25px", md: "40px"},
-                                                letterSpacing: "-0.13px"
-                                            }}
-                                        >UPC</Typography>
-
-                                        <Typography
-                                            sx={{
-                                                fontWeight: "400",
-                                                fontSize: {xs: "13px", md: "15px"},
-                                                lineHeight: {xs: "25px", md: "40px"},
-                                                letterSpacing: "-0.13px"
-                                            }}
-                                        > { singleRelease.upc_ean } </Typography>
-                                    </Stack>
 
                                     <Stack direction="row" spacing={"auto"} justifyContent="space-between" alignItems="center">
                                         <Typography

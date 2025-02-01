@@ -65,6 +65,7 @@ import CartCheckoutPage from "./pages/account/createReleases/cartCheckout/Checko
 // import ArtistAnalytics_RL from "./pages/account/recordLabel/ArtistAnalytics_RL";
 import SuccessfulPayment from "./pages/account/createReleases/cartCheckout/SuccessfulPayment";
 import ArtistSongs_RL from "./pages/account/recordLabel/ArtistSongs_RL";
+import Music from "./pages/Music";
 
 
 export const router = createBrowserRouter([
@@ -103,6 +104,11 @@ export const router = createBrowserRouter([
         {
           path: "about",
           element: <About />
+        },
+
+        {
+          path: "music/:code",
+          element: <Music />
         },
 
         {
@@ -296,36 +302,6 @@ export const router = createBrowserRouter([
                   path: "artist-songs",
                   element: <ArtistSongs_RL />,
                 },
-                // {
-                //   path: "artist-analytics",
-                //   element: <ArtistAnalytics_RL />,
-                // },
-
-                // {
-                //   path: "balance-history",
-                //   element: <BalanceHistory_RL />
-                // },
-                // {
-                //   path: "sales-report",
-                //   element: <SalesReport_RL />
-                // },
-                // {
-                //   path: "analytics-reach",
-                //   element: <AnalyticsReach_RL />
-                // },
-                // {
-                //   path: "song-details",
-                //   element: <SongDetails_RL />
-                // },
-                // {
-                //   path: "album-details",
-                //   element: <AlbumDetails_RL />
-                // },
-                // {
-                //   path: "all-music",
-                //   element: <AllMusic_RL />
-                // },
-
               ]
             },
           ]

@@ -144,7 +144,7 @@ function AlbumDetails() {
 
                                 <Box sx={{ flex: "1 1 30%" }}>
                                     <Box>
-                                        <CopyShareLink linkUrl={releaseDetails.liveUrl || '' } />
+                                        <CopyShareLink linkUrl={releaseDetails.musicLinks?.url || '' } />
                                     </Box>
                                 </Box>
                             </Stack>
@@ -416,7 +416,7 @@ function AlbumDetails() {
                             </Box>
 
                             <Box sx={{ flex: "1 1 40%", maxWidth: "50%" }} >
-                                <CopyShareLink linkUrl={releaseDetails.liveUrl || ''} />
+                                <CopyShareLink linkUrl={releaseDetails.musicLinks?.url || ''} />
                             </Box>
                         </Stack>
 

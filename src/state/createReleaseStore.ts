@@ -197,6 +197,9 @@ export const useCreateReleaseStore = create<_typeInterface_>((set) => ({
   
 
     _restoreAllRelease: () => {
+        removeLocalStorageItem("singleRelease");
+        removeLocalStorageItem("albumRelease");
+
         const singleRelease = getNormalLocalStorage("singleRelease");
         const albumRelease = getNormalLocalStorage("albumRelease");
 
