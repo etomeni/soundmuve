@@ -66,6 +66,8 @@ import CartCheckoutPage from "./pages/account/createReleases/cartCheckout/Checko
 import SuccessfulPayment from "./pages/account/createReleases/cartCheckout/SuccessfulPayment";
 import ArtistSongs_RL from "./pages/account/recordLabel/ArtistSongs_RL";
 import Music from "./pages/Music";
+import ProfilePage from "./pages/account/profile/ProfilePage";
+import ProfileEditPage from "./pages/account/profile/ProfileEditPage";
 
 
 export const router = createBrowserRouter([
@@ -161,6 +163,14 @@ export const router = createBrowserRouter([
             {
               path: "",
               element: <DashboardHome />
+            },
+            {
+              path: "profile",
+              element: <ProfilePage />
+            },
+            {
+              path: "profile/edit",
+              element: <ProfileEditPage />
             },
             {
               path: "faq",

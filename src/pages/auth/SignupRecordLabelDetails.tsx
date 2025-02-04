@@ -33,7 +33,7 @@ import { auth2MuiTextFieldStyle } from '@/util/mui';
 
 
 const formSchema = yup.object({
-    recordLabelName: yup.string().required().min(2).trim().label("First Name"),
+    recordLabelName: yup.string().required().min(2).trim().label("Record label name"),
     phoneNumber: yup.string().required().min(7, "Incorrect phone number").max(15, "Incorrect phone number").trim().label("Phone Number"),
     country: yup.string().required().min(2).trim().label("Country"),
     // logo: yup.string().required().min(2).trim().label("logo"),

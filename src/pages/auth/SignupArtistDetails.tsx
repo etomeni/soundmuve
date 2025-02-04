@@ -31,7 +31,7 @@ import colors from '@/constants/colors';
 
 
 const formSchema = yup.object({
-    artistName: yup.string().required().min(2).trim().label("First Name"),
+    artistName: yup.string().required().min(2).trim().label("Artist name"),
     phoneNumber: yup.string().required().min(7, "Incorrect phone number").max(15, "Incorrect phone number").trim().label("Phone Number"),
     country: yup.string().required().min(2).trim().label("Country"),
     gender: yup.string().required().min(2).trim().label("Gender"),

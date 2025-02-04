@@ -28,7 +28,13 @@ import { apiEndpoint } from '@/util/resources';
 import { releaseInterface } from '@/typeInterfaces/release.interface';
 import LoadingDataComponent from '@/components/LoadingData2';
 
-
+declare global {
+    interface Window {
+        drift?: any;
+        driftt?: any;
+    }
+}
+  
 const musicDsps = [
     {
         id: 1,
@@ -137,8 +143,26 @@ function Music() {
 
     useEffect(() => {
         getMusicLinks4rmReleases();
+
+        hideDriftWhenLoaded();
     }, []);
-    
+
+    const hideDriftWhenLoaded = () => {
+        let attempt = 0;
+        const maxRetries = 100;
+        const interval = 500; // Retry every 500ms
+      
+        const checkDrift = setInterval(() => {
+            if (window.drift && window.drift.ready) {
+                window.drift.hide();
+                clearInterval(checkDrift); // Stop retrying once Drift is hidden
+            } else if (attempt >= maxRetries) {
+                clearInterval(checkDrift); // Stop after max attempts
+            }
+            attempt++;
+        }, interval);
+    };
+
 
     const getMusicLinks4rmReleases = async () => {
         try {
@@ -254,8 +278,7 @@ function Music() {
             return (orderMap.get(a.name) ?? Infinity) - (orderMap.get(b.name) ?? Infinity);
         });
     };
-      
-      
+    
     
 
     return (

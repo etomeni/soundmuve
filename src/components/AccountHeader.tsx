@@ -201,6 +201,20 @@ export default function AccountHeaderComponent({headerSpacing = false} : _Props)
                 <Box height="30px"></Box>
 
                 <List onClick={handleDrawerToggle}>
+                    <Link to="/account/profile" style={{ color: "inherit" }}>
+                        <ListItem disablePadding 
+                            sx={{
+                                bgcolor: pathname.endsWith('/account/profile') || pathname.endsWith('/account/profile/') ? "#141414" : '',
+                                borderRadius: "21px",
+                                color: pathname.endsWith('/account/profile') || pathname.endsWith('/account/profile/') ? colors.milk : colors.dark
+                            }}
+                        >
+                            <ListItemButton>
+                                <ListItemText primary={"Profile"} />
+                            </ListItemButton>
+                        </ListItem>
+                    </Link>
+
                     {
                         userData.userType == "artist" ? (
                             menuItems.map((item) => (
@@ -318,13 +332,16 @@ export default function AccountHeaderComponent({headerSpacing = false} : _Props)
                 flexDirection: "column",
             }}
         >
-            <Stack direction="row" alignItems="center" spacing="10px">
+            <Stack direction="row" alignItems="center" spacing="10px"
+                onClick={() => navigate("/account/profile")}
+            >
                 <Avatar
                     alt={`${userData.firstName} ${userData.lastName}`}
                     // src={userData.profile_image || ""}
                     sx={{ 
                         boxShadow: "0px 4px 8px -1px rgba(0, 0, 0, 0.1)",
                         bgcolor: stringToColor(`${userData.firstName.trim()} ${userData.lastName.trim()}`),
+                        cursor: "pointer",
                     }}
                     children={<Typography sx={{
                         fontSize: "15px",
@@ -332,7 +349,7 @@ export default function AccountHeaderComponent({headerSpacing = false} : _Props)
                     }}>{stringAvatar(`${userData.firstName.trim()} ${userData.lastName.trim()}`)}</Typography>}
                 />
 
-                <Box width={"90px"}>
+                <Box width={"90px"} sx={{cursor: "pointer"}} >
                     <Typography noWrap variant="h1" component="h2"
                         sx={{
                             fontWeight: "700",

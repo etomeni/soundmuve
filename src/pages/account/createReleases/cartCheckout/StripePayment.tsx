@@ -42,15 +42,11 @@ const StripePayment: React.FC<_Props> = ({
 
 
     useEffect(() => {
-        if (discount._id) {
-            setamount(discount.payableAmount || 0);
-        } else {
-            setamount(getTotalAmount(cartItems));
-        }
+        const gatPayAmount = discount._id && discount.payableAmount ? discount.payableAmount : getTotalAmount(cartItems);
+        setamount(gatPayAmount);
 
-        // setamount(getTotalAmount(cartItems));
         setTimeout(() => {
-            handleGetPaymentIntent(amount);
+            handleGetPaymentIntent(gatPayAmount);
         }, 500);
     }, [cartItems, discount]);
 

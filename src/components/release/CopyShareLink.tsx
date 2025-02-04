@@ -15,11 +15,12 @@ import { numberOfLinesTypographyStyle } from '@/util/mui';
 interface _Props {
     // children: React.ReactNode,
     linkUrl: string | undefined
+    linkText?: string
 }
 
 
 const CopyShareLink: React.FC<_Props> = ({
-    linkUrl
+    linkUrl, linkText = ''
 }) => {
 
     return (
@@ -58,9 +59,9 @@ const CopyShareLink: React.FC<_Props> = ({
                         
                         <RWebShare
                             data={{
-                                text: linkUrl,
+                                text: linkText,
                                 url: linkUrl,
-                                title: "Soundmuve",
+                                title: "Soundmuve Music",
                             }}
                             onClick={() =>
                                 console.log("shared successfully!")

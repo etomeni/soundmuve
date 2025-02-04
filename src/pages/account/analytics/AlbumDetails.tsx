@@ -1,10 +1,16 @@
 import { createSearchParams, useNavigate } from 'react-router-dom';
 
+import { CopyToClipboard } from 'react-copy-to-clipboard';
+import { RWebShare } from "react-web-share";
+
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+
+import IosShareOutlinedIcon from '@mui/icons-material/IosShareOutlined';
+import ContentCopyOutlinedIcon from '@mui/icons-material/ContentCopyOutlined';
 
 import AlbumSongItem from '@/components/account/AlbumSongItem';
 import AccountWrapper from '@/components/AccountWrapper';
@@ -17,7 +23,7 @@ import { useReleaseStore } from '@/state/releaseStore';
 import { useEffect, useState } from 'react';
 // import { allMonths } from '@/util/months';
 import { getDateRangeBydays } from '@/util/dateTime';
-import CopyShareLink from '@/components/release/CopyShareLink';
+// import CopyShareLink from '@/components/release/CopyShareLink';
 import { useAnalyticsHook } from '@/hooks/analytics/useAnalyticsHook';
 import { currencyDisplay, formatedNumber, getQueryParams } from '@/util/resources';
 import DateRangeMonthsYearBasicMenu from '@/components/DateRange_MonthsYear';
@@ -51,6 +57,50 @@ function AlbumDetails() {
             );
         }
     }, [dateRange]);
+
+
+    const displayMusicLink = () => (
+        <Box>
+            {
+                releaseDetails.musicLinks && 
+                releaseDetails.musicLinks?.url ?
+                    <Stack direction="row" spacing="10px" alignItems="center">
+                        <Typography
+                            sx={{
+                                fontWeight: {xs: "500", md: "700"},
+                                fontSize: {xs: "12px", sm: "14px", md: "17px" } ,
+                                // lineHeight: "24px",
+                                color: colors.tertiary
+                            }}
+                        >{ releaseDetails.musicLinks?.url || '' } </Typography>
+
+                        <Box>
+                            <CopyToClipboard text={releaseDetails.musicLinks?.url || ''} onCopy={() => {}}>
+                                <IconButton size='small' sx={{bgcolor: colors.tertiary, mx: 1}}>
+                                    <ContentCopyOutlinedIcon sx={{ color: colors.milk, fontSize: {xs: "13px", md: "18px"} }} />
+                                </IconButton>
+                            </CopyToClipboard>
+
+                            <RWebShare
+                                data={{
+                                    text: `${releaseDetails.title} - ${releaseDetails.mainArtist.spotifyProfile.name}`,
+                                    url: releaseDetails.musicLinks?.url,
+                                    title: `Soundmuve Music`,
+                                }}
+                                // onClick={() =>
+                                //     console.log("shared successfully!")
+                                // }
+                            >
+                                <IconButton size='small' sx={{bgcolor: colors.tertiary}}>
+                                    <IosShareOutlinedIcon sx={{ color: colors.milk, fontSize: {xs: "13px", md: '18px'} }} />
+                                </IconButton>
+                            </RWebShare>
+                        </Box>
+                    </Stack>
+                : <></>
+            }
+        </Box>
+    )
     
 
     return (
@@ -124,7 +174,8 @@ function AlbumDetails() {
 
                         <Box width="100%">
                             <Stack direction="row" spacing="10px" alignItems="center">
-                                <Box sx={{ flex: "1 1 70%" }}>
+                                {/* <Box sx={{ flex: "1 1 70%" }}> */}
+                                <Box>
                                     <Typography
                                         sx={{
                                             fontWeight: "900",
@@ -142,12 +193,17 @@ function AlbumDetails() {
                                     >{ releaseDetails.mainArtist.spotifyProfile.name }</Typography>
                                 </Box>
 
-                                <Box sx={{ flex: "1 1 30%" }}>
+                                {/* <Box sx={{ flex: "1 1 30%" }}>
                                     <Box>
-                                        <CopyShareLink linkUrl={releaseDetails.musicLinks?.url || '' } />
+                                        <CopyShareLink
+                                            linkUrl={releaseDetails.musicLinks?.url || '' } 
+                                            linkText={`${releaseDetails.title} - ${releaseDetails.mainArtist.spotifyProfile.name}`}
+                                        />
                                     </Box>
-                                </Box>
+                                </Box> */}
                             </Stack>
+
+                            { displayMusicLink() }
 
                             <Stack direction="row" spacing="10px" mt="30px">
                                 <Typography
@@ -397,7 +453,8 @@ function AlbumDetails() {
                     >
 
                         <Stack direction="row" spacing="10px">
-                            <Box sx={{ flex: "1 1 50%" }}>
+                            {/* <Box sx={{ flex: "1 1 50%" }}> */}
+                            <Box>
                                 <Typography
                                     sx={{
                                         fontWeight: "900",
@@ -415,10 +472,15 @@ function AlbumDetails() {
                                 >{ releaseDetails.mainArtist.spotifyProfile.name }</Typography>
                             </Box>
 
-                            <Box sx={{ flex: "1 1 40%", maxWidth: "50%" }} >
-                                <CopyShareLink linkUrl={releaseDetails.musicLinks?.url || ''} />
-                            </Box>
+                            {/* <Box sx={{ flex: "1 1 40%", maxWidth: "50%" }} >
+                                <CopyShareLink 
+                                    linkUrl={releaseDetails.musicLinks?.url || ''} 
+                                    linkText={`${releaseDetails.title} - ${releaseDetails.mainArtist.spotifyProfile.name}`} 
+                                />
+                            </Box> */}
                         </Stack>
+
+                        { displayMusicLink() }
 
 
                         <Stack direction="row" spacing="10px" mt="20px">

@@ -99,7 +99,6 @@ function CheckoutFormPage({ amount }: { amount: number }) {
         )
     }
 
- 
 
     return (
         <Box>
@@ -145,12 +144,8 @@ function CheckoutFormPage({ amount }: { amount: number }) {
                             letterSpacing: "-0.13px"
                         }}
                     >{ `Pay ${currencyDisplay(Number(amount))}` }</Typography>
-           
                 }
-
             </Button>
-
-
         </Box>
     )
 }
