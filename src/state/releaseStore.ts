@@ -36,6 +36,7 @@ const defaultReleaseData: releaseInterface = {
         countries: []
     },
     upc_ean: "",
+    preSave: false,
     stores: [],
     socialPlatforms: [],
     coverArt: temptCoverPhotoImg,

@@ -22,7 +22,7 @@ import { useCreateReleaseStore } from '@/state/createReleaseStore';
 import AccountWrapper from '@/components/AccountWrapper';
 import SongPreviewComponent from '@/components/account/SongPreview';
 
-import { releaseSelectStyle, releaseTextFieldStyle, releaseTextFieldStyle2 } from '@/util/mui';
+import { releaseSelectStyle, releaseTextFieldStyle, releaseTextFieldStyle2, submitBtnStyle } from '@/util/mui';
 import { languages } from '@/util/languages';
 import { minutes, seconds, songArtistsCreativesRoles } from '@/util/resources';
 import CopyrightOwnershipModalComponent from '@/components/account/CopyrightOwnershipModal';
@@ -1295,16 +1295,21 @@ function CreateAlbumReleaseSongUpload() {
 
                                         <Button variant="text" 
                                             type="submit" 
-                                            disabled={ !isValid || isSubmitting } 
-                                            sx={{ my: 3, p: 0 }}
+                                            disabled={ !isValid || isSubmitting }
+                                            size='small'
+                                            sx={{ 
+                                                my: 3, p: 0,
+                                                ...submitBtnStyle
+                                            }}
                                         >
-                                            <Stack direction="row" justifyContent="space-between" alignItems="center"
+                                            <Stack direction="row" spacing="5px"
+                                                justifyContent="center" alignItems="center"
                                                 sx={{
-                                                    p: {xs: "5px 15px", md: "10px 25px"},
+                                                    // p: {xs: "5px 15px", md: "10px 25px"},
                                                     borderRadius: '16px',
                                                     width: "200px",
-                                                    bgcolor: colors.primary,
-                                                    color: colors.milk,
+                                                    // bgcolor: colors.primary,
+                                                    // color: colors.milk,
                                                 }}
                                             >
                                                 {
@@ -1327,11 +1332,11 @@ function CreateAlbumReleaseSongUpload() {
                                                                 sx={{
                                                                     fontWeight: "900",
                                                                     fontSize: "18px",
-                                                                    lineHeight: "18px",
-                                                                    letterSpacing: "-1.05px"
+                                                                    // lineHeight: "18px",
+                                                                    // letterSpacing: "-1.05px"
                                                                 }}
                                                             >Add Song</Typography>
-                                                            <AddIcon sx={{pr: "14px", fontSize: "40px"}} />
+                                                            <AddIcon sx={{ fontSize: "25px" }} />
                                                         </>
                                                     )
                                                 }

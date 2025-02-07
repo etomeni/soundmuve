@@ -62,6 +62,7 @@ const ViewSongItemComponent: React.FC<_Props> = ({ releaseDetails, releaseType }
                 artistName: releaseDetails.mainArtist.spotifyProfile.name,
                 coverArt: releaseDetails.coverArt,
                 price: releaseDetails.releaseType == "album" ? 45 : 25,
+                preSaveAmount: releaseDetails.preSave ? 20 : 0, 
                 releaseType: releaseDetails.releaseType,
                 title: releaseDetails.title 
             };

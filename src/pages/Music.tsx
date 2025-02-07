@@ -187,11 +187,20 @@ function Music() {
             setApiResponse({
                 display: true,
                 status: false,
-                message: err.errors && err.errors.errors.length ? err.errors.errors[0].msg : err.message || fixedErrorMsg
+                message: err.errors && err.errors.length ? err.errors[0].msg : err.message || fixedErrorMsg
             });
         }
     }
 
+
+    const displaySelectedDspBtnText = (name: string, releaseDetails: releaseInterface) => {
+        if (releaseDetails.preSave && releaseDetails.status == "Pre-Saved") {
+            return "Pre-Saved";
+        } else {
+            const country = musicDsps.find((value) => value.name == name);
+            return country ? country.btnText : "Play";
+        }
+    }
 
     const getSelectedDspByName = (name: string) => {
         const country = musicDsps.find((value) => value.name == name);
@@ -205,7 +214,7 @@ function Music() {
     }
 
 
-    const musicDspCard = (name: string, url: string) => (
+    const musicDspCard = (name: string, url: string, releaseDetails: releaseInterface) => (
         <Box
             sx={{
                 // activeLocationData
@@ -262,7 +271,7 @@ function Music() {
                                 letterSpacing: "-0.463px",
                                 textAlign: "center",
                             }}
-                        >{ getSelectedDspByName(name)?.btnText || "Play" }</Typography>
+                        >{ displaySelectedDspBtnText(name, releaseDetails) }</Typography>
                     </Box>
                 </Stack>
             </Box>
@@ -361,7 +370,7 @@ function Music() {
                                         releaseDetails && releaseDetails.musicLinks ?
                                             sortDspLinks(releaseDetails.musicLinks.dspLinks).map((items, index) => (
                                                 <Grid key={index} item xs={12} sm={6} md={4} lg={3}>
-                                                    { musicDspCard(items.name, items.url) }
+                                                    { musicDspCard(items.name, items.url, releaseDetails) }
                                                 </Grid>
                                             ))
                                         : <></>
@@ -400,7 +409,7 @@ function Music() {
             >
                 <Box sx={{p: "15px 20px"}}>
                     <img 
-                        alt='hello'
+                        alt='soundMuve logo'
                         src={soundMuve}
                         style={{
                             width: "100%",

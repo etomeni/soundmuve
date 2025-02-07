@@ -1,6 +1,8 @@
 // export const emekaBackendUrl = "https://soundmuve-backend-zrap.onrender.com"; // Emeka
 // export const emekaApiEndpoint = `${emekaBackendUrl}/api`;
 
+import { cartItemInterface } from "@/typeInterfaces/cartInterface";
+
 export const apiEndpoint = `${import.meta.env.VITE_API_BASE_URL}/api/v1`;
 
 
@@ -376,3 +378,19 @@ export function handleExternalUrl (
     'noopener,noreferrer'
   ) 
 };
+
+
+export function getCartTotalAmount(cartItems: cartItemInterface[]) {
+  if (cartItems.length) {
+    const totalPrice = cartItems.reduce((accumulator, currentObject) => {
+      const releaseTotalPrice = currentObject.price + currentObject.preSaveAmount;
+
+      return accumulator + releaseTotalPrice;
+      // return accumulator + currentObject.price;
+    }, 0);
+
+    return totalPrice;
+  } else {
+    return 0;
+  }
+}

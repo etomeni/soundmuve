@@ -38,7 +38,9 @@ import { releaseSelectStyle3, releaseTextFieldStyle } from '@/util/mui';
 import SearchArtistModalComponent from '@/components/account/SearchArtistModal';
 import ExplicitLyricsReadMoreInfoComponent from '@/components/ExplicitLyricsReadMoreInfo';
 import YesNoOptionsComponent from '@/components/release/YesNoOptions';
-import { useCreateSingleRelease } from '@/hooks/release/useCreateSingleRelease';
+// import { useCreateSingleRelease } from '@/hooks/release/useCreateSingleRelease';
+import { useCreateSingleRelease2 } from '@/hooks/release/createSingleRelease/useCreateSingle2';
+import PreSaveModalComponent from '@/components/account/PreSaveModal';
 
 
 let dspToSearch: "Apple" | "Spotify";
@@ -78,7 +80,11 @@ function CreateSingleRelease2() {
         handleAddMoreCreatives,
 
         openSearchArtistModal, setOpenSearchArtistModal,
-    } = useCreateSingleRelease();
+
+        submittedFormData,
+        preSaveModal, setPreSaveModal,
+        handleSubmitData, isFormSubmitting
+    } = useCreateSingleRelease2();
 
     const { setValue, register, resetField, getValues, formState } = singleRelease2Form;
     const { errors, isSubmitting, isValid } = formState;
@@ -1381,7 +1387,7 @@ function CreateSingleRelease2() {
                     <Stack justifyContent={"center"} alignItems={"center"} sx={{mt: "20px"}}>
                         <Button variant="contained" 
                             fullWidth type="submit" 
-                            disabled={ !isValid || isSubmitting } 
+                            disabled={ !isValid || isSubmitting || isFormSubmitting} 
                             sx={{ 
                                 bgcolor: colors.primary,
                                 maxWidth: "312px",
@@ -1407,22 +1413,17 @@ function CreateSingleRelease2() {
                                 textTransform: "none"
                             }}
                         >
-
                             {
-                                isSubmitting ? (
+                                isSubmitting || isFormSubmitting ? (
                                     <CircularProgressWithLabel 
                                         value={songUploadProgress} size={30} 
                                         sx={{ color: colors.primary, fontWeight: "bold", mx: 'auto' }} 
                                     />
                                 ) : <span>Save Release</span>
                             }
-
-                            {/* <span style={{ display: isSubmitting ? "none" : "initial" }}>Save Release</span>
-                            <CircularProgress size={25} sx={{ display: isSubmitting ? "initial" : "none", color: "#8638E5", fontWeight: "bold" }} /> */}
                         </Button>
                     </Stack>
                 </form>
-
             </Box>
 
                    
@@ -1445,6 +1446,20 @@ function CreateSingleRelease2() {
                 onChange={handleImageFileUpload}
                 style={{display: "none"}}
             />
+
+            {
+                submittedFormData && 
+                <PreSaveModalComponent 
+                    handleSubmit={(state) => {
+                        const data2submit = submittedFormData;
+                        data2submit.append('preSave', `${state}`);
+                        handleSubmitData(data2submit, state);
+                        setPreSaveModal(false);
+                    }}
+                    openModal={preSaveModal}
+                    closeModal={() => setPreSaveModal(false)}
+                />
+            }
 
             <SuccessModalComponent 
                 openModal={openSuccessModal}

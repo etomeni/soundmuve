@@ -3,7 +3,7 @@ import { useCallback, useEffect, useState } from "react";
 import axios from "axios";
 
 import { useCartItemStore } from "@/state/cartStore";
-import { getQueryParams, apiEndpoint } from "@/util/resources";
+import { getQueryParams, apiEndpoint, getCartTotalAmount } from "@/util/resources";
 import { useUserStore } from "@/state/userStore";
 import { cartItemInterface } from "@/typeInterfaces/cartInterface";
 import { getLocalStorage } from "@/util/storage";
@@ -32,22 +32,16 @@ export function useCart() {
 
 
     useEffect(() => {
-        if (cartItems.length) {
-            const totalPrice = cartItems.reduce((accumulator, currentObject) => {
-                return accumulator + currentObject.price;
-            }, 0);
-    
-            setTotalAmount(totalPrice);
-        } else {
-            setTotalAmount(0);
-        }
+        const totalCartAmount = getCartTotalAmount(cartItems);
+        setTotalAmount(totalCartAmount);
     }, [cartItems]);
 
 
     const handleAddToCart = useCallback(async(item: cartItemInterface) => {
         try {
             const response = (await axios.post(`${apiEndpoint}/checkout/add-to-cart`,
-                item, {
+                item, 
+                {
                     headers: {
                         Authorization: `Bearer ${accessToken}`
                     }
@@ -67,7 +61,7 @@ export function useCart() {
             });
         } catch (error: any) {
             console.log(error);
-            const err = error.response.data || error;
+            const err = error.response && error.response.data ? error.response.data : error;
             const fixedErrorMsg = "Oooops, something went wrong";
 
             setApiResponse({
@@ -101,7 +95,7 @@ export function useCart() {
             });
         } catch (error: any) {
             console.log(error);
-            const err = error.response.data || error;
+            const err = error.response && error.response.data ? error.response.data : error;
             const fixedErrorMsg = "Oooops, something went wrong";
 
             _setToastNotification({
@@ -141,7 +135,7 @@ export function useCart() {
             // });
         } catch (error: any) {
             console.log(error);
-            // const err = error.response.data || error;
+            // const err = error.response && error.response.data ? error.response.data : error;
             // const fixedErrorMsg = "Oooops, something went wrong";
 
             // setApiResponse({
@@ -181,7 +175,7 @@ export function useCart() {
             });
         } catch (error: any) {
             console.log(error);
-            const err = error.response.data || error;
+            const err = error.response && error.response.data ? error.response.data : error;
             const fixedErrorMsg = "Oooops, something went wrong";
 
             setApiResponse({
@@ -226,7 +220,7 @@ export function useCart() {
             };
         } catch (error: any) {
             // console.log(error);
-            const err = error.response.data || error;
+            const err = error.response && error.response.data ? error.response.data : error;
             const fixedErrorMsg = "Oooops, something went wrong";
             console.log(err);
 
@@ -277,7 +271,7 @@ export function useCart() {
             }
         } catch (error: any) {
             console.log(error);
-            const err = error.response.data || error;
+            const err = error.response && error.response.data ? error.response.data : error;
             const fixedErrorMsg = "Oooops, something went wrong";
 
             _setToastNotification({
@@ -287,8 +281,6 @@ export function useCart() {
             });
         }
     }
-        
-
 
     const handleCheckReleaseCart = useCallback(async(item: cartItemInterface) => {
         try {
@@ -315,7 +307,7 @@ export function useCart() {
             return false;
         } catch (error: any) {
             console.log(error);
-            const err = error.response.data || error;
+            const err = error.response && error.response.data ? error.response.data : error;
             const fixedErrorMsg = "Oooops, something went wrong";
 
             _setToastNotification({

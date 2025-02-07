@@ -27,7 +27,7 @@ const CartItemComponent: React.FC<_Props> = ({
             {/* desktop view */}
             <Box sx={{ display: {xs: "none", md: "block"} }}>
                 <Grid container spacing="20px">
-                    <Grid item xs={4} md={4}>
+                    <Grid item xs={3} md={3}>
                         <Box>
                             <Typography variant='body1'
                                 sx={{
@@ -41,7 +41,7 @@ const CartItemComponent: React.FC<_Props> = ({
                         </Box>
                     </Grid>
 
-                    <Grid item xs={4} md={4}>
+                    <Grid item xs={3} md={3}>
                         <Box textAlign="center">
                             <Typography variant='body1'
                                 sx={{
@@ -55,7 +55,21 @@ const CartItemComponent: React.FC<_Props> = ({
                         </Box>
                     </Grid>
 
-                    <Grid item xs={4} md={4}>
+                    <Grid item xs={3} md={3}>
+                        <Box textAlign="center">
+                            <Typography variant='body1'
+                                sx={{
+                                    fontWeight: "600",
+                                    fontSize: {xs: "16px", md: "20px"},
+                                    lineHeight: {xs: "20px", md: "40px"},
+                                    letterSpacing: "-0.13px",
+                                    color: colors.dark,
+                                }}
+                            >Pre-save</Typography>
+                        </Box>
+                    </Grid>
+
+                    <Grid item xs={3} md={3}>
                         <Box textAlign="center">
                             <Box 
                                 sx={{
@@ -96,7 +110,7 @@ const CartItemComponent: React.FC<_Props> = ({
                     cartItems.length ?
                         cartItems.map((item, index) => (
                             <Grid key={index} container spacing="20px" mb="20px">
-                                <Grid item xs={4} md={4}>
+                                <Grid item xs={3} md={3}>
                                     <Box>
                                         <Stack direction="row" spacing="20px">
                                             <Box
@@ -155,7 +169,7 @@ const CartItemComponent: React.FC<_Props> = ({
                                     </Box>
                                 </Grid>
 
-                                <Grid item xs={4} md={4}>
+                                <Grid item xs={3} md={3}>
                                     <Box textAlign="center">
                                         <Typography variant='body1'
                                             sx={{
@@ -169,7 +183,25 @@ const CartItemComponent: React.FC<_Props> = ({
                                     </Box>
                                 </Grid>
 
-                                <Grid item xs={4} md={4}>
+                                <Grid item xs={3} md={3}>
+                                    <Box textAlign="center">
+                                        {
+                                            item.preSaveAmount ? 
+                                                <Typography variant='body1'
+                                                    sx={{
+                                                        fontWeight: "700",
+                                                        fontSize: "20px",
+                                                        lineHeight: "40px",
+                                                        letterSpacing: "-0.13px",
+                                                        color: colors.dark,
+                                                    }}
+                                                >{ currencyDisplay(item.preSaveAmount) }</Typography>
+                                            : <></>
+                                        }
+                                    </Box>
+                                </Grid>
+
+                                <Grid item xs={3} md={3}>
                                     <Box textAlign="right" sx={{ display: index > 0 ? "none" : "initial" }}>
                                         {/* <Typography variant='body1'
                                             sx={{
@@ -355,6 +387,21 @@ const CartItemComponent: React.FC<_Props> = ({
                                                         color: colors.secondary
                                                     }}
                                                 >{ currencyDisplay(item.price) }</Typography>
+
+                                                {
+                                                    item.preSaveAmount ? 
+                                                        <Typography variant='subtitle2'
+                                                            sx={{
+                                                                fontWeight: "500",
+                                                                fontSize: "15px",
+                                                                lineHeight: "20px",
+                                                                letterSpacing: "-0.06px",
+                                                                color: colors.secondary,
+                                                            }}
+                                                        >{ currencyDisplay(item.preSaveAmount) } (pre-save)</Typography>
+                                                    : <></>
+                                                }
+
 
                                                 <Typography variant='subtitle2'
                                                     onClick={() => removeItemFn(item)}

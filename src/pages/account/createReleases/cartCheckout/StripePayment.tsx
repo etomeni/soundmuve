@@ -4,7 +4,7 @@ import Box from '@mui/material/Box';
 import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
 
-import { convertToSubCurrency } from '@/util/resources';
+import { convertToSubCurrency, getCartTotalAmount } from '@/util/resources';
 import CheckoutFormPage from './CheckoutFormPage';
 import ModalWrapper from '@/components/account/ModalWrapper';
 import { cartItemInterface, couponInterface } from '@/typeInterfaces/cartInterface';
@@ -23,26 +23,15 @@ interface _Props {
     // confirmBtn: (data: any) => void;
 }
 
-function getTotalAmount(cartItems: cartItemInterface[]) {
-    if (cartItems.length) {
-        const totalPrice = cartItems.reduce((accumulator, currentObject) => {
-            return accumulator + currentObject.price;
-        }, 0);
-    
-        return totalPrice;
-    }
-    return 0;
-}
-
 const StripePayment: React.FC<_Props> = ({
     cartItems, discount, openModal, closeModal, // confirmBtn
 }) => {
-    const [amount, setamount] = useState(discount.payableAmount || getTotalAmount(cartItems));
+    const [amount, setamount] = useState(discount.payableAmount || getCartTotalAmount(cartItems));
     const { handleGetPaymentIntent } = useCart();
 
 
     useEffect(() => {
-        const gatPayAmount = discount._id && discount.payableAmount ? discount.payableAmount : getTotalAmount(cartItems);
+        const gatPayAmount = discount._id && discount.payableAmount ? discount.payableAmount : getCartTotalAmount(cartItems);
         setamount(gatPayAmount);
 
         setTimeout(() => {

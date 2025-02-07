@@ -39,7 +39,8 @@ import { releaseSelectStyle, releaseSelectStyle2, releaseTextFieldStyle } from '
 // import AppleSportifyCheckmark from '@/components/AppleSportifyCheckmark';
 import SelectedArtistView from '@/components/release/SelectedArtistView';
 import YesNoOptionsComponent from '@/components/release/YesNoOptions';
-import { useCreateSingleRelease } from '@/hooks/release/useCreateSingleRelease';
+import { useCreateSingleRelease1 } from '@/hooks/release/createSingleRelease/useCreateSingle1';
+// import { useCreateSingleRelease } from '@/hooks/release/useCreateSingleRelease';
 
 
 const contriesss = restCountries.map(item => item.name.common);
@@ -71,7 +72,7 @@ function CreateSingleRelease() {
         onSubmitCreateSingleRelease1, 
 
         openSearchArtistModal, setOpenSearchArtistModal,
-    } = useCreateSingleRelease();
+    } = useCreateSingleRelease1();
 
     const { setValue, register, formState } = singleRelease1Form;
     const { errors, isSubmitting, isValid } = formState;

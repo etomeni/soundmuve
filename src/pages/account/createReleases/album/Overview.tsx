@@ -16,17 +16,18 @@ import { useUserStore } from '@/state/userStore';
 import { useSettingStore } from '@/state/settingStore';
 import { useCreateReleaseStore } from '@/state/createReleaseStore';
 
+import colors from '@/constants/colors';
+import { useCart } from '@/hooks/useCart';
+import { apiEndpoint } from '@/util/resources';
 import AccountWrapper from '@/components/AccountWrapper';
 import SongPreviewComponent from '@/components/account/SongPreview';
 import SuccessModalComponent from '@/components/account/SuccessModal';
-import { apiEndpoint } from '@/util/resources';
-import colors from '@/constants/colors';
-import { useCart } from '@/hooks/useCart';
+import PreSaveModalComponent from '@/components/account/PreSaveModal';
+import CircularProgress from '@mui/material/CircularProgress';
 
 
 function CreateAlbumReleaseOverview() {
     const navigate = useNavigate();
-    const darkTheme = useSettingStore((state) => state.darkTheme);
     const userData = useUserStore((state) => state.userData);
     const accessToken = useUserStore((state) => state.accessToken);
 
@@ -37,6 +38,8 @@ function CreateAlbumReleaseOverview() {
     const _handleClearAlbumRelease = useCreateReleaseStore((state) => state._handleClearAlbumRelease);
     const { handleAddToCart } = useCart();
 
+    const [isFormSubmitting, setIsFormSubmitting] = useState(false);
+    const [preSaveModal, setPreSaveModal] = useState(false);
     const [openSuccessModal, setOpenSuccessModal] = useState(false);
     const _setToastNotification = useSettingStore((state) => state._setToastNotification);
     const [apiResponse, setApiResponse] = useState({
@@ -83,37 +86,62 @@ function CreateAlbumReleaseOverview() {
         }
     }
 
-    const onSubmit = async () => {
+    const onSubmit = async (preSaveState: boolean) => {
         setApiResponse({
             display: false,
             status: true,
             message: ""
         });
+        setIsFormSubmitting(true);
 
-        setOpenSuccessModal(true);
+        try {
+            const response = (await axios.patch(
+                `${apiEndpoint}/releases/album/save-release/${ albumRelease._id || '' }`,
+                { preSave: preSaveState },
+                {
+                    headers: {
+                        Authorization: `Bearer ${accessToken}`
+                    },
+                }
+            )).data;
+            // console.log(response);
+            setIsFormSubmitting(false);
+            
+            if (response.result) {
+                setOpenSuccessModal(true);
 
-        // clear the release from memory and rest the state
-        _handleClearAlbumRelease();
+                // clear the release from memory and rest the state
+                _handleClearAlbumRelease();
 
+                handleAddToCart({
+                    release_id: albumRelease._id || '',
+                    user_email: userData.email,
+                    user_id: userData._id || '',
+                    artistName: albumRelease.mainArtist.spotifyProfile.name,
+                    coverArt: albumRelease.coverArt,
+                    price: 45,
+                    preSaveAmount: preSaveState ? 20 : 0,
+                    releaseType: albumRelease.releaseType,
+                    title: albumRelease.title 
+                });
 
-        setOpenSuccessModal(true);
+                navigate("/account/cart");
+                setOpenSuccessModal(false);
+            }
 
-        handleAddToCart({
-            release_id: albumRelease._id || '',
-            user_email: userData.email,
-            user_id: userData._id || '',
-            artistName: albumRelease.mainArtist.spotifyProfile.name,
-            coverArt: albumRelease.coverArt,
-            price: 45,
-            releaseType: albumRelease.releaseType,
-            title: albumRelease.title 
-        });
+        } catch (error: any) {
+            setIsFormSubmitting(false);
+            const err = error.response && error.response.data ? error.response.data : error;
+            const fixedErrorMsg = "Ooops and error occurred!";
+            console.log(err);
+            
+            setApiResponse({
+                display: true,
+                status: false,
+                message: err.errors && err.errors.length ? err.errors[0].msg : err.message || fixedErrorMsg
+            });
+        }
 
-        setTimeout(() => {
-            navigate("/account/cart");
-            setOpenSuccessModal(false);
-        }, 1000);
-        return;
     }
 
 
@@ -479,8 +507,8 @@ function CreateAlbumReleaseOverview() {
                                 sx={{
                                     maxWidth: {xs: "330px", sm: "892px"},
                                     border: {
-                                        xs: `0.45px solid ${ darkTheme ? "#fff" : "#272727" }`, 
-                                        sm: `1px solid ${ darkTheme ? "#fff" : "#272727" }`
+                                        xs: `0.45px solid #272727`, 
+                                        sm: `1px solid #272727`
                                     },
                                     borderRadius: {xs: "5.42px", sm: "12px"},
                                     overflow: "hidden",
@@ -557,8 +585,8 @@ function CreateAlbumReleaseOverview() {
                                 sx={{
                                     maxWidth: {xs: "330px", sm: "892px"},
                                     border: {
-                                        xs: `0.45px solid ${ darkTheme ? "#fff" : "#272727" }`, 
-                                        sm: `1px solid ${ darkTheme ? "#fff" : "#272727" }`
+                                        xs: `0.45px solid #272727`, 
+                                        sm: `1px solid #272727`
                                     },
                                     borderRadius: {xs: "5.42px", sm: "12px"},
                                     overflow: "hidden",
@@ -642,8 +670,8 @@ function CreateAlbumReleaseOverview() {
                             <Stack justifyContent="center" alignItems="center">
 
                                 <Button variant="contained" fullWidth
-                                    onClick={() => onSubmit()}
-                                    // disabled={ !isValid || isSubmitting } 
+                                    onClick={() => setPreSaveModal(true)}
+                                    disabled={ isFormSubmitting } 
                                     sx={{ 
                                         bgcolor: colors.primary,
                                         maxWidth: "312px",
@@ -668,7 +696,15 @@ function CreateAlbumReleaseOverview() {
                                         letterSpacing: "-0.12px",
                                         textTransform: "none"
                                     }}
-                                > Save Release </Button>
+                                >
+                                    {
+                                        isFormSubmitting ? (
+                                            <CircularProgress size={25} 
+                                                sx={{ color: colors.primary, fontWeight: "bold", mx: 'auto' }} 
+                                            />
+                                        ) : <span>Save Release</span>
+                                    }
+                                </Button>
                             </Stack>
                         </Box>
                     </Box>
@@ -676,6 +712,15 @@ function CreateAlbumReleaseOverview() {
             </Box>
 
 
+            <PreSaveModalComponent 
+                handleSubmit={(state) => {
+                    onSubmit(state);
+                    setPreSaveModal(false);
+                }}
+                openModal={preSaveModal}
+                closeModal={() => setPreSaveModal(false)}
+            />
+            
             <SuccessModalComponent 
                 openModal={openSuccessModal}
                 closeModal={() => setOpenSuccessModal(false)}
