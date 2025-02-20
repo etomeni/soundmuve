@@ -68,6 +68,7 @@ import ArtistSongs_RL from "./pages/account/recordLabel/ArtistSongs_RL";
 import Music from "./pages/Music";
 import ProfilePage from "./pages/account/profile/ProfilePage";
 import ProfileEditPage from "./pages/account/profile/ProfileEditPage";
+import PreOrderPage from "./pages/account/createReleases/PreOrder";
 
 
 export const router = createBrowserRouter([
@@ -221,6 +222,10 @@ export const router = createBrowserRouter([
             {
               path: "create-album-release-overview",
               element: <CreateAlbumReleaseOverview />
+            },
+            {
+              path: "create-release-preorder/:release_id",
+              element: <PreOrderPage />
             },
 
             {

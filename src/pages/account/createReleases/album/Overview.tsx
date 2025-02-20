@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { createSearchParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 import SideNav from './SideNav';
@@ -17,18 +17,19 @@ import { useSettingStore } from '@/state/settingStore';
 import { useCreateReleaseStore } from '@/state/createReleaseStore';
 
 import colors from '@/constants/colors';
-import { useCart } from '@/hooks/useCart';
+// import { useCart } from '@/hooks/useCart';
 import { apiEndpoint } from '@/util/resources';
 import AccountWrapper from '@/components/AccountWrapper';
 import SongPreviewComponent from '@/components/account/SongPreview';
 import SuccessModalComponent from '@/components/account/SuccessModal';
 import PreSaveModalComponent from '@/components/account/PreSaveModal';
-import CircularProgress from '@mui/material/CircularProgress';
+// import CircularProgress from '@mui/material/CircularProgress';
+import { usePreOrderHook } from '../usePreOrderHook';
 
 
 function CreateAlbumReleaseOverview() {
     const navigate = useNavigate();
-    const userData = useUserStore((state) => state.userData);
+    // const userData = useUserStore((state) => state.userData);
     const accessToken = useUserStore((state) => state.accessToken);
 
     const albumRelease = useCreateReleaseStore((state) => state.albumRelease);
@@ -36,9 +37,9 @@ function CreateAlbumReleaseOverview() {
     const _handleSetAlbumRelease = useCreateReleaseStore((state) => state._handleSetAlbumRelease);
     // const _removeAlbumReleaseSongUpload = useCreateReleaseStore((state) => state._removeAlbumReleaseSongUpload);
     const _handleClearAlbumRelease = useCreateReleaseStore((state) => state._handleClearAlbumRelease);
-    const { handleAddToCart } = useCart();
+    // const { handleAddToCart } = useCart();
 
-    const [isFormSubmitting, setIsFormSubmitting] = useState(false);
+    // const [isFormSubmitting, setIsFormSubmitting] = useState(false);
     const [preSaveModal, setPreSaveModal] = useState(false);
     const [openSuccessModal, setOpenSuccessModal] = useState(false);
     const _setToastNotification = useSettingStore((state) => state._setToastNotification);
@@ -48,6 +49,7 @@ function CreateAlbumReleaseOverview() {
         message: ""
     });
 
+    const { handleSkipPreOrder } = usePreOrderHook();
 
     const deleteSong = async (index: number) => {
         if (!albumRelease.songs) return;
@@ -86,63 +88,63 @@ function CreateAlbumReleaseOverview() {
         }
     }
 
-    const onSubmit = async (preSaveState: boolean) => {
-        setApiResponse({
-            display: false,
-            status: true,
-            message: ""
-        });
-        setIsFormSubmitting(true);
+    // const onSubmit = async (preOrderState: boolean) => {
+    //     setApiResponse({
+    //         display: false,
+    //         status: true,
+    //         message: ""
+    //     });
+    //     setIsFormSubmitting(true);
 
-        try {
-            const response = (await axios.patch(
-                `${apiEndpoint}/releases/album/save-release/${ albumRelease._id || '' }`,
-                { preSave: preSaveState },
-                {
-                    headers: {
-                        Authorization: `Bearer ${accessToken}`
-                    },
-                }
-            )).data;
-            // console.log(response);
-            setIsFormSubmitting(false);
+    //     try {
+    //         const response = (await axios.patch(
+    //             `${apiEndpoint}/releases/album/save-release/${ albumRelease._id || '' }`,
+    //             { preSave: preOrderState },
+    //             {
+    //                 headers: {
+    //                     Authorization: `Bearer ${accessToken}`
+    //                 },
+    //             }
+    //         )).data;
+    //         // console.log(response);
+    //         setIsFormSubmitting(false);
             
-            if (response.result) {
-                setOpenSuccessModal(true);
+    //         if (response.result) {
+    //             setOpenSuccessModal(true);
 
-                // clear the release from memory and rest the state
-                _handleClearAlbumRelease();
+    //             // clear the release from memory and rest the state
+    //             _handleClearAlbumRelease();
 
-                handleAddToCart({
-                    release_id: albumRelease._id || '',
-                    user_email: userData.email,
-                    user_id: userData._id || '',
-                    artistName: albumRelease.mainArtist.spotifyProfile.name,
-                    coverArt: albumRelease.coverArt,
-                    price: 45,
-                    preSaveAmount: preSaveState ? 20 : 0,
-                    releaseType: albumRelease.releaseType,
-                    title: albumRelease.title 
-                });
+    //             handleAddToCart({
+    //                 release_id: albumRelease._id || '',
+    //                 user_email: userData.email,
+    //                 user_id: userData._id || '',
+    //                 artistName: albumRelease.mainArtist.spotifyProfile.name,
+    //                 coverArt: albumRelease.coverArt,
+    //                 price: 45,
+    //                 preSaveAmount: preOrderState ? 20 : 0,
+    //                 releaseType: albumRelease.releaseType,
+    //                 title: albumRelease.title 
+    //             });
 
-                navigate("/account/cart");
-                setOpenSuccessModal(false);
-            }
+    //             navigate("/account/cart");
+    //             setOpenSuccessModal(false);
+    //         }
 
-        } catch (error: any) {
-            setIsFormSubmitting(false);
-            const err = error.response && error.response.data ? error.response.data : error;
-            const fixedErrorMsg = "Ooops and error occurred!";
-            console.log(err);
+    //     } catch (error: any) {
+    //         setIsFormSubmitting(false);
+    //         const err = error.response && error.response.data ? error.response.data : error;
+    //         const fixedErrorMsg = "Ooops and error occurred!";
+    //         console.log(err);
             
-            setApiResponse({
-                display: true,
-                status: false,
-                message: err.errors && err.errors.length ? err.errors[0].msg : err.message || fixedErrorMsg
-            });
-        }
+    //         setApiResponse({
+    //             display: true,
+    //             status: false,
+    //             message: err.errors && err.errors.length ? err.errors[0].msg : err.message || fixedErrorMsg
+    //         });
+    //     }
 
-    }
+    // }
 
 
     return (
@@ -215,7 +217,14 @@ function CreateAlbumReleaseOverview() {
                                         }}
                                     >Details</Typography>
 
-                                    <Typography onClick={() => navigate("/account/create-album-release-details")}
+                                    <Typography onClick={() => {
+                                        navigate({
+                                            pathname: "/account/create-album-release-details",
+                                            search: `?${createSearchParams({
+                                                release_id: albumRelease._id || ''
+                                            })}`,
+                                        });
+                                    }}
                                         sx={{
                                             fontWeight: "400",
                                             fontSize: {xs: "15px", sm: "20px"},
@@ -401,7 +410,14 @@ function CreateAlbumReleaseOverview() {
                                     >Selected Stores</Typography>
                                     
                                     <Typography 
-                                        onClick={() => navigate("/account/create-album-release-select-stores")}
+                                        onClick={() => {
+                                            navigate({
+                                                pathname: "/account/create-album-release-select-stores",
+                                                search: `?${createSearchParams({
+                                                    release_id: albumRelease._id || ''
+                                                })}`,
+                                            });
+                                        }}
                                         sx={{
                                             fontWeight: "400",
                                             fontSize: {xs: "15px", sm: "20px"},
@@ -461,7 +477,14 @@ function CreateAlbumReleaseOverview() {
                                     >Social Platforms - Automatically Selected</Typography>
 
                                     <Typography
-                                        onClick={() => navigate("/account/create-album-release-select-stores")}
+                                        onClick={() => {
+                                            navigate({
+                                                pathname: "/account/create-album-release-select-stores",
+                                                search: `?${createSearchParams({
+                                                    release_id: albumRelease._id || ''
+                                                })}`,
+                                            });
+                                        }}
                                         sx={{
                                             fontWeight: "400",
                                             fontSize: {xs: "15px", sm: "20px"},
@@ -540,7 +563,14 @@ function CreateAlbumReleaseOverview() {
                                     > Song </Typography>
                                      
                                     <Typography
-                                        onClick={() => navigate("/account/create-album-release-song-upload")}
+                                        onClick={() => {
+                                            navigate({
+                                                pathname: "/account/create-album-release-song-upload",
+                                                search: `?${createSearchParams({
+                                                    release_id: albumRelease._id || ''
+                                                })}`,
+                                            });
+                                        }}
                                         sx={{
                                             fontWeight: "400",
                                             fontSize: {xs: "15px", sm: "20px"},
@@ -619,7 +649,14 @@ function CreateAlbumReleaseOverview() {
                                     > Album art </Typography>
                                      
                                     <Typography
-                                        onClick={() => navigate("/account/create-album-release-album-art")}
+                                        onClick={() => {
+                                            navigate({
+                                                pathname: "/account/create-album-release-album-art",
+                                                search: `?${createSearchParams({
+                                                    release_id: albumRelease._id || ''
+                                                })}`,
+                                            });
+                                        }}
                                         sx={{
                                             fontWeight: "400",
                                             fontSize: {xs: "15px", sm: "20px"},
@@ -671,7 +708,7 @@ function CreateAlbumReleaseOverview() {
 
                                 <Button variant="contained" fullWidth
                                     onClick={() => setPreSaveModal(true)}
-                                    disabled={ isFormSubmitting } 
+                                    // disabled={ isFormSubmitting } 
                                     sx={{ 
                                         bgcolor: colors.primary,
                                         maxWidth: "312px",
@@ -696,14 +733,14 @@ function CreateAlbumReleaseOverview() {
                                         letterSpacing: "-0.12px",
                                         textTransform: "none"
                                     }}
-                                >
-                                    {
+                                >Save Release
+                                    {/* {
                                         isFormSubmitting ? (
                                             <CircularProgress size={25} 
                                                 sx={{ color: colors.primary, fontWeight: "bold", mx: 'auto' }} 
                                             />
                                         ) : <span>Save Release</span>
-                                    }
+                                    } */}
                                 </Button>
                             </Stack>
                         </Box>
@@ -714,11 +751,33 @@ function CreateAlbumReleaseOverview() {
 
             <PreSaveModalComponent 
                 handleSubmit={(state) => {
-                    onSubmit(state);
+                    // onSubmit(state);
                     setPreSaveModal(false);
+
+                    navigate({
+                        pathname: `/account/create-release-preorder/${albumRelease._id}`,
+                        search: `?${createSearchParams({ 
+                            releaseType: albumRelease.releaseType,
+                            preOrder: state ? '1' : '0',
+                        })}`,
+                    });
                 }}
                 openModal={preSaveModal}
-                closeModal={() => setPreSaveModal(false)}
+                closeModal={() => {
+                    setPreSaveModal(false);
+
+                    setOpenSuccessModal(true);
+
+                    handleSkipPreOrder(albumRelease);
+
+                    setTimeout(() => {
+                        // navigate("/account/cart");
+                        setOpenSuccessModal(false);
+
+                        // clear the release from memory and rest the state
+                        _handleClearAlbumRelease();
+                    }, 1000);
+                }}
             />
             
             <SuccessModalComponent 

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { createSearchParams } from 'react-router-dom';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
@@ -24,34 +24,45 @@ import SuccessModalComponent from '@/components/account/SuccessModal';
 import ArtWorkFileInfoComponent from '@/components/ArtWorkFileInfo';
 import CircularProgressWithLabel from '@/components/CircularProgressWithLabel';
 import CopyrightOwnershipModalComponent from '@/components/account/CopyrightOwnershipModal';
+import YesNoOptionsComponent from '@/components/release/YesNoOptions';
+import PreSaveModalComponent from '@/components/account/PreSaveModal';
+import MultipleSelectCheckmarks from '@/components/MultipleSelectCheckmarks';
+import SearchArtistModalComponent from '@/components/account/SearchArtistModal';
+import ExplicitLyricsReadMoreInfoComponent from '@/components/ExplicitLyricsReadMoreInfo';
 
 import { 
-    artWorkAllowedTypes, minutes, musicStores, seconds, 
+    artWorkAllowedTypes, getQueryParams, minutes, musicStores, seconds, 
     socialPlatformStores, songArtistsCreativesRoles 
 } from '@/util/resources';
 import { languages } from '@/util/languages';
 
 import cloudUploadIconImg from "@/assets/images/cloudUploadIcon.png";
-import MultipleSelectCheckmarks from '@/components/MultipleSelectCheckmarks';
 import colors from '@/constants/colors';
 import { releaseSelectStyle3, releaseTextFieldStyle } from '@/util/mui';
-import SearchArtistModalComponent from '@/components/account/SearchArtistModal';
-import ExplicitLyricsReadMoreInfoComponent from '@/components/ExplicitLyricsReadMoreInfo';
-import YesNoOptionsComponent from '@/components/release/YesNoOptions';
 // import { useCreateSingleRelease } from '@/hooks/release/useCreateSingleRelease';
 import { useCreateSingleRelease2 } from '@/hooks/release/createSingleRelease/useCreateSingle2';
-import PreSaveModalComponent from '@/components/account/PreSaveModal';
+// import { useCart } from '@/hooks/useCart';
+// import { useUserStore } from '@/state/userStore';
+import { useCreateReleaseStore } from '@/state/createReleaseStore';
+import { usePreOrderHook } from '../usePreOrderHook';
 
 
 let dspToSearch: "Apple" | "Spotify";
 
 function CreateSingleRelease2() {
     const [isrcMoreInfoTooltip, setIsrcMoreInfoTooltip] = useState(false);
+    // const singleRelease = useCreateReleaseStore((state) => state.singleRelease);
+    const _handleClearSingleRelease = useCreateReleaseStore((state) => state._handleClearSingleRelease);
+    // const { handleAddToCart } = useCart();
+    // const userData = useUserStore((state) => state.userData);
+
+    const { handleSkipPreOrder } = usePreOrderHook();
     
     const {
         singleRelease, 
         apiResponse, // setApiResponse,
         navigate,
+
 
         songWriters, setSongWriters, 
         songArtists_Creatives, setSongArtists_Creatives,
@@ -79,15 +90,28 @@ function CreateSingleRelease2() {
         handleSetArtistName2,
         handleAddMoreCreatives,
 
+        getReleaseById,
+        restoreValues,
+
         openSearchArtistModal, setOpenSearchArtistModal,
 
-        submittedFormData,
+        // submittedFormData, handleSubmitData,
         preSaveModal, setPreSaveModal,
-        handleSubmitData, isFormSubmitting
+        isFormSubmitting
     } = useCreateSingleRelease2();
 
     const { setValue, register, resetField, getValues, formState } = singleRelease2Form;
     const { errors, isSubmitting, isValid } = formState;
+
+    const release_id: string = singleRelease._id || getQueryParams('release_id');
+    
+    useEffect(() => {
+        restoreValues()
+    }, [singleRelease]);
+
+    useEffect(() => {
+        getReleaseById(release_id);
+    }, [release_id]);
 
 
     return (
@@ -1447,19 +1471,40 @@ function CreateSingleRelease2() {
                 style={{display: "none"}}
             />
 
-            {
-                submittedFormData && 
-                <PreSaveModalComponent 
-                    handleSubmit={(state) => {
-                        const data2submit = submittedFormData;
-                        data2submit.append('preSave', `${state}`);
-                        handleSubmitData(data2submit, state);
-                        setPreSaveModal(false);
-                    }}
-                    openModal={preSaveModal}
-                    closeModal={() => setPreSaveModal(false)}
-                />
-            }
+
+            <PreSaveModalComponent 
+                handleSubmit={(state) => {
+                    // const data2submit = submittedFormData;
+                    // data2submit.append('preSave', `${state}`);
+                    // handleSubmitData(data2submit, state);
+                    setPreSaveModal(false);
+
+                    navigate({
+                        pathname: `/account/create-release-preorder/${singleRelease._id}`,
+                        search: `?${createSearchParams({ 
+                            releaseType: singleRelease.releaseType,
+                            preOrder: state ? '1' : '0',
+                        })}`,
+                    });
+                }}
+                openModal={preSaveModal}
+                closeModal={() => {
+                    setPreSaveModal(false);
+
+                    setOpenSuccessModal(true);
+
+                    handleSkipPreOrder(singleRelease);
+
+                    setTimeout(() => {
+                        // navigate("/account/cart");
+                        setOpenSuccessModal(false);
+
+                        // clear the release from memory and rest the state
+                        _handleClearSingleRelease();
+                    }, 1000);
+
+                }}
+            />
 
             <SuccessModalComponent 
                 openModal={openSuccessModal}

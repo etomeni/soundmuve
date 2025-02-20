@@ -58,11 +58,18 @@ export const hours = [...Array(13).keys()].map((num) => num.toString().padStart(
 export const minutes = [...Array(60).keys()].map((num) => num.toString().padStart(2, '0'));
 export const seconds = [...Array(60).keys()].map((num) => num.toString().padStart(2, '0'));
 
-export const minReleaseDate = () => {
-  const dateObj = new Date();
-  const year = dateObj.getFullYear();
-  const month = String(dateObj.getMonth() + 1).padStart(2, "0");
-  const day = String(dateObj.getDate()).padStart(2, "0");
+export const minReleaseDate = (dateString: any = '', additionalDays: number = 14) => {
+  // Get today's date
+  const today = dateString ? new Date(dateString) : new Date();
+
+  // Add 14 days (2 weeks) to today's date
+  const twoWeeksLater = new Date(today);
+  twoWeeksLater.setDate(today.getDate() + additionalDays);
+
+
+  const year = twoWeeksLater.getFullYear();
+  const month = String(twoWeeksLater.getMonth() + 1).padStart(2, "0");
+  const day = String(twoWeeksLater.getDate()).padStart(2, "0");
   
   const formattedDate = `${year}-${month}-${day}`;
   return formattedDate;

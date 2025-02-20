@@ -65,7 +65,7 @@ const CartItemComponent: React.FC<_Props> = ({
                                     letterSpacing: "-0.13px",
                                     color: colors.dark,
                                 }}
-                            >Pre-save</Typography>
+                            >Pre-order</Typography>
                         </Box>
                     </Grid>
 

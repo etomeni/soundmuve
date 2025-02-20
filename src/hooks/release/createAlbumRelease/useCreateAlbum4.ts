@@ -1,5 +1,5 @@
-import { useCallback, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useCallback, useEffect, useState } from 'react';
+import { createSearchParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -8,8 +8,9 @@ import { useUserStore } from '@/state/userStore';
 import { useSettingStore } from '@/state/settingStore';
 import { useCreateReleaseStore } from '@/state/createReleaseStore';
 import { artistInterface, releaseInterface, songArtists_CreativesInterface } from '@/typeInterfaces/release.interface';
-import { apiEndpoint, pauseExecution } from '@/util/resources';
+import { apiEndpoint, getQueryParams, pauseExecution } from '@/util/resources';
 import { albumRelease4FormSchema } from '../releaseFormSchema';
+import { useGetReleases } from '../useGetReleases';
 
 
 export function useCreateAlbum4() {
@@ -29,6 +30,23 @@ export function useCreateAlbum4() {
         status: true,
         message: ""
     });
+
+    const _handleSetAlbumRelease = useCreateReleaseStore((state) => state._handleSetAlbumRelease2);
+    const release_id = albumRelease._id || getQueryParams('release_id')  || '';
+    const { releaseDetails, getReleaseById } = useGetReleases();
+
+    useEffect(() => {
+        if (!albumRelease._id) {
+            getReleaseById(release_id);
+        }
+    }, [release_id]);
+
+    useEffect(() => {
+        if (releaseDetails) {
+            _handleSetAlbumRelease(releaseDetails);
+        }
+    }, [releaseDetails]);
+
     
     const [explicitLyrics, setExplicitLyrics] = useState(""); // No
     const [copyrightOwnership, setCopyrightOwnership] = useState('');
@@ -116,8 +134,12 @@ export function useCreateAlbum4() {
 
     const handleNextBTN = useCallback((albumRelease: releaseInterface) => {
         if (albumRelease.songs.length) {
-            navigate("/account/create-album-release-album-art");
-
+            navigate({
+                pathname: "/account/create-album-release-album-art",
+                search: `?${createSearchParams({
+                    release_id: albumRelease._id || ''
+                })}`,
+            });
         } else {
             _setToastNotification({
                 display: true,

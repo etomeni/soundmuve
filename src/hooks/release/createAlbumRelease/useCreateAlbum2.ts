@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { createSearchParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -9,8 +9,9 @@ import { useSettingStore } from '@/state/settingStore';
 import { useCreateReleaseStore } from '@/state/createReleaseStore';
 import { albumRelease2Interface } from '@/typeInterfaces/release.interface';
 import { albumRelease2FormSchema } from '../releaseFormSchema';
-import { apiEndpoint } from '@/util/resources';
+import { apiEndpoint, getQueryParams } from '@/util/resources';
 import { restCountries } from '@/util/countries';
+import { useGetReleases } from '../useGetReleases';
 
 
 const contriesss = restCountries.map(item => item.name.common);
@@ -30,6 +31,10 @@ export function useCreateAlbum2() {
         message: ""
     });
 
+    const _handleSetAlbumRelease = useCreateReleaseStore((state) => state._handleSetAlbumRelease2);
+    const release_id = albumRelease._id || getQueryParams('release_id')  || '';
+    const { releaseDetails, getReleaseById } = useGetReleases();
+
     const [soldWorldwide, setSoldWorldwide] = useState(""); // Yes
     const [selectSoldCountries, setSelectSoldCountries] = useState<string[]>(contriesss);
 
@@ -44,6 +49,18 @@ export function useCreateAlbum2() {
     useEffect(() => {
         restoreValues()
     }, [albumRelease]);
+
+    useEffect(() => {
+        if (!albumRelease._id) {
+            getReleaseById(release_id);
+        }
+    }, [release_id]);
+
+    useEffect(() => {
+        if (releaseDetails) {
+            _handleSetAlbumRelease(releaseDetails);
+        }
+    }, [releaseDetails]);
     
 
     const restoreValues = () => {
@@ -135,7 +152,13 @@ export function useCreateAlbum2() {
 
             if (response.status) {
                 _handleSetAlbumRelease2(response.result);
-                navigate("/account/create-album-release-select-stores");
+
+                navigate({
+                    pathname: "/account/create-album-release-select-stores",
+                    search: `?${createSearchParams({
+                        release_id: albumRelease._id || ''
+                    })}`,
+                });
             }
 
         } catch (error: any) {
@@ -157,6 +180,7 @@ export function useCreateAlbum2() {
         apiResponse,
         setApiResponse,
         
+        albumRelease,
         register, setValue,
         errors, isValid, isSubmitting,
         

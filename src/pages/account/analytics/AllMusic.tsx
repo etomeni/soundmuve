@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import Box from '@mui/material/Box';
@@ -24,6 +24,7 @@ function AllMusic() {
     const [albumType, setAlbumType] = useState<"Single" | "Album">("Single");
 
     const { 
+        limitNo,
         apiResponse, // setApiResponse,
 
         currentPageNo, // totalRecords,
@@ -31,8 +32,15 @@ function AllMusic() {
 
         // singleReleases, albumReleases,
         releases, getReleases
-    } = useGetReleases(1, 20, "single");
+    } = useGetReleases();
 
+
+    useEffect(() => {
+        getReleases(
+            currentPageNo, limitNo, 
+            albumType == "Album" ? "album" : "single"
+        );
+    }, []);
 
     const handleLoadMore = () => {
         getReleases(currentPageNo + 1, 20, albumType == "Album" ? "album" : "single" );

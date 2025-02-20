@@ -56,7 +56,7 @@ const PreSaveModalComponent: React.FC<_Props> = ({
                                     // letterSpacing: "-0.0983451px",
                                     color: colors.dark
                                 }}  
-                            >Would you like to pre-save this release</Typography>
+                            >Would you like to pre-order this release</Typography>
 
                             <IconButton onClick={() => closeModal() }>
                                 <CloseIcon 
@@ -82,10 +82,10 @@ const PreSaveModalComponent: React.FC<_Props> = ({
                                     color: colors.dark
                                 }}
                             >
-                                Pre-saving your release gives your audience the 
+                                Pre-ordering your release gives your audience the 
                                 opportunity to add your release to their play 
                                 list before it goes live. <b>
-                                    Note Pre-save attracts an extra cost of 
+                                    Note Pre-order attracts an extra cost of 
                                     $20 to the initial release cost
                                 </b>
                             </Typography>

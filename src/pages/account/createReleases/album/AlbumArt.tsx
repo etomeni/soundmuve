@@ -1,5 +1,5 @@
 import { ChangeEvent, useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { createSearchParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 import Toolbar from '@mui/material/Toolbar';
@@ -88,7 +88,12 @@ function CreateAlbumReleaseAlbumArt() {
             // if the user is editing without uploading new image, continue
             if (albumRelease.coverArt) {
                 setIsBtnSubmitting(false);
-                navigate("/account/create-album-release-overview");
+                navigate({
+                    pathname: "/account/create-album-release-overview",
+                    search: `?${createSearchParams({
+                        release_id: albumRelease._id || ''
+                    })}`,
+                });
                 return;
             }
 
@@ -129,7 +134,12 @@ function CreateAlbumReleaseAlbumArt() {
                 setIsBtnSubmitting(false);
 
                 _handleSetAlbumRelease(response.result);
-                navigate("/account/create-album-release-overview");
+                navigate({
+                    pathname: "/account/create-album-release-overview",
+                    search: `?${createSearchParams({
+                        release_id: albumRelease._id || ''
+                    })}`,
+                });
             }
 
         } catch (error: any) {

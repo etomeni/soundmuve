@@ -1,4 +1,4 @@
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useCallback, useState } from "react";
 import { useNavigate } from 'react-router-dom';
 
 import axios from "axios";
@@ -7,12 +7,12 @@ import { yupResolver } from '@hookform/resolvers/yup';
 
 import { useUserStore } from "@/state/userStore";
 import { convertToBase64, getQueryParams, apiEndpoint, validateImageArtWork } from "@/util/resources";
-import { artistInterface, releaseInterface, songArtists_CreativesInterface } from "@/typeInterfaces/release.interface";
+import { artistInterface, songArtists_CreativesInterface } from "@/typeInterfaces/release.interface";
 import { singleRelease2FormSchema } from "../releaseFormSchema";
 import { useSettingStore } from "@/state/settingStore";
 import { useCreateReleaseStore } from "@/state/createReleaseStore";
 import { musicStores, socialPlatformStores } from '@/util/resources';
-import { useCart } from "@/hooks/useCart";
+// import { useCart } from "@/hooks/useCart";
 // import { useCartItemStore } from "@/state/cartStore";
 
 
@@ -20,14 +20,14 @@ export function useCreateSingleRelease2() {
     const navigate = useNavigate();
     const singleRelease = useCreateReleaseStore((state) => state.singleRelease);
     const _handleSetSingleRelease2 = useCreateReleaseStore((state) => state._handleSetSingleRelease2);
-    const _handleClearSingleRelease = useCreateReleaseStore((state) => state._handleClearSingleRelease);
+    // const _handleClearSingleRelease = useCreateReleaseStore((state) => state._handleClearSingleRelease);
 
     const release_id: string = singleRelease._id || getQueryParams('release_id');
     
-    const userData = useUserStore((state) => state.userData);
+    // const userData = useUserStore((state) => state.userData);
     const accessToken = useUserStore((state) => state.accessToken);
     const _setToastNotification = useSettingStore((state) => state._setToastNotification);
-    const { handleAddToCart } = useCart();
+    // const { handleAddToCart } = useCart();
 
     const [apiResponse, setApiResponse] = useState({
         display: false,
@@ -46,7 +46,7 @@ export function useCreateSingleRelease2() {
     const [songWriters, setSongWriters] = useState<string[]>([]);
     const [songArtists_Creatives, setSongArtists_Creatives] = useState<songArtists_CreativesInterface[]>([]);
     const [image, setImage] = useState<Blob | null>(null);
-    const [imagePreview, setImagePreview] = useState();
+    const [imagePreview, setImagePreview] = useState<any>();
     const [songAudio, setSongAudio] = useState<Blob | null>(null);
     const [songAudioPreview, setSongAudioPreview] = useState<any>();
     const [selectStores, setSelectStores] = useState<string[]>(musicStores);
@@ -74,6 +74,125 @@ export function useCreateSingleRelease2() {
         } 
     });
 
+
+    const getReleaseById = useCallback(async (release_id: string) => {
+        try {
+            const response = (await axios.get(`${apiEndpoint}/releases/${release_id}`, {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`
+                },
+                params: {
+                    release_id: release_id,
+                }
+            })).data;
+            // console.log(response);
+
+            if (response.status) {
+                _handleSetSingleRelease2(response.result);
+            }
+
+        } catch (error: any) {
+            const err = error.response && error.response.data ? error.response.data : error;
+            const fixedErrorMsg = "Ooops and error occurred!";
+            console.log(err);
+            // setReleases([]);
+
+            setApiResponse({
+                display: true,
+                status: false,
+                message: err.errors && err.errors.length ? err.errors[0].msg : err.message || fixedErrorMsg
+            });
+        }
+    }, []);
+
+
+    const restoreValues = () => {
+        if (singleRelease.songs.length) {
+            setSongWriters(singleRelease.songs[0].songWriters);
+        }
+
+        if (singleRelease.songs.length) {
+            setSongArtists_Creatives(singleRelease.songs[0].songArtists_Creatives);
+        }
+
+        if (singleRelease.songs.length) {
+            setExplicitLyrics(singleRelease.songs[0].explicitLyrics);
+
+            singleRelease2Form.setValue(
+                "explicitSongLyrics", singleRelease.songs[0].explicitLyrics,
+                { shouldDirty: true, shouldTouch: true, shouldValidate: true }
+            );
+        }
+
+        if (singleRelease.songs.length) {
+            setCopyrightOwnership(`${singleRelease.songs[0].copyrightOwnership.coverVersion}`);
+
+            singleRelease2Form.setValue(
+                "copyrightOwnership", `${singleRelease.songs[0].copyrightOwnership.coverVersion}`,
+                { shouldDirty: true, shouldTouch: true, shouldValidate: true }
+            );
+        }
+
+        if (singleRelease.songs.length) {
+            setCopyrightOwnershipPermission(`${singleRelease.songs[0].copyrightOwnership.permissions}`);
+
+            singleRelease2Form.setValue(
+                "copyrightOwnershipPermission", `${singleRelease.songs[0].copyrightOwnership.permissions}`,
+                { shouldDirty: true, shouldTouch: true, shouldValidate: true }
+            );
+        }
+        
+        if (singleRelease.songs.length) {
+            singleRelease2Form.setValue(
+                "ISRC_Number", singleRelease.songs[0].isrcNumber,
+                { shouldDirty: true, shouldTouch: true, shouldValidate: true }
+            );
+        }
+        
+        if (singleRelease.songs.length) {
+            singleRelease2Form.setValue(
+                "lyricsLanguage", singleRelease.songs[0].lyricsLanguage,
+                { shouldDirty: true, shouldTouch: true, shouldValidate: true }
+            );
+        }
+        
+        if (singleRelease.songs.length) {
+            singleRelease2Form.setValue(
+                "songLyrics", singleRelease.songs[0].lyricsLanguage,
+                { shouldDirty: true, shouldTouch: true, shouldValidate: true }
+            );
+        }
+        
+        if (singleRelease.songs.length) {
+            singleRelease2Form.setValue(
+                "tikTokClipStartTime_Minutes", singleRelease.songs[0].tikTokClipStartTime?.minutes,
+                { shouldDirty: true, shouldTouch: true, shouldValidate: true }
+            );
+        }
+        
+        if (singleRelease.songs.length) {
+            singleRelease2Form.setValue(
+                "tikTokClipStartTime_Seconds", singleRelease.songs[0].tikTokClipStartTime?.seconds,
+                { shouldDirty: true, shouldTouch: true, shouldValidate: true }
+            );
+        }
+        
+        if (singleRelease.songs.length) {
+            setSongAudioPreview(singleRelease.songs[0].songAudio);
+        }
+        
+        if (singleRelease.coverArt) {
+            setImagePreview(singleRelease.coverArt);
+        }
+        
+        if (singleRelease.stores) {
+            setSelectStores(singleRelease.stores);
+        }
+        
+        if (singleRelease.socialPlatforms) {
+            setSelectSocialStores(singleRelease.socialPlatforms);
+        }
+    }
         
     const handleAudioFileUpload = async (e: ChangeEvent<HTMLInputElement>) => {
         // const file = e.target.files[0]; 
@@ -323,7 +442,7 @@ export function useCreateSingleRelease2() {
             return;
         }
 
-        if (!songAudio) {
+        if (!songAudioPreview) {
             setApiResponse({
                 display: true,
                 status: false,
@@ -399,16 +518,14 @@ export function useCreateSingleRelease2() {
 
         // Append songs properties
         data2submit.append('songDetails', JSON.stringify(songDetails));
-        data2submit.append('songAudio', songAudio);
+        // data2submit.append('songAudio', songAudio);
+        if (songAudio) data2submit.append('songAudio', songAudio);
         // Append coverArt (assumed to be a file upload or URL)
         if (image) data2submit.append('coverArt', image);
 
         // console.log(data2db);
         setSubmittedFormData(data2submit);
-        setPreSaveModal(true);
-        return;
-
-
+        // setPreSaveModal(true);
 
         try {
             const response = (await axios.patch(
@@ -433,34 +550,41 @@ export function useCreateSingleRelease2() {
             // console.log(response);
 
             if (response.status) {
-                const result: releaseInterface = response.result;
+                // setReleaseData(response.result);
+                _handleSetSingleRelease2(response.result);
+
+                // const result: releaseInterface = response.result;
                 _setToastNotification({
                     display: true,
                     status: "success",
                     message: response.message
                 });
 
-                setOpenSuccessModal(true);
+                setPreSaveModal(true);
 
-                handleAddToCart({
-                    release_id: result._id || '',
-                    user_email: userData.email,
-                    user_id: userData._id || '',
-                    artistName: result.mainArtist.spotifyProfile.name,
-                    coverArt: result.coverArt,
-                    price: 25,
-                    preSaveAmount: 0,
-                    releaseType: result.releaseType,
-                    title: result.title 
-                });
 
-                setTimeout(() => {
-                    navigate("/account/cart");
-                    setOpenSuccessModal(false);
+                // setOpenSuccessModal(true);
 
-                    // clear the release from memory and rest the state
-                    _handleClearSingleRelease();
-                }, 1000);
+                // handleAddToCart({
+                //     release_id: result._id || '',
+                //     user_email: userData.email,
+                //     user_id: userData._id || '',
+                //     artistName: result.mainArtist.spotifyProfile.name,
+                //     coverArt: result.coverArt,
+                //     price: 25,
+                //     preSaveAmount: 0,
+                //     releaseType: result.releaseType,
+                //     title: result.title 
+                // });
+
+                // setTimeout(() => {
+                //     setPreSaveModal(true);
+
+                //     navigate("/account/cart");
+                //     setOpenSuccessModal(false);
+                //     // clear the release from memory and rest the state
+                //     _handleClearSingleRelease();
+                // }, 1000);
                 return;
             }
             
@@ -483,82 +607,83 @@ export function useCreateSingleRelease2() {
 
     }
 
-    const handleSubmitData = async (data2submit: FormData, preSaveState: boolean) => {
-        setIsFormSubmitting(true);
+    // const handleSubmitData = async (data2submit: FormData, preOrderState: boolean) => {
+    //     setIsFormSubmitting(true);
 
-        try {
-            const response = (await axios.patch(
-                `${apiEndpoint}/releases/single/create-update`,
-                data2submit,  
-                {
-                    headers: {
-                        "Content-Type": "multipart/form-data",
-                        Authorization: `Bearer ${accessToken}`
-                    },
-                    onUploadProgress: (progressEvent) => {
-                        const loaded = progressEvent.loaded;
-                        const total = progressEvent.total || 0;
-                        const percentage = Math.floor((loaded * 100) / total );
+    //     try {
+    //         const response = (await axios.patch(
+    //             `${apiEndpoint}/releases/single/create-update`,
+    //             data2submit,  
+    //             {
+    //                 headers: {
+    //                     "Content-Type": "multipart/form-data",
+    //                     Authorization: `Bearer ${accessToken}`
+    //                 },
+    //                 onUploadProgress: (progressEvent) => {
+    //                     const loaded = progressEvent.loaded;
+    //                     const total = progressEvent.total || 0;
+    //                     const percentage = Math.floor((loaded * 100) / total );
 
-                        if (percentage < 100) {
-                            setSongUploadProgress(percentage);
-                        }
-                    },
-                }
-            )).data;
-            // console.log(response);
-            setIsFormSubmitting(false);
+    //                     if (percentage < 100) {
+    //                         setSongUploadProgress(percentage);
+    //                     }
+    //                 },
+    //             }
+    //         )).data;
+    //         // console.log(response);
+    //         setIsFormSubmitting(false);
 
-            if (response.status) {
-                const result: releaseInterface = response.result;
-                _setToastNotification({
-                    display: true,
-                    status: "success",
-                    message: response.message
-                });
+    //         if (response.status) {
+    //             const result: releaseInterface = response.result;
+    //             _setToastNotification({
+    //                 display: true,
+    //                 status: "success",
+    //                 message: response.message
+    //             });
 
-                setOpenSuccessModal(true);
+    //             setOpenSuccessModal(true);
 
-                handleAddToCart({
-                    release_id: result._id || '',
-                    user_email: userData.email,
-                    user_id: userData._id || '',
-                    artistName: result.mainArtist.spotifyProfile.name,
-                    coverArt: result.coverArt,
-                    price: 25,
-                    preSaveAmount: preSaveState ? 20 : 0,
-                    releaseType: result.releaseType,
-                    title: result.title 
-                });
+    //             handleAddToCart({
+    //                 release_id: result._id || '',
+    //                 user_email: userData.email,
+    //                 user_id: userData._id || '',
+    //                 artistName: result.mainArtist.spotifyProfile.name,
+    //                 coverArt: result.coverArt,
+    //                 price: 25,
+    //                 preSaveAmount: preOrderState ? 20 : 0,
+    //                 releaseType: result.releaseType,
+    //                 title: result.title 
+    //             });
 
-                setTimeout(() => {
-                    navigate("/account/cart");
-                    setOpenSuccessModal(false);
+    //             setTimeout(() => {
+    //                 navigate(`account/create-release-preorder/${result._id}?releaseType=${result.releaseType}`);
+    //                 // navigate("/account/cart");
+    //                 setOpenSuccessModal(false);
 
-                    // clear the release from memory and rest the state
-                    _handleClearSingleRelease();
-                }, 1000);
-                return;
-            }
+    //                 // clear the release from memory and rest the state
+    //                 // _handleClearSingleRelease();
+    //             }, 1000);
+    //             return;
+    //         }
             
-            setApiResponse({
-                display: true,
-                status: true,
-                message: response.message
-            });
-        } catch (error: any) {
-            setIsFormSubmitting(false);
-            const err = error.response && error.response.data ? error.response.data : error;
-            const fixedErrorMsg = "Oooops, failed to save details. please try again.";
-            console.log(err);
+    //         setApiResponse({
+    //             display: true,
+    //             status: true,
+    //             message: response.message
+    //         });
+    //     } catch (error: any) {
+    //         setIsFormSubmitting(false);
+    //         const err = error.response && error.response.data ? error.response.data : error;
+    //         const fixedErrorMsg = "Oooops, failed to save details. please try again.";
+    //         console.log(err);
 
-            setApiResponse({
-                display: true,
-                status: false,
-                message: err.errors && err.errors.length ? err.errors[0].msg : err.message || fixedErrorMsg
-            });
-        }
-    }
+    //         setApiResponse({
+    //             display: true,
+    //             status: false,
+    //             message: err.errors && err.errors.length ? err.errors[0].msg : err.message || fixedErrorMsg
+    //         });
+    //     }
+    // }
 
 
     const returnSingleRelease2 = {
@@ -595,11 +720,15 @@ export function useCreateSingleRelease2() {
         navigate,
 
         openSearchArtistModal, setOpenSearchArtistModal,
+        // releaseData,
 
         submittedFormData,
         preSaveModal, setPreSaveModal,
-        handleSubmitData,
+        // handleSubmitData,
         isFormSubmitting, setIsFormSubmitting,
+
+        getReleaseById,
+        restoreValues,
 
         ...returnSingleRelease2,
     }

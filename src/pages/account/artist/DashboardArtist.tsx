@@ -42,9 +42,10 @@ function DashboardArtist() {
     const { paymentDetails, getPayoutInfo } = usePayoutData();
 
     const { 
+        limitNo,
         // apiResponse, setApiResponse,
 
-        // currentPageNo, totalRecords,
+        currentPageNo, // totalRecords,
         // totalPages,
 
         // singleReleases, albumReleases,
@@ -52,6 +53,10 @@ function DashboardArtist() {
     } = useGetReleases();
 
     useEffect(() => {
+        getReleases(
+            currentPageNo, limitNo, 
+            albumType == "Album" ? "album" : "single"
+        );
         // getSingleRelease();
         getPayoutInfo();
     }, []);

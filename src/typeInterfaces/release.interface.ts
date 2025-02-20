@@ -76,7 +76,18 @@ export type releaseInterface = {
     },
 
     upc_ean: string, // optional
-    preSave: boolean,
+    // preSave: boolean,
+    preOrder?: {
+        status: boolean,
+        preOrderChannel: string,
+        preOrderStartDate: string,
+        preOrderTrackPreview: {
+            song_id: string;
+            songTitle: string;
+        },
+        trackPrice: number,
+        preOrderPrice: number,
+    },
 
     stores: string[],
     socialPlatforms: string[],

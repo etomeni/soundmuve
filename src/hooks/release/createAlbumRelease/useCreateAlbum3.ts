@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { createSearchParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -9,8 +9,9 @@ import { useSettingStore } from '@/state/settingStore';
 import { useCreateReleaseStore } from '@/state/createReleaseStore';
 import { albumRelease3Interface } from '@/typeInterfaces/release.interface';
 import { albumRelease3FormSchema } from '../releaseFormSchema';
-import { apiEndpoint } from '@/util/resources';
+import { apiEndpoint, getQueryParams } from '@/util/resources';
 import { musicStores, socialPlatformStores } from '@/util/resources';
+import { useGetReleases } from '../useGetReleases';
 
 
 export function useCreateAlbum3() {
@@ -30,6 +31,10 @@ export function useCreateAlbum3() {
         message: ""
     });
 
+    const _handleSetAlbumRelease = useCreateReleaseStore((state) => state._handleSetAlbumRelease2);
+    const release_id = albumRelease._id || getQueryParams('release_id')  || '';
+    const { releaseDetails, getReleaseById } = useGetReleases();
+    
     const { 
         handleSubmit, register, setValue, setError, formState: { errors, isValid, isSubmitting } 
     } = useForm({ 
@@ -41,7 +46,20 @@ export function useCreateAlbum3() {
     useEffect(() => {
         restoreValues()
     }, [albumRelease]);
-    
+
+    useEffect(() => {
+        if (!albumRelease._id) {
+            getReleaseById(release_id);
+        }
+    }, [release_id]);
+
+    useEffect(() => {
+        if (releaseDetails) {
+            _handleSetAlbumRelease(releaseDetails);
+        }
+    }, [releaseDetails]);
+
+
     const restoreValues = () => {
         if (albumRelease.stores.length) {
             handleStoreSelect(albumRelease.stores);
@@ -118,7 +136,12 @@ export function useCreateAlbum3() {
 
             if (response.status) {
                 _handleSetAlbumRelease3(response.result);
-                navigate("/account/create-album-release-song-upload");
+                navigate({
+                    pathname: "/account/create-album-release-song-upload",
+                    search: `?${createSearchParams({
+                        release_id: albumRelease._id || ''
+                    })}`,
+                });
             }
         } catch (error: any) {
             const err = error.response.data || error;
@@ -139,6 +162,8 @@ export function useCreateAlbum3() {
         navigate,
         apiResponse,
         setApiResponse,
+
+        albumRelease,
         
         register, setValue,
         errors, isValid, isSubmitting,

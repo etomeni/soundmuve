@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { createSearchParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -10,6 +10,7 @@ import { useCreateReleaseStore } from '@/state/createReleaseStore';
 import { albumRelease1Interface, artistInterface } from '@/typeInterfaces/release.interface';
 import { albumRelease1FormSchema } from '../releaseFormSchema';
 import { getQueryParams, apiEndpoint } from '@/util/resources';
+import { useGetReleases } from '../useGetReleases';
 
 
 export function useCreateAlbum1() {
@@ -39,6 +40,9 @@ export function useCreateAlbum1() {
     const [openSearchArtistModal, setOpenSearchArtistModal] = useState(false);
     const [selectedSpotifyArtist, setSelectedSpotifyArtist] = useState<artistInterface>();
 
+    const _handleSetAlbumRelease = useCreateReleaseStore((state) => state._handleSetAlbumRelease2);
+    const { releaseDetails, getReleaseById } = useGetReleases();
+
 
     const { 
         handleSubmit, register, setValue, setError, formState: { errors, isValid, isSubmitting } 
@@ -59,6 +63,18 @@ export function useCreateAlbum1() {
     useEffect(() => {
         restoreValues()
     }, [albumRelease]);
+
+    useEffect(() => {
+        if (!albumRelease._id) {
+            getReleaseById(release_id);
+        }
+    }, [release_id]);
+
+    useEffect(() => {
+        if (releaseDetails) {
+            _handleSetAlbumRelease(releaseDetails);
+        }
+    }, [releaseDetails]);
     
 
     const restoreValues = () => {
@@ -264,12 +280,17 @@ export function useCreateAlbum1() {
                 }
             )).data;
 
-            console.log(response);
+            // console.log(response);
             
 
             if (response.status) {
                 _handleSetAlbumRelease1(response.result);
-                navigate("/account/create-album-release-advance-features");
+                navigate({
+                    pathname: "/account/create-album-release-advance-features",
+                    search: `?${createSearchParams({
+                        release_id: albumRelease._id || ''
+                    })}`,
+                });
             }
 
         } catch (error: any) {

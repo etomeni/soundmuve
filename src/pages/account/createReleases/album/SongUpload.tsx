@@ -34,6 +34,7 @@ import SearchArtistModalComponent from '@/components/account/SearchArtistModal';
 import { useCreateAlbum4 } from '@/hooks/release/createAlbumRelease/useCreateAlbum4';
 import CircularProgress from '@mui/material/CircularProgress';
 import IconButton from '@mui/material/IconButton';
+import { createSearchParams } from 'react-router-dom';
 
 
 let dspToSearch: "Apple" | "Spotify";
@@ -1358,7 +1359,14 @@ function CreateAlbumReleaseSongUpload() {
                                     <Stack direction="row" justifyContent="space-between" spacing="20px" alignItems="center">
                                         <Button variant="contained" 
                                             fullWidth type='button'
-                                            onClick={() => navigate("/account/create-album-release-select-stores")}
+                                            onClick={() => {
+                                                navigate({
+                                                    pathname: "/account/create-album-release-select-stores",
+                                                    search: `?${createSearchParams({
+                                                        release_id: albumRelease._id || ''
+                                                    })}`,
+                                                });
+                                            }}
                                             sx={{ 
                                                 bgcolor: "#9c9c9c",
                                                 maxWidth: "312px",

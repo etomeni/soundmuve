@@ -34,6 +34,7 @@ function ArtistSongs_RL() {
     const artistName = getQueryParams("name");
 
     const { 
+        // limitNo,
         // apiResponse, // setApiResponse,
 
         currentPageNo, // totalRecords,
@@ -45,7 +46,13 @@ function ArtistSongs_RL() {
 
         rlArtistSongsData,
         getRL_ArtistReleaseData,
-    } = useGetReleases(1, 20, "single");
+    } = useGetReleases();
+
+    // useEffect(() => {
+    //     getReleases(
+    //         currentPageNo, limitNo, "single"
+    //     );
+    // }, []);
 
 
     const handleLoadMore = () => {

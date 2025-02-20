@@ -1,18 +1,20 @@
 import axios from "axios";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import { useUserStore } from "@/state/userStore";
 import { apiEndpoint } from "@/util/resources";
 import { releaseInterface } from "@/typeInterfaces/release.interface";
 import { useSettingStore } from "@/state/settingStore";
 
-export function useGetReleases(pageNo = 1, limitNo = 5, releaseType: 'single' | 'album' = "single") {
+export function useGetReleases() {
     const accessToken = useUserStore((state) => state.accessToken);
 
-    const [currentPageNo, setCurrentPageNo] = useState(pageNo);
+    const [limitNo, setLimitNo] = useState(25);
+    const [currentPageNo, setCurrentPageNo] = useState(1);
     const [totalRecords, setTotalRecords] = useState(0);
     const [totalPages, setTotalPages] = useState(1);
     const [isSubmitting, setIsSubmitting] = useState(false);
 
+    const [releaseDetails, setReleaseDetails] = useState<releaseInterface>();
     const [releases, setReleases] = useState<releaseInterface[]>();
     const [singleReleases, setSingleReleases] = useState<releaseInterface[]>();
     const [albumReleases, setAlbumReleases] = useState<releaseInterface[]>();
@@ -30,10 +32,6 @@ export function useGetReleases(pageNo = 1, limitNo = 5, releaseType: 'single' | 
         message: ""
     });
 
-    
-    useEffect(() => {
-        getReleases(currentPageNo, limitNo, releaseType);
-    }, []);
 
     const getReleases = useCallback(async (pageNo: number, limitNo: number, releaseType: 'single' | 'album') => {
         // const localResponds = getLocalStorage("allSingleReleases");
@@ -194,17 +192,51 @@ export function useGetReleases(pageNo = 1, limitNo = 5, releaseType: 'single' | 
     }, []);
 
 
+    const getReleaseById = useCallback(async (release_id: string) => {
+        try {
+            const response = (await axios.get(`${apiEndpoint}/releases/${release_id}`, {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`
+                },
+                params: {
+                    release_id: release_id,
+                }
+            })).data;
+            // console.log(response);
+
+            if (response.status) {
+                setReleaseDetails(response.result);
+            }
+
+        } catch (error: any) {
+            const err = error.response && error.response.data ? error.response.data : error;
+            const fixedErrorMsg = "Ooops and error occurred!";
+            console.log(err);
+            // setReleases([]);
+
+            setApiResponse({
+                display: true,
+                status: false,
+                message: err.errors && err.errors.length ? err.errors[0].msg : err.message || fixedErrorMsg
+            });
+        }
+    }, []);
+
+
     return {
         apiResponse, setApiResponse,
 
+        limitNo, setLimitNo,
         currentPageNo, totalRecords,
         totalPages,
 
         isSubmitting,
 
+        releaseDetails,
         singleReleases, albumReleases,
         releases, getReleases,
         getRL_ArtistReleases,
+        getReleaseById,
 
         rlArtistSongsData,
         getRL_ArtistReleaseData,

@@ -194,7 +194,8 @@ function Music() {
 
 
     const displaySelectedDspBtnText = (name: string, releaseDetails: releaseInterface) => {
-        if (releaseDetails.preSave && releaseDetails.status == "Pre-Saved") {
+        // if (releaseDetails.preSave && releaseDetails.status == "Pre-Saved") {
+        if (releaseDetails.status == "Pre-Saved") {
             return "Pre-Saved";
         } else {
             const country = musicDsps.find((value) => value.name == name);
@@ -397,10 +398,10 @@ function Music() {
                     justifyContent: "center",
                     // gap: "15px",
                     position: "fixed",
-                    right: "30px",
-                    bottom: "35%",
-                    width: "200px",
-                    height: "60px",
+                    right: {xs: "15px", sm: "20px", md: "30px"},
+                    bottom: "7%",
+                    width: {xs: "120px", sm: "130px", md: "150px"},
+                    height: {xs: "30px", sm: "35px", md: "40px"},
                     background: "#0C2634",
                     boxShadow: "0px 6px 6px rgba(0, 0, 0, 0.25)",
                     borderRadius: "28.5px",

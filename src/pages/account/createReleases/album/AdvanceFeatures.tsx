@@ -24,6 +24,8 @@ import LongSelectList from '@/components/LongSelectList';
 import { restCountries } from '@/util/countries';
 import colors from '@/constants/colors';
 import { useCreateAlbum2 } from '@/hooks/release/createAlbumRelease/useCreateAlbum2';
+import { createSearchParams } from 'react-router-dom';
+
 
 const contriesss = restCountries.map(item => item.name.common);
 contriesss.unshift("All");
@@ -35,6 +37,7 @@ function CreateAlbumReleaseAdvanceFeatures() {
     const {
         navigate,
         apiResponse, // setApiResponse,
+        albumRelease,
 
         register, setValue,
         errors, isValid, isSubmitting,
@@ -428,7 +431,14 @@ function CreateAlbumReleaseAdvanceFeatures() {
                                     <Stack direction="row" justifyContent="space-between" spacing="20px" alignItems="center">
                                         <Button variant="contained" 
                                             fullWidth type='button'
-                                            onClick={() => navigate("/account/create-album-release-details")}
+                                            onClick={() => {
+                                                navigate({
+                                                    pathname: "/account/create-album-release-details",
+                                                    search: `?${createSearchParams({
+                                                        release_id: albumRelease._id || ''
+                                                    })}`,
+                                                });
+                                            }}
                                             sx={{ 
                                                 maxWidth: "312px",
                                                 bgcolor: "#9c9c9c",

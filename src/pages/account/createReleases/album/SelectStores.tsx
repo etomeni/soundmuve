@@ -15,6 +15,7 @@ import { musicStores, socialPlatformStores } from '@/util/resources';
 import MultipleSelectCheckmarks from '@/components/MultipleSelectCheckmarks';
 import colors from '@/constants/colors';
 import { useCreateAlbum3 } from '@/hooks/release/createAlbumRelease/useCreateAlbum3';
+import { createSearchParams } from 'react-router-dom';
 
 
 function CreateAlbumReleaseSelectStores() {
@@ -24,6 +25,7 @@ function CreateAlbumReleaseSelectStores() {
         navigate,
         apiResponse, // setApiResponse,
 
+        albumRelease,
         // register, setValue,
         errors, isValid, isSubmitting,
         
@@ -35,9 +37,6 @@ function CreateAlbumReleaseSelectStores() {
 
         submitForm
     } = useCreateAlbum3();
-
-
-
 
 
 
@@ -208,7 +207,14 @@ function CreateAlbumReleaseSelectStores() {
                                     <Stack direction="row" justifyContent="space-between" spacing="20px" alignItems="center">
                                         <Button variant="contained" 
                                             fullWidth type='button'
-                                            onClick={() => navigate("/account/create-album-release-advance-features")}
+                                            onClick={() => {
+                                                navigate({
+                                                    pathname: "/account/create-album-release-advance-features",
+                                                    search: `?${createSearchParams({
+                                                        release_id: albumRelease._id || ''
+                                                    })}`,
+                                                });
+                                            }}
                                             sx={{ 
                                                 bgcolor: "#9c9c9c",
                                                 color: "#fff",
