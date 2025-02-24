@@ -185,11 +185,11 @@ export function useCreateSingleRelease2() {
             setImagePreview(singleRelease.coverArt);
         }
         
-        if (singleRelease.stores) {
+        if (singleRelease.stores.length) {
             setSelectStores(singleRelease.stores);
         }
         
-        if (singleRelease.socialPlatforms) {
+        if (singleRelease.socialPlatforms.length) {
             setSelectSocialStores(singleRelease.socialPlatforms);
         }
     }

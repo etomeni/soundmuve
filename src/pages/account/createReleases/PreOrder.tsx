@@ -370,7 +370,7 @@ function PreOrderPage() {
                                                                 mb: 2
                                                             }}
                                                         >
-                                                            <b>Note: </b> your pre-order start date must be at least on day prior to your sales start date. 
+                                                            <b>Note: </b> your pre-order start date must be at least one day prior to your sales start date. 
                                                             Today's date must also be at least 10 days prior to your pre-order set date
                                                         </Typography>
             
@@ -450,9 +450,10 @@ function PreOrderPage() {
                                                                 >
                                                                     <LocalizationProvider dateAdapter={AdapterDayjs}>
                                                                         <DemoContainer components={['DatePicker']}>
-                                                                            <DatePicker label="Start Date" 
-                                                                                minDate={dayjs(minReleaseDate(releaseData.releaseDate, 0))}
-                                                                                // maxDate={dayjs()}
+                                                                            <DatePicker label="Start Date" format="DD/MM/YYYY"
+
+                                                                                minDate={dayjs(minReleaseDate(releaseData.releaseDate, -10))}
+                                                                                maxDate={dayjs(minReleaseDate(releaseData.releaseDate, 0))}
             
                                                                                 onChange={(newValue) => {
                                                                                     const value = dayjs(newValue).format('YYYY/MM/DD');
@@ -488,7 +489,7 @@ function PreOrderPage() {
                                                                             sx={{
             
                                                                             }}
-                                                                        >{releaseData.releaseDate}</Typography>
+                                                                        >{ dayjs(releaseData.releaseDate).format('DD/MM/YYYY') }</Typography>
             
                                                                         <Typography 
                                                                             onClick={() => setReleaseDateModal(true)}

@@ -38,7 +38,7 @@ const PreSaveModalComponent: React.FC<_Props> = ({
             >
                 <Box sx={{
                     bgcolor: colors.bg,
-                    maxWidth: {xs: "92%", sm: "496px", md: "570px"},
+                    maxWidth: {xs: "92%", sm: "496px", md: "570px", lg: "600px"},
                     maxHeight: "605px",
                     borderRadius: "12px",
                     p: "25px",
@@ -84,10 +84,22 @@ const PreSaveModalComponent: React.FC<_Props> = ({
                             >
                                 Pre-ordering your release gives your audience the 
                                 opportunity to add your release to their play 
-                                list before it goes live. <b>
-                                    Note Pre-order attracts an extra cost of 
-                                    $20 to the initial release cost
-                                </b>
+                                list before it goes live. <br /> <br />
+                                <b> Note: </b>
+                                <ul style={{ marginTop: 0, marginBottom: 0}}>
+                                    <li>
+                                        Pre-order attracts an extra cost of 
+                                        $20 to the initial release cost.
+                                    </li>
+
+                                    <li>
+                                        Your pre-order start date must be at least one day prior to your sales start date. 
+                                    </li>
+
+                                    <li>
+                                        Today's date must also be at least 10 days prior to your pre-order set date
+                                    </li>
+                                </ul>
                             </Typography>
 
                         </Box>

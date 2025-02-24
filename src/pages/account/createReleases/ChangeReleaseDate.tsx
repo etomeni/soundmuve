@@ -111,7 +111,7 @@ const ChangeReleaseDateComponent: React.FC<myProps> = ({
                         <Box>
                             <LocalizationProvider dateAdapter={AdapterDayjs}>
                                 <DemoContainer components={['DatePicker']}>
-                                    <DatePicker label="Release Date" 
+                                    <DatePicker label="Release Date" format="DD/MM/YYYY"
                                         value={dayjs(releaseDate)}
                                         // minDate={dayjs(userData.createdAt)}
                                         minDate={dayjs(minReleaseDate())}
