@@ -21,6 +21,8 @@ import napster from "@/assets/branded/images/dsp/napster.png";
 import tidal from "@/assets/branded/images/dsp/tidal.png";
 import youtube from "@/assets/branded/images/dsp/youtube.png";
 import youtubeMusic from "@/assets/branded/images/dsp/youtubeMusic.png";
+import deezer from "@/assets/branded/images/dsp/deezer.png";
+import tiktok from "@/assets/branded/images/dsp/tiktok.png";
 import soundMuve from "@/assets/branded/soundMuve.png";
 
 import colors from '@/constants/colors';
@@ -124,12 +126,22 @@ const musicDsps = [
         textColor: "#fff",
         btnText: "Download",
     },
-    // {
-    //     id: 12,
-    //     name: "Spotify",
-    //     imageLogo: "",
-    //     bgColor: "#C8F452",
-    // },
+    {
+        id: 12,
+        name: "Tiktok",
+        imageLogo: tiktok,
+        bgColor: "linear-gradient(185.75deg, #EE1D52 46.56%, #69C9D0 132.64%)",
+        textColor: "#fff",
+        btnText: "Download",
+    },
+    {
+        id: 13,
+        name: "DEEZER",
+        imageLogo: deezer,
+        bgColor: "#B646FF",
+        textColor: "#fff",
+        btnText: "Download",
+    },
 ];
 
 function Music() {
