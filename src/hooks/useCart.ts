@@ -8,6 +8,7 @@ import { useUserStore } from "@/state/userStore";
 import { cartItemInterface } from "@/typeInterfaces/cartInterface";
 import { getLocalStorage } from "@/util/storage";
 import { useSettingStore } from "@/state/settingStore";
+import { FlutterWaveResponse } from "flutterwave-react-v3/dist/types";
 
 
 export function useCart() {
@@ -281,6 +282,44 @@ export function useCart() {
             });
         }
     }
+        
+    const handleFlutterwaveSuccessfulPayment = async (flutterWaveResponse: FlutterWaveResponse) => {
+        const data2submit = {
+            cartItems: cartItems,
+            paidAmount: flutterWaveResponse.amount,
+            paymentIntent: flutterWaveResponse.transaction_id,
+            paymentIntentClientSecret: flutterWaveResponse.tx_ref,
+            paymentStatus: flutterWaveResponse.status,
+            flutterWaveResponse
+        };
+
+        try {
+            const response = (await axios.post(`${apiEndpoint}/checkout/successful-payment`,
+                data2submit, {
+                    headers: {
+                        Authorization: `Bearer ${accessToken}`
+                    }
+                }
+            )).data;
+            // console.log(response);
+
+            if (response.status) {
+                // setApplyPromoResponse(response);
+                _clearCartItems();
+                _clearCouponDiscount();
+            }
+        } catch (error: any) {
+            console.log(error);
+            const err = error.response && error.response.data ? error.response.data : error;
+            const fixedErrorMsg = "Oooops, something went wrong";
+
+            _setToastNotification({
+                display: true,
+                status: "error",
+                message: err.errors && err.errors.length ? err.errors[0].msg : err.message || fixedErrorMsg
+            });
+        }
+    }
 
     const handleCheckReleaseCart = useCallback(async(item: cartItemInterface) => {
         try {
@@ -338,6 +377,7 @@ export function useCart() {
         setApiResponse,
 
         handleSuccessfulPayment,
+        handleFlutterwaveSuccessfulPayment,
 
         handleCheckReleaseCart
     }

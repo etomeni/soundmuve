@@ -390,7 +390,7 @@ export function handleExternalUrl (
 export function getCartTotalAmount(cartItems: cartItemInterface[]) {
   if (cartItems.length) {
     const totalPrice = cartItems.reduce((accumulator, currentObject) => {
-      const releaseTotalPrice = currentObject.price + currentObject.preSaveAmount;
+      const releaseTotalPrice = currentObject.price + (currentObject.preSaveAmount || 0);
 
       return accumulator + releaseTotalPrice;
       // return accumulator + currentObject.price;

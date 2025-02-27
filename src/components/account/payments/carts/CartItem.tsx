@@ -6,7 +6,7 @@ import Grid from '@mui/material/Grid';
 
 import colors from '@/constants/colors';
 import { numberOfLinesTypographyStyle } from '@/util/mui';
-import { currencyDisplay } from '@/util/resources';
+import { currencyDisplay, getCartTotalAmount } from '@/util/resources';
 import { cartItemInterface, couponInterface } from '@/typeInterfaces/cartInterface';
 import EmptyCartComponent from '@/components/EmptyCart';
 
@@ -19,7 +19,7 @@ interface _Props {
 }
 
 const CartItemComponent: React.FC<_Props> = ({
-    cartItems, discount, totalPrice, removeItemFn
+    cartItems, discount, removeItemFn, // totalPrice,
 }) => {
 
     return (
@@ -97,7 +97,7 @@ const CartItemComponent: React.FC<_Props> = ({
                                             fontWeight: "900",
                                             pl: 1
                                         }}
-                                    > { currencyDisplay(totalPrice) }</Typography>
+                                    > { currencyDisplay(getCartTotalAmount(cartItems)) }</Typography>
                                 </Typography>
 
                             </Box>
@@ -280,7 +280,8 @@ const CartItemComponent: React.FC<_Props> = ({
                                                             textAlign: "right",
                                                             float: "right"
                                                         }}
-                                                    >{ discount.discount || 0 }% discount applied</Typography>
+                                                        // >{ discount.discount || 0 }% discount applied on the total price, excluding pre-order.</Typography>
+                                                    >{ currencyDisplay(discount.discountedAmount || 0) } discount applied.</Typography>
                                                 </>
                                             ) : <></>
                                         }
@@ -398,7 +399,7 @@ const CartItemComponent: React.FC<_Props> = ({
                                                                 letterSpacing: "-0.06px",
                                                                 color: colors.secondary,
                                                             }}
-                                                        >{ currencyDisplay(item.preSaveAmount) } (pre-save)</Typography>
+                                                        >{ currencyDisplay(item.preSaveAmount) } (pre-order)</Typography>
                                                     : <></>
                                                 }
 
@@ -433,7 +434,7 @@ const CartItemComponent: React.FC<_Props> = ({
                                                 color: colors.dark,
                                                 mt: "10px",
                                             }}
-                                        >{ currencyDisplay(totalPrice) }</Typography>
+                                        > { currencyDisplay(getCartTotalAmount(cartItems)) }</Typography>
 
                                         {
                                             discount._id ? (
@@ -470,7 +471,8 @@ const CartItemComponent: React.FC<_Props> = ({
                                                             textAlign: "right",
                                                             float: "right"
                                                         }}
-                                                    >{ discount.discount || 0 }% discount applied</Typography>
+                                                    >{ currencyDisplay(discount.discountedAmount || 0) } discount applied.</Typography>
+
                                                 </>
                                             ) : <></>
                                         }
