@@ -69,27 +69,29 @@ function DashboardArtist() {
 
 
     const handleOnclickedSong = (release: releaseInterface, albumSongIndex: number = 0) => {
-        _setReleaseDetails(release);
-
-        const song = release.songs[albumSongIndex];
-
-        // if (albumType == "Single") {
-        //     _setReleaseDetails(release);
-        // } else 
-        if (albumType == "Album" && release.songs) {
-            _setSongDetails(song);
+        if (release.status == "Live" || release.status == "Pre-Saved" || release.status == "Processing") {
+            _setReleaseDetails(release);
+    
+            const song = release.songs[albumSongIndex];
+    
+            // if (albumType == "Single") {
+            //     _setReleaseDetails(release);
+            // } else 
+            if (albumType == "Album" && release.songs) {
+                _setSongDetails(song);
+            }
+            // navigate("/account/analytics/song-details");
+    
+    
+            const params = {
+                releaseId: release._id || '',
+                songId: song._id || ''
+            };
+            navigate({
+                pathname: "/account/analytics/song-details",
+                search: `?${createSearchParams(params)}`,
+            });
         }
-        // navigate("/account/analytics/song-details");
-
-
-        const params = {
-            releaseId: release._id || '',
-            songId: song._id || ''
-        };
-        navigate({
-            pathname: "/account/analytics/song-details",
-            search: `?${createSearchParams(params)}`,
-        });
     }
 
 
@@ -806,7 +808,12 @@ function DashboardArtist() {
                                 <Grid item xs={6} md={4} key={index}>
                                     <ViewSongItemComponent 
                                         releaseType={albumType}
-                                        index={index}
+                                        getAllReleases={() => {
+                                            getReleases(
+                                                currentPageNo, limitNo, 
+                                                albumType == "Album" ? "album" : "single"
+                                            );
+                                        }}
                                         releaseDetails={song}
                                     />
                                 </Grid>

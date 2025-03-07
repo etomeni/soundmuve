@@ -29,6 +29,8 @@ import LoadingDataComponent from '@/components/LoadingData';
 import SuccessModalComponent from '@/components/account/SuccessModal';
 import { minReleaseDate } from '@/util/resources';
 import ChangeReleaseDateComponent from './ChangeReleaseDate';
+import { useCart } from '@/hooks/useCart';
+import { releaseInterface } from '@/typeInterfaces/release.interface';
 
 
 let errors = {
@@ -43,6 +45,7 @@ function PreOrderPage() {
     const navigate = useNavigate();
     const { release_id } = useParams();
     const [releaseDateModal, setReleaseDateModal] = useState(false);
+    const { handleRemoveCartItem, cartItems } = useCart();
 
     const {
         apiResponse, setApiResponse,
@@ -68,6 +71,24 @@ function PreOrderPage() {
             navigate(-1);
         }
     }, [release_id]);
+
+    useEffect(() => {
+        if (releaseData) {
+            if (releaseData.preOrder?.preOrderChannel) {
+                setPreOrderChannel(releaseData.preOrder?.preOrderChannel);
+            }
+
+            if (releaseData.preOrder?.preOrderStartDate) {
+                setPreOrderDate(releaseData.preOrder?.preOrderStartDate)
+            }
+
+            if (releaseData.preOrder?.preOrderTrackPreview?.song_id) {
+                const song = releaseData.songs.find((value) => value._id == releaseData.preOrder?.preOrderTrackPreview.song_id);
+                if (song) setPreOrderTrackPreview(song);
+            }
+
+        }
+    }, [releaseData]);
 
     const handleContineBtn = () => {
         errors = {
@@ -128,6 +149,14 @@ function PreOrderPage() {
 
         // submit to endpoint
 
+        cartItems.forEach((item) => {
+            const id = release_id || releaseData?._id || '';
+            if (item.release_id == id) {
+                handleRemoveCartItem(item);
+            }
+        });
+
+
         submitPreOrderRelease(
             release_id || releaseData?._id || '',
             {
@@ -145,6 +174,18 @@ function PreOrderPage() {
 
             }
         )
+    }
+
+    const handleSelectedTrack = (release: releaseInterface) => {
+        const index = release.songs.findIndex(item => item._id == preOrderTrackPreview?._id);
+
+        if (index != -1) {
+            return index;
+            // console.log(index); // Output: 1
+        } else {
+            return undefined;
+            // console.log(undefined); // Output: undefined
+        }
     }
     
 
@@ -451,6 +492,7 @@ function PreOrderPage() {
                                                                     <LocalizationProvider dateAdapter={AdapterDayjs}>
                                                                         <DemoContainer components={['DatePicker']}>
                                                                             <DatePicker label="Start Date" format="DD/MM/YYYY"
+                                                                                value={dayjs(preOrderDate)}
 
                                                                                 minDate={dayjs(minReleaseDate(releaseData.releaseDate, -10))}
                                                                                 maxDate={dayjs(minReleaseDate(releaseData.releaseDate, 0))}
@@ -594,6 +636,7 @@ function PreOrderPage() {
                                                                 <RadioGroup
                                                                     // aria-labelledby="demo-radio-buttons-group-label"
                                                                     // defaultValue="female"
+                                                                    value={handleSelectedTrack(releaseData)}
                                                                     name="radio-buttons-group"
                                                                     onChange={(_e, newValue) => {
                                                                         const value = Number(newValue);

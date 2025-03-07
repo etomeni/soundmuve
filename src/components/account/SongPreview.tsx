@@ -23,7 +23,7 @@ interface _Props {
 }
 
 const SongPreviewComponent: React.FC<_Props> = ({
-    songAudio, songTitle, subTitle, deleteSong = ()=>{}, editSong
+    songAudio, songTitle, subTitle, deleteSong, editSong
 }) => {
     // const darkTheme = useSettingStore((state) => state.darkTheme);
     const waveDisplayRef = useRef();
@@ -82,9 +82,9 @@ const SongPreviewComponent: React.FC<_Props> = ({
                         <Typography
                             sx={{
                                 fontWeight: "700",
-                                fontSize: "15.67px",
-                                lineHeight: "32px",
-                                letterSpacing: "-0.1px",
+                                fontSize: "14px",
+                                // lineHeight: "32px",
+                                // letterSpacing: "-0.1px",
                                 color: "#CACACA"
                             }}
                         > { subTitle } </Typography>
@@ -93,32 +93,33 @@ const SongPreviewComponent: React.FC<_Props> = ({
                 </Box>
 
                 {
-                    editSong ? (
-                        <Typography
-                            sx={{
-                                fontWeight: "700",
-                                fontSize: "15.67px",
-                                lineHeight: "32px",
-                                letterSpacing: "-0.1px",
-                                cursor: 'pointer'
-                            }}
-                            onClick={() => {
-                                waveSurferRef.current.stop();
-                                // waveSurferRef.current.destroy();
-                                editSong(); 
-                            }}
-                        > Edit </Typography>
-                    ) : (
-                        <DeleteForeverOutlinedIcon sx={{ color: colors.milk, ":hover": { color: colors.primary } }}
-                            onClick={() => { 
-                                waveSurferRef.current.stop();
-                                waveSurferRef.current.destroy();
-                                deleteSong(); 
-                            }} 
-                        />
-                    )
+                    editSong &&
+                    <Typography
+                        sx={{
+                            fontWeight: "700",
+                            fontSize: "15.67px",
+                            lineHeight: "32px",
+                            letterSpacing: "-0.1px",
+                            cursor: 'pointer'
+                        }}
+                        onClick={() => {
+                            waveSurferRef.current.stop();
+                            // waveSurferRef.current.destroy();
+                            editSong(); 
+                        }}
+                    > Edit </Typography>
                 }
 
+                {
+                    deleteSong &&
+                    <DeleteForeverOutlinedIcon sx={{ color: colors.milk, ":hover": { color: colors.primary } }}
+                        onClick={() => { 
+                            waveSurferRef.current.stop();
+                            waveSurferRef.current.destroy();
+                            deleteSong(); 
+                        }} 
+                    />
+                }
             </Stack>
 
             <Stack 

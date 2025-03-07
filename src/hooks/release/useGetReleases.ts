@@ -214,6 +214,42 @@ export function useGetReleases() {
             console.log(err);
             // setReleases([]);
 
+            _setToastNotification({
+                display: true,
+                status: "error",
+                message: err.errors && err.errors.length ? err.errors[0].msg : err.message || fixedErrorMsg
+            })
+
+            setApiResponse({
+                display: true,
+                status: false,
+                message: err.errors && err.errors.length ? err.errors[0].msg : err.message || fixedErrorMsg
+            });
+        }
+    }, []);
+
+    const deleteReleaseById = useCallback(async (release_id: string, successFn = (_res: any) => {}) => {
+        try {
+            const response = (await axios.delete(`${apiEndpoint}/releases/${release_id}`, {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`
+                },
+                params: {
+                    release_id: release_id,
+                }
+            })).data;
+            // console.log(response);
+
+            if (response.status) {
+                successFn(response.result)
+            }
+
+        } catch (error: any) {
+            const err = error.response && error.response.data ? error.response.data : error;
+            const fixedErrorMsg = "Ooops and error occurred!";
+            console.log(err);
+            // setReleases([]);
+
             setApiResponse({
                 display: true,
                 status: false,
@@ -240,5 +276,7 @@ export function useGetReleases() {
 
         rlArtistSongsData,
         getRL_ArtistReleaseData,
+
+        deleteReleaseById,
     }
 }

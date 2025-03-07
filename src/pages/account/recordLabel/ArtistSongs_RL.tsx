@@ -253,7 +253,9 @@ function ArtistSongs_RL() {
                                             <ViewSongItemComponent 
                                                 // releaseType={albumType}
                                                 releaseType={song.releaseType == "album" ? "Album" : "Single"}
-                                                index={index}
+                                                getAllReleases={() => {
+                                                    getRL_ArtistReleases(artist_id, 1, 20);
+                                                }}
                                                 releaseDetails={song}
                                             />
                                         </Grid>

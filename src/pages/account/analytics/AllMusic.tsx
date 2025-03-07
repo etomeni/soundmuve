@@ -177,7 +177,12 @@ function AllMusic() {
                                     <Grid item xs={6} md={4} key={index}>
                                         <ViewSongItemComponent 
                                             releaseType={albumType}
-                                            index={index}
+                                            getAllReleases={() => {
+                                                getReleases(
+                                                    currentPageNo, limitNo, 
+                                                    albumType == "Album" ? "album" : "single"
+                                                );
+                                            }}
                                             releaseDetails={song}
                                         />
                                     </Grid>

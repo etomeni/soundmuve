@@ -69,6 +69,7 @@ import Music from "./pages/Music";
 import ProfilePage from "./pages/account/profile/ProfilePage";
 import ProfileEditPage from "./pages/account/profile/ProfileEditPage";
 import PreOrderPage from "./pages/account/createReleases/PreOrder";
+import ReleaseOverview from "./pages/account/createReleases/ReleaseOverview";
 
 
 export const router = createBrowserRouter([
@@ -189,6 +190,10 @@ export const router = createBrowserRouter([
             {
               path: "checkout/success",
               element: <SuccessfulPayment />
+            },
+            {
+              path: "release/overview/:release_id",
+              element: <ReleaseOverview />
             },
 
             {
