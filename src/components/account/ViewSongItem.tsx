@@ -293,88 +293,96 @@ const SongItemMenu: React.FC<SongItem_Props> = ({ release, getRelease }) => {
         handleClose();
     }
 
+    const menuItems = [
+        {
+            name: "View details",
+            action: () => handleViewReleaseDetails(),
+            display: release.status != "Incomplete"
+        },
+        {
+            name: "View analytics",
+            action: () => ViewSongAnalytics(),
+            display: release.status == "Live" || release.status == "Pre-Saved" || release.status == "Processing"
+        },
+        {
+            name: "Edit",
+            action: () => handleEdit(),
+            display: release.status == "Incomplete" || release.status == "Unpaid"
+        },
+        {
+            name: "Delete",
+            action: () => handleDelete(),
+            display: release.status == "Incomplete" || release.status == "Unpaid"
+        }
+    ];
+
+
     return (
-        <div>
-            <IconButton
-                aria-label="more"
-                id="long-button"
-                aria-controls={open ? 'long-menu' : undefined}
-                aria-expanded={open ? 'true' : undefined}
-                aria-haspopup="true"
-                onClick={handleClick}
-                sx={{ bgcolor: colors.dark }}
-            >
-                <MoreVertIcon sx={{ color: "#fff" }} />
-            </IconButton>
-            <Menu
-                id="long-menu"
-                MenuListProps={{
-                    'aria-labelledby': 'long-button',
-                }}
-                anchorEl={anchorEl}
-                open={open}
-                onClose={handleClose}
-                slotProps={{
-                    paper: {
-                        style: {
-                            maxHeight: ITEM_HEIGHT * 4.5,
-                            // width: '20ch',
-                        },
-                    },
-                }}
-            >
-                {
-                    release.status != "Incomplete" &&
-                    <MenuItem onClick={handleViewReleaseDetails}>
-                        View details
-                    </MenuItem>
-                }
-
-                {
-                    release.status == "Live" || release.status == "Pre-Saved" || release.status == "Processing" &&
-                    <MenuItem onClick={ViewSongAnalytics}>
-                        View analytics
-                    </MenuItem>
-                }
-                
-                { 
-                    release.status == "Incomplete" || release.status == "Unpaid" &&
-                    <MenuItem onClick={handleEdit}
-                    > Edit </MenuItem>
-                }
-
-                {
-                    release.status == "Incomplete" || release.status == "Unpaid" &&
-                    <MenuItem onClick={handleDelete}
-                        sx={{ 
-                            bgcolor: "#A80D05",
-                            color: "#fff",
-                            ":hover": {
-                                bgcolor: "#701920",
+        <Box>
+            <div>
+                <IconButton
+                    aria-label="more"
+                    id="long-button"
+                    aria-controls={open ? 'long-menu' : undefined}
+                    aria-expanded={open ? 'true' : undefined}
+                    aria-haspopup="true"
+                    onClick={handleClick}
+                    sx={{ bgcolor: colors.dark }}
+                >
+                    <MoreVertIcon sx={{ color: "#fff" }} />
+                </IconButton>
+                <Menu
+                    id="long-menu"
+                    MenuListProps={{
+                        'aria-labelledby': 'long-button',
+                    }}
+                    anchorEl={anchorEl}
+                    open={open}
+                    onClose={handleClose}
+                    slotProps={{
+                        paper: {
+                            style: {
+                                maxHeight: ITEM_HEIGHT * 4.5,
+                                // width: '20ch',
                             },
-                        }}
-                    > Delete </MenuItem>
-                }
-            </Menu>
+                        },
+                    }}
+                >
+                    {
+                        menuItems.map((item, index) => (
+                            item.display &&
+                            <MenuItem key={index} onClick={() => item.action()}
+                                sx={item.name == "Delete" ? {
+                                    bgcolor: "#A80D05",
+                                    color: "#fff",
+                                    ":hover": {
+                                        bgcolor: "#701920",
+                                    },    
+                                } : {}}
+                            > {item.name} </MenuItem>
+                        ))
+                    }
+                </Menu>
 
-			<ConfirmationDialog 
-				actionYes={() => {
-					dialogData.action();
-				}}
-				isSubmitting={isLoading}
-				openDialog={dialogData.state}
-				setOpenDialog={() => {
-					setDialogData({
-						action: () => {},
-						state: false,
-						title: '',
-						description: '',
-					});
-                    setIsLoading(false);
-				}}
-                title={dialogData.title}
-                description={dialogData.description}
-			/>
-        </div>
+                <ConfirmationDialog 
+                    actionYes={() => {
+                        dialogData.action();
+                    }}
+                    isSubmitting={isLoading}
+                    openDialog={dialogData.state}
+                    setOpenDialog={() => {
+                        setDialogData({
+                            action: () => {},
+                            state: false,
+                            title: '',
+                            description: '',
+                        });
+                        setIsLoading(false);
+                    }}
+                    title={dialogData.title}
+                    description={dialogData.description}
+                />
+            </div>
+        </Box>
     );
 }
