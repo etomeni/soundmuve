@@ -1,0 +1,285 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+	<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<url>
+	<loc>https://soundmuve.com/</loc>
+	<lastmod>2025-03-09T14:39:46+01:00</lastmod>
+	<priority>1.0</priority>
+	<changefreq>monthly</changefreq>
+</url>
+<url>
+	<loc>https://soundmuve.com/pricing</loc>
+	<lastmod>2025-03-09T14:39:46+01:00</lastmod>
+	<priority>1.0</priority>
+	<changefreq>monthly</changefreq>
+</url>
+<url>
+	<loc>https://soundmuve.com/terms-of-use</loc>
+	<lastmod>2025-03-09T14:39:46+01:00</lastmod>
+	<priority>0.8</priority>
+	<changefreq>monthly</changefreq>
+</url>
+<url>
+	<loc>https://soundmuve.com/privacy-policy</loc>
+	<lastmod>2025-03-09T14:39:46+01:00</lastmod>
+	<priority>0.8</priority>
+	<changefreq>monthly</changefreq>
+</url>
+<url>
+	<loc>https://soundmuve.com/about</loc>
+	<lastmod>2025-03-09T14:39:46+01:00</lastmod>
+	<priority>1.0</priority>
+	<changefreq>monthly</changefreq>
+</url>
+<url>
+	<loc>https://soundmuve.com/contact</loc>
+	<lastmod>2025-03-09T14:39:46+01:00</lastmod>
+	<priority>1.0</priority>
+	<changefreq>monthly</changefreq>
+</url>
+<url>
+	<loc>https://soundmuve.com/faq</loc>
+	<lastmod>2025-03-09T14:39:46+01:00</lastmod>
+	<priority>1.0</priority>
+	<changefreq>monthly</changefreq>
+</url>
+<url>
+	<loc>https://soundmuve.com/music/</loc>
+	<lastmod>2025-03-09T14:39:46+01:00</lastmod>
+	<priority>1.0</priority>
+	<changefreq>always</changefreq>
+</url>
+
+<!-- auth routes -->
+<url>
+	<loc>https://soundmuve.com/auth</loc>
+	<lastmod>2025-03-09T14:39:46+01:00</lastmod>
+	<priority>0.8</priority>
+	<changefreq>monthly</changefreq>
+</url>
+<url>
+	<loc>https://soundmuve.com/auth/login</loc>
+	<lastmod>2025-03-09T14:39:46+01:00</lastmod>
+	<priority>0.8</priority>
+	<changefreq>monthly</changefreq>
+</url>
+<url>
+	<loc>https://soundmuve.com/auth/signup</loc>
+	<lastmod>2025-03-09T14:39:46+01:00</lastmod>
+	<priority>0.8</priority>
+	<changefreq>monthly</changefreq>
+</url>
+<url>
+	<loc>https://soundmuve.com/auth/signup-type</loc>
+	<lastmod>2025-03-09T14:39:46+01:00</lastmod>
+	<priority>0.8</priority>
+	<changefreq>monthly</changefreq>
+</url>
+<url>
+	<loc>https://soundmuve.com/auth/signup-artistDetails</loc>
+	<lastmod>2025-03-09T14:39:46+01:00</lastmod>
+	<priority>0.8</priority>
+	<changefreq>monthly</changefreq>
+</url>
+<url>
+	<loc>https://soundmuve.com/auth/signup-recordLabelDetails</loc>
+	<lastmod>2025-03-09T14:39:46+01:00</lastmod>
+	<priority>0.8</priority>
+	<changefreq>monthly</changefreq>
+</url>
+<url>
+	<loc>https://soundmuve.com/auth/forgot-password</loc>
+	<lastmod>2025-03-09T14:39:46+01:00</lastmod>
+	<priority>0.8</priority>
+	<changefreq>monthly</changefreq>
+</url>
+<url>
+	<loc>https://soundmuve.com/auth/verify-email</loc>
+	<lastmod>2025-03-09T14:39:46+01:00</lastmod>
+	<priority>0.8</priority>
+	<changefreq>monthly</changefreq>
+</url>
+<url>
+	<loc>https://soundmuve.com/auth/create-new-password</loc>
+	<lastmod>2025-03-09T14:39:46+01:00</lastmod>
+	<priority>0.8</priority>
+	<changefreq>monthly</changefreq>
+</url>
+
+<url>
+	<loc>https://soundmuve.com/account/</loc>
+	<lastmod>2025-03-09T14:39:46+01:00</lastmod>
+	<priority>0.8</priority>
+	<changefreq>monthly</changefreq>
+</url>
+
+<!-- artist dashboard routes -->
+<url>
+	<loc>https://soundmuve.com/account/artist</loc>
+	<lastmod>2025-03-09T14:39:46+01:00</lastmod>
+	<priority>0.8</priority>
+	<changefreq>monthly</changefreq>
+</url>
+
+<!-- record-label dashboard routes -->
+<url>
+	<loc>https://soundmuve.com/account/record-label</loc>
+	<lastmod>2025-03-09T14:39:46+01:00</lastmod>
+	<priority>0.8</priority>
+	<changefreq>monthly</changefreq>
+</url>
+<url>
+	<loc>https://soundmuve.com/account/record-label/add-artist</loc>
+	<lastmod>2025-03-09T14:39:46+01:00</lastmod>
+	<priority>0.7</priority>
+	<changefreq>monthly</changefreq>
+</url>
+<url>
+	<loc>https://soundmuve.com/account/record-label/artist</loc>
+	<lastmod>2025-03-09T14:39:46+01:00</lastmod>
+	<priority>0.7</priority>
+	<changefreq>monthly</changefreq>
+</url>
+<url>
+	<loc>https://soundmuve.com/account/record-label/artist-songs</loc>
+	<lastmod>2025-03-09T14:39:46+01:00</lastmod>
+	<priority>0.7</priority>
+	<changefreq>monthly</changefreq>
+</url>
+
+<!-- dashboard analytics routes -->
+<url>
+	<loc>https://soundmuve.com/account/analytics/sales-report</loc>
+	<lastmod>2025-03-09T14:39:46+01:00</lastmod>
+	<priority>0.6</priority>
+	<changefreq>monthly</changefreq>
+</url>
+<url>
+	<loc>https://soundmuve.com/account/analytics/balance-history</loc>
+	<lastmod>2025-03-09T14:39:46+01:00</lastmod>
+	<priority>0.6</priority>
+	<changefreq>monthly</changefreq>
+</url>
+<url>
+	<loc>https://soundmuve.com/account/analytics/analytics-reach</loc>
+	<lastmod>2025-03-09T14:39:46+01:00</lastmod>
+	<priority>0.6</priority>
+	<changefreq>monthly</changefreq>
+</url>
+<url>
+	<loc>https://soundmuve.com/account/analytics/song-details</loc>
+	<lastmod>2025-03-09T14:39:46+01:00</lastmod>
+	<priority>0.6</priority>
+	<changefreq>monthly</changefreq>
+</url>
+<url>
+	<loc>https://soundmuve.com/account/analytics/album-details</loc>
+	<lastmod>2025-03-09T14:39:46+01:00</lastmod>
+	<priority>0.6</priority>
+	<changefreq>monthly</changefreq>
+</url>
+<url>
+	<loc>https://soundmuve.com/account/analytics/all-music</loc>
+	<lastmod>2025-03-09T14:39:46+01:00</lastmod>
+	<priority>0.7</priority>
+	<changefreq>monthly</changefreq>
+</url>
+
+
+<url>
+	<loc>https://soundmuve.com/account/faq</loc>
+	<lastmod>2025-03-09T14:39:46+01:00</lastmod>
+	<priority>0.8</priority>
+	<changefreq>monthly</changefreq>
+</url>
+<url>
+	<loc>https://soundmuve.com/account/profile</loc>
+	<lastmod>2025-03-09T14:39:46+01:00</lastmod>
+	<priority>0.8</priority>
+	<changefreq>monthly</changefreq>
+</url>
+<url>
+	<loc>https://soundmuve.com/profile/edit</loc>
+	<lastmod>2025-03-09T14:39:46+01:00</lastmod>
+	<priority>0.6</priority>
+	<changefreq>monthly</changefreq>
+</url>
+<url>
+	<loc>https://soundmuve.com/cart</loc>
+	<lastmod>2025-03-09T14:39:46+01:00</lastmod>
+	<priority>0.6</priority>
+	<changefreq>monthly</changefreq>
+</url>
+<url>
+	<loc>https://soundmuve.com/checkout</loc>
+	<lastmod>2025-03-09T14:39:46+01:00</lastmod>
+	<priority>0.6</priority>
+	<changefreq>monthly</changefreq>
+</url>
+<url>
+	<loc>https://soundmuve.com/checkout/success</loc>
+	<lastmod>2025-03-09T14:39:46+01:00</lastmod>
+	<priority>0.5</priority>
+	<changefreq>monthly</changefreq>
+</url>
+<url>
+	<loc>https://soundmuve.com/release/overview/</loc>
+	<lastmod>2025-03-09T14:39:46+01:00</lastmod>
+	<priority>0.8</priority>
+	<changefreq>monthly</changefreq>
+</url>
+<url>
+	<loc>https://soundmuve.com/create-single-release</loc>
+	<lastmod>2025-03-09T14:39:46+01:00</lastmod>
+	<priority>1.0</priority>
+	<changefreq>monthly</changefreq>
+</url>
+<url>
+	<loc>https://soundmuve.com/create-single-release-continue</loc>
+	<lastmod>2025-03-09T14:39:46+01:00</lastmod>
+	<priority>0.8</priority>
+	<changefreq>monthly</changefreq>
+</url>
+<url>
+	<loc>https://soundmuve.com/create-album-release-details</loc>
+	<lastmod>2025-03-09T14:39:46+01:00</lastmod>
+	<priority>1.0</priority>
+	<changefreq>monthly</changefreq>
+</url>
+<url>
+	<loc>https://soundmuve.com/create-album-release-advance-features</loc>
+	<lastmod>2025-03-09T14:39:46+01:00</lastmod>
+	<priority>0.8</priority>
+	<changefreq>monthly</changefreq>
+</url>
+<url>
+	<loc>https://soundmuve.com/create-album-release-select-stores</loc>
+	<lastmod>2025-03-09T14:39:46+01:00</lastmod>
+	<priority>0.8</priority>
+	<changefreq>monthly</changefreq>
+</url>
+<url>
+	<loc>https://soundmuve.com/create-album-release-song-upload</loc>
+	<lastmod>2025-03-09T14:39:46+01:00</lastmod>
+	<priority>0.8</priority>
+	<changefreq>monthly</changefreq>
+</url>
+<url>
+	<loc>https://soundmuve.com/create-album-release-album-art</loc>
+	<lastmod>2025-03-09T14:39:46+01:00</lastmod>
+	<priority>0.8</priority>
+	<changefreq>monthly</changefreq>
+</url>
+<url>
+	<loc>https://soundmuve.com/create-album-release-overview</loc>
+	<lastmod>2025-03-09T14:39:46+01:00</lastmod>
+	<priority>0.8</priority>
+	<changefreq>monthly</changefreq>
+</url>
+<url>
+	<loc>https://soundmuve.com/create-release-preorder/</loc>
+	<lastmod>2025-03-09T14:39:46+01:00</lastmod>
+	<priority>0.8</priority>
+	<changefreq>monthly</changefreq>
+</url>
+
+</urlset>

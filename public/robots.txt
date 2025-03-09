@@ -1,0 +1,11 @@
+User-agent: *
+Disallow: /auth/
+Allow: /auth/login
+Allow: /auth/signup
+Disallow: /account/
+Allow: /account/faq
+Allow: /music/
+Disallow: /profile/
+Disallow: /profile/edit
+
+Sitemap: https://soundmuve.com/sitemap.xml

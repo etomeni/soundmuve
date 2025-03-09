@@ -11,7 +11,7 @@ function Faq() {
 
     return (
         <Box bgcolor={colors.bg} >
-            <Box height={{xs: 60, sm: 50, md: 40}}></Box>
+            <Box height={{ xs: 60, sm: 50, md: 40 }}></Box>
             <HeaderComponent />
 
             <FaqComponent />

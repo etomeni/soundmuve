@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Navigate, useParams } from 'react-router-dom';
 import axios from 'axios';
+import { Helmet } from "react-helmet-async";
 
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
@@ -36,7 +37,7 @@ declare global {
         driftt?: any;
     }
 }
-  
+
 const musicDsps = [
     {
         id: 1,
@@ -145,7 +146,7 @@ const musicDsps = [
 ];
 
 function Music() {
-    const {code} = useParams();
+    const { code } = useParams();
     const [releaseDetails, setReleaseDetails] = useState<releaseInterface>();
     const [apiResponse, setApiResponse] = useState({
         display: false,
@@ -163,7 +164,7 @@ function Music() {
         let attempt = 0;
         const maxRetries = 100;
         const interval = 500; // Retry every 500ms
-      
+
         const checkDrift = setInterval(() => {
             if (window.drift && window.drift.ready) {
                 window.drift.hide();
@@ -249,7 +250,7 @@ function Music() {
                         <Avatar variant="rounded"
                             alt={name}
                             src={getSelectedDspByName(name)?.imageLogo}
-                            // sx={{ width: "48px", height: "48px" }}
+                        // sx={{ width: "48px", height: "48px" }}
                         />
 
                         <Typography variant='subtitle1'
@@ -261,7 +262,7 @@ function Music() {
                                 // lineHeight: "11.101px",
                                 letterSpacing: "-0.463px",
                             }}
-                        >{ name }</Typography>
+                        >{name}</Typography>
                     </Stack>
 
                     <Box onClick={() => handleOnClickedBtn(url)}
@@ -284,7 +285,7 @@ function Music() {
                                 letterSpacing: "-0.463px",
                                 textAlign: "center",
                             }}
-                        >{ displaySelectedDspBtnText(name, releaseDetails) }</Typography>
+                        >{displaySelectedDspBtnText(name, releaseDetails)}</Typography>
                     </Box>
                 </Stack>
             </Box>
@@ -295,13 +296,12 @@ function Music() {
     const sortDspLinks = (dspLinks: { name: string; url: string }[]) => {
         // Create a map of the order of names in musicDsps for efficient lookup
         const orderMap = new Map(musicDsps.map((dsp, index) => [dsp.name, index]));
-      
+
         return [...dspLinks].sort((a, b) => {
             return (orderMap.get(a.name) ?? Infinity) - (orderMap.get(b.name) ?? Infinity);
         });
     };
-    
-    
+
 
     return (
         <Box
@@ -315,11 +315,31 @@ function Music() {
             }}
         >
             <Box sx={{ pt: 2 }}>
-
                 {
-                    
                     releaseDetails ?
                         <Container>
+                            <Helmet>
+                                <script type="application/ld+json">
+                                    {JSON.stringify({
+                                        "@context": "https://schema.org",
+                                        "@type": "MusicRecording",
+                                        "name": releaseDetails?.songs[0].songTitle, // song.title,
+                                        "url": `https://soundmuve.com/music/${releaseDetails?.musicLinks?.code}`,
+                                        // "duration": song.duration,
+                                        "inAlbum": {
+                                            "@type": "MusicAlbum",
+                                            "name": releaseDetails?.title // song.albumName
+                                        },
+                                        "byArtist": {
+                                            "@type": "Person",
+                                            "name": releaseDetails?.mainArtist.spotifyProfile.name, // song.artistName,
+                                            // "url": `https://soundmuve.com/artist/${song.artistId}`
+                                            "url": `https://soundmuve.com/music/${releaseDetails?.musicLinks?.code}`
+                                        }
+                                    })}
+                                </script>
+                            </Helmet>
+
                             <Box
                                 sx={{
                                     height: "417px",
@@ -335,15 +355,15 @@ function Music() {
                                     position: 'relative',
                                 }}
                             >
-                                <Box 
-                                    sx={{ 
+                                <Box
+                                    sx={{
                                         position: "absolute",
-                                        bottom: {xs: "10px", md: "20px"}, 
-                                        left: {xs: "10px", md: "20px"}, 
+                                        bottom: { xs: "10px", md: "20px" },
+                                        left: { xs: "10px", md: "20px" },
                                     }}
                                 >
                                     <Chip
-                                        avatar={<Avatar 
+                                        avatar={<Avatar
                                             alt={releaseDetails.mainArtist.spotifyProfile.name}
                                             src={releaseDetails.mainArtist.spotifyProfile.profilePicture}
                                         />}
@@ -376,24 +396,24 @@ function Music() {
                                     }}
                                 >Choose how you enjoy your music</Typography>
                             </Box>
-                            
+
                             <Box>
                                 <Grid container spacing="15px">
                                     {
                                         releaseDetails && releaseDetails.musicLinks ?
                                             sortDspLinks(releaseDetails.musicLinks.dspLinks).map((items, index) => (
                                                 <Grid key={index} item xs={12} sm={6} md={4} lg={3}>
-                                                    { musicDspCard(items.name, items.url, releaseDetails) }
+                                                    {musicDspCard(items.name, items.url, releaseDetails)}
                                                 </Grid>
                                             ))
-                                        : <></>
+                                            : <></>
                                     }
                                 </Grid>
                             </Box>
                         </Container>
-                    : apiResponse.display ? 
+                    : apiResponse.display ?
                         <Box my={3}>
-                            <Navigate replace  to={"/music"} />
+                            <Navigate replace to={"/music"} />
                         </Box>
                     : <Stack direction="row" alignItems="center" justifyContent="center" height="90vh">
                         <LoadingDataComponent />
@@ -410,18 +430,18 @@ function Music() {
                     justifyContent: "center",
                     // gap: "15px",
                     position: "fixed",
-                    right: {xs: "15px", sm: "20px", md: "30px"},
+                    right: { xs: "15px", sm: "20px", md: "30px" },
                     bottom: "7%",
-                    width: {xs: "120px", sm: "130px", md: "150px"},
-                    height: {xs: "30px", sm: "35px", md: "40px"},
+                    width: { xs: "120px", sm: "130px", md: "150px" },
+                    height: { xs: "30px", sm: "35px", md: "40px" },
                     background: "#0C2634",
                     boxShadow: "0px 6px 6px rgba(0, 0, 0, 0.25)",
                     borderRadius: "28.5px",
                     cursor: "pointer",
                 }}
             >
-                <Box sx={{p: "15px 20px"}}>
-                    <img 
+                <Box sx={{ p: "15px 20px" }}>
+                    <img
                         alt='soundMuve logo'
                         src={soundMuve}
                         style={{
@@ -450,5 +470,3 @@ function Music() {
 }
 
 export default Music;
-
-
