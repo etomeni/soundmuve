@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { Helmet } from "react-helmet-async";
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 
@@ -101,27 +100,23 @@ function FaqComponent() {
             mt: { xs: "35px", md: "75px"}
         }}>
 
-            <Helmet>
-                <script type="application/ld+json">
-                    {JSON.stringify(
-                        {
-                            "@context": "https://schema.org",
-                            "@type": "FAQPage",
-                            "mainEntity": questions.map((item) => {
-                                return {
-                                    "@type": "Question",
-                                    "name": item.title,
-                                    "acceptedAnswer": {
-                                        "@type": "Answer",
-                                        "text": item.details
-                                    }
-                                }
-                            })
-                            
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify({
+                    "@context": "https://schema.org",
+                    "@type": "FAQPage",
+                    "mainEntity": questions.map((item) => {
+                        return {
+                            "@type": "Question",
+                            "name": item.title,
+                            "acceptedAnswer": {
+                                "@type": "Answer",
+                                "text": item.details
+                            }
                         }
-                    )}
-                </script>
-            </Helmet>
+                    })
+                }) }}
+            />
 
             <Typography sx={{
                 fontFamily: "Nohemi",

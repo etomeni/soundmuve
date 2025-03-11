@@ -200,7 +200,6 @@ const SongItemMenu: React.FC<SongItem_Props> = ({ release, getRelease }) => {
     const _handleSetAlbumRelease = useCreateReleaseStore((state) => state._handleSetAlbumRelease);
     // const _setSongDetails = useReleaseStore((state) => state._setSongDetails);
 
-    const { handleCheckReleaseCart } = useCart();
     const { deleteReleaseById } = useGetReleases();
 
     const [isLoading, setIsLoading] = React.useState(false);
@@ -225,20 +224,17 @@ const SongItemMenu: React.FC<SongItem_Props> = ({ release, getRelease }) => {
     }
 
     const ViewSongAnalytics = async () => {
-        const releaseCartData = {
-            release_id: release._id || '',
-            user_email: release.email,
-            user_id: release.user_id || '',
-            artistName: release.mainArtist.spotifyProfile.name,
-            coverArt: release.coverArt,
-            price: release.releaseType == "album" ? 45 : 25,
-            preSaveAmount: release.preOrder?.status ? 20 : 0,
-            releaseType: release.releaseType,
-            title: release.title
-        };
+        _setReleaseDetails(release);
 
-        const response = await handleCheckReleaseCart(releaseCartData);
-        if (response) navigate(`/account/cart`);
+        const url = `/account/analytics/${release.releaseType == "album" ? "album-details" : "song-details"}`;
+        const params = {
+            releaseId: release._id || '',
+            songId: release.songs[0]?._id || ''
+        };
+        navigate({
+            pathname: url,
+            search: `?${createSearchParams(params)}`,
+        });        
 
         handleClose();
         return;

@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Navigate, useParams } from 'react-router-dom';
 import axios from 'axios';
-import { Helmet } from "react-helmet-async";
 
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
@@ -318,27 +317,26 @@ function Music() {
                 {
                     releaseDetails ?
                         <Container>
-                            <Helmet>
-                                <script type="application/ld+json">
-                                    {JSON.stringify({
-                                        "@context": "https://schema.org",
-                                        "@type": "MusicRecording",
-                                        "name": releaseDetails?.songs[0].songTitle, // song.title,
-                                        "url": `https://soundmuve.com/music/${releaseDetails?.musicLinks?.code}`,
-                                        // "duration": song.duration,
-                                        "inAlbum": {
-                                            "@type": "MusicAlbum",
-                                            "name": releaseDetails?.title // song.albumName
-                                        },
-                                        "byArtist": {
-                                            "@type": "Person",
-                                            "name": releaseDetails?.mainArtist.spotifyProfile.name, // song.artistName,
-                                            // "url": `https://soundmuve.com/artist/${song.artistId}`
-                                            "url": `https://soundmuve.com/music/${releaseDetails?.musicLinks?.code}`
-                                        }
-                                    })}
-                                </script>
-                            </Helmet>
+                            <script
+                                type="application/ld+json"
+                                dangerouslySetInnerHTML={{ __html: JSON.stringify({
+                                    "@context": "https://schema.org",
+                                    "@type": "MusicRecording",
+                                    "name": releaseDetails?.songs[0].songTitle, // song.title,
+                                    "url": `https://soundmuve.com/music/${releaseDetails?.musicLinks?.code}`,
+                                    // "duration": song.duration,
+                                    "inAlbum": {
+                                        "@type": "MusicAlbum",
+                                        "name": releaseDetails?.title // song.albumName
+                                    },
+                                    "byArtist": {
+                                        "@type": "Person",
+                                        "name": releaseDetails?.mainArtist.spotifyProfile.name, // song.artistName,
+                                        // "url": `https://soundmuve.com/artist/${song.artistId}`
+                                        "url": `https://soundmuve.com/music/${releaseDetails?.musicLinks?.code}`
+                                    }
+                                }) }}
+                            />
 
                             <Box
                                 sx={{
