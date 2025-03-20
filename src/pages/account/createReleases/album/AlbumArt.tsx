@@ -1,6 +1,5 @@
 import { ChangeEvent, useEffect, useState } from 'react';
 import { createSearchParams, useNavigate } from 'react-router-dom';
-import axios from 'axios';
 
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
@@ -9,22 +8,23 @@ import Stack from '@mui/material/Stack';
 import Alert from '@mui/material/Alert';
 import Button from '@mui/material/Button';
 
-import { useUserStore } from '@/state/userStore';
+// import { useUserStore } from '@/state/userStore';
 import { useSettingStore } from '@/state/settingStore';
 import { useCreateReleaseStore } from '@/state/createReleaseStore';
 
 import SideNav from './SideNav';
 import AccountWrapper from '@/components/AccountWrapper';
 import cloudUploadIconImg from "@/assets/images/cloudUploadIcon.png";
-import { apiEndpoint, artWorkAllowedTypes, convertToBase64, validateImageArtWork } from '@/util/resources';
+import { artWorkAllowedTypes, convertToBase64, validateImageArtWork } from '@/util/resources';
 import CircularProgress from '@mui/material/CircularProgress';
 import ArtWorkFileInfoComponent from '@/components/ArtWorkFileInfo';
 import colors from '@/constants/colors';
+import apiClient, { apiErrorResponse } from '@/util/apiClient';
 
 
 function CreateAlbumReleaseAlbumArt() {
     const navigate = useNavigate();
-    const accessToken = useUserStore((state) => state.accessToken);
+    // const accessToken = useUserStore((state) => state.accessToken);
     const darkTheme = useSettingStore((state) => state.darkTheme);
     // const userData = useUserStore((state) => state.userData);
     const albumRelease = useCreateReleaseStore((state) => state.albumRelease);
@@ -118,13 +118,13 @@ function CreateAlbumReleaseAlbumArt() {
 
         try {
             setIsBtnSubmitting(true);
-            const response = (await axios.patch(
-                `${apiEndpoint}/releases/album/create-update-5`,
+            const response = (await apiClient.patch(
+                `/releases/album/create-update-5`,
                 data2db,  
                 {
                     headers: {
                         'Content-Type': 'multipart/form-data',
-                        Authorization: `Bearer ${accessToken}`
+                        // Authorization: `Bearer ${accessToken}`
                     },
                 }
             )).data;
@@ -143,17 +143,14 @@ function CreateAlbumReleaseAlbumArt() {
             }
 
         } catch (error: any) {
-            console.log(error);
+            // console.log(error);
             setIsBtnSubmitting(false);
-
-            const err = error.response.data || error;
-            const fixedErrorMsg = "Oooops, failed to save details. please try again.";
-            // console.log(err);
+            const messageRes = apiErrorResponse(error, "Oooops, something went wrong. please try again.", false);
 
             setApiResponse({
                 display: true,
                 status: false,
-                message: err.errors && err.errors.length ? err.errors[0].msg : err.message || fixedErrorMsg
+                message: messageRes
             });
         }
 

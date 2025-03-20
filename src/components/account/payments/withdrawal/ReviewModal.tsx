@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 
 import Box from '@mui/material/Box';
 // import IconButton from '@mui/material/IconButton';
@@ -12,11 +11,12 @@ import Alert from '@mui/material/Alert';
 import { useUserStore } from '@/state/userStore';
 // import { useSettingStore } from '@/state/settingStore';
 
-import { apiEndpoint, currencyDisplay, formatedNumber } from '@/util/resources';
+import { currencyDisplay, formatedNumber } from '@/util/resources';
 import { getCurrencySymbol } from '@/util/currencies';
 import colors from '@/constants/colors';
 import PaymentModalWrapper from '../PaymentWrapper';
 import { transactionInterface, withdrawInterface } from '@/typeInterfaces/transaction.interface';
+import apiClient, { apiErrorResponse } from '@/util/apiClient';
 
 
 interface _Props {
@@ -32,7 +32,6 @@ const FL_ReviewModalComponent: React.FC<_Props> = ({
     openModal, closeModal, saveBtn, formDetails
 }) => {
     // const darkTheme = useSettingStore((state) => state.darkTheme);
-    const accessToken = useUserStore((state) => state.accessToken);
     const userData = useUserStore((state) => state.userData);
 
     const [apiResponse, setApiResponse] = useState({
@@ -94,28 +93,21 @@ const FL_ReviewModalComponent: React.FC<_Props> = ({
 
         
         try {
-            const response = (await axios.post(`${apiEndpoint}/transactions/initiate-withdrawal`, 
-                data2db, 
-                {
-                    headers: {
-                        Authorization: `Bearer ${accessToken}`
-                    }
-                }
+            const response = (await apiClient.post(`/transactions/initiate-withdrawal`, 
+                data2db
             )).data;
-            console.log(response);
+            // console.log(response);
             // setBanks(response.data);
 
             saveBtn(response.result);
 
         } catch (error: any) {
-            const err = error.response && error.response.data ? error.response.data : error;
-            const fixedErrorMsg = "Ooops and error occurred!";
-            console.log(err);
+            const messageRes = apiErrorResponse(error, "Oooops, something went wrong", false);
 
             setApiResponse({
                 display: true,
                 status: false,
-                message: err.message || fixedErrorMsg
+                message: messageRes
             });
 
         }

@@ -1,13 +1,13 @@
 import { useState } from "react";
 
-import axios from "axios";
 import { useForm } from 'react-hook-form';
 import * as yup from "yup";
 import { yupResolver } from '@hookform/resolvers/yup';
 
-import { apiEndpoint, passwordRegex } from "@/util/resources";
+import { passwordRegex } from "@/util/resources";
 import { useUserStore } from "@/state/userStore";
 import { removeSessionStorageItem, setSessionStorage } from "@/util/storage";
+import apiClient, { apiErrorResponse } from "@/util/apiClient";
 
 
 const formSchema = yup.object({
@@ -35,7 +35,7 @@ interface _Props {
 export const useProfileEmailUpdateHook = (props: _Props) => {
     // const navigate = useNavigate();
     const userData = useUserStore((state) => state.userData);
-    const accessToken = useUserStore((state) => state.accessToken);
+    // const accessToken = useUserStore((state) => state.accessToken);
     const _updateUser = useUserStore((state) => state._updateUser);
 
     const [isSubmittingOtpCode, setIsSubmittingOtpCode] = useState(false);
@@ -69,13 +69,10 @@ export const useProfileEmailUpdateHook = (props: _Props) => {
                 return;
             }
 
-            const response = (await axios.post(
-                `${apiEndpoint}/profile/sendEmailUpdateCode/${userData._id}`,
+            const response = (await apiClient.post(
+                `/profile/sendEmailUpdateCode/${userData._id}`,
                 {email: formData.email, password: formData.password},
                 {
-                    headers: {
-                        Authorization: `Bearer ${accessToken}`,
-                    },
                     onUploadProgress: (progressEvent) => {
                         const loaded = progressEvent.loaded;
                         const total = progressEvent.total || 0;
@@ -118,14 +115,12 @@ export const useProfileEmailUpdateHook = (props: _Props) => {
             //     message: response.message || "Oooops, an error occured."
             // });
         } catch (error: any) {
-            const err = error.response && error.response.data ? error.response.data : error;
-            const fixedErrorMsg = "Oooops, an error occured.";
-            console.log(err);
-
+            const messageRes = apiErrorResponse(error, "Oooops, something went wrong", false);
+            
             setApiResponse({
                 display: true,
                 status: false,
-                message: err.errors && err.errors.length ? err.errors[0].msg : err.message || fixedErrorMsg
+                message: messageRes
             });
         }
 
@@ -148,13 +143,10 @@ export const useProfileEmailUpdateHook = (props: _Props) => {
                 return;
             }
 
-            const response = (await axios.post(
-                `${apiEndpoint}/profile/resendEmailUpdateCode/${userData._id}`,
+            const response = (await apiClient.post(
+                `/profile/resendEmailUpdateCode/${userData._id}`,
                 {email},
                 {
-                    headers: {
-                        Authorization: `Bearer ${accessToken}`,
-                    },
                     onUploadProgress: (progressEvent) => {
                         const loaded = progressEvent.loaded;
                         const total = progressEvent.total || 0;
@@ -192,14 +184,12 @@ export const useProfileEmailUpdateHook = (props: _Props) => {
             //     message: response.message || "Oooops, an error occured."
             // });
         } catch (error: any) {
-            const err = error.response && error.response.data ? error.response.data : error;
-            const fixedErrorMsg = "Oooops, an error occured.";
-            console.log(err);
+            const messageRes = apiErrorResponse(error, "Oooops, something went wrong", false);
 
             setApiResponse({
                 display: true,
                 status: false,
-                message: err.errors && err.errors.length ? err.errors[0].msg : err.message || fixedErrorMsg
+                message: messageRes
             });
         }
 
@@ -220,13 +210,10 @@ export const useProfileEmailUpdateHook = (props: _Props) => {
         };
 
         try {
-            const response = (await axios.post(
-                `${apiEndpoint}/profile/verifyEmailUpdateCode/${userData._id}`,
+            const response = (await apiClient.post(
+                `/profile/verifyEmailUpdateCode/${userData._id}`,
                 dataSent,
                 {
-                    headers: {
-                        Authorization: `Bearer ${accessToken}`,
-                    },
                     onUploadProgress: (progressEvent) => {
                         const loaded = progressEvent.loaded;
                         const total = progressEvent.total || 0;
@@ -267,14 +254,12 @@ export const useProfileEmailUpdateHook = (props: _Props) => {
 
             setIsSubmittingOtpCode(false);
         } catch (error: any) {
-            const err = error.response && error.response.data ? error.response.data : error;
-            const fixedErrorMsg = "Oooops, an error occured.";
-            console.log(err);
+            const messageRes = apiErrorResponse(error, "Oooops, something went wrong", false);
 
             setApiResponse({
                 display: true,
                 status: false,
-                message: err.errors && err.errors.length ? err.errors[0].msg : err.message || fixedErrorMsg
+                message: messageRes
             });
 
             setIsSubmittingOtpCode(false);

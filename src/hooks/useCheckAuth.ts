@@ -1,8 +1,7 @@
 import { useCallback, useState } from "react";
-import axios from "axios";
 import { useUserStore } from "@/state/userStore";
-import { apiEndpoint } from "@/util/resources";
 import { getLocalStorage } from "@/util/storage";
+import apiClient, { apiErrorResponse } from "@/util/apiClient";
 
 export function useCheckAuth() {
     const _autoLogin = useUserStore((state) => state._autoLogin);
@@ -16,41 +15,43 @@ export function useCheckAuth() {
     }, []);
     
     const checkUserAuthState = async () => {
-        const access_token = getLocalStorage("access_token")
-        // const refresh_token = getLocalStorage("refreshToken");
+        // const access_token = getLocalStorage("access_token")
+        const refresh_token = getLocalStorage("refreshToken");
         const user_data = getLocalStorage("user");
-    
-        if (!access_token || !user_data ) {
+
+        if (!refresh_token || !user_data ) {
             setIsLoading(false);
             return;
         }
-    
+
         // if (!pathname.includes("/account") || !pathname.includes("/auth")) {
         //     setIsLoading(false);
         // }
         
         try {
-            const response = (await axios.get(`${apiEndpoint}/auth/reValidateUserAuth`, {
-                headers: {
-                    Authorization: `Bearer ${access_token}`,
-                    // refresh: `Bearer ${refresh_token}`
+            // const response = (await apiClient.get(`/auth/reValidateUserAuth`, {
+            const response = (await apiClient.post(`/auth/refresh`, 
+                { refresh_token: refresh_token },
+                {
+                    headers: {
+                        // Authorization: `Bearer ${access_token}`,
+                        refresh: `Bearer ${refresh_token}`
+                    }
                 }
-            })).data;
-            // console.log(response);
+            )).data;
+            console.log(response);
 
-            if (response.accessToken && response.refreshToken) {
-                // _handleRefreshToken(response.accessToken, response.refreshToken)
-                _handleRefreshToken(response.accessToken)
+            if (response.status) {
+                _handleRefreshToken(response.result.newToken, refresh_token);
+                _updateUser(response.result.user);
+                _autoLogin(response.result.user || user_data);
             }
-            if (response.result._id) _updateUser(response.result);
-    
             setIsLoading(false);
-            if (user_data && access_token) _autoLogin(response.result || user_data);
-    
+        
             return true;
         } catch (error: any) {
-            const err = error.response.data || error;
-            console.log(err);
+            apiErrorResponse(error, "Oooops, something went wrong", false);
+
             setIsLoading(false);
             _logOutUser();
     

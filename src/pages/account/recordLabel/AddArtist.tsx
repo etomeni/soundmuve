@@ -3,7 +3,6 @@ import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import * as yup from "yup";
 import { yupResolver } from '@hookform/resolvers/yup';
-import axios from 'axios';
 
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
@@ -20,14 +19,14 @@ import RecordLabelWrapper from '@/components/account/recordLabel/RecordLabelWrap
 import CircularProgressWithLabel from '@/components/CircularProgressWithLabel';
 
 import { getCountries, getUserLocation } from '@/util/location';
-import { apiEndpoint } from '@/util/resources';
-import { useUserStore } from '@/state/userStore';
+// import { useUserStore } from '@/state/userStore';
 import { restCountries } from '@/util/countries';
 import { releaseSelectStyle2, releaseTextFieldStyle } from '@/util/mui';
 import cloudUploadIconImg from "@/assets/images/cloudUploadIcon.png";
 import colors from '@/constants/colors';
 import { useNavigate } from 'react-router-dom';
 import { useSettingStore } from '@/state/settingStore';
+import apiClient, { apiErrorResponse } from '@/util/apiClient';
 
 
 const formSchema = yup.object({
@@ -52,7 +51,7 @@ function AddArtistRecordLabel() {
     const [userCountry, setUserCountry] = useState("");
     // const userData = useUserStore((state) => state.userData);
     // const darkTheme = useSettingStore((state) => state.darkTheme);
-    const accessToken = useUserStore((state) => state.accessToken);
+    // const accessToken = useUserStore((state) => state.accessToken);
     const [image, setImage] = useState<any>();
     const [imagePreview, setImagePreview] = useState<any>();
 
@@ -152,11 +151,11 @@ function AddArtistRecordLabel() {
         data_2db.append('artistAvatar', image);
 
         try {
-            const response = (await axios.post(`${apiEndpoint}/record-label/add-artist`, data_2db,
+            const response = (await apiClient.post(`/record-label/add-artist`, data_2db,
                 {
                     headers: {
                         'Content-Type': 'multipart/form-data',
-                        Authorization: `Bearer ${accessToken}`
+                        // Authorization: `Bearer ${accessToken}`
                     },
                     onUploadProgress: (progressEvent) => {
                         const loaded = progressEvent.loaded;
@@ -190,14 +189,12 @@ function AddArtistRecordLabel() {
                 message: response.message
             });
         } catch (error: any) {
-            const err = error.response.data || error;
-            const fixedErrorMsg = "Ooops and error occurred!";
-            console.log(err);
+            const messageRes = apiErrorResponse(error, "Oooops, something went wrong. please try again.", false);
 
             setApiResponse({
                 display: true,
                 status: false,
-                message: err.errors && err.errors.length ? err.errors[0].msg : err.message || fixedErrorMsg
+                message: messageRes
             });
         }
     }

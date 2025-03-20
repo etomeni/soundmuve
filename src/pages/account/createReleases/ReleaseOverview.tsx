@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { createSearchParams, useNavigate, useParams } from 'react-router-dom';
-import axios from 'axios';
 
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
@@ -10,13 +9,13 @@ import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 
-import { useUserStore } from '@/state/userStore';
+// import { useUserStore } from '@/state/userStore';
 import { useSettingStore } from '@/state/settingStore';
 // import { useCreateReleaseStore } from '@/state/createReleaseStore';
 
 import colors from '@/constants/colors';
 // import { useCart } from '@/hooks/useCart';
-import { apiEndpoint, getQueryParams } from '@/util/resources';
+import { getQueryParams } from '@/util/resources';
 import AccountWrapper from '@/components/AccountWrapper';
 import SongPreviewComponent from '@/components/account/SongPreview';
 import SuccessModalComponent from '@/components/account/SuccessModal';
@@ -26,6 +25,7 @@ import { usePreOrderHook } from './usePreOrderHook';
 import { useGetReleases } from '@/hooks/release/useGetReleases';
 import LoadingDataComponent from '@/components/LoadingData';
 import { releaseInterface } from '@/typeInterfaces/release.interface';
+import apiClient, { apiErrorResponse } from '@/util/apiClient';
 
 
 function ReleaseOverview() {
@@ -34,7 +34,7 @@ function ReleaseOverview() {
     const _id = getQueryParams("release_id");
     
     // const userData = useUserStore((state) => state.userData);
-    const accessToken = useUserStore((state) => state.accessToken);
+    // const accessToken = useUserStore((state) => state.accessToken);
 
     const { handleSkipPreOrder } = usePreOrderHook();
 
@@ -65,13 +65,8 @@ function ReleaseOverview() {
         const song = releaseDetails.songs[index];
 
         try {
-            const response = (await axios.delete(
-                `${apiEndpoint}/releases/album/${ releaseDetails._id || '' }/delete-song/${ song._id || '' }`,
-                {
-                    headers: {
-                        Authorization: `Bearer ${accessToken}`
-                    },
-                }
+            const response = (await apiClient.delete(
+                `/releases/album/${ releaseDetails._id || '' }/delete-song/${ song._id || '' }`,
             )).data;
             // console.log(response);
             
@@ -87,14 +82,12 @@ function ReleaseOverview() {
             }
 
         } catch (error: any) {
-            const err = error.response.data || error;
-            const fixedErrorMsg = "Oooops, failed to save details. please try again.";
-            // console.log(err);
+            const messageRes = apiErrorResponse(error, "Oooops, failed to save details. please try again.");
 
             setApiResponse({
                 display: true,
                 status: false,
-                message: err.errors && err.errors.length ? err.errors[0].msg : err.message || fixedErrorMsg
+                message: messageRes
             });
         }
     }

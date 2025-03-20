@@ -3,7 +3,6 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import * as yup from "yup";
 import { yupResolver } from '@hookform/resolvers/yup';
-import axios from 'axios';
 
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
@@ -13,10 +12,10 @@ import Alert from '@mui/material/Alert';
 import Button from '@mui/material/Button';
 import CircularProgress from '@mui/material/CircularProgress';
 
-import { apiEndpoint } from '../util/resources';
 import colors from '@/constants/colors';
 import { contactMuiTextFieldStyle } from '@/util/mui';
 import { useSettingStore } from '@/state/settingStore';
+import apiClient, { apiErrorResponse } from '@/util/apiClient';
 
 
 const formSchema = yup.object({
@@ -63,7 +62,7 @@ const ContactUsComponent: React.FC<myProps> = ({
         });
 
         try {
-            const response = (await axios.post(`${apiEndpoint}/contact/contact-us`, formData )).data;
+            const response = (await apiClient.post(`/contact/contact-us`, formData )).data;
             // console.log(response);
 
             // setApiResponse({
@@ -80,21 +79,8 @@ const ContactUsComponent: React.FC<myProps> = ({
             reset();
             
         } catch (error: any) {
-            const err = error.response.data || error;
-            // console.log(err);
-            const fixedErrorMsg = "Oooops, failed to send message. please try again.";
-
-            // setApiResponse({
-            //     display: true,
-            //     status: false,
-            //     message: err.errors && err.errors.length ? err.errors[0].msg : err.message || fixedErrorMsg
-            // });
-
-            _setToastNotification({
-                display: true,
-                status: "error",
-                message: err.errors && err.errors.length ? err.errors[0].msg : err.message || fixedErrorMsg
-            });
+            const messageRes = apiErrorResponse(error, "Oooops, failed to send message. please try again.");
+            console.log(messageRes);
         }
     }
 

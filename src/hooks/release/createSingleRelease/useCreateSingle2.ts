@@ -1,17 +1,16 @@
 import { ChangeEvent, useCallback, useState } from "react";
 import { useNavigate } from 'react-router-dom';
 
-import axios from "axios";
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 
-import { useUserStore } from "@/state/userStore";
-import { convertToBase64, getQueryParams, apiEndpoint, validateImageArtWork } from "@/util/resources";
+import { convertToBase64, getQueryParams, validateImageArtWork } from "@/util/resources";
 import { artistInterface, songArtists_CreativesInterface } from "@/typeInterfaces/release.interface";
 import { singleRelease2FormSchema } from "../releaseFormSchema";
 import { useSettingStore } from "@/state/settingStore";
 import { useCreateReleaseStore } from "@/state/createReleaseStore";
 import { musicStores, socialPlatformStores } from '@/util/resources';
+import apiClient, { apiErrorResponse } from "@/util/apiClient";
 // import { useCart } from "@/hooks/useCart";
 // import { useCartItemStore } from "@/state/cartStore";
 
@@ -25,7 +24,7 @@ export function useCreateSingleRelease2() {
     const release_id: string = singleRelease._id || getQueryParams('release_id');
     
     // const userData = useUserStore((state) => state.userData);
-    const accessToken = useUserStore((state) => state.accessToken);
+    // const accessToken = useUserStore((state) => state.accessToken);
     const _setToastNotification = useSettingStore((state) => state._setToastNotification);
     // const { handleAddToCart } = useCart();
 
@@ -77,10 +76,7 @@ export function useCreateSingleRelease2() {
 
     const getReleaseById = useCallback(async (release_id: string) => {
         try {
-            const response = (await axios.get(`${apiEndpoint}/releases/${release_id}`, {
-                headers: {
-                    Authorization: `Bearer ${accessToken}`
-                },
+            const response = (await apiClient.get(`/releases/${release_id}`, {
                 params: {
                     release_id: release_id,
                 }
@@ -92,15 +88,12 @@ export function useCreateSingleRelease2() {
             }
 
         } catch (error: any) {
-            const err = error.response && error.response.data ? error.response.data : error;
-            const fixedErrorMsg = "Ooops and error occurred!";
-            console.log(err);
-            // setReleases([]);
+            const messageRes = apiErrorResponse(error, "Oooops, something went wrong", false);
 
             setApiResponse({
                 display: true,
                 status: false,
-                message: err.errors && err.errors.length ? err.errors[0].msg : err.message || fixedErrorMsg
+                message: messageRes
             });
         }
     }, []);
@@ -528,13 +521,13 @@ export function useCreateSingleRelease2() {
         // setPreSaveModal(true);
 
         try {
-            const response = (await axios.patch(
-                `${apiEndpoint}/releases/single/create-update`,
+            const response = (await apiClient.patch(
+                `/releases/single/create-update`,
                 data2submit,  
                 {
                     headers: {
                         "Content-Type": "multipart/form-data",
-                        Authorization: `Bearer ${accessToken}`
+                        // Authorization: `Bearer ${accessToken}`
                     },
                     onUploadProgress: (progressEvent) => {
                         const loaded = progressEvent.loaded;
@@ -594,14 +587,12 @@ export function useCreateSingleRelease2() {
                 message: response.message
             });
         } catch (error: any) {
-            const err = error.response && error.response.data ? error.response.data : error;
-            const fixedErrorMsg = "Oooops, failed to save details. please try again.";
-            console.log(err);
+            const messageRes = apiErrorResponse(error, "Oooops, failed to save details. please try again.", false);
 
             setApiResponse({
                 display: true,
                 status: false,
-                message: err.errors && err.errors.length ? err.errors[0].msg : err.message || fixedErrorMsg
+                message: messageRes
             });
         }
 
@@ -611,8 +602,8 @@ export function useCreateSingleRelease2() {
     //     setIsFormSubmitting(true);
 
     //     try {
-    //         const response = (await axios.patch(
-    //             `${apiEndpoint}/releases/single/create-update`,
+    //         const response = (await apiClient.patch(
+    //             `/releases/single/create-update`,
     //             data2submit,  
     //             {
     //                 headers: {

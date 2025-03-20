@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { Navigate, useParams } from 'react-router-dom';
-import axios from 'axios';
 
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
@@ -26,9 +25,9 @@ import tiktok from "@/assets/branded/images/dsp/tiktok.png";
 import soundMuve from "@/assets/branded/soundMuve.png";
 
 import colors from '@/constants/colors';
-import { apiEndpoint } from '@/util/resources';
 import { releaseInterface } from '@/typeInterfaces/release.interface';
 import LoadingDataComponent from '@/components/LoadingData2';
+import apiClient, { apiErrorResponse } from '@/util/apiClient';
 
 declare global {
     interface Window {
@@ -178,7 +177,7 @@ function Music() {
 
     const getMusicLinks4rmReleases = async () => {
         try {
-            const response = (await axios.get(`${apiEndpoint}/releases/musicLinks/${code}`)).data;
+            const response = (await apiClient.get(`/releases/musicLinks/${code}`)).data;
             // console.log(response);
 
             if (response.status) {
@@ -192,14 +191,12 @@ function Music() {
             });
 
         } catch (error: any) {
-            const err = error.response.data || error;
-            const fixedErrorMsg = "Ooops and error occurred!";
-            console.log(err);
+            const messageRes = apiErrorResponse(error, "Oooops, something went wrong. please try again.", false);
 
             setApiResponse({
                 display: true,
                 status: false,
-                message: err.errors && err.errors.length ? err.errors[0].msg : err.message || fixedErrorMsg
+                message: messageRes
             });
         }
     }

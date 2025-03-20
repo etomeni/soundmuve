@@ -37,7 +37,6 @@ export default function HeaderComponent() {
     const isLoggedIn = useUserStore((state) => state.isLoggedIn);
 
 
-
     const handleDrawerToggle = () => {
         setMobileOpen((prevState) => !prevState);
     };
@@ -62,6 +61,11 @@ export default function HeaderComponent() {
             title: "FAQ",
             link: "/faq",
             active: pathname.startsWith('/faq'),
+        },
+        {
+            title: "Blog",
+            link: "/blog",
+            active: pathname.startsWith('/blog'),
         }
     ];
 
@@ -218,7 +222,7 @@ export default function HeaderComponent() {
                     top: 0,
                     // zIndex: 9999, // this is to make the testiomianls not to show upto of the header
                     mx: "auto", 
-                    backgroundColor: "#000", 
+                    backgroundColor: "#050F15", 
                     borderRadius: 23.5, 
                     ...contentWidth
                     // width: {xs: "calc(100% - 20px)", md: "calc(100% - 30px)", md: "calc(100% - 40px)" },

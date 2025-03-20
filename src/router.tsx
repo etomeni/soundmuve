@@ -70,6 +70,8 @@ import ProfilePage from "./pages/account/profile/ProfilePage";
 import ProfileEditPage from "./pages/account/profile/ProfileEditPage";
 import PreOrderPage from "./pages/account/createReleases/PreOrder";
 import ReleaseOverview from "./pages/account/createReleases/ReleaseOverview";
+import BlogPosts from "./pages/blog/BlogPosts";
+import PostsDetails from "./pages/blog/PostsDetails";
 
 
 export const router = createBrowserRouter([
@@ -115,6 +117,20 @@ export const router = createBrowserRouter([
           element: <Music />
         },
 
+        {
+          path: "blog",
+          // element: <AuthLayout />,
+          children: [
+            {
+              path: "",
+              element: <BlogPosts />
+            },
+            {
+              path: ":post_slug",
+              element: <PostsDetails />
+            },
+          ]
+        },
         {
           path: "auth",
           element: <AuthLayout />,

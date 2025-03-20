@@ -1,11 +1,10 @@
 import { useState } from "react";
 
-import axios from "axios";
-
 // import { useUserStore } from "@/state/userStore";
-import { apiEndpoint, getQueryParams } from "@/util/resources";
+import { getQueryParams } from "@/util/resources";
 import { createSearchParams, useNavigate } from "react-router-dom";
 import { useSettingStore } from "@/state/settingStore";
+import apiClient, { apiErrorResponse } from "@/util/apiClient";
 
 
 export function useVerifyEmailAuth() {
@@ -105,8 +104,8 @@ export function useVerifyEmailAuth() {
         };
         
         try {
-            const response = (await axios.post(
-                `${apiEndpoint}/auth/verifyEmailToken`, 
+            const response = (await apiClient.post(
+                `/auth/verifyEmailToken`, 
                 data2db,
                 {
                     headers: {
@@ -136,12 +135,12 @@ export function useVerifyEmailAuth() {
 
             setIsSubmitting(false);
         } catch (error: any) {
-            const err = error.response.data || error;
+            const messageRes = apiErrorResponse(error, "Oooops, failed to send email otp. please try again.", false);
 
             setApiResponse({
                 display: true,
                 status: false,
-                message: err.message || "Oooops, failed to send email otp. please try again."
+                message: messageRes
             });
             setIsSubmitting(false);
         }
@@ -149,8 +148,8 @@ export function useVerifyEmailAuth() {
            
     const handleResendOtp = async () => {
         try {
-            const response = (await axios.post(
-                `${apiEndpoint}/auth/sendPasswordResetEmail`, 
+            const response = (await apiClient.post(
+                `/auth/sendPasswordResetEmail`, 
                 { email: getQueryParams('email') } 
             )).data;
             // console.log(response);
@@ -164,13 +163,12 @@ export function useVerifyEmailAuth() {
             });
 
         } catch (error: any) {
-            const err = error.response.data || error;
-            const fixedErrorMsg = "Oooops, failed to send email otp. please try again.";
+            const messageRes = apiErrorResponse(error, "Oooops, failed to send email otp. please try again.", false);
 
             setApiResponse({
                 display: true,
                 status: false,
-                message: err.errors && err.errors.length ? err.errors[0].msg : err.message || fixedErrorMsg
+                message: messageRes
             });
         }
     }

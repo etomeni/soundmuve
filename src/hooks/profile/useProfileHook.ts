@@ -1,12 +1,11 @@
 import { useState } from "react";
 
-import axios from "axios";
 import { useForm } from 'react-hook-form';
 import * as yup from "yup";
 import { yupResolver } from '@hookform/resolvers/yup';
 
-import { apiEndpoint } from "@/util/resources";
 import { useUserStore } from "@/state/userStore";
+import apiClient, { apiErrorResponse } from "@/util/apiClient";
 
 
 const formSchema = yup.object({
@@ -24,7 +23,7 @@ const formSchema = yup.object({
 export function useProfileHook() {
     // const navigate = useNavigate();
     const userData = useUserStore((state) => state.userData);
-    const accessToken = useUserStore((state) => state.accessToken);
+    // const accessToken = useUserStore((state) => state.accessToken);
     const _updateUser = useUserStore((state) => state._updateUser);
 
     const [imageRl, setImageRl] = useState();
@@ -88,14 +87,14 @@ export function useProfileHook() {
             rlData2db.append('recordLabelName', formData.recordLabelName || '');
             if (imageRl) rlData2db.append('recordLabelLogo', imageRl);
 
-            const response = (await axios.patch(
-                // `${apiEndpoint}/rlProfile/edit/:user_id`,
-                userData.userType == "record label" ? `${apiEndpoint}/rlProfile/edit/${userData._id}` : `${apiEndpoint}/artistProfile/edit/${userData._id}`,
+            const response = (await apiClient.patch(
+                // `/rlProfile/edit/:user_id`,
+                userData.userType == "record label" ? `/rlProfile/edit/${userData._id}` : `/artistProfile/edit/${userData._id}`,
                 userData.userType == "record label" ? rlData2db : artistData2db,
                 {
                     headers: {
                         // "Content-Type": "multipart/form-data",
-                        Authorization: `Bearer ${accessToken}`,
+                        // Authorization: `Bearer ${accessToken}`,
                         ...(userData.userType == "record label" && {"Content-Type": "multipart/form-data"})
                     },
                     onUploadProgress: (progressEvent) => {
@@ -109,7 +108,7 @@ export function useProfileHook() {
                     },
                 }
             )).data;
-            console.log(response);
+            // console.log(response);
             
             if (response.status) {
                 setApiResponse({
@@ -128,14 +127,12 @@ export function useProfileHook() {
             //     message: response.message || "Oooops, an error occured."
             // });
         } catch (error: any) {
-            // console.log(error);
-            const err = error.response.data || error;
-            const fixedErrorMsg = "Oooops, an error occured.";
+            const messageRes = apiErrorResponse(error, "Oooops, something went wrong", false);
 
             setApiResponse({
                 display: true,
                 status: false,
-                message: err.errors && err.errors.length ? err.errors[0].msg : err.message || fixedErrorMsg
+                message: messageRes
             });
         }
 

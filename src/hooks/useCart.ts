@@ -1,14 +1,14 @@
 import { useCallback, useEffect, useState } from "react";
 // import { useNavigate } from 'react-router-dom';
-import axios from "axios";
 
 import { useCartItemStore } from "@/state/cartStore";
-import { getQueryParams, apiEndpoint, getCartTotalAmount } from "@/util/resources";
-import { useUserStore } from "@/state/userStore";
+import { getQueryParams, getCartTotalAmount } from "@/util/resources";
+// import { useUserStore } from "@/state/userStore";
 import { cartItemInterface } from "@/typeInterfaces/cartInterface";
 import { getLocalStorage } from "@/util/storage";
 import { useSettingStore } from "@/state/settingStore";
 import { FlutterWaveResponse } from "flutterwave-react-v3/dist/types";
+import apiClient, { apiErrorResponse } from "@/util/apiClient";
 
 
 export function useCart() {
@@ -22,7 +22,7 @@ export function useCart() {
     const _clearCouponDiscount = useCartItemStore((state) => state._clearCouponDiscount);
     const [totalAmount, setTotalAmount] = useState<number>(0);
     // const userData = useUserStore((state) => state.userData); 
-    const accessToken = useUserStore((state) => state.accessToken);
+    // const accessToken = useUserStore((state) => state.accessToken);
     const _setToastNotification = useSettingStore((state) => state._setToastNotification);
 
     const [apiResponse, setApiResponse] = useState({
@@ -40,14 +40,7 @@ export function useCart() {
 
     const handleAddToCart = useCallback(async(item: cartItemInterface) => {
         try {
-            const response = (await axios.post(`${apiEndpoint}/checkout/add-to-cart`,
-                item, 
-                {
-                    headers: {
-                        Authorization: `Bearer ${accessToken}`
-                    }
-                }
-            )).data;
+            const response = (await apiClient.post(`/checkout/add-to-cart`, item)).data;
             // console.log(response);
 
             if (response.status) {
@@ -61,27 +54,19 @@ export function useCart() {
                 message: response.message
             });
         } catch (error: any) {
-            console.log(error);
-            const err = error.response && error.response.data ? error.response.data : error;
-            const fixedErrorMsg = "Oooops, something went wrong";
-
+            const messageRes = apiErrorResponse(error, "Oooops, something went wrong");
+            
             setApiResponse({
                 display: true,
                 status: false,
-                message: err.errors && err.errors.length ? err.errors[0].msg : err.message || fixedErrorMsg
+                message: messageRes
             });
         }
     }, []);
 
     const handleRemoveCartItem = useCallback(async (item: cartItemInterface) => {
         try {
-            const response = (await axios.delete(`${apiEndpoint}/checkout/${item._id}`,
-                {
-                    headers: {
-                        Authorization: `Bearer ${accessToken}`
-                    }
-                }
-            )).data;
+            const response = (await apiClient.delete(`/checkout/${item._id}`)).data;
             // console.log(response);
 
             if (response.status) {
@@ -95,15 +80,9 @@ export function useCart() {
                 message: response.message
             });
         } catch (error: any) {
-            console.log(error);
-            const err = error.response && error.response.data ? error.response.data : error;
-            const fixedErrorMsg = "Oooops, something went wrong";
-
-            _setToastNotification({
-                display: true,
-                status: "error",
-                message: err.errors && err.errors.length ? err.errors[0].msg : err.message || fixedErrorMsg
-            });
+            const messageRes = apiErrorResponse(error, "Oooops, something went wrong");
+            console.log(messageRes);
+            
         }
     }, []);
 
@@ -114,13 +93,7 @@ export function useCart() {
         }
 
         try {
-            const response = (await axios.get(`${apiEndpoint}/checkout/get-cart-items`,
-                {
-                    headers: {
-                        Authorization: `Bearer ${accessToken}`
-                    }
-                }
-            )).data;
+            const response = (await apiClient.get(`/checkout/get-cart-items`)).data;
             // console.log(response);
 
             if (response.status) {
@@ -150,13 +123,7 @@ export function useCart() {
 
     const handleGetPaymentIntent = useCallback(async(amount: number) => {
         try {
-            const response = (await axios.post(`${apiEndpoint}/checkout/create-payment-intent`,
-                { amount }, {
-                    headers: {
-                        Authorization: `Bearer ${accessToken}`
-                    }
-                }
-            )).data;
+            const response = (await apiClient.post(`/checkout/create-payment-intent`, { amount } )).data;
             // console.log(response);
 
             if (response.status) {
@@ -175,14 +142,12 @@ export function useCart() {
                 message: response.message
             });
         } catch (error: any) {
-            console.log(error);
-            const err = error.response && error.response.data ? error.response.data : error;
-            const fixedErrorMsg = "Oooops, something went wrong";
+            const messageRes = apiErrorResponse(error, "Oooops, something went wrong");
 
             setApiResponse({
                 display: true,
                 status: false,
-                message: err.errors && err.errors.length ? err.errors[0].msg : err.message || fixedErrorMsg
+                message: messageRes
             });
         }
     }, []);
@@ -195,13 +160,7 @@ export function useCart() {
         };
 
         try {
-            const response = (await axios.post(`${apiEndpoint}/checkout/apply-promo-code`,
-                data2db, {
-                    headers: {
-                        Authorization: `Bearer ${accessToken}`
-                    }
-                }
-            )).data;
+            const response = (await apiClient.post(`/checkout/apply-promo-code`, data2db )).data;
             // console.log(response);
 
             if (response.status) {
@@ -220,22 +179,19 @@ export function useCart() {
                 result: response
             };
         } catch (error: any) {
+            const messageRes = apiErrorResponse(error, "Oooops, something went wrong");
             // console.log(error);
             const err = error.response && error.response.data ? error.response.data : error;
-            const fixedErrorMsg = "Oooops, something went wrong";
-            console.log(err);
-
-            const errorMessage = err.errors && err.errors.length ? err.errors[0].msg : err.message || fixedErrorMsg;
-
+    
             _setToastNotification({
                 display: true,
                 status: "error",
-                message: errorMessage
+                message: messageRes
             });
 
             return {
                 status: false,
-                result: { ...err, message: errorMessage }
+                result: { ...err, message: messageRes }
             };
         }
     }, []);
@@ -256,12 +212,8 @@ export function useCart() {
         };
 
         try {
-            const response = (await axios.post(`${apiEndpoint}/checkout/successful-payment`,
-                data2submit, {
-                    headers: {
-                        Authorization: `Bearer ${accessToken}`
-                    }
-                }
+            const response = (await apiClient.post(`/checkout/successful-payment`,
+                data2submit
             )).data;
             // console.log(response);
 
@@ -271,15 +223,8 @@ export function useCart() {
                 _clearCouponDiscount();
             }
         } catch (error: any) {
-            console.log(error);
-            const err = error.response && error.response.data ? error.response.data : error;
-            const fixedErrorMsg = "Oooops, something went wrong";
-
-            _setToastNotification({
-                display: true,
-                status: "error",
-                message: err.errors && err.errors.length ? err.errors[0].msg : err.message || fixedErrorMsg
-            });
+            const messageRes = apiErrorResponse(error, "Oooops, something went wrong");
+            console.log(messageRes);
         }
     }
         
@@ -294,12 +239,8 @@ export function useCart() {
         };
 
         try {
-            const response = (await axios.post(`${apiEndpoint}/checkout/successful-payment`,
-                data2submit, {
-                    headers: {
-                        Authorization: `Bearer ${accessToken}`
-                    }
-                }
+            const response = (await apiClient.post(`/checkout/successful-payment`,
+                data2submit
             )).data;
             // console.log(response);
 
@@ -309,27 +250,14 @@ export function useCart() {
                 _clearCouponDiscount();
             }
         } catch (error: any) {
-            console.log(error);
-            const err = error.response && error.response.data ? error.response.data : error;
-            const fixedErrorMsg = "Oooops, something went wrong";
-
-            _setToastNotification({
-                display: true,
-                status: "error",
-                message: err.errors && err.errors.length ? err.errors[0].msg : err.message || fixedErrorMsg
-            });
+            const messageRes = apiErrorResponse(error, "Oooops, something went wrong");
+            console.log(messageRes);
         }
     }
 
     const handleCheckReleaseCart = useCallback(async(item: cartItemInterface) => {
         try {
-            const response = (await axios.post(`${apiEndpoint}/checkout/check-release-cart`,
-                item, {
-                    headers: {
-                        Authorization: `Bearer ${accessToken}`
-                    }
-                }
-            )).data;
+            const response = (await apiClient.post(`/checkout/check-release-cart`, item )).data;
             // console.log(response);
 
             if (response.status) {
@@ -345,16 +273,9 @@ export function useCart() {
 
             return false;
         } catch (error: any) {
-            console.log(error);
-            const err = error.response && error.response.data ? error.response.data : error;
-            const fixedErrorMsg = "Oooops, something went wrong";
-
-            _setToastNotification({
-                display: true,
-                status: "error",
-                message: err.errors && err.errors.length ? err.errors[0].msg : err.message || fixedErrorMsg
-            });
-
+            const messageRes = apiErrorResponse(error, "Oooops, something went wrong");
+            console.log(messageRes);
+            
             return false;
         }
     }, []);

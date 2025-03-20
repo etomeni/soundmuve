@@ -1,17 +1,16 @@
 import { useCallback, useEffect, useState } from 'react';
 import { createSearchParams, useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 
-import { useUserStore } from '@/state/userStore';
 import { useSettingStore } from '@/state/settingStore';
 import { useCreateReleaseStore } from '@/state/createReleaseStore';
 import { albumRelease2Interface } from '@/typeInterfaces/release.interface';
 import { albumRelease2FormSchema } from '../releaseFormSchema';
-import { apiEndpoint, getQueryParams } from '@/util/resources';
+import { getQueryParams } from '@/util/resources';
 import { restCountries } from '@/util/countries';
 import { useGetReleases } from '../useGetReleases';
+import apiClient, { apiErrorResponse } from '@/util/apiClient';
 
 
 const contriesss = restCountries.map(item => item.name.common);
@@ -20,7 +19,6 @@ contriesss.unshift("All");
 export function useCreateAlbum2() {
     const navigate = useNavigate();
 
-    const accessToken = useUserStore((state) => state.accessToken);
     const albumRelease = useCreateReleaseStore((state) => state.albumRelease);
     const _handleSetAlbumRelease2 = useCreateReleaseStore((state) => state._handleSetAlbumRelease2);
 
@@ -139,15 +137,9 @@ export function useCreateAlbum2() {
 
 
         try {
-            const response = (await axios.patch(
-                `${apiEndpoint}/releases/album/create-update-2`,
+            const response = (await apiClient.patch(
+                `/releases/album/create-update-2`,
                 formDetails,
-                {
-                    headers: {
-                        // 'Content-Type': 'multipart/form-data',
-                        Authorization: `Bearer ${accessToken}`
-                    },
-                }
             )).data;
 
             if (response.status) {
@@ -162,14 +154,12 @@ export function useCreateAlbum2() {
             }
 
         } catch (error: any) {
-            const err = error.response.data || error;
-            const fixedErrorMsg = "Oooops, failed to save details. please try again.";
-            // console.log(err);
+            const messageRes = apiErrorResponse(error, "Oooops, failed to save details. please try again.");
 
             setApiResponse({
                 display: true,
                 status: false,
-                message: err.errors && err.errors.length ? err.errors[0].msg : err.message || fixedErrorMsg
+                message: messageRes
             });
         }
     }

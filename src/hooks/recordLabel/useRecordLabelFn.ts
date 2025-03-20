@@ -1,17 +1,14 @@
 import { useCallback, useState } from "react";
 import { createSearchParams, useNavigate } from "react-router-dom";
-import axios from "axios";
-import { useUserStore } from "@/state/userStore";
-import { apiEndpoint } from "@/util/resources";
 // import { getLocalStorage,  } from "@/util/storage";
 import { recordLabelArtistInterface } from "@/typeInterfaces/recordLabelArtist.interface";
+import apiClient, { apiErrorResponse } from "@/util/apiClient";
 // import { recordLabelArtistInterface } from "@/constants/typesInterface";
 
 
 export function useRecordLabelFn() {
     const navigate = useNavigate();
     // const userData = useUserStore((state) => state.userData); 
-    const accessToken = useUserStore((state) => state.accessToken);
 
     const [totalArtists, setTotalArtists] = useState(0);
     const [totalSongs, setTotalSongs] = useState(0);
@@ -23,11 +20,7 @@ export function useRecordLabelFn() {
 
     const getTotalRelease_Artist = useCallback(async () => {
         try {
-            const response = (await axios.get(`${apiEndpoint}/record-label/total-release-n-artist`, {
-                headers: {
-                    Authorization: `Bearer ${accessToken}`
-                }
-            })).data;
+            const response = (await apiClient.get(`/record-label/total-release-n-artist`)).data;
             // console.log(response);
 
             if (response.status) {
@@ -35,24 +28,20 @@ export function useRecordLabelFn() {
                 setTotalSongs(response.result.totalReleases);
             }
         } catch (error: any) {
-            const errorResponse = error.response.data || error;
-            console.error(errorResponse);
+            apiErrorResponse(error, "Oooops, something went wrong", false);
         }
     }, []);
 
 
     const getAllRecordLabelArtist = useCallback(async (pageNo = 1, limitNo = 20,) => {
         try {
-            const response = (await axios.get(`${apiEndpoint}/record-label/get-all-artist`, {
-                headers: {
-                    Authorization: `Bearer ${accessToken}`
-                },
+            const response = (await apiClient.get(`/record-label/get-all-artist`, {
                 params: {
                     page: pageNo,
                     limit: limitNo,
                 }
             })).data;
-            console.log(response);
+            // console.log(response);
 
             if (response.status) {
                 setRecordLabelArtist(response.result);
@@ -64,8 +53,7 @@ export function useRecordLabelFn() {
     
 
         } catch (error: any) {
-            const errorResponse = error.response.data;
-            console.error(errorResponse);
+            apiErrorResponse(error, "Oooops, something went wrong", false);
             setRecordLabelArtist([]);
         }
     }, []);

@@ -1,9 +1,7 @@
 import { create } from "zustand";
-import axios from "axios";
-import { useUserStore } from "./userStore";
-import { apiEndpoint } from "@/util/resources";
 import { getLocalStorage, removeLocalStorageItem, setLocalStorage } from "@/util/storage";
 import { cartItemInterface, couponInterface } from "@/typeInterfaces/cartInterface";
+import apiClient from "@/util/apiClient";
 
 
 const defaultPaymentIntent = {
@@ -127,7 +125,6 @@ export const useCartItemStore = create<_typeInterface_>((set) => ({
 
     _restoreCartItems: async () => {
         const cartItems = getLocalStorage("cart");
-        const accessToken = useUserStore.getState().accessToken;
 
         try {
             set((_state) => {
@@ -136,13 +133,7 @@ export const useCartItemStore = create<_typeInterface_>((set) => ({
                 };
             });
 
-            const response = (await axios.get(`${apiEndpoint}/checkout/get-cart-items`,
-                {
-                    headers: {
-                        Authorization: `Bearer ${accessToken}`
-                    }
-                }
-            )).data;
+            const response = (await apiClient.get(`/checkout/get-cart-items`)).data;
 
             if (response.status) {
                 setLocalStorage("cart", response.result);

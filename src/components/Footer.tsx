@@ -1,4 +1,3 @@
-import axios from 'axios';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import Box from '@mui/material/Box';
@@ -18,11 +17,11 @@ import style from "./footer.module.css";
 import logo from "@/assets/branded/logo.png";
 import mobileBrandImage from "@/assets/branded/images/footer/mobileBrandImage.png";
 import desktopBrandImage from "@/assets/branded/images/footer/desktopBrandImage.png";
-import { apiEndpoint } from '../util/resources';
 
 import { contentWidth } from '@/util/mui';
 import colors from '@/constants/colors';
 import { useSettingStore } from '@/state/settingStore';
+import apiClient, { apiErrorResponse } from '@/util/apiClient';
 
 
 const currentYear = new Date().getFullYear();
@@ -50,7 +49,7 @@ export default function FooterComponent() {
         }
 
         try {
-            const response = (await axios.post(`${apiEndpoint}/contact/subscribe-newsletter`, { email })).data;
+            const response = (await apiClient.post(`/contact/subscribe-newsletter`, { email })).data;
    
             _setToastNotification({
                 display: true,
@@ -60,15 +59,14 @@ export default function FooterComponent() {
 
             setEmail("");
         } catch (error: any) {
-            // console.log(error);
-            const err = error.response.data || error;
-            const fixedErrorMsg = "Oooops, news letter subscription failed. please try again.";
-
-            _setToastNotification({
-                display: true,
-                status: "error",
-                message: err.errors && err.errors.length ? err.errors[0].msg : err.message || fixedErrorMsg
-            });
+            // const messageRes = 
+            apiErrorResponse(error, "Oooops, news letter subscription failed. please try again.");
+            
+            // _setToastNotification({
+            //     display: true,
+            //     status: "error",
+            //     message: messageRes
+            // });
         }
     }
 

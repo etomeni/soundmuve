@@ -1,14 +1,23 @@
+import { useEffect } from 'react';
 import { Outlet, Navigate } from 'react-router-dom';
 import { useUserStore } from '@/state/userStore';
+import { useCartItemStore } from '@/state/cartStore';
 
 const AccountLayout = () => {
     const isLoggedIn = useUserStore((state) => state.isLoggedIn);
 
-    if (!isLoggedIn) return <Navigate replace to={"/auth/login"} />;
+    const _restoreCartItems = useCartItemStore((state) => state._restoreCartItems);
+    useEffect(() => {
+        _restoreCartItems();
+    }, []);
 
     return (
         <main>
-            <Outlet />
+            {
+                isLoggedIn ? 
+                    <Outlet />
+                : <Navigate replace to={"/auth/login"} />
+            }
         </main>
     );
 };

@@ -1,12 +1,11 @@
 import { ChangeEvent, useCallback, useEffect, useState } from "react";
 import { createSearchParams, useNavigate } from 'react-router-dom';
 
-import axios from "axios";
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 
 import { useUserStore } from "@/state/userStore";
-import { convertToBase64, getQueryParams, apiEndpoint, validateImageArtWork } from "@/util/resources";
+import { convertToBase64, getQueryParams, validateImageArtWork } from "@/util/resources";
 import { artistInterface, releaseInterface, singleRelease1Interface, songArtists_CreativesInterface } from "@/typeInterfaces/release.interface";
 import { singleRelease1FormSchema, singleRelease2FormSchema } from "./releaseFormSchema";
 import { restCountries } from "@/util/countries";
@@ -15,6 +14,7 @@ import { useCreateReleaseStore } from "@/state/createReleaseStore";
 import { musicStores, socialPlatformStores } from '@/util/resources';
 // import { useCartItemStore } from "@/state/cartStore";
 import { useCart } from "../useCart";
+import apiClient, { apiErrorResponse } from "@/util/apiClient";
 
 
 const contriesss = restCountries.map(item => item.name.common);
@@ -30,7 +30,7 @@ export function useCreateSingleRelease() {
     const recordLabelArtist_id: string = getQueryParams('recordLabelArtist_id');
     
     const userData = useUserStore((state) => state.userData);
-    const accessToken = useUserStore((state) => state.accessToken);
+    // const accessToken = useUserStore((state) => state.accessToken);
     const _setToastNotification = useSettingStore((state) => state._setToastNotification);
     const _handleSetSingleRelease1 = useCreateReleaseStore((state) => state._handleSetSingleRelease1);
     const { handleAddToCart } = useCart();
@@ -209,14 +209,8 @@ export function useCreateSingleRelease() {
         _handleSetSingleRelease1(data2submit);
 
         try {
-            const response = (await axios.put(
-                `${apiEndpoint}/releases/single/create`,
-                data2submit,  
-                {
-                    headers: {
-                        Authorization: `Bearer ${accessToken}`
-                    },
-                }
+            const response = (await apiClient.put(
+                `/releases/single/create`, data2submit
             )).data;
             // console.log(response);
 
@@ -244,14 +238,12 @@ export function useCreateSingleRelease() {
                 message: response.message
             });
         } catch (error: any) {
-            const err = error.response.data || error;
-            const fixedErrorMsg = "Oooops, failed to save details. please try again.";
-            // console.log(err);
+            const messageRes = apiErrorResponse(error, "Oooops, something went wrong", false);
 
             setApiResponse({
                 display: true,
                 status: false,
-                message: err.errors && err.errors.length ? err.errors[0].msg : err.message || fixedErrorMsg
+                message: messageRes
             });
         }
 
@@ -583,13 +575,13 @@ export function useCreateSingleRelease() {
         // console.log(data2db);
 
         try {
-            const response = (await axios.patch(
-                `${apiEndpoint}/releases/single/create-update`,
+            const response = (await apiClient.patch(
+                `/releases/single/create-update`,
                 data2submit,  
                 {
                     headers: {
                         "Content-Type": "multipart/form-data",
-                        Authorization: `Bearer ${accessToken}`
+                        // Authorization: `Bearer ${accessToken}`
                     },
                     onUploadProgress: (progressEvent) => {
                         const loaded = progressEvent.loaded;
@@ -643,14 +635,12 @@ export function useCreateSingleRelease() {
                 message: response.message
             });
         } catch (error: any) {
-            const err = error.response && error.response.data ? error.response.data : error;
-            const fixedErrorMsg = "Oooops, failed to save details. please try again.";
-            console.log(err);
+            const messageRes = apiErrorResponse(error, "Oooops, something went wrong", false);
 
             setApiResponse({
                 display: true,
                 status: false,
-                message: err.errors && err.errors.length ? err.errors[0].msg : err.message || fixedErrorMsg
+                message: messageRes
             });
         }
 

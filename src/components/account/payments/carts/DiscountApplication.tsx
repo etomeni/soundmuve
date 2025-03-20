@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 
-import axios from 'axios';
 import * as yup from "yup";
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -16,11 +15,11 @@ import CircularProgress from '@mui/material/CircularProgress';
 import { paymentTextFieldStyle, submitBtnStyle } from '@/util/mui';
 
 import { useUserStore } from '@/state/userStore';
-import { apiEndpoint } from '@/util/resources';
 import colors from '@/constants/colors';
 import ModalWrapper from '@/components/account/ModalWrapper';
 import SuccessModalComponent from './SuccessModal';
 import { cartItemInterface } from '@/typeInterfaces/cartInterface';
+import apiClient, { apiErrorResponse } from '@/util/apiClient';
 
 
 const formSchema = yup.object({
@@ -40,7 +39,6 @@ const DiscountApplicationModalComponent: React.FC<_Props> = ({
     cartItems, openModal, closeModal, // confirmBtn
 }) => {
     const userData = useUserStore((state) => state.userData);
-    const accessToken = useUserStore((state) => state.accessToken);
     const [successModalState, setSuccessModalState] = useState(false)
 
     const [apiResponse, setApiResponse] = useState({
@@ -71,12 +69,8 @@ const DiscountApplicationModalComponent: React.FC<_Props> = ({
         }
 
         try {
-            const response = (await axios.post(`${apiEndpoint}/checkout/discount-application`,
-                data2db, {
-                    headers: {
-                        Authorization: `Bearer ${accessToken}`
-                    }
-                }
+            const response = (await apiClient.post(`/checkout/discount-application`,
+                data2db
             )).data;
             // console.log(response);
             // setBanks(response.data);
@@ -93,14 +87,12 @@ const DiscountApplicationModalComponent: React.FC<_Props> = ({
                 message: response.message
             })
         } catch (error: any) {
-            console.log(error);
-            const err = error.response.data || error;
-            const fixedErrorMsg = "Oooops, something went wrong";
-
+            const messageRes = apiErrorResponse(error, "Oooops, something went wrong", false);
+     
             setApiResponse({
                 display: true,
                 status: false,
-                message: err.errors && err.errors.length ? err.errors[0].msg : err.message || fixedErrorMsg
+                message: messageRes
             });
         }
 

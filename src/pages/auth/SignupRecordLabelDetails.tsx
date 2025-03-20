@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import * as yup from "yup";
 import { yupResolver } from '@hookform/resolvers/yup';
-import axios from 'axios';
 
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
@@ -24,12 +23,12 @@ import cloudUpload from "@/assets/images/cloud_upload.png";
 
 import { getCountries, getUserLocation } from '@/util/location';
 import { restCountries } from '@/util/countries';
-import { apiEndpoint } from '@/util/resources';
 import { useUserStore } from '@/state/userStore';
 import { useSettingStore } from '@/state/settingStore';
 import { SxProps, Theme } from '@mui/material/styles';
 import colors from '@/constants/colors';
 import { auth2MuiTextFieldStyle } from '@/util/mui';
+import apiClient, { apiErrorResponse } from '@/util/apiClient';
 
 
 const formSchema = yup.object({
@@ -148,8 +147,8 @@ function SignupRecordLabelDetails() {
         data2db.append('recordLabelLogo', image);
 
         try {
-            const response = (await axios.patch(
-                `${apiEndpoint}/auth/updateUser-details`,
+            const response = (await apiClient.patch(
+                `/auth/updateUser-details`,
                 data2db,  
                 {
                     headers: {
@@ -174,13 +173,12 @@ function SignupRecordLabelDetails() {
 
             navigate("/auth/login", {replace: true});
         } catch (error: any) {
-            const err = error.response.data || error;
-            const fixedErrorMsg = "Oooops, failed to update details. please try again.";
+            const messageRes = apiErrorResponse(error, "Oooops, something went wrong. please try again.", false);
 
             setApiResponse({
                 display: true,
                 status: false,
-                message: err.errors && err.errors.length ? err.errors[0].msg : err.message || fixedErrorMsg
+                message: messageRes
             });
         }
 

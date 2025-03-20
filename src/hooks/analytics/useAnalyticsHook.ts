@@ -1,8 +1,5 @@
 import { useCallback, useState } from "react";
-import axios from "axios";
-import { useUserStore } from "@/state/userStore";
-import { apiEndpoint } from "@/util/resources";
-import { useSettingStore } from "@/state/settingStore";
+// import { useSettingStore } from "@/state/settingStore";
 import { transactionInterface } from "@/typeInterfaces/transaction.interface";
 import colors from "@/constants/colors";
 // import { analyticsInterface, locationAnalyticsInterface, totalEarningsAnalyticsInterface } from "@/typeInterfaces/analytics.interface";
@@ -10,12 +7,12 @@ import { useAnalyticsStore } from "@/state/analyticsStore";
 import { totalEarningsAnalyticsInterface } from "@/typeInterfaces/analytics.interface";
 // import { releaseInterface, songInterface } from "@/typeInterfaces/release.interface";
 import { useReleaseStore } from "@/state/releaseStore";
+import apiClient, { apiErrorResponse } from "@/util/apiClient";
 
 
 export function useAnalyticsHook() {
     // const userData = useUserStore((state) => state.userData);
-    const accessToken = useUserStore((state) => state.accessToken);
-    const _setToastNotification = useSettingStore((state) => state._setToastNotification);
+    // const _setToastNotification = useSettingStore((state) => state._setToastNotification);
     const [apiResponse, setApiResponse] = useState({
         display: false,
         status: true,
@@ -53,10 +50,7 @@ export function useAnalyticsHook() {
 
     const getTransactionHistory = useCallback(async (pageNo: number, limitNo: number, startDate: string, endDate: string) => {
         try {
-            const response = (await axios.get(`${apiEndpoint}/transactions/get-transactions`, {
-                headers: {
-                    Authorization: `Bearer ${accessToken}`
-                },
+            const response = (await apiClient.get(`/transactions/get-transactions`, {
                 params: {
                     page: pageNo, limit: limitNo,
                     startDate, endDate,
@@ -79,27 +73,17 @@ export function useAnalyticsHook() {
             // });
 
         } catch (error: any) {
-            const err = error.response && error.response.data ? error.response.data : error;
-            const fixedErrorMsg = "Ooops and error occurred!";
-            console.log(err);
-
+            const messageRes = apiErrorResponse(error, "Oooops, something went wrong");
+            console.log(messageRes);
+            
             setTransactions([]);
-
-            _setToastNotification({
-                display: true,
-                status: "error",
-                message: err.errors && err.errors.length ? err.errors[0].msg : err.message || fixedErrorMsg
-            });
         }
     }, []);
 
 
     const getSalesReportAnalytics = useCallback(async (startDate: string, endDate: string) => {
         try {
-            const response = (await axios.get(`${apiEndpoint}/analytics/get-salesreport-analytics`, {
-                headers: {
-                    Authorization: `Bearer ${accessToken}`
-                },
+            const response = (await apiClient.get(`/analytics/get-salesreport-analytics`, {
                 params: {
                     // page: pageNo, limit: limitNo,
                     startDate, endDate,
@@ -131,24 +115,14 @@ export function useAnalyticsHook() {
             // });
 
         } catch (error: any) {
-            const err = error.response && error.response.data ? error.response.data : error;
-            const fixedErrorMsg = "Ooops and error occurred!";
-            console.log(err);
-
-            _setToastNotification({
-                display: true,
-                status: "error",
-                message: err.errors && err.errors.length ? err.errors[0].msg : err.message || fixedErrorMsg
-            });
+            const messageRes = apiErrorResponse(error, "Oooops, something went wrong");
+            console.log(messageRes);
         }
     }, []);
 
     const getSongAnalytics = useCallback(async (startDate: string, endDate: string, songId: string, release_id: string) => {
         try {
-            const response = (await axios.get(`${apiEndpoint}/analytics/get-song-analytics`, {
-                headers: {
-                    Authorization: `Bearer ${accessToken}`
-                },
+            const response = (await apiClient.get(`/analytics/get-song-analytics`, {
                 params: {
                     // page: pageNo, limit: limitNo,
                     startDate, endDate,
@@ -175,24 +149,14 @@ export function useAnalyticsHook() {
             // });
 
         } catch (error: any) {
-            const err = error.response && error.response.data ? error.response.data : error;
-            const fixedErrorMsg = "Ooops and error occurred!";
-            console.log(err);
-
-            _setToastNotification({
-                display: true,
-                status: "error",
-                message: err.errors && err.errors.length ? err.errors[0].msg : err.message || fixedErrorMsg
-            });
+            const messageRes = apiErrorResponse(error, "Oooops, something went wrong");
+            console.log(messageRes);
         }
     }, []);
 
     const getAlbumAnalytics = useCallback(async (startDate: string, endDate: string, release_id: string) => {
         try {
-            const response = (await axios.get(`${apiEndpoint}/analytics/get-album-analytics`, {
-                headers: {
-                    Authorization: `Bearer ${accessToken}`
-                },
+            const response = (await apiClient.get(`/analytics/get-album-analytics`, {
                 params: {
                     // page: pageNo, limit: limitNo,
                     startDate, endDate,
@@ -216,20 +180,10 @@ export function useAnalyticsHook() {
             // });
 
         } catch (error: any) {
-            const err = error.response && error.response.data ? error.response.data : error;
-            const fixedErrorMsg = "Ooops and error occurred!";
-            console.log(err);
-
-            _setToastNotification({
-                display: true,
-                status: "error",
-                message: err.errors && err.errors.length ? err.errors[0].msg : err.message || fixedErrorMsg
-            });
+            const messageRes = apiErrorResponse(error, "Oooops, something went wrong");
+            console.log(messageRes);
         }
     }, []);
-
-
-    
 
     const handleStatusDisplay = (status: "Pending" | "Processing" | "Success" | "Complete" | "Failed") => {
 

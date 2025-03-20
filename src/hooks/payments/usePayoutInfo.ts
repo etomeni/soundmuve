@@ -1,11 +1,9 @@
 import { useCallback, useState } from "react";
-import axios from "axios";
-import { useUserStore } from "@/state/userStore";
-import { apiEndpoint } from "@/util/resources";
 import { payoutDetailsInterface, savePayoutDetailsInterface } from "@/typeInterfaces/payout.interface";
 import { supportCurrencies } from "@/util/currencies";
 import { allNgBanks } from "@/util/banks";
 import { withdrawExchangeInterface } from "@/typeInterfaces/transaction.interface";
+import apiClient, { apiErrorResponse } from "@/util/apiClient";
 
 
 // function getLocalPayoutData() {
@@ -18,7 +16,6 @@ import { withdrawExchangeInterface } from "@/typeInterfaces/transaction.interfac
 // }
 
 export function usePayoutData() {
-    const accessToken = useUserStore((state) => state.accessToken);
     const [apiResponse, setApiResponse] = useState({
         display: false,
         status: true,
@@ -36,11 +33,7 @@ export function usePayoutData() {
 
     const getPayoutInfo = useCallback(async () => {
         try {
-            const response = (await axios.get(`${apiEndpoint}/payout-details`, {
-                headers: {
-                    Authorization: `Bearer ${accessToken}`
-                }
-            })).data;
+            const response = (await apiClient.get(`/payout-details`)).data;
             
             if (response.status) {
                 setPaymentDetails(response.result);
@@ -50,24 +43,14 @@ export function usePayoutData() {
                 }
             }
         } catch (error: any) {
-            console.log(error);
-            
-            const errorResponse = error.response.data || error;
-            console.error(errorResponse);
-            // setPaymentDetails([]);
+            const messageRes = apiErrorResponse(error, "Oooops, something went wrong", false);
+            console.log(messageRes);
         }
     }, []);
 
     const saveBankPayoutDetails = useCallback(async (data2submit: savePayoutDetailsInterface) => {
         try {
-            const response = (await axios.post(`${apiEndpoint}/payout-details/setup`, 
-                data2submit, 
-                {
-                    headers: {
-                        Authorization: `Bearer ${accessToken}`
-                    }
-                }
-            )).data;
+            const response = (await apiClient.post(`/payout-details/setup`, data2submit)).data;
             // console.log(response);
 
             if (response.status) {
@@ -81,14 +64,12 @@ export function usePayoutData() {
             }
             return false;
         } catch (error: any) {
-            const err = error.response.data || error;
-            const fixedErrorMsg = "Ooops and error occurred!";
-            console.log(err);
+            const messageRes = apiErrorResponse(error, "Oooops, something went wrong", false);
 
             setApiResponse({
                 display: true,
                 status: false,
-                message: err.errors && err.errors.length ? err.errors[0].msg : err.message || fixedErrorMsg
+                message: messageRes
             });
 
             return false;
@@ -98,11 +79,7 @@ export function usePayoutData() {
 
     const getSupportedCurrencies = useCallback( async () => {
         try {
-            const response = (await axios.get(`${apiEndpoint}/payout-details/get-currencies`, {
-                headers: {
-                    Authorization: `Bearer ${accessToken}`
-                }
-            })).data;
+            const response = (await apiClient.get(`/payout-details/get-currencies`)).data;
             // console.log(response);
 
             if (response.status) {
@@ -111,14 +88,12 @@ export function usePayoutData() {
             }
 
         } catch (error: any) {
-            const err = error.response.data || error;
-            const fixedErrorMsg = "Ooops and error occurred!";
-            console.log(err);
+            const messageRes = apiErrorResponse(error, "Oooops, something went wrong", false);
 
             setApiResponse({
                 display: true,
                 status: false,
-                message: err.errors && err.errors.length ? err.errors[0].msg : err.message || fixedErrorMsg
+                message: messageRes
             });
         }
     }, []);
@@ -126,11 +101,7 @@ export function usePayoutData() {
 
     const getAllSupportedNgBanks = useCallback( async () => {
         try {
-            const response = (await axios.get(`${apiEndpoint}/payout-details/banks/NG`, {
-                headers: {
-                    Authorization: `Bearer ${accessToken}`
-                }
-            })).data;
+            const response = (await apiClient.get(`/payout-details/banks/NG`)).data;
             // console.log(response);
 
             if (response.status) {
@@ -153,10 +124,8 @@ export function usePayoutData() {
             }
             
         } catch (error: any) {
-            const err = error.response.data || error;
-            // const fixedErrorMsg = "Ooops and error occurred!";
-            console.log(err);
-
+            apiErrorResponse(error, "Oooops, something went wrong", false);
+            
             // setApiResponse({
             //     display: true,
             //     status: false,
@@ -167,13 +136,8 @@ export function usePayoutData() {
 
     const getBankAccountName = useCallback( async (account_number: string, account_bank: string) => {
         try {
-            const response = (await axios.post(`${apiEndpoint}/payout-details/resolve-account-name`,
+            const response = (await apiClient.post(`/payout-details/resolve-account-name`,
                 { account_number, account_bank },
-                {
-                    headers: {
-                        Authorization: `Bearer ${accessToken}`
-                    }
-                }
             )).data;
             console.log(response);
 
@@ -182,24 +146,13 @@ export function usePayoutData() {
             }
             
         } catch (error: any) {
-            const err = error.response.data || error;
-            // const fixedErrorMsg = "Ooops and error occurred!";
-            console.log(err);
-
-            // setApiResponse({
-            //     display: true,
-            //     status: false,
-            //     message: err.errors && err.errors.length ? err.errors[0].msg : err.message || fixedErrorMsg
-            // });
+            apiErrorResponse(error, "Oooops, something went wrong", false);
         }
     }, []);
 
     const getExchangeRate = useCallback(async (amount: string, currency: string) => {
         try {
-            const response = (await axios.get(`${apiEndpoint}/transactions/exchange-rate`, {
-                headers: {
-                    Authorization: `Bearer ${accessToken}`
-                },
+            const response = (await apiClient.get(`/transactions/exchange-rate`, {
                 params: {
                     amount: amount,
                     currency: currency
@@ -214,9 +167,7 @@ export function usePayoutData() {
             // }
 
         } catch (error: any) {
-            const err = error.response && error.response.data ? error.response.data : error;
-            // const fixedErrorMsg = "Ooops and error occurred!";
-            console.log(err);
+            apiErrorResponse(error, "Oooops, something went wrong", false);
         }
     }, []);
 

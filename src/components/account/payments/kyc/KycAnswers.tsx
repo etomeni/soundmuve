@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 
-import axios from 'axios';
 import * as yup from "yup";
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -15,7 +14,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import colors from '@/constants/colors';
 import { paymentTextFieldStyle } from '@/util/mui';
 import { useUserStore } from '@/state/userStore';
-import { apiEndpoint } from '@/util/resources';
+import apiClient, { apiErrorResponse } from '@/util/apiClient';
 
 
 const formSchema: any = yup.object({
@@ -36,7 +35,6 @@ const KycAnswersComponent: React.FC<_Props> = ({
     phoneNumber, questions, isCompleteState
 
 }) => {
-    const accessToken = useUserStore((state) => state.accessToken);
     const _updateUser = useUserStore((state) => state._updateUser);
     
     const [apiResponse, setApiResponse] = useState({
@@ -67,11 +65,7 @@ const KycAnswersComponent: React.FC<_Props> = ({
         }
         
         try {
-            const response = (await axios.post(`${apiEndpoint}/auth/set-kyc`, kycInfo, {
-                headers: {
-                    Authorization: `Bearer ${accessToken}`
-                }
-            })).data;
+            const response = (await apiClient.post(`/auth/set-kyc`, kycInfo)).data;
 
             if (response.status) {
                 _updateUser(response.result);
@@ -79,14 +73,12 @@ const KycAnswersComponent: React.FC<_Props> = ({
             }
 
         } catch (error: any) {
-            const err = error.response.data || error;
-            const fixedErrorMsg = "Ooops and error occurred!";
-            console.log(err);
+            const messageRes = apiErrorResponse(error, "Oooops, something went wrong", false);
 
             setApiResponse({
                 display: true,
                 status: false,
-                message: err.errors && err.errors.length ? err.errors[0].msg : err.message || fixedErrorMsg
+                message: messageRes
             });
         }
 

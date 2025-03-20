@@ -1,16 +1,15 @@
 import { useCallback, useEffect, useState } from 'react';
 import { createSearchParams, useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 
-import { useUserStore } from '@/state/userStore';
 import { useSettingStore } from '@/state/settingStore';
 import { useCreateReleaseStore } from '@/state/createReleaseStore';
 import { albumRelease1Interface, artistInterface } from '@/typeInterfaces/release.interface';
 import { albumRelease1FormSchema } from '../releaseFormSchema';
-import { getQueryParams, apiEndpoint } from '@/util/resources';
+import { getQueryParams } from '@/util/resources';
 import { useGetReleases } from '../useGetReleases';
+import apiClient, { apiErrorResponse } from '@/util/apiClient';
 
 
 export function useCreateAlbum1() {
@@ -20,7 +19,6 @@ export function useCreateAlbum1() {
     const recordLabelArtist_id: string = getQueryParams('recordLabelArtist_id');
     const release_id: string = albumRelease._id || getQueryParams('release_id');
 
-    const accessToken = useUserStore((state) => state.accessToken);
     const _handleSetAlbumRelease1 = useCreateReleaseStore((state) => state._handleSetAlbumRelease1);
 
     const _setToastNotification = useSettingStore((state) => state._setToastNotification);
@@ -269,19 +267,12 @@ export function useCreateAlbum1() {
 
 
         try {
-            const response = (await axios.put(
-                `${apiEndpoint}/releases/album/create-1`,
+            const response = (await apiClient.put(
+                `/releases/album/create-1`,
                 formDetails,
-                {
-                    headers: {
-                        // 'Content-Type': 'multipart/form-data',
-                        Authorization: `Bearer ${accessToken}`
-                    },
-                }
             )).data;
 
             // console.log(response);
-            
 
             if (response.status) {
                 _handleSetAlbumRelease1(response.result);
@@ -294,14 +285,12 @@ export function useCreateAlbum1() {
             }
 
         } catch (error: any) {
-            const err = error.response.data || error;
-            const fixedErrorMsg = "Oooops, failed to save details. please try again.";
-            // console.log(err);
-
+            const messageRes = apiErrorResponse(error, "Oooops, failed to save details. please try again.");
+            
             setApiResponse({
                 display: true,
                 status: false,
-                message: err.errors && err.errors.length ? err.errors[0].msg : err.message || fixedErrorMsg
+                message: messageRes
             });
         }
     }

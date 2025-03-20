@@ -1,13 +1,9 @@
-import axios from "axios";
 import { useCallback, useState } from "react";
-import { useUserStore } from "@/state/userStore";
-import { apiEndpoint } from "@/util/resources";
 import { artistInterface } from "@/typeInterfaces/release.interface";
+import apiClient, { apiErrorResponse } from "@/util/apiClient";
 
 
 export function useSearchArtists() {
-    // const userData = useUserStore((state) => state.userData);
-    const accessToken = useUserStore((state) => state.accessToken);
     const [spotifyArtistResults, setSpotifyArtistResults] = useState<artistInterface[]>([]);
 
     const [apiResponse, setApiResponse] = useState({
@@ -19,10 +15,7 @@ export function useSearchArtists() {
 
     const searchSpotifyArtist = useCallback(async (searchWord: string) => {
         try {
-            const response = (await axios.get(`${apiEndpoint}/releases/search/spotify-artist`, {
-                headers: {
-                    Authorization: `Bearer ${accessToken}`
-                },
+            const response = (await apiClient.get(`/releases/search/spotify-artist`, {
                 params: {
                     artistName: searchWord
                 }
@@ -34,14 +27,12 @@ export function useSearchArtists() {
                 setSpotifyArtistResults(result);
             }
         } catch (error: any) {
-            const err = error.response.data || error;
-            const fixedErrorMsg = "Ooops and error occurred!";
-            console.log(err);
+            const messageRes = apiErrorResponse(error, "Oooops, something went wrong", false);
 
             setApiResponse({
                 display: true,
                 status: false,
-                message: err.errors && err.errors.length ? err.errors[0].msg : err.message || fixedErrorMsg
+                message: messageRes
             });
         }
     }, []);

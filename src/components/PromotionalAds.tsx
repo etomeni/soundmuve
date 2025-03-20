@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination, EffectFade, Autoplay } from "swiper/modules";
 import Box from '@mui/material/Box';
@@ -7,11 +6,11 @@ import Stack from '@mui/material/Stack';
 // import useMediaQuery from '@mui/material/useMediaQuery';
 // import { useTheme } from '@mui/material/styles';
 // import useMediaQuery from '@mui/material/useMediaQuery';
-import { apiEndpoint } from "@/util/resources";
 import { useUserStore } from "@/state/userStore";
 
 import { promotionInterface } from "@/typeInterfaces/promotions.interface";
 import promotionalImg from "@/assets/branded/images/promotion.png";
+import apiClient, { apiErrorResponse } from "@/util/apiClient";
 
 
 function PromotionalAdsComponent() {
@@ -19,7 +18,6 @@ function PromotionalAdsComponent() {
     // const xsMatches = useMediaQuery(theme.breakpoints.up('xs'));
     // const smMatches = useMediaQuery(theme.breakpoints.up('sm'));
     // const mdMatches = useMediaQuery(theme.breakpoints.up('md'));
-    const accessToken = useUserStore((state) => state.accessToken);
     const userData = useUserStore((state) => state.userData);
 
     const [adverts, setAdverts] = useState<promotionInterface[]>([]);
@@ -48,13 +46,7 @@ function PromotionalAdsComponent() {
 
     const getPromotions = async () => {
         try {
-            const response = (await axios.get(`${apiEndpoint}/promotions`, {
-                headers: {
-                    Authorization: `Bearer ${accessToken}`
-                }
-            })).data;
-
-
+            const response = (await apiClient.get(`/promotions`)).data;
 
             if (response.status) {
                 const promotions = response.result.filter(
@@ -65,9 +57,7 @@ function PromotionalAdsComponent() {
             }
 
         } catch (error: any) {
-            const err = error.response && error.response.data ? error.response.data : error;
-            // const fixedErrorMsg = "Ooops and error occurred!";
-            console.error(err);
+            apiErrorResponse(error, "Oooops, something went wrong. please try again.", false);
         }
     }
 

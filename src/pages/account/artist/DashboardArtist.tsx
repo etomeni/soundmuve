@@ -107,7 +107,7 @@ function DashboardArtist() {
                         lineHeight: {xs: "42.49px", md: "63.8px"},
                         letterSpacing: {xs: "-0.89px", md: "-1.34px"},
                     }}
-                > Welcome { userData.firstName } 👋 </Typography>
+                > Welcome { userData?.artistName } 👋 </Typography>
 
                 {/* desktop view */}
                 <Box sx={{ display: { xs: 'none', sm: 'block' } }}>

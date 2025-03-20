@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { createSearchParams, useNavigate } from 'react-router-dom';
-import axios from 'axios';
 
 import SideNav from './SideNav';
 import Toolbar from '@mui/material/Toolbar';
@@ -12,25 +11,23 @@ import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 
-import { useUserStore } from '@/state/userStore';
 import { useSettingStore } from '@/state/settingStore';
 import { useCreateReleaseStore } from '@/state/createReleaseStore';
 
 import colors from '@/constants/colors';
 // import { useCart } from '@/hooks/useCart';
-import { apiEndpoint } from '@/util/resources';
 import AccountWrapper from '@/components/AccountWrapper';
 import SongPreviewComponent from '@/components/account/SongPreview';
 import SuccessModalComponent from '@/components/account/SuccessModal';
 import PreSaveModalComponent from '@/components/account/PreSaveModal';
 // import CircularProgress from '@mui/material/CircularProgress';
 import { usePreOrderHook } from '../usePreOrderHook';
+import apiClient, { apiErrorResponse } from '@/util/apiClient';
 
 
 function CreateAlbumReleaseOverview() {
     const navigate = useNavigate();
     // const userData = useUserStore((state) => state.userData);
-    const accessToken = useUserStore((state) => state.accessToken);
 
     const albumRelease = useCreateReleaseStore((state) => state.albumRelease);
 
@@ -56,13 +53,8 @@ function CreateAlbumReleaseOverview() {
         const song = albumRelease.songs[index];
 
         try {
-            const response = (await axios.delete(
-                `${apiEndpoint}/releases/album/${ albumRelease._id || '' }/delete-song/${ song._id || '' }`,
-                {
-                    headers: {
-                        Authorization: `Bearer ${accessToken}`
-                    },
-                }
+            const response = (await apiClient.delete(
+                `/releases/album/${ albumRelease._id || '' }/delete-song/${ song._id || '' }`,
             )).data;
             // console.log(response);
             
@@ -76,14 +68,12 @@ function CreateAlbumReleaseOverview() {
             }
 
         } catch (error: any) {
-            const err = error.response.data || error;
-            const fixedErrorMsg = "Oooops, failed to save details. please try again.";
-            // console.log(err);
+            const messageRes = apiErrorResponse(error, "Oooops, failed to save details. please try again.", false);
 
             setApiResponse({
                 display: true,
                 status: false,
-                message: err.errors && err.errors.length ? err.errors[0].msg : err.message || fixedErrorMsg
+                message: messageRes
             });
         }
     }
@@ -97,8 +87,8 @@ function CreateAlbumReleaseOverview() {
     //     setIsFormSubmitting(true);
 
     //     try {
-    //         const response = (await axios.patch(
-    //             `${apiEndpoint}/releases/album/save-release/${ albumRelease._id || '' }`,
+    //         const response = (await apiClient.patch(
+    //             `/releases/album/save-release/${ albumRelease._id || '' }`,
     //             { preSave: preOrderState },
     //             {
     //                 headers: {

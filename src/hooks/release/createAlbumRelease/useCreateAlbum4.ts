@@ -1,26 +1,25 @@
 import { useCallback, useEffect, useState } from 'react';
 import { createSearchParams, useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 
-import { useUserStore } from '@/state/userStore';
+// import { useUserStore } from '@/state/userStore';
 import { useSettingStore } from '@/state/settingStore';
 import { useCreateReleaseStore } from '@/state/createReleaseStore';
 import { artistInterface, releaseInterface, songArtists_CreativesInterface } from '@/typeInterfaces/release.interface';
-import { apiEndpoint, getQueryParams, pauseExecution } from '@/util/resources';
+import { getQueryParams, pauseExecution } from '@/util/resources';
 import { albumRelease4FormSchema } from '../releaseFormSchema';
 import { useGetReleases } from '../useGetReleases';
+import apiClient, { apiErrorResponse } from '@/util/apiClient';
 
 
 export function useCreateAlbum4() {
     const navigate = useNavigate();
-    // const darkTheme = useSettingStore((state) => state.darkTheme);
     const albumRelease = useCreateReleaseStore((state) => state.albumRelease);
     const _handleSetAlbumRelease4 = useCreateReleaseStore((state) => state._handleSetAlbumRelease4);
     const _removeAlbumReleaseSongUpload = useCreateReleaseStore((state) => state._removeAlbumReleaseSongUpload);
 
-    const accessToken = useUserStore((state) => state.accessToken);
+    // const accessToken = useUserStore((state) => state.accessToken);
 
     const [openCopyrightOwnershipModal, setOpenCopyrightOwnershipModal] = useState(false);
 
@@ -326,13 +325,13 @@ export function useCreateAlbum4() {
 
 
         try {
-            const response = (await axios[ songEditId ? "patch" : "put"](
-                `${apiEndpoint}/releases/album/create-update-4`,
+            const response = (await apiClient[ songEditId ? "patch" : "put"](
+                `/releases/album/create-update-4`,
                 data2db,
                 {
                     headers: {
                         'Content-Type': 'multipart/form-data',
-                        Authorization: `Bearer ${accessToken}`
+                        // Authorization: `Bearer ${accessToken}`
                     },
                     onUploadProgress: (progressEvent) => {
                         const loaded = progressEvent.loaded;
@@ -385,14 +384,12 @@ export function useCreateAlbum4() {
                 message: response.message || ""
             });
         } catch (error: any) {
-            const err = error.response.data || error;
-            const fixedErrorMsg = "Oooops, failed to save details. please try again.";
-            // console.log(err);
+            const messageRes = apiErrorResponse(error, "Oooops, failed to save details. please try again.");
 
             setApiResponse({
                 display: true,
                 status: false,
-                message: err.errors && err.errors.length ? err.errors[0].msg : err.message || fixedErrorMsg
+                message: messageRes
             });
         }
 

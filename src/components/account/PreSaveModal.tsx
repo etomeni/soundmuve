@@ -74,7 +74,7 @@ const PreSaveModalComponent: React.FC<_Props> = ({
                                 p: 2, borderRadius: 2,
                             }}
                         >
-                            <Typography
+                            <Typography component="div"
                                 sx={{
                                     fontWeight: "300",
                                     fontSize: "18px",

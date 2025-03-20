@@ -1,12 +1,11 @@
-import axios from "axios";
 import { useCallback, useState } from "react";
-import { useUserStore } from "@/state/userStore";
-import { apiEndpoint } from "@/util/resources";
+// import { useUserStore } from "@/state/userStore";
 import { releaseInterface } from "@/typeInterfaces/release.interface";
-import { useSettingStore } from "@/state/settingStore";
+// import { useSettingStore } from "@/state/settingStore";
+import apiClient, { apiErrorResponse } from "@/util/apiClient";
 
 export function useGetReleases() {
-    const accessToken = useUserStore((state) => state.accessToken);
+    // const accessToken = useUserStore((state) => state.accessToken);
 
     const [limitNo, setLimitNo] = useState(25);
     const [currentPageNo, setCurrentPageNo] = useState(1);
@@ -25,7 +24,7 @@ export function useGetReleases() {
         album: "0"
     });
 
-    const _setToastNotification = useSettingStore((state) => state._setToastNotification);
+    // const _setToastNotification = useSettingStore((state) => state._setToastNotification);
     const [apiResponse, setApiResponse] = useState({
         display: false,
         status: true,
@@ -46,10 +45,7 @@ export function useGetReleases() {
 
     
         try {
-            const response = (await axios.get(`${apiEndpoint}/releases`, {
-                headers: {
-                    Authorization: `Bearer ${accessToken}`
-                },
+            const response = (await apiClient.get(`/releases`, {
                 params: {
                     page: pageNo,
                     limit: limitNo,
@@ -93,15 +89,12 @@ export function useGetReleases() {
     
             setIsSubmitting(false);
         } catch (error: any) {
-            const err = error.response && error.response.data ? error.response.data : error;
-            const fixedErrorMsg = "Ooops and error occurred!";
-            console.log(err);
-            // setReleases([]);
+            const messageRes = apiErrorResponse(error, "Oooops, something went wrong", false);
 
             setApiResponse({
                 display: true,
                 status: false,
-                message: err.errors && err.errors.length ? err.errors[0].msg : err.message || fixedErrorMsg
+                message: messageRes
             });
 
             setIsSubmitting(false);
@@ -115,10 +108,7 @@ export function useGetReleases() {
         // setIsSubmitting(true);
 
         try {
-            const response = (await axios.get(`${apiEndpoint}/releases/rl-artist`, {
-                headers: {
-                    Authorization: `Bearer ${accessToken}`
-                },
+            const response = (await apiClient.get(`/releases/rl-artist`, {
                 params: {
                     page: pageNo,
                     limit: limitNo,
@@ -146,15 +136,12 @@ export function useGetReleases() {
     
             setIsSubmitting(false);
         } catch (error: any) {
-            const err = error.response && error.response.data ? error.response.data : error;
-            const fixedErrorMsg = "Ooops and error occurred!";
-            console.log(err);
-            // setReleases([]);
+            const messageRes = apiErrorResponse(error, "Oooops, something went wrong", false);
 
             setApiResponse({
                 display: true,
                 status: false,
-                message: err.errors && err.errors.length ? err.errors[0].msg : err.message || fixedErrorMsg
+                message: messageRes
             });
 
             setIsSubmitting(false);
@@ -163,10 +150,7 @@ export function useGetReleases() {
 
     const getRL_ArtistReleaseData = useCallback(async (artist_id: string) => {
         try {
-            const response = (await axios.get(`${apiEndpoint}/releases/rl-artist-data`, {
-                headers: {
-                    Authorization: `Bearer ${accessToken}`
-                },
+            const response = (await apiClient.get(`/releases/rl-artist-data`, {
                 params: {
                     artist_id
                 }
@@ -178,26 +162,14 @@ export function useGetReleases() {
             }
 
         } catch (error: any) {
-            const err = error.response && error.response.data ? error.response.data : error;
-            const fixedErrorMsg = "Ooops and error occurred!";
-            // console.log(err);
-            // setReleases([]);
-
-            _setToastNotification({
-                display: true,
-                status: "info",
-                message: err.errors && err.errors.length ? err.errors[0].msg : err.message || fixedErrorMsg
-            });
+            apiErrorResponse(error, "Oooops, something went wrong", false);
         }
     }, []);
 
 
     const getReleaseById = useCallback(async (release_id: string) => {
         try {
-            const response = (await axios.get(`${apiEndpoint}/releases/${release_id}`, {
-                headers: {
-                    Authorization: `Bearer ${accessToken}`
-                },
+            const response = (await apiClient.get(`/releases/${release_id}`, {
                 params: {
                     release_id: release_id,
                 }
@@ -209,31 +181,19 @@ export function useGetReleases() {
             }
 
         } catch (error: any) {
-            const err = error.response && error.response.data ? error.response.data : error;
-            const fixedErrorMsg = "Ooops and error occurred!";
-            console.log(err);
-            // setReleases([]);
-
-            _setToastNotification({
-                display: true,
-                status: "error",
-                message: err.errors && err.errors.length ? err.errors[0].msg : err.message || fixedErrorMsg
-            })
+            const messageRes = apiErrorResponse(error, "Oooops, something went wrong", false);
 
             setApiResponse({
                 display: true,
                 status: false,
-                message: err.errors && err.errors.length ? err.errors[0].msg : err.message || fixedErrorMsg
+                message: messageRes
             });
         }
     }, []);
 
     const deleteReleaseById = useCallback(async (release_id: string, successFn = (_res: any) => {}) => {
         try {
-            const response = (await axios.delete(`${apiEndpoint}/releases/${release_id}`, {
-                headers: {
-                    Authorization: `Bearer ${accessToken}`
-                },
+            const response = (await apiClient.delete(`/releases/${release_id}`, {
                 params: {
                     release_id: release_id,
                 }
@@ -245,15 +205,12 @@ export function useGetReleases() {
             }
 
         } catch (error: any) {
-            const err = error.response && error.response.data ? error.response.data : error;
-            const fixedErrorMsg = "Ooops and error occurred!";
-            console.log(err);
-            // setReleases([]);
+            const messageRes = apiErrorResponse(error, "Oooops, something went wrong", false);
 
             setApiResponse({
                 display: true,
                 status: false,
-                message: err.errors && err.errors.length ? err.errors[0].msg : err.message || fixedErrorMsg
+                message: messageRes
             });
         }
     }, []);

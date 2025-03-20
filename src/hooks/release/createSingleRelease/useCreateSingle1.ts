@@ -1,17 +1,16 @@
 import { useCallback, useEffect, useState } from "react";
 import { createSearchParams, useNavigate } from 'react-router-dom';
 
-import axios from "axios";
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 
-import { useUserStore } from "@/state/userStore";
-import { getQueryParams, apiEndpoint } from "@/util/resources";
+import { getQueryParams } from "@/util/resources";
 import { artistInterface, singleRelease1Interface } from "@/typeInterfaces/release.interface";
 import { singleRelease1FormSchema } from "../releaseFormSchema";
 import { restCountries } from "@/util/countries";
 import { useSettingStore } from "@/state/settingStore";
 import { useCreateReleaseStore } from "@/state/createReleaseStore";
+import apiClient, { apiErrorResponse } from "@/util/apiClient";
 
 
 const contriesss = restCountries.map(item => item.name.common);
@@ -24,7 +23,6 @@ export function useCreateSingleRelease1() {
     const release_id: string = singleRelease._id || getQueryParams('release_id');
     const recordLabelArtist_id: string = getQueryParams('recordLabelArtist_id');
     
-    const accessToken = useUserStore((state) => state.accessToken);
     const _setToastNotification = useSettingStore((state) => state._setToastNotification);
     const _handleSetSingleRelease1 = useCreateReleaseStore((state) => state._handleSetSingleRelease1);
 
@@ -201,14 +199,9 @@ export function useCreateSingleRelease1() {
         _handleSetSingleRelease1(data2submit);
 
         try {
-            const response = (await axios.put(
-                `${apiEndpoint}/releases/single/create`,
-                data2submit,  
-                {
-                    headers: {
-                        Authorization: `Bearer ${accessToken}`
-                    },
-                }
+            const response = (await apiClient.put(
+                `/releases/single/create`,
+                data2submit,
             )).data;
             // console.log(response);
 
@@ -236,14 +229,12 @@ export function useCreateSingleRelease1() {
                 message: response.message
             });
         } catch (error: any) {
-            const err = error.response.data || error;
-            const fixedErrorMsg = "Oooops, failed to save details. please try again.";
-            // console.log(err);
+            const messageRes = apiErrorResponse(error, "Oooops, failed to save details. please try again.");
 
             setApiResponse({
                 display: true,
                 status: false,
-                message: err.errors && err.errors.length ? err.errors[0].msg : err.message || fixedErrorMsg
+                message: messageRes
             });
         }
 
