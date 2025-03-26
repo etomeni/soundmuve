@@ -22,6 +22,7 @@ import { contentWidth } from '@/util/mui';
 import colors from '@/constants/colors';
 import { useSettingStore } from '@/state/settingStore';
 import apiClient, { apiErrorResponse } from '@/util/apiClient';
+import InstallPWAButton from './PwaInstallBtn';
 
 
 const currentYear = new Date().getFullYear();
@@ -255,6 +256,10 @@ export default function FooterComponent() {
                             <Typography variant='body1' component="p" className={style.text}>
                                 All rights reserved.
                             </Typography>
+
+                            <Box mt={2}>
+                                <InstallPWAButton />
+                            </Box>
                         </Box>
                     </Grid>
 
@@ -367,7 +372,7 @@ export default function FooterComponent() {
                 pb: 0,
             }}>
                 <Box sx={{ px: {xs: 2, md: 5, lg: 12} }}>
-                    <Box>
+                    <Stack direction="row" spacing="15px" alignItems="center" justifyContent="space-between">
                         <Link to="/">
                             <img 
                                 src={logo}
@@ -375,7 +380,9 @@ export default function FooterComponent() {
                                 style={{maxWidth: "53px", display: "block"}} 
                             />
                         </Link>
-                    </Box>
+
+                        <InstallPWAButton />
+                    </Stack>
 
                     <Grid container spacing={2} mt={2}>
                         <Grid item xs={6} sm={6} md={4}>
@@ -491,7 +498,6 @@ export default function FooterComponent() {
                         Carlifonia, United states.
                     </Typography>
                 </Box>
-
 
 
                 <Box sx={{ position: "relative", bottom: 0 }}>

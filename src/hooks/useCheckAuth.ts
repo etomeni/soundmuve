@@ -39,7 +39,7 @@ export function useCheckAuth() {
                     }
                 }
             )).data;
-            console.log(response);
+            // console.log(response);
 
             if (response.status) {
                 _handleRefreshToken(response.result.newToken, refresh_token);

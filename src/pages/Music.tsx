@@ -22,6 +22,7 @@ import youtube from "@/assets/branded/images/dsp/youtube.png";
 import youtubeMusic from "@/assets/branded/images/dsp/youtubeMusic.png";
 import deezer from "@/assets/branded/images/dsp/deezer.png";
 import tiktok from "@/assets/branded/images/dsp/tiktok.png";
+import boomplay from "@/assets/branded/images/dsp/boomplay.svg";
 import soundMuve from "@/assets/branded/soundMuve.png";
 
 import colors from '@/constants/colors';
@@ -140,6 +141,14 @@ const musicDsps = [
         bgColor: "#B646FF",
         textColor: "#fff",
         btnText: "Download",
+    },
+    {
+        id: 14,
+        name: "Boomplay",
+        imageLogo: boomplay,
+        bgColor: "#B646FF",
+        textColor: "#fff",
+        btnText: "Play",
     },
 ];
 

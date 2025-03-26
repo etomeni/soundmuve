@@ -95,6 +95,12 @@ const ArtistAnalyticsNavComponent: React.FC<_Props> = ({
                     > Reach </Typography>
                 </Box> */}
             </Stack>
+
+            <Typography variant='subtitle2'
+                sx={{
+                    color: "#666666"
+                }}
+            >Streaming services typically report on a 2-3 month delay.</Typography>
         </Box>
     )
 }

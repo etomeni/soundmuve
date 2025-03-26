@@ -85,7 +85,7 @@ function FaqComponent() {
         },
         {
             title: "How much of my royalties does SoundMuve keep?",
-            details: "None. We offer transparent transactions, ensuring you receive 100% of your earnings."
+            details: "None. We offer transparent transactions, ensuring you receive 85% of your earnings."
         },
         {
             title: "What kind of support does SoundMuve offer its users?",
