@@ -5,11 +5,11 @@ import Grid from '@mui/material/Grid';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 
-// import FacebookIcon from '@mui/icons-material/Facebook';
+import FacebookIcon from '@mui/icons-material/Facebook';
 // import TwitterIcon from '@mui/icons-material/Twitter';
 import XIcon from '@mui/icons-material/X';
 import InstagramIcon from '@mui/icons-material/Instagram';
-// import LinkedInIcon from '@mui/icons-material/LinkedIn';
+import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 
 import style from "./footer.module.css";
@@ -226,13 +226,17 @@ export default function FooterComponent() {
                             </Link>
 
                             <Box sx={{display: "flex", gap: 1, mt: 2}}>
-                                {/* <FacebookIcon className={style.icons} /> */}
+                                <Link to="https://facebook.com/soundmuve" target='_blank'>
+                                    <FacebookIcon className={style.icons} />
+                                </Link>
 
                                 <Link to="https://x.com/soundmuve/" target='_blank' >
                                     <XIcon className={style.icons} />
                                 </Link>
 
-                                {/* <LinkedInIcon className={style.icons} /> */}
+                                <Link to="https://www.linkedin.com/company/86408243/" target='_blank'>
+                                    <LinkedInIcon className={style.icons} />
+                                </Link>
                                 
                                 <Link to="https://www.instagram.com/soundmuve/" target='_blank' >
                                     <InstagramIcon className={style.icons} />
@@ -445,13 +449,17 @@ export default function FooterComponent() {
                     <Stack direction="row" justifyContent="left" alignItems="center" spacing={2} my={2}>
 
                         <Box sx={{display: "flex", gap: 1}}>
-                            {/* <FacebookIcon className={style.icons} sx={{ fontSize: 12 }} /> */}
+                            <Link to="https://facebook.com/soundmuve" target='_blank'>
+                                <FacebookIcon className={style.icons} sx={{ fontSize: 12 }} />
+                            </Link>
 
                             <Link to="https://x.com/soundmuve/" target='_blank'>
                                 <XIcon className={style.icons} sx={{ fontSize: 12 }} />
                             </Link>
 
-                            {/* <LinkedInIcon className={style.icons} sx={{ fontSize: 12}} /> */}
+                            <Link to="https://www.linkedin.com/company/86408243/" target='_blank'>
+                                <LinkedInIcon className={style.icons} sx={{ fontSize: 12}} />
+                            </Link>
 
                             <Link to="https://www.instagram.com/soundmuve/" target='_blank'>
                                 <InstagramIcon className={style.icons} sx={{ fontSize: 12 }} />

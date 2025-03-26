@@ -3,19 +3,19 @@ import Grid from '@mui/material/Grid';
 import Stack from '@mui/material/Stack';
 import { useTheme } from '@mui/material/styles';
 
-import HeaderComponent from '../components/Header';
-import FooterComponent from '../components/Footer';
+import HeaderComponent from '@/components/Header';
+import FooterComponent from '@/components/Footer';
 import colors from '@/constants/colors';
 import { contentWidth } from '@/util/mui';
 import contactBgImage from "@/assets/branded/images/contact/background.png";
 import illustrationMailImage from "@/assets/branded/images/contact/illustrationMail.png";
 import useMediaQuery from '@mui/material/useMediaQuery';
 
-// import FacebookIcon from '@mui/icons-material/Facebook';
+import FacebookIcon from '@mui/icons-material/Facebook';
 import XIcon from '@mui/icons-material/X';
 import InstagramIcon from '@mui/icons-material/Instagram';
 import ContactUsComponent from '@/components/ContactUsComponent';
-// import LinkedInIcon from '@mui/icons-material/LinkedIn';
+import LinkedInIcon from '@mui/icons-material/LinkedIn';
   
 
 function Contact() {
@@ -94,13 +94,17 @@ function Contact() {
 
                                                 <Box sx={{mt: "auto", mb: "50px", width: "100%" }}>
                                                     <Box sx={{ display: "flex", gap: "15px" }}>
-                                                        {/* <FacebookIcon sx={{maxWidth: "20px", fontSize: 20, color: "#6C6050"}} /> */}
+                                                        <a href="https://facebook.com/soundmuve" target='_blank'>
+                                                            <FacebookIcon sx={{maxWidth: "20px", fontSize: 20, color: "#6C6050"}} />
+                                                        </a>
 
                                                         <a href="https://x.com/soundmuve/" target='_blank' >
                                                             <XIcon sx={{maxWidth: "20px", fontSize: 20, color: "#6C6050"}} />
                                                         </a>
 
-                                                        {/* <LinkedInIcon sx={{maxWidth: "20px", fontSize: 20, color: "#6C6050"}} /> */}
+                                                        <a href="https://www.linkedin.com/company/86408243/" target='_blank'>
+                                                            <LinkedInIcon sx={{maxWidth: "20px", fontSize: 20, color: "#6C6050"}} />
+                                                        </a>                                                        
 
                                                         <a href="https://www.instagram.com/soundmuve/" target='_blank' >
                                                             <InstagramIcon sx={{maxWidth: "20px", fontSize: 20, color: "#6C6050"}} />

@@ -13,7 +13,7 @@ import MuiAccordionDetails from '@mui/material/AccordionDetails';
 import { contentWidth } from '@/util/mui';
 import colors from '@/constants/colors';
 
-import faqVideoThumbnail from "@/assets/branded/images/faqVideoThumbnail.png";
+// import faqVideoThumbnail from "@/assets/branded/images/faqVideoThumbnail.png";
 
 
 const Accordion = styled((props: AccordionProps) => (
@@ -177,7 +177,7 @@ function FaqComponent() {
             </Box>
 
 
-            <Box my="100px" 
+            {/* <Box my="100px" 
                 sx={{
                     width: "100%",
                     backgroundColor: "#0B0B0B70",
@@ -193,7 +193,7 @@ function FaqComponent() {
                     <source src="https://gsssecurity.ng/wp-content/uploads/2023/02/GSS-SECURITY-AD-VIDEO.mp4" type="video/mp4" />
                     Your browser does not support the video tag.
                 </video>
-            </Box>
+            </Box> */}
         </Box>
     )
 }
